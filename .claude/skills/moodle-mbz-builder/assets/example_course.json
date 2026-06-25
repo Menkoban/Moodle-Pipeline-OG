@@ -1,0 +1,109 @@
+{
+  "filename": "backup-moodle2-course-demo.mbz",
+  "course": {
+    "fullname": "Elektrosicherheit Demo",
+    "shortname": "ELEKTRO-DEMO",
+    "summary": "<p>Demonstrationskurs, der alle unterstützten Material- und Aktivitätstypen zeigt.</p>",
+    "format": "topics",
+    "category_name": "Testbereich 2025"
+  },
+  "sections": [
+    {
+      "name": "Kursbeschreibung",
+      "summary": "<p><b>Inhalte:</b> Grundlagen der Elektrosicherheit.</p>",
+      "activities": [
+        {
+          "type": "label",
+          "name": "Hinweis",
+          "intro": "<p><b>Willkommen!</b> Bitte arbeiten Sie die Materialien der Reihe nach durch.</p>"
+        },
+        {
+          "type": "page",
+          "name": "Einführung",
+          "intro": "<p>Eine Textseite mit Lerninhalten.</p>",
+          "content": "<h3>Gefahren des elektrischen Stroms</h3><p>Strom wird ab ca. 50 mA lebensgefährlich.</p><ul><li>Stromstärke</li><li>Einwirkdauer</li><li>Stromweg</li></ul>"
+        }
+      ]
+    },
+    {
+      "name": "Modul 1: Grundlagen",
+      "summary": "<p>Physiologische Wirkung des Stroms.</p>",
+      "activities": [
+        {
+          "type": "url",
+          "name": "DGUV Vorschrift 3 (extern)",
+          "intro": "<p>Weiterführender Link.</p>",
+          "externalurl": "https://www.dguv.de"
+        },
+        {
+          "type": "book",
+          "name": "Lehrbuch Schutzmaßnahmen",
+          "intro": "<p>Ein mehrseitiges Buch.</p>",
+          "chapters": [
+            {"title": "Kapitel 1: Direktes Berühren", "content": "<p>Schutz gegen direktes Berühren ...</p>"},
+            {"title": "Kapitel 2: Indirektes Berühren", "content": "<p>Schutz gegen indirektes Berühren ...</p>"}
+          ]
+        },
+        {
+          "type": "quiz",
+          "name": "Selbsttest Modul 1",
+          "intro": "<p>Prüfen Sie Ihr Wissen.</p>",
+          "questions": [
+            {
+              "type": "truefalse",
+              "name": "Frage 1",
+              "questiontext": "<p>Ab ca. 50 mA wird Wechselstrom für den Menschen lebensgefährlich.</p>",
+              "correct": true
+            },
+            {
+              "type": "multichoice",
+              "name": "Frage 2",
+              "questiontext": "<p>Welcher Faktor beeinflusst die Gefährlichkeit NICHT direkt?</p>",
+              "answers": [
+                {"text": "Stromstärke", "correct": false},
+                {"text": "Einwirkdauer", "correct": false},
+                {"text": "Farbe des Kabels", "correct": true}
+              ]
+            }
+          ]
+        },
+        {
+          "type": "assign",
+          "name": "Abgabe: Gefährdungsbeurteilung",
+          "intro": "<p>Erstellen Sie eine Gefährdungsbeurteilung.</p>",
+          "grade": 100
+        },
+        {
+          "type": "forum",
+          "name": "Diskussionsforum",
+          "intro": "<p>Diskutieren Sie offene Fragen.</p>"
+        },
+        {
+          "type": "choice",
+          "name": "Stimmungsabfrage",
+          "intro": "<p>Wie sicher fühlen Sie sich?</p>",
+          "options": ["Sehr sicher", "Eher sicher", "Unsicher"]
+        },
+        {
+          "type": "glossary",
+          "name": "Fachbegriffe",
+          "intro": "<p>Wichtige Begriffe mit vorbefüllten Einträgen.</p>",
+          "entries": [
+            {"concept": "Stromstärke", "definition": "<p>Maß für die Menge des fließenden Stroms, gemessen in Ampere (A).</p>"},
+            {"concept": "Schutzleiter", "definition": "<p>Grün-gelber Leiter, der im Fehlerfall gefährliche Spannungen ableitet.</p>"}
+          ]
+        },
+        {
+          "type": "feedback",
+          "name": "Kursfeedback",
+          "intro": "<p>Wie hat dir der Kurs gefallen?</p>",
+          "items": [
+            {"type": "label", "text": "<p>Bitte nimm dir kurz Zeit für dein Feedback.</p>"},
+            {"type": "multichoice", "name": "Wie verständlich war der Kurs?", "options": ["Sehr", "Mittel", "Wenig"], "required": 1},
+            {"type": "textarea", "name": "Verbesserungsvorschläge", "cols": 60, "rows": 4}
+          ]
+        }
+      ]
+    }
+  ]
+}

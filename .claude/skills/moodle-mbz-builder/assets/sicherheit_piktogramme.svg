@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 230" font-family="Arial, Helvetica, sans-serif">
+  <rect width="600" height="230" fill="#ffffff"/>
+  <text x="300" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a1a1a">Sicherheit beim Bohren</text>
+
+  <!-- Schutzbrille: Gebot -->
+  <circle cx="80" cy="100" r="40" fill="#e6f1fb" stroke="#185fa5" stroke-width="3"/>
+  <ellipse cx="66" cy="100" rx="13" ry="10" fill="#fff" stroke="#185fa5" stroke-width="2.5"/>
+  <ellipse cx="94" cy="100" rx="13" ry="10" fill="#fff" stroke="#185fa5" stroke-width="2.5"/>
+  <line x1="79" y1="100" x2="81" y2="100" stroke="#185fa5" stroke-width="3"/>
+  <circle cx="80" cy="158" r="12" fill="#1d9e75"/><path d="M 74 158 l 4 5 l 8 -10" fill="none" stroke="#fff" stroke-width="2.5"/>
+  <text x="80" y="195" text-anchor="middle" font-size="13" fill="#0f6e56">Schutzbrille</text>
+
+  <!-- keine Handschuhe: Verbot -->
+  <circle cx="215" cy="100" r="40" fill="#fdeceb" stroke="#d8312c" stroke-width="3"/>
+  <path d="M 200 88 v 24 h 30 v -18 l -6 -2 v -8 l -5 -1 v 7 l -3 -1 v -8 l -5 0 v 8 l -3 0 v -7 z" fill="#f0c9a8" stroke="#a3322f" stroke-width="1.5"/>
+  <line x1="185" y1="70" x2="245" y2="130" stroke="#d8312c" stroke-width="4"/>
+  <circle cx="215" cy="158" r="12" fill="#d8312c"/><path d="M 209 152 l 12 12 M 221 152 l -12 12" stroke="#fff" stroke-width="2.5"/>
+  <text x="215" y="195" text-anchor="middle" font-size="13" fill="#a3322f">keine Handschuhe</text>
+
+  <!-- Haare sichern: Gebot -->
+  <circle cx="350" cy="100" r="40" fill="#e6f1fb" stroke="#185fa5" stroke-width="3"/>
+  <circle cx="350" cy="96" r="14" fill="#f0c9a8" stroke="#185fa5" stroke-width="2"/>
+  <path d="M 336 92 a 14 12 0 0 1 28 0 q -14 -10 -28 0" fill="#854f0b"/>
+  <rect x="342" y="108" width="16" height="14" rx="4" fill="#9aa0a6" stroke="#185fa5" stroke-width="1.5"/>
+  <circle cx="350" cy="158" r="12" fill="#1d9e75"/><path d="M 344 158 l 4 5 l 8 -10" fill="none" stroke="#fff" stroke-width="2.5"/>
+  <text x="350" y="195" text-anchor="middle" font-size="13" fill="#0f6e56">Haare sichern</text>
+
+  <!-- Späne nicht mit Hand: Verbot -->
+  <circle cx="485" cy="100" r="40" fill="#fdeceb" stroke="#d8312c" stroke-width="3"/>
+  <ellipse cx="485" cy="108" rx="20" ry="10" fill="#f0c9a8" stroke="#a3322f" stroke-width="1.5"/>
+  <g stroke="#854f0b" stroke-width="2"><path d="M 472 92 q 4 -8 8 0"/><path d="M 485 88 q 4 -8 8 0"/><path d="M 497 92 q 4 -8 8 0"/></g>
+  <line x1="455" y1="70" x2="515" y2="130" stroke="#d8312c" stroke-width="4"/>
+  <circle cx="485" cy="158" r="12" fill="#d8312c"/><path d="M 479 152 l 12 12 M 491 152 l -12 12" stroke="#fff" stroke-width="2.5"/>
+  <text x="485" y="195" text-anchor="middle" font-size="13" fill="#a3322f">Späne nie mit Hand</text>
+</svg>
