@@ -163,7 +163,145 @@ document.getElementById('mbz-editor').addEventListener('input',function(e){
   const r=e.target.dataset&&e.target.dataset.role;
   if(r==='secname'){const si=+e.target.closest('.sec').dataset.si;secs()[si].name=e.target.value;setDirty(true);}
 });
-function renderEditor(si,ai,el){el.innerHTML='';}
+function fld(label,inputHtml){return '<div class="fld"><label>'+label+'</label>'+inputHtml+'</div>';}
+function ta(val,rows){return '<textarea rows="'+(rows||4)+'">'+esc(val)+'</textarea>';}
+function bind(el,sel,fn){el.querySelectorAll(sel).forEach(fn);}
+function edPage(a,el){
+  el.insertAdjacentHTML('beforeend',
+    fld('Inhalt (HTML)',ta(a.content,8))
+    +fld('Infoblatt (material)','<input type="checkbox" '+(a.material?'checked':'')+' data-f="material" style="width:auto">')
+    +fld('Kernpunkte (eine pro Zeile, optional)',ta((a.material_bullets||[]).join('\n'),3)));
+  const tas=el.querySelectorAll('textarea');
+  tas[tas.length-2].addEventListener('input',function(){a.content=this.value;setDirty(true);});
+  tas[tas.length-1].addEventListener('input',function(){a.material_bullets=this.value.split('\n').filter(Boolean);setDirty(true);});
+  el.querySelector('[data-f=material]').addEventListener('change',function(){a.material=this.checked;setDirty(true);});
+  if(a._inline_images){for(const k in a._inline_images){el.insertAdjacentHTML('beforeend','<div class="fld"><label>Diagramm: '+esc(k)+' (Änderung via KI-Auftrag)</label><div style="max-width:480px">'+a._inline_images[k]+'</div></div>');}}
+}
+function edQuiz(a,el){
+  a.questions=a.questions||[];
+  a.questions.forEach(function(q,qi){
+    const qd=document.createElement('div');
+    qd.style.cssText='border:0.5px solid var(--border);border-radius:var(--radius);padding:8px 10px;margin:8px 0';
+    let inner=fld('Frage '+(qi+1)+' ('+(q.type||'multichoice')+')',ta(q.questiontext,2))
+      +fld('Erklärung (generalfeedback)',ta(q.generalfeedback,2));
+    if(q.type==='truefalse'){
+      inner+=fld('Richtig?','<select data-q="correct"><option value="true"'+(q.correct?' selected':'')+'>Wahr</option><option value="false"'+(!q.correct?' selected':'')+'>Falsch</option></select>')
+        +fld('Feedback richtig',ta(q.feedbackcorrect,2))+fld('Feedback falsch',ta(q.feedbackwrong,2));
+    }else{
+      (q.answers=q.answers||[]).forEach(function(an,ni){
+        inner+='<div class="ansblk" style="border-left:2px solid '+(an.correct?'var(--border-success)':'var(--border-danger)')+';border-radius:0;padding-left:8px;margin:6px 0">'
+          +fld('Antwort '+(ni+1)+' — korrekt: <input type="checkbox" data-an="'+ni+'" '+(an.correct?'checked':'')+' style="width:auto">',ta(an.text,1))
+          +fld('Feedback',ta(an.feedback,1))
+          +'<button class="mini" data-delan="'+ni+'" aria-label="Antwort löschen">'+icon('trash')+' Antwort</button></div>';});
+      inner+='<button data-addan="1">'+icon('plus')+' Antwort</button> ';
+    }
+    inner+='<button class="mini" data-delq="'+qi+'" aria-label="Frage löschen">'+icon('trash')+' Frage</button>';
+    qd.innerHTML=inner;el.appendChild(qd);
+    const tas=qd.querySelectorAll(':scope > .fld textarea');
+    tas[0].addEventListener('input',function(){q.questiontext=this.value;setDirty(true);});
+    tas[1].addEventListener('input',function(){q.generalfeedback=this.value;setDirty(true);});
+    if(q.type==='truefalse'){
+      qd.querySelector('[data-q=correct]').addEventListener('change',function(){q.correct=this.value==='true';setDirty(true);});
+      tas[2].addEventListener('input',function(){q.feedbackcorrect=this.value;setDirty(true);});
+      tas[3].addEventListener('input',function(){q.feedbackwrong=this.value;setDirty(true);});
+    }else{
+      bind(qd,'.ansblk',function(block,ni){
+        const an=q.answers[ni];if(!an)return;
+        const t=block.querySelectorAll('textarea');
+        t[0].addEventListener('input',function(){an.text=this.value;setDirty(true);});
+        t[1].addEventListener('input',function(){an.feedback=this.value;setDirty(true);});
+        block.querySelector('[data-an]').addEventListener('change',function(){an.correct=this.checked;setDirty(true);});
+        block.querySelector('[data-delan]').addEventListener('click',function(){q.answers.splice(ni,1);setDirty(true);render();});
+      });
+      const addBtn=qd.querySelector('[data-addan]');
+      if(addBtn)addBtn.addEventListener('click',function(){q.answers.push({text:'',correct:false,feedback:''});setDirty(true);render();});
+    }
+    qd.querySelector('[data-delq]').addEventListener('click',function(){a.questions.splice(qi,1);setDirty(true);render();});
+  });
+  const foot=document.createElement('div');
+  foot.innerHTML='<button data-newq="multichoice">'+icon('plus')+' Multiple-Choice</button> <button data-newq="truefalse">'+icon('plus')+' Wahr/Falsch</button>'
+    +fld('Gesamtfeedback (overallfeedback, JSON)',ta(JSON.stringify(a.overallfeedback||[]),2));
+  el.appendChild(foot);
+  bind(foot,'[data-newq]',function(b){b.addEventListener('click',function(){
+    a.questions.push(b.dataset.newq==='truefalse'
+      ?{type:'truefalse',questiontext:'<p></p>',correct:true,generalfeedback:'',feedbackcorrect:'',feedbackwrong:''}
+      :{type:'multichoice',questiontext:'<p></p>',generalfeedback:'',answers:[{text:'',correct:true,feedback:''}]});
+    setDirty(true);render();});});
+  foot.querySelector('textarea').addEventListener('input',function(){
+    try{a.overallfeedback=JSON.parse(this.value);this.style.borderColor='';setDirty(true);}
+    catch(err){this.style.borderColor='var(--border-danger)';}});
+}
+function edAssign(a,el){
+  el.insertAdjacentHTML('beforeend',fld('Max. Punkte','<input type="number" value="'+(a.grade||100)+'" data-f="grade">'));
+  el.querySelector('[data-f=grade]').addEventListener('input',function(){a.grade=+this.value;setDirty(true);});
+}
+function edGlossary(a,el){
+  (a.entries=a.entries||[]).forEach(function(en,ei){
+    const d=document.createElement('div');
+    d.innerHTML=fld('Begriff','<input value="'+esc(en.concept)+'" style="width:100%;box-sizing:border-box">')
+      +fld('Definition (HTML)',ta(en.definition,2))
+      +'<button class="mini" aria-label="Begriff löschen">'+icon('trash')+'</button>';
+    d.querySelector('input').addEventListener('input',function(){en.concept=this.value;setDirty(true);});
+    d.querySelector('textarea').addEventListener('input',function(){en.definition=this.value;setDirty(true);});
+    d.querySelector('button').addEventListener('click',function(){a.entries.splice(ei,1);setDirty(true);render();});
+    el.appendChild(d);});
+  const b=document.createElement('button');b.innerHTML=icon('plus')+' Begriff';
+  b.addEventListener('click',function(){a.entries.push({concept:'',definition:''});setDirty(true);render();});
+  el.appendChild(b);
+}
+function edChoice(a,el){
+  el.insertAdjacentHTML('beforeend',fld('Optionen (eine pro Zeile)',ta((a.options||[]).join('\n'),3)));
+  el.lastElementChild.querySelector('textarea').addEventListener('input',function(){a.options=this.value.split('\n').filter(Boolean);setDirty(true);});
+}
+function edBook(a,el){
+  (a.chapters=a.chapters||[]).forEach(function(ch,ci){
+    const d=document.createElement('div');
+    d.innerHTML=fld('Kapitel '+(ci+1),'<input value="'+esc(ch.title)+'" style="width:100%;box-sizing:border-box">')
+      +fld('Inhalt (HTML)',ta(ch.content,4))
+      +'<button class="mini" aria-label="Kapitel löschen">'+icon('trash')+'</button>';
+    d.querySelector('input').addEventListener('input',function(){ch.title=this.value;setDirty(true);});
+    d.querySelector('textarea').addEventListener('input',function(){ch.content=this.value;setDirty(true);});
+    d.querySelector('button').addEventListener('click',function(){a.chapters.splice(ci,1);setDirty(true);render();});
+    el.appendChild(d);});
+  const b=document.createElement('button');b.innerHTML=icon('plus')+' Kapitel';
+  b.addEventListener('click',function(){a.chapters.push({title:'',content:'<p></p>'});setDirty(true);render();});
+  el.appendChild(b);
+}
+function edFeedback(a,el){
+  el.insertAdjacentHTML('beforeend',fld('Items (JSON — v1-Vereinfachung)',ta(JSON.stringify(a.items||[],null,1),6)));
+  el.lastElementChild.querySelector('textarea').addEventListener('input',function(){
+    try{a.items=JSON.parse(this.value);this.style.borderColor='';setDirty(true);}
+    catch(err){this.style.borderColor='var(--border-danger)';}});
+}
+function simpleField(a,el,key,label){
+  el.insertAdjacentHTML('beforeend',fld(label,'<input value="'+esc(a[key]||'')+'" style="width:100%;box-sizing:border-box">'));
+  el.lastElementChild.querySelector('input').addEventListener('input',function(){a[key]=this.value;setDirty(true);});
+}
+function renderEditor(si,ai,el){
+  const a=secs()[si].activities[ai];el.innerHTML='';
+  el.insertAdjacentHTML('beforeend',fld('Name','<input value="'+esc(a.name)+'" data-f="name" style="width:100%;box-sizing:border-box">'));
+  el.querySelector('[data-f=name]').addEventListener('input',function(){a.name=this.value;setDirty(true);});
+  if(a.type!=='page'){
+    el.insertAdjacentHTML('beforeend',fld('Beschreibung / Intro (HTML)',ta(a.intro,3)));
+    el.lastElementChild.querySelector('textarea').addEventListener('input',function(){a.intro=this.value;setDirty(true);});
+  }
+  if(a.type==='page')edPage(a,el);
+  else if(a.type==='quiz')edQuiz(a,el);
+  else if(a.type==='assign')edAssign(a,el);
+  else if(a.type==='glossary')edGlossary(a,el);
+  else if(a.type==='choice')edChoice(a,el);
+  else if(a.type==='book')edBook(a,el);
+  else if(a.type==='feedback')edFeedback(a,el);
+  else if(a.type==='url')simpleField(a,el,'externalurl','Externe URL');
+  else if(a.type==='resource')simpleField(a,el,'file','Dateipfad');
+  else if(a.type==='folder'){
+    el.insertAdjacentHTML('beforeend',fld('Dateipfade (einer pro Zeile)',ta((a.files||[]).join('\n'),3)));
+    el.lastElementChild.querySelector('textarea').addEventListener('input',function(){a.files=this.value.split('\n').filter(Boolean);setDirty(true);});
+  }
+  else if(a.type==='forum')simpleField(a,el,'forumtype','Forumtyp (general/news/qanda/eachuser/single)');
+  renderAiRow(a,el,si,ai);
+}
+function renderAiRow(a,el,si,ai){}
 /*__EDITORS__*/
 /*__ACTIONS__*/
 render();

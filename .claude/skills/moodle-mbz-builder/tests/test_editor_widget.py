@@ -50,9 +50,18 @@ def test_all_supported_types_in_add_menu(spec):
         assert f'"{t}"' in out
 
 
+def test_field_editors_cover_types(spec):
+    out = build_widget(spec)
+    for marker in ["function renderEditor(", "edPage(", "edQuiz(", "edAssign(",
+                   "edGlossary(", "edChoice(", "edBook(", "edFeedback(",
+                   "material_bullets", "_inline_images", "overallfeedback"]:
+        assert marker in out, f"fehlt: {marker}"
+
+
 def test_size_fallback_disables_inline_images(spec):
     big = json.loads(json.dumps(spec))
     filler = {"type": "page", "name": "F", "content": "<p>" + "x" * 4000 + "</p>"}
     big["sections"].append({"name": "Bulk", "activities": [dict(filler) for _ in range(120)]})
     out = build_widget(big)
-    assert len(out) <= MAX_WIDGET_CHARS or "_inline_images" not in out
+    embedded = json.dumps(extract_embedded(out))
+    assert len(out) <= MAX_WIDGET_CHARS or "_inline_images" not in embedded
