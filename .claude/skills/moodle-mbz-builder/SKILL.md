@@ -193,6 +193,11 @@ Nach der Kurs-Generierung (fertige `course.json`) zeige dem Autor den Kurs im
 2. `python <skill-dir>/scripts/build_editor_widget.py course.json -o editor.html`
 3. Rendere den Datei-Inhalt via `mcp__visualize__show_widget`
    (title: `mbz_course_editor_<shortname>`).
+4. **Erzeuge IMMER auch die Lese-Vorschau und liefere sie mit** (sie ist billig
+   und das Standard-Review-Werkzeug — nicht erst bei `finalize`):
+   `python <skill-dir>/scripts/preview_mbz.py course.json -o <kurs>_vorschau.html`,
+   dann als Datei an den User senden (render). Nach jedem `save`/`ai_assist`
+   mit inhaltlichen Änderungen: Vorschau mit-regenerieren.
 
 Der Autor editiert lokal (Struktur + Felder). Aktionen erreichen dich als
 Nachricht `Kurs-Editor-Aktion:` mit einem JSON-Envelope:
