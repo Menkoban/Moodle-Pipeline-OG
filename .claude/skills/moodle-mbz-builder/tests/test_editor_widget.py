@@ -58,6 +58,20 @@ def test_field_editors_cover_types(spec):
         assert marker in out, f"fehlt: {marker}"
 
 
+def test_ai_assist_wiring(spec):
+    out = build_widget(spec)
+    for marker in ["AI_PRESETS", "renderAiRow(", "'ai_assist'",
+                   "Neu schreiben", "Diagramm neu generieren", "Frage ergänzen",
+                   "Rubrik generieren", "Begriffe ergänzen", "Eigener KI-Auftrag"]:
+        assert marker in out, f"fehlt: {marker}"
+
+
+def test_envelope_actions_present(spec):
+    out = build_widget(spec)
+    for a in ["'save'", "'finalize'", "'video_recap'"]:
+        assert a in out
+
+
 def test_size_fallback_disables_inline_images(spec):
     big = json.loads(json.dumps(spec))
     filler = {"type": "page", "name": "F", "content": "<p>" + "x" * 4000 + "</p>"}

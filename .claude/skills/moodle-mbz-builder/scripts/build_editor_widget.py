@@ -301,9 +301,29 @@ function renderEditor(si,ai,el){
   else if(a.type==='forum')simpleField(a,el,'forumtype','Forumtyp (general/news/qanda/eachuser/single)');
   renderAiRow(a,el,si,ai);
 }
-function renderAiRow(a,el,si,ai){}
-/*__EDITORS__*/
-/*__ACTIONS__*/
+const AI_PRESETS={
+  page:[["pencil","Neu schreiben","Schreibe den Inhalt dieser Seite komplett neu: gleiche Kernaussagen, bessere Didaktik."],
+        ["cut","Kürzen","Kürze den Inhalt dieser Seite auf das Wesentliche (ca. 60% der Länge)."],
+        ["wand","Vereinfachen","Vereinfache die Sprache dieser Seite auf A2/B1-Niveau, kurze Sätze."],
+        ["pin","Merke-Box ergänzen","Ergänze am Ende eine prägnante Merke-Box mit den 3 wichtigsten Punkten."],
+        ["photo","Diagramm neu generieren","Erzeuge das eingebettete SVG-Diagramm dieser Seite neu (klarer, korrekt beschriftet, deutsch)."]],
+  quiz:[["plus","Frage ergänzen","Ergänze eine weitere lernzielorientierte Frage mit vollständigem formativem Feedback."],
+        ["target","Distraktoren verbessern","Verbessere die falschen Antwortoptionen: plausible, auf echten Fehlvorstellungen basierende Distraktoren."],
+        ["message","Feedback schreiben","Schreibe für jede Antwort dieser Fragen ein kurzes, erklärendes Feedback."]],
+  assign:[["target","Auftrag schärfen","Schärfe den Arbeitsauftrag: konkrete Schritte, messbares Handlungsprodukt, klare Abgabe."],
+          ["chart-bar","Rubrik generieren","Erstelle eine transparente Bewertungsrubrik (Kriterien mal Niveaus) und füge sie dem Auftragstext hinzu."]],
+  glossary:[["plus","Begriffe ergänzen","Ergänze 5 weitere zentrale Fachbegriffe dieses Kurses mit lernendengerechten Definitionen."]]};
+function renderAiRow(a,el,si,ai){
+  const row=document.createElement('div');row.className='ai-row';
+  (AI_PRESETS[a.type]||[]).forEach(function(p){
+    const b=document.createElement('button');b.innerHTML=icon(p[0])+' '+p[1]+' ↗';
+    b.addEventListener('click',function(){send('ai_assist',{target:{section:si,activity:ai},instruction:p[2]});});
+    row.appendChild(b);});
+  const inp=document.createElement('input');inp.placeholder='Eigener KI-Auftrag für diesen Baustein';inp.style.flex='1';inp.style.minWidth='170px';
+  const go=document.createElement('button');go.innerHTML=icon('robot')+' Ausführen ↗';
+  go.addEventListener('click',function(){if(inp.value.trim())send('ai_assist',{target:{section:si,activity:ai},instruction:inp.value.trim()});});
+  row.appendChild(inp);row.appendChild(go);el.appendChild(row);
+}
 render();
 return {send:send,addSection:addSection};
 })();
