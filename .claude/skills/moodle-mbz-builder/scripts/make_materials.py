@@ -173,6 +173,14 @@ def main():
     os.makedirs(matdir, exist_ok=True)
     spec = json.load(open(args.course_json, encoding="utf-8"))
 
+    # Check embedded SVG diagrams BEFORE rasterising them into PDF/PPTX, so a
+    # clipped/overlapping diagram is caught before it is baked into materials.
+    try:
+        import validate_svg
+        validate_svg.check_course_svgs(spec, base)
+    except Exception as e:  # noqa: BLE001
+        print(f"NOTE: SVG diagram check skipped ({e}).", file=sys.stderr)
+
     pdfs, pptxs = [], []
     for sec in spec["sections"]:
         new_acts = []

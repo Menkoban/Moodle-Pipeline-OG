@@ -79,6 +79,24 @@ file. This generator already **bundles** those templates for the common types
 write a JSON course definition. You only need a *new* template if you want an
 activity type that isn't yet covered (see "Extending" below).
 
+## Setup (once, after copying the skill)
+
+The skill is self-contained: everything travels in this folder. Install the
+Python dependencies once so the material pipeline **and the automatic diagram
+quality check** work:
+
+```bash
+python -m pip install -r <skill-dir>/requirements.txt
+```
+
+Diagram QA is built in and runs automatically — `make_materials.py` and
+`build_mbz.py` lint every embedded SVG (clipping, overlaps, `<tspan>` traps, tofu
+glyphs, lines crossing labels, text spilling out of its box) on every run, so a
+broken diagram cannot ship unnoticed. If the dependencies above are missing,
+`build_mbz.py` still builds but prints `NOTE: SVG diagram check skipped` — install
+them to keep the check active. No paths are hard-coded; the scripts find each
+other relative to the skill folder wherever it is installed.
+
 ## Quick start
 
 1. Write a course definition JSON. Minimal example:
@@ -97,7 +115,28 @@ activity type that isn't yet covered (see "Extending" below).
 
 2. **Auto-generate downloadable materials** (PDF + PowerPoint per Infoblatt) and
    wire them into the course. Mark each Infoblatt page with `"material": true`
-   (see "Downloadable materials" below), then run:
+   (see "Downloadable materials" below).
+
+   **First, if the course embeds any hand-authored SVG diagrams, lint and
+   auto-fit them** — this prevents clipped edges and overlapping labels (the
+   diagrams flow into the course, PDF and PPTX, so fix them once, up front):
+
+```bash
+python <skill-dir>/scripts/autofit_svg.py  course.json          # grow each viewBox to fit its content
+python <skill-dir>/scripts/validate_svg.py course.json --strict # measure text: catch overflow, overlap, styled <tspan>
+```
+
+   `autofit_svg.py` measures real text widths and enlarges each `viewBox` (and
+   its background rect) so nothing is clipped; `validate_svg.py` reports any
+   remaining overlaps, styling `<tspan>` traps, tofu glyphs, or lines crossing a
+   label. Both accept `.svg` files, a directory, or a `course.json`.
+
+   You still run `autofit_svg.py` yourself (it *edits* the SVGs). The **check**
+   also runs **automatically**: `make_materials.py` lints the diagrams before
+   rasterising them, and `build_mbz.py` lints them on every build (warn-only by
+   default; add `--strict-svg` to abort on defects, `--no-svg-check` to skip). So
+   a broken diagram cannot ship unnoticed even if you forget this step. Then
+   generate the materials:
 
 ```bash
 python <skill-dir>/scripts/make_materials.py course.json -o course.materialized.json
@@ -313,3 +352,8 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
 - `references/activity-types.md` — per-activity-type field schemas and source
   pointers; read before adding or editing an activity type.
 - `references/course-spec.md` — the JSON course-definition schema.
+- `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
+  text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
+  labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Run on
+  `.svg`, a folder, or a `course.json` before `make_materials.py`. See the
+  "SVG-Autorenregeln" section of `references/course-design.md`.
