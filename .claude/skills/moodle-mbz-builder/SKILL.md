@@ -392,6 +392,9 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
 - `references/activity-types.md` — per-activity-type field schemas and source
   pointers; read before adding or editing an activity type.
 - `references/course-spec.md` — the JSON course-definition schema.
+- `references/notebooklm-video-recap.md` — Best-Effort-Workflow für die
+  automatische Videozusammenfassung (NotebookLM) inkl.
+  `export_course_dossier.py`; Grundlage des Folgeprojekts.
 - `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
   text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
   labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Run on
