@@ -1530,12 +1530,35 @@ def main(argv=None) -> int:
         default="https://moodle.example.edu",
         help="Original site URL recorded in the backup metadata",
     )
+    p.add_argument(
+        "--strict-svg", action="store_true",
+        help="abort the build if an embedded SVG diagram has defects",
+    )
+    p.add_argument(
+        "--no-svg-check", action="store_true",
+        help="skip the automatic SVG diagram check",
+    )
     args = p.parse_args(argv)
 
     with open(args.spec, encoding="utf-8") as fh:
         spec = json.load(fh)
     if "filename" not in spec:
         spec["filename"] = os.path.basename(args.output)
+
+    # Automatically check embedded SVG diagrams for clipping / overlaps / tspan
+    # traps / tofu glyphs / lines crossing labels, so no build ships a broken
+    # diagram unnoticed. Degrades gracefully if the SVG toolchain is absent.
+    if not args.no_svg_check:
+        try:
+            import validate_svg  # same scripts/ dir
+            validate_svg.check_course_svgs(
+                spec, os.path.dirname(os.path.abspath(args.spec)),
+                strict=args.strict_svg)
+        except SystemExit:
+            raise
+        except Exception as e:  # noqa: BLE001 - optional dependency (reportlab)
+            print(f"NOTE: SVG diagram check skipped ({e}). "
+                  f"Install reportlab to enable it.", file=sys.stderr)
 
     # Third-party course formats (e.g. tiles) ship their own backup/restore
     # handler that expects plugin-specific data this generator does not produce;

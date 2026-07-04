@@ -79,6 +79,24 @@ file. This generator already **bundles** those templates for the common types
 write a JSON course definition. You only need a *new* template if you want an
 activity type that isn't yet covered (see "Extending" below).
 
+## Setup (once, after copying the skill)
+
+The skill is self-contained: everything travels in this folder. Install the
+Python dependencies once so the material pipeline **and the automatic diagram
+quality check** work:
+
+```bash
+python -m pip install -r <skill-dir>/requirements.txt
+```
+
+Diagram QA is built in and runs automatically — `make_materials.py` and
+`build_mbz.py` lint every embedded SVG (clipping, overlaps, `<tspan>` traps, tofu
+glyphs, lines crossing labels, text spilling out of its box) on every run, so a
+broken diagram cannot ship unnoticed. If the dependencies above are missing,
+`build_mbz.py` still builds but prints `NOTE: SVG diagram check skipped` — install
+them to keep the check active. No paths are hard-coded; the scripts find each
+other relative to the skill folder wherever it is installed.
+
 ## Quick start
 
 1. Write a course definition JSON. Minimal example:
@@ -97,7 +115,28 @@ activity type that isn't yet covered (see "Extending" below).
 
 2. **Auto-generate downloadable materials** (PDF + PowerPoint per Infoblatt) and
    wire them into the course. Mark each Infoblatt page with `"material": true`
-   (see "Downloadable materials" below), then run:
+   (see "Downloadable materials" below).
+
+   **First, if the course embeds any hand-authored SVG diagrams, lint and
+   auto-fit them** — this prevents clipped edges and overlapping labels (the
+   diagrams flow into the course, PDF and PPTX, so fix them once, up front):
+
+```bash
+python <skill-dir>/scripts/autofit_svg.py  course.json          # grow each viewBox to fit its content
+python <skill-dir>/scripts/validate_svg.py course.json --strict # measure text: catch overflow, overlap, styled <tspan>
+```
+
+   `autofit_svg.py` measures real text widths and enlarges each `viewBox` (and
+   its background rect) so nothing is clipped; `validate_svg.py` reports any
+   remaining overlaps, styling `<tspan>` traps, tofu glyphs, or lines crossing a
+   label. Both accept `.svg` files, a directory, or a `course.json`.
+
+   You still run `autofit_svg.py` yourself (it *edits* the SVGs). The **check**
+   also runs **automatically**: `make_materials.py` lints the diagrams before
+   rasterising them, and `build_mbz.py` lints them on every build (warn-only by
+   default; add `--strict-svg` to abort on defects, `--no-svg-check` to skip). So
+   a broken diagram cannot ship unnoticed even if you forget this step. Then
+   generate the materials:
 
 ```bash
 python <skill-dir>/scripts/make_materials.py course.json -o course.materialized.json
@@ -144,6 +183,68 @@ every build — deliver the preview together with the `.mbz`.
 
 A full demo spec covering every supported type lives at
 `assets/example_course.json` — build it to see all types at once.
+
+## Interaktiver Kurs-Editor (Widget) — Standard-Schritt vor dem Build
+
+Nach der Kurs-Generierung (fertige `course.json`) zeige dem Autor den Kurs im
+**bearbeitbaren Widget**, bevor du die `.mbz` baust. Das Widget ist die
+**bearbeitbare Vorschau**: Es rendert den Kurs in Vorschau-Optik (Titel +
+Meta-Zeile, Abschnitts-Kacheln, Diagramme **inline im Inhalt**, Quiz mit
+Antworten und Feedback) und macht genau diese Ansicht direkt editierbar
+(WYSIWYG). Inline-Diagramme sind als `svgwrap`-Marker geschützt und werden
+beim Senden automatisch zurück zu `@@PLUGINFILE@@`-`img`-Tags serialisiert —
+das Kurs-HTML bleibt sauber:
+
+1. Rufe einmalig `mcp__visualize__read_me` (`modules: ["interactive"]`) auf (still).
+2. `python <skill-dir>/scripts/build_editor_widget.py course.json -o editor.html`
+3. Rendere den Datei-Inhalt via `mcp__visualize__show_widget`
+   (title: `mbz_course_editor_<shortname>`).
+4. **Erzeuge IMMER auch die Lese-Vorschau und liefere sie mit** (sie ist billig
+   und das Standard-Review-Werkzeug — nicht erst bei `finalize`):
+   `python <skill-dir>/scripts/preview_mbz.py course.json -o <kurs>_vorschau.html`,
+   dann als Datei an den User senden (render). Nach jedem `save`/`ai_assist`
+   mit inhaltlichen Änderungen: Vorschau mit-regenerieren.
+
+Der Autor editiert lokal (Struktur + Felder). Aktionen erreichen dich als
+Nachricht `Kurs-Editor-Aktion:` mit einem JSON-Envelope:
+`{widget:"mbz-course-editor", action, course, target?, instruction?}` —
+`course` ist IMMER der vollständige aktuelle Kursstand (ohne `_`-Keys; Bilder
+bleiben Pfad-Referenzen).
+
+**Handler je `action`:**
+- `save` — Envelope-`course` als `course.json` speichern (überschreiben),
+  kurz plausibilisieren (JSON-Struktur, Pflichtfelder), Widget aus der neuen
+  Datei regenerieren und erneut rendern. KEIN Build.
+- `ai_assist` — `target` = `{section, activity}`-Indizes. Führe `instruction`
+  auf genau diesem Baustein aus (Text/Fragen/SVG generieren und in die
+  Kursdefinition einsetzen — bei SVG: neue Datei schreiben und
+  `autofit_svg.py`/`validate_svg.py` laufen lassen, Pfad in `images` aktuell
+  halten). Dann wie bei `save`: speichern, regenerieren, rendern.
+  **Nur `{section}` (ohne `activity`)** = Abschnitts-Auftrag: auf den ganzen
+  Abschnitt anwenden (z. B. neue Aktivität hineingenerieren, Abschnitt
+  überarbeiten).
+- `quality_check` — kursweiter Konsistenz-Check auf dem Envelope-Stand:
+  (a) Constructive Alignment: Lernziele ↔ Testfragen ↔ Praxisauftrag decken
+  sich (Verb-Konsistenz!), (b) Pflicht-Sequenz vollständig (Einführung /
+  Vertiefung / Anwendung / Recap), (c) Zeitbudget ~25 Wörter/Lernminute je
+  Abschnitt, (d) Infoblatt-Bauplan (Fließtext ≥120 Wörter, Diagramm, Merke),
+  (e) Feedback-Vollständigkeit in Quizzes. Befunde kompakt je Baustein im Chat
+  melden, konkrete Fixes vorschlagen und auf Wunsch als `ai_assist` anwenden.
+  KEIN Build.
+- `finalize` — volle Pipeline auf dem Envelope-Stand: `autofit_svg` →
+  `validate_svg --strict` → `make_materials` → `build_mbz` → `validate_mbz` →
+  `preview_mbz`. Deliverables (.mbz + Vorschau) an den User geben.
+- `video_recap` — NotebookLM-Flow (siehe
+  `references/notebooklm-video-recap.md`); falls in der Session nicht möglich
+  (kein Browser-Zugriff / User nicht eingeloggt), erkläre den Stand und lass
+  den Platzhalter im Kurs.
+
+**Fehlerfälle:** Unparsebarer Envelope → letzte gültige `course.json` behalten,
+Widget daraus neu rendern und den Fehler im Chat erklären. Schlägt `finalize`
+in einem Validator fehl → eindeutige Defekte beheben, sonst Widget mit Hinweis
+auf den betroffenen Baustein neu rendern.
+
+Zwischenstände bauen NIE eine `.mbz` — nur `finalize` tut das.
 
 ## Supported activity types
 
@@ -313,3 +414,11 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
 - `references/activity-types.md` — per-activity-type field schemas and source
   pointers; read before adding or editing an activity type.
 - `references/course-spec.md` — the JSON course-definition schema.
+- `references/notebooklm-video-recap.md` — Best-Effort-Workflow für die
+  automatische Videozusammenfassung (NotebookLM) inkl.
+  `export_course_dossier.py`; Grundlage des Folgeprojekts.
+- `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
+  text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
+  labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Run on
+  `.svg`, a folder, or a `course.json` before `make_materials.py`. See the
+  "SVG-Autorenregeln" section of `references/course-design.md`.

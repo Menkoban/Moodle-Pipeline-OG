@@ -163,6 +163,56 @@ auto-generierten PDF/PPTX; ohne werden sie aus dem Content extrahiert).
 - **Keine Fotos generieren** – wenn echte Fotos nötig sind, Platzhalter mit
   Bildprompt setzen; der Autor/die Lehrkraft ersetzt sie später.
 
+### SVG-Autorenregeln (gegen abgeschnittene Ränder & Überlappungen)
+
+Hand-gezeichnetes SVG hat zwei typische Defekte, weil man Textbreiten beim
+Schreiben nur schätzt: Inhalt wird am `viewBox`-Rand **abgeschnitten** oder
+Beschriftungen **überlappen** und verdecken sich. Halte diese Regeln ein – und
+prüfe sie danach automatisch (nicht nur per Augenschein):
+
+- **Kein Styling-`<tspan>` innerhalb eines `<text>`** (z. B. `<tspan
+  font-weight="bold">…</tspan>` ohne eigenes `x`). svglib rückt den x-Cursor
+  über `<tspan>` **nicht** weiter → der fette Teil landet auf dem folgenden Text
+  („eibfaidhe genau EIN Weg"). Nutze **getrennte `<text>`-Elemente** oder mach
+  das ganze `<text>` fett.
+- **Lange Beschriftungen in eine Legenden-Box**, nicht als frei schwebende
+  Leader-Line-Labels am Rand – Legenden lassen sich bündig setzen und laufen
+  nicht aus dem Rahmen. Kurze **Tags** (B1, S2, …) direkt ans Objekt.
+- **Innenrand einhalten:** mind. ~10 px Abstand von Text zum `viewBox`-Rand.
+- **Text muss in seine Box passen** (Merke-/Legenden-Kästen): einzeiliger SVG-Text
+  bricht nicht um; ist er breiter als das Rechteck, läuft er rechts heraus (der
+  Kasten wächst NICHT mit, `autofit` vergrößert nur die viewBox). Box breit genug
+  zeichnen, Text kürzen **oder** auf zwei `<text>`-Zeilen umbrechen und die Box
+  höher machen. `validate_svg.py` meldet Text, der aus seiner umschließenden Box läuft.
+- **Dekorative Linien und Pfeile nicht durch Beschriftungen legen** (z. B. ein
+  Rotations- oder Leserichtungs-Pfeil quer durch ein Label). Beschriftungslinien
+  dürfen *am* Text enden, aber nicht hindurchlaufen. `validate_svg.py` meldet
+  Linien **und gekrümmte Pfade** (Q/C-Kurven, Bögen — typisch: Rotationspfeile),
+  die einen Text kreuzen (Leader, die am Text enden, sind ausgenommen), sowie
+  **gefüllte Polygone** (Pfeilspitzen), die ein Label überdecken (SHAPE-Check).
+- **Renderpfad:** svglib → `renderPDF` (so rendert der Skill); das `rlPyCairo`-
+  Backend von `renderPM` ist nicht installiert – nicht darauf verlassen.
+- **Keine Sonderzeichen-Glyphen in SVG-`<text>`**, die die Helvetica-Basisschrift
+  nicht hat (⚠ ✅ ⛔ Emoji) oder kombinierende Diakritika (Überstrich für
+  Negation) – sie werden im gerasterten PDF/PPTX zu leeren Kästchen. **Zeichne**
+  sie stattdessen (z. B. Negationsstrich als `<line>` über dem Signal), oder lass
+  das Symbol weg. Pfeile (→ ↑) und der Malpunkt · rendern dagegen. `validate_svg.py`
+  warnt vor riskanten Glyphen.
+
+**Pflicht-Prüfung (deterministisch, misst echte Textbreiten):**
+
+```bash
+python <skill-dir>/scripts/autofit_svg.py   assets/          # wächst viewBox passgenau -> nie mehr abgeschnitten
+python <skill-dir>/scripts/validate_svg.py  assets/ --strict # findet Überlappungen + Styling-tspan
+```
+
+`autofit_svg.py` löst das Abschneiden **strukturell** (viewBox umschließt den
+gemessenen Inhalt inkl. Text + Rand; Hintergrund-Rechteck wächst mit).
+`validate_svg.py` meldet verbleibende Überlappungen und tspan-Fallen. Beide
+akzeptieren einzelne `.svg`, einen Ordner **oder** eine `course.json` (prüft
+alle referenzierten Diagramme). Führe sie aus, **bevor** du `make_materials.py`
+startest – dann sind die Diagramme in Kurs, PDF und PPTX gleichermaßen korrekt.
+
 ---
 
 ## 7. Lernziele, Handlungssituation, Praxisauftrag, Feedback (Schreibmuster)
@@ -205,11 +255,19 @@ PDFs + PPTX in der verborgenen Lehrkräfte-Sektion.
 
 **Pipeline (Standard für jeden Kurs):**
 ```
+autofit_svg.py   assets/                                     # viewBox passgenau -> kein Clipping
+validate_svg.py  course.json --strict                        # Überlappungen/tspan finden (vor make_materials!)
 make_materials.py course.json -o course.materialized.json   # PDF/PPTX + Einhängen
 build_mbz.py     course.materialized.json -o course.mbz --wwwroot ...
 validate_mbz.py  course.mbz
 preview_mbz.py   course.materialized.json -o course_vorschau.html
 ```
+Die beiden SVG-Schritte laufen **zuerst**, damit die (korrigierten) Diagramme in
+Kurs, PDF und PPTX identisch stimmen. `autofit_svg.py` musst du selbst ausführen
+(es *ändert* die SVGs); die **Prüfung** läuft zusätzlich **automatisch** in
+`make_materials.py` (vor dem Rastern) und `build_mbz.py` (jeder Build, nur Warnung;
+`--strict-svg` bricht ab, `--no-svg-check` überspringt) – ein defektes Diagramm
+rutscht also auch dann nicht durch, wenn man den Schritt vergisst.
 Die einzige Material-Ausnahme: die **Videozusammenfassung** (NotebookLM-Platzhalter,
 bewusst nicht generiert). Liefere immer `.mbz` **und** die HTML-Vorschau aus.
 
@@ -242,7 +300,7 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 2. Authentische Handlungssituation + klares Handlungsprodukt.
 3. Sequenz Einführung → Grundlagen → Vertiefung → Anwendung → Recap erkennbar.
 4. Jedes Infoblatt nach Bauplan: Einleitung + **Erklär-Fließtext (≥120–200 Wörter, Was/Wie/Warum)** + Diagramm + Stichpunkte + Merke. Kein „Bild + ein Satz".
-5. Diagramme als eingebettete Bilddateien (kein inline-SVG); Stil passend zum Inhalt.
+5. Diagramme als eingebettete Bilddateien (kein inline-SVG); Stil passend zum Inhalt. **`autofit_svg.py` + `validate_svg.py --strict` grün** (kein Clipping, keine Überlappung, kein Styling-tspan).
 6. Praxisauftrag mit Vorgehen **und** transparenter Rubrik.
 7. Formative Tests: mehrere Versuche, Antwort-Feedback + allgemeines Feedback + Gesamtfeedback.
 8. Glossar mit echten Begriffen; Forum mit klarer Aufgabe.
