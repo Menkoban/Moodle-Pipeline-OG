@@ -184,10 +184,12 @@ prüfe sie danach automatisch (nicht nur per Augenschein):
   Kasten wächst NICHT mit, `autofit` vergrößert nur die viewBox). Box breit genug
   zeichnen, Text kürzen **oder** auf zwei `<text>`-Zeilen umbrechen und die Box
   höher machen. `validate_svg.py` meldet Text, der aus seiner umschließenden Box läuft.
-- **Dekorative Linien nicht durch Beschriftungen legen** (z. B. ein Leserichtungs-
-  Pfeil quer durch „oben/unten"). Beschriftungslinien dürfen *am* Text enden, aber
-  nicht hindurchlaufen. `validate_svg.py` meldet Linien, die einen Text kreuzen
-  (Leader-Linien, die am Text enden, werden ausgenommen).
+- **Dekorative Linien und Pfeile nicht durch Beschriftungen legen** (z. B. ein
+  Rotations- oder Leserichtungs-Pfeil quer durch ein Label). Beschriftungslinien
+  dürfen *am* Text enden, aber nicht hindurchlaufen. `validate_svg.py` meldet
+  Linien **und gekrümmte Pfade** (Q/C-Kurven, Bögen — typisch: Rotationspfeile),
+  die einen Text kreuzen (Leader, die am Text enden, sind ausgenommen), sowie
+  **gefüllte Polygone** (Pfeilspitzen), die ein Label überdecken (SHAPE-Check).
 - **Renderpfad:** svglib → `renderPDF` (so rendert der Skill); das `rlPyCairo`-
   Backend von `renderPM` ist nicht installiert – nicht darauf verlassen.
 - **Keine Sonderzeichen-Glyphen in SVG-`<text>`**, die die Helvetica-Basisschrift
