@@ -92,6 +92,13 @@ def test_wysiwyg_preview_combination(spec):
     assert "Änderung via KI-Auftrag" not in out
 
 
+def test_section_level_editing_ai_and_quality_check(spec):
+    out = build_widget(spec)
+    for marker in ["Abschnitts-Beschreibung", "renderSecAiRow(", "'quality_check'",
+                   "<optgroup", "Arbeitsmaterial", "nu.completion=1"]:
+        assert marker in out, f"fehlt: {marker}"
+
+
 def test_size_fallback_disables_inline_images(spec):
     big = json.loads(json.dumps(spec))
     filler = {"type": "page", "name": "F", "content": "<p>" + "x" * 4000 + "</p>"}

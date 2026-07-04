@@ -58,6 +58,7 @@ TEMPLATE = r"""<h2 class="sr-only" style="position:absolute;left:-9999px">Bearbe
   <span id="dirty-badge" style="display:none;font-size:12px;background:var(--bg-warning);color:var(--text-warning);padding:2px 10px;border-radius:var(--radius)">ungespeichert</span>
   <span style="flex:1"></span>
   <button onclick="ED.send('save')"><i class="ti ti-device-floppy" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Speichern ↗</button>
+  <button onclick="ED.send('quality_check')"><i class="ti ti-checklist" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Konsistenz prüfen ↗</button>
   <button onclick="ED.send('video_recap')"><i class="ti ti-movie" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Video-Recap ↗</button>
   <button onclick="ED.send('finalize')"><i class="ti ti-package-export" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Fertigstellen → .mbz ↗</button>
 </div>
@@ -116,6 +117,7 @@ function moveAct(si,ai,d){const a=secs()[si].activities,j=ai+d;if(j<0||j>=a.leng
 function delAct(si,ai){const a=secs()[si].activities;if(!confirm('Aktivität "'+(a[ai].name||a[ai].type)+'" löschen?'))return;a.splice(ai,1);setDirty(true);render();}
 function addActivity(si,type){const a=secs()[si].activities=secs()[si].activities||[];
   const nu={type:type,name:"Neue "+(TLABEL[type]||type)};
+  if(type!=="label")nu.completion=1;
   if(type==="page")nu.content="<p></p>";if(type==="quiz")nu.questions=[];
   if(type==="glossary")nu.entries=[];if(type==="choice")nu.options=[];
   if(type==="folder")nu.files=[];if(type==="book")nu.chapters=[];
@@ -140,6 +142,12 @@ function render(){
       +'<button class="mini" data-op="secdel" aria-label="Abschnitt löschen">'+icon('trash')+'</button></div>'
       +'<div class="sec-b" style="display:'+(open.sec[si]?'block':'none')+'"></div>';
     const body=sd.querySelector('.sec-b');
+    if(open.sec[si]){
+      const sumRow=document.createElement('div');sumRow.className='act';
+      sumRow.innerHTML='<div class="fld"><label>Abschnitts-Beschreibung</label>'+rich(sec.summary)+'</div>';
+      sumRow.querySelector('.rich').addEventListener('input',function(){sec.summary=serializeRich(this);setDirty(true);});
+      body.appendChild(sumRow);
+    }
     (sec.activities||[]).forEach(function(act,ai){
       const key=si+'_'+ai;
       const ad=document.createElement('div');ad.className='act';ad.dataset.si=si;ad.dataset.ai=ai;
@@ -153,11 +161,29 @@ function render(){
       body.appendChild(ad);
     });
     const addRow=document.createElement('div');addRow.className='act';
-    addRow.innerHTML='<select data-role="addtype">'+TYPES.map(function(t){return '<option value="'+t+'">'+TLABEL[t]+'</option>';}).join('')+'</select> '
-      +'<button data-op="actadd">'+icon('plus')+' Aktivität</button>';
+    const MAT=["label","page","url","resource","folder","book"];
+    function opts(list){return list.map(function(t){return '<option value="'+t+'">'+TLABEL[t]+'</option>';}).join('');}
+    addRow.innerHTML='<label style="font-size:12px;color:var(--text-secondary);margin-right:6px">Neu hinzufügen:</label>'
+      +'<select data-role="addtype"><optgroup label="Arbeitsmaterial">'+opts(MAT)+'</optgroup>'
+      +'<optgroup label="Aktivität">'+opts(TYPES.filter(function(t){return MAT.indexOf(t)<0;}))+'</optgroup></select> '
+      +'<button data-op="actadd">'+icon('plus')+' Hinzufügen</button>';
     body.appendChild(addRow);
+    if(open.sec[si])renderSecAiRow(sec,si,body);
     root.appendChild(sd);
   });
+}
+function renderSecAiRow(sec,si,container){
+  const row=document.createElement('div');row.className='act ai-row';row.style.marginTop='0';
+  [["sparkles","Neue Aktivität generieren","Erzeuge eine weitere didaktisch passende Aktivität für diesen Abschnitt (Typ begründet wählen) und füge sie ein."],
+   ["refresh","Abschnitt überarbeiten","Überarbeite alle Aktivitäten dieses Abschnitts: klarere Sprache, stimmige Progression, Feedback vervollständigen."]]
+  .forEach(function(p){
+    const b=document.createElement('button');b.innerHTML=icon(p[0])+' '+p[1]+' ↗';
+    b.addEventListener('click',function(){send('ai_assist',{target:{section:si},instruction:p[2]});});
+    row.appendChild(b);});
+  const inp=document.createElement('input');inp.placeholder='Eigener KI-Auftrag für diesen Abschnitt';inp.style.flex='1';inp.style.minWidth='170px';
+  const go=document.createElement('button');go.innerHTML=icon('robot')+' Ausführen ↗';
+  go.addEventListener('click',function(){if(inp.value.trim())send('ai_assist',{target:{section:si},instruction:inp.value.trim()});});
+  row.appendChild(inp);row.appendChild(go);container.appendChild(row);
 }
 document.getElementById('mbz-editor').addEventListener('click',function(e){
   const btn=e.target.closest('[data-op]');

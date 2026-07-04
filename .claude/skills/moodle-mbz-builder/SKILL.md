@@ -220,6 +220,17 @@ bleiben Pfad-Referenzen).
   Kursdefinition einsetzen — bei SVG: neue Datei schreiben und
   `autofit_svg.py`/`validate_svg.py` laufen lassen, Pfad in `images` aktuell
   halten). Dann wie bei `save`: speichern, regenerieren, rendern.
+  **Nur `{section}` (ohne `activity`)** = Abschnitts-Auftrag: auf den ganzen
+  Abschnitt anwenden (z. B. neue Aktivität hineingenerieren, Abschnitt
+  überarbeiten).
+- `quality_check` — kursweiter Konsistenz-Check auf dem Envelope-Stand:
+  (a) Constructive Alignment: Lernziele ↔ Testfragen ↔ Praxisauftrag decken
+  sich (Verb-Konsistenz!), (b) Pflicht-Sequenz vollständig (Einführung /
+  Vertiefung / Anwendung / Recap), (c) Zeitbudget ~25 Wörter/Lernminute je
+  Abschnitt, (d) Infoblatt-Bauplan (Fließtext ≥120 Wörter, Diagramm, Merke),
+  (e) Feedback-Vollständigkeit in Quizzes. Befunde kompakt je Baustein im Chat
+  melden, konkrete Fixes vorschlagen und auf Wunsch als `ai_assist` anwenden.
+  KEIN Build.
 - `finalize` — volle Pipeline auf dem Envelope-Stand: `autofit_svg` →
   `validate_svg --strict` → `make_materials` → `build_mbz` → `validate_mbz` →
   `preview_mbz`. Deliverables (.mbz + Vorschau) an den User geben.
