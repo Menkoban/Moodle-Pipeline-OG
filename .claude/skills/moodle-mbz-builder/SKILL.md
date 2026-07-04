@@ -184,6 +184,46 @@ every build — deliver the preview together with the `.mbz`.
 A full demo spec covering every supported type lives at
 `assets/example_course.json` — build it to see all types at once.
 
+## Interaktiver Kurs-Editor (Widget) — Standard-Schritt vor dem Build
+
+Nach der Kurs-Generierung (fertige `course.json`) zeige dem Autor den Kurs im
+**bearbeitbaren Widget**, bevor du die `.mbz` baust:
+
+1. Rufe einmalig `mcp__visualize__read_me` (`modules: ["interactive"]`) auf (still).
+2. `python <skill-dir>/scripts/build_editor_widget.py course.json -o editor.html`
+3. Rendere den Datei-Inhalt via `mcp__visualize__show_widget`
+   (title: `mbz_course_editor_<shortname>`).
+
+Der Autor editiert lokal (Struktur + Felder). Aktionen erreichen dich als
+Nachricht `Kurs-Editor-Aktion:` mit einem JSON-Envelope:
+`{widget:"mbz-course-editor", action, course, target?, instruction?}` —
+`course` ist IMMER der vollständige aktuelle Kursstand (ohne `_`-Keys; Bilder
+bleiben Pfad-Referenzen).
+
+**Handler je `action`:**
+- `save` — Envelope-`course` als `course.json` speichern (überschreiben),
+  kurz plausibilisieren (JSON-Struktur, Pflichtfelder), Widget aus der neuen
+  Datei regenerieren und erneut rendern. KEIN Build.
+- `ai_assist` — `target` = `{section, activity}`-Indizes. Führe `instruction`
+  auf genau diesem Baustein aus (Text/Fragen/SVG generieren und in die
+  Kursdefinition einsetzen — bei SVG: neue Datei schreiben und
+  `autofit_svg.py`/`validate_svg.py` laufen lassen, Pfad in `images` aktuell
+  halten). Dann wie bei `save`: speichern, regenerieren, rendern.
+- `finalize` — volle Pipeline auf dem Envelope-Stand: `autofit_svg` →
+  `validate_svg --strict` → `make_materials` → `build_mbz` → `validate_mbz` →
+  `preview_mbz`. Deliverables (.mbz + Vorschau) an den User geben.
+- `video_recap` — NotebookLM-Flow (siehe
+  `references/notebooklm-video-recap.md`); falls in der Session nicht möglich
+  (kein Browser-Zugriff / User nicht eingeloggt), erkläre den Stand und lass
+  den Platzhalter im Kurs.
+
+**Fehlerfälle:** Unparsebarer Envelope → letzte gültige `course.json` behalten,
+Widget daraus neu rendern und den Fehler im Chat erklären. Schlägt `finalize`
+in einem Validator fehl → eindeutige Defekte beheben, sonst Widget mit Hinweis
+auf den betroffenen Baustein neu rendern.
+
+Zwischenstände bauen NIE eine `.mbz` — nur `finalize` tut das.
+
 ## Supported activity types
 
 The `type` field of each activity selects a builder. Supported today:
