@@ -23,6 +23,7 @@ are ignored with the element flagged so callers can warn.
 """
 from __future__ import annotations
 
+import math
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
@@ -130,26 +131,124 @@ def _text_content(el: ET.Element) -> str:
     return "".join(parts)
 
 
-def _path_coords(d: str) -> tuple[list, list]:
-    """Best-effort Koordinaten eines path-``d``: pro Befehl nur die ECHTEN
-    Koordinaten einsammeln. Naives Zahlen-Paaren zaehlt bei ``A`` die Radien
-    und Flags als Punkte (ein ``A 62 62 0 0 1 725 175`` erzeugt sonst einen
-    Phantom-Punkt bei y=725 und blaeht die viewBox auf)."""
-    xs, ys = [], []
+def _arc_points(p0, rx, ry, rot_deg, laf, swf, p1, n=12):
+    """Sample-Punkte eines elliptischen Bogens (W3C endpoint->center)."""
+    x1, y1 = p0
+    x2, y2 = p1
+    if rx == 0 or ry == 0 or (x1, y1) == (x2, y2):
+        return [p1]
+    rx, ry = abs(rx), abs(ry)
+    phi = math.radians(rot_deg)
+    cp, sp = math.cos(phi), math.sin(phi)
+    dx, dy = (x1 - x2) / 2.0, (y1 - y2) / 2.0
+    x1p = cp * dx + sp * dy
+    y1p = -sp * dx + cp * dy
+    lam = x1p ** 2 / rx ** 2 + y1p ** 2 / ry ** 2
+    if lam > 1:
+        s = math.sqrt(lam)
+        rx *= s
+        ry *= s
+    den = rx * rx * y1p * y1p + ry * ry * x1p * x1p
+    num = rx * rx * ry * ry - den
+    co = math.sqrt(max(num, 0.0) / den) if den else 0.0
+    if laf == swf:
+        co = -co
+    cxp = co * rx * y1p / ry
+    cyp = -co * ry * x1p / rx
+    cx = cp * cxp - sp * cyp + (x1 + x2) / 2.0
+    cy = sp * cxp + cp * cyp + (y1 + y2) / 2.0
+
+    def ang(ux, uy, vx, vy):
+        d = math.hypot(ux, uy) * math.hypot(vx, vy)
+        a = math.acos(max(-1.0, min(1.0, (ux * vx + uy * vy) / d))) if d else 0.0
+        return -a if ux * vy - uy * vx < 0 else a
+
+    th1 = ang(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry)
+    dth = ang((x1p - cxp) / rx, (y1p - cyp) / ry,
+              (-x1p - cxp) / rx, (-y1p - cyp) / ry)
+    if not swf and dth > 0:
+        dth -= 2 * math.pi
+    elif swf and dth < 0:
+        dth += 2 * math.pi
+    out = []
+    for k in range(1, n + 1):
+        t = th1 + dth * k / n
+        out.append((cx + rx * math.cos(t) * cp - ry * math.sin(t) * sp,
+                    cy + rx * math.cos(t) * sp + ry * math.sin(t) * cp))
+    out[-1] = (x2, y2)
+    return out
+
+
+def _path_points(d: str) -> list:
+    """Geordnete Sample-Punkte eines path-``d`` (M/L/H/V/C/S/Q/T/A). Kurven
+    werden abgetastet, damit BBox UND Kreuzungs-Checks die echte Geometrie
+    sehen. Naives Zahlen-Paaren zaehlte bei ``A`` Radien und Flags als Punkte
+    (Phantom-Punkt bei y=725) und sah Kurvenbaeuche gar nicht."""
+    pts = []
+    cur = (0.0, 0.0)
+
+    def absol(rel, x, y):
+        return (cur[0] + x, cur[1] + y) if rel else (x, y)
+
     for cmd, body in re.findall(r"([MmLlHhVvCcSsQqTtAaZz])([^A-Za-z]*)", d):
         nums = [float(v) for v in re.findall(r"-?\d*\.?\d+(?:e-?\d+)?", body)]
-        u = cmd.upper()
-        if u == "A":
-            # Gruppen aus 7 Parametern: rx ry rot large-arc sweep x y
-            for i in range(6, len(nums), 7):
-                xs.append(nums[i - 1]); ys.append(nums[i])
+        u, rel = cmd.upper(), cmd.islower()
+        if u in ("M", "L", "T"):
+            for i in range(0, len(nums) - 1, 2):
+                cur = absol(rel, nums[i], nums[i + 1])
+                pts.append(cur)
         elif u == "H":
-            xs.extend(nums)
+            for v in nums:
+                cur = ((cur[0] + v) if rel else v, cur[1])
+                pts.append(cur)
         elif u == "V":
-            ys.extend(nums)
-        elif u != "Z":
-            xs.extend(nums[0::2]); ys.extend(nums[1::2])
-    return xs, ys
+            for v in nums:
+                cur = (cur[0], (cur[1] + v) if rel else v)
+                pts.append(cur)
+        elif u == "Q":
+            for i in range(0, len(nums) - 3, 4):
+                c = absol(rel, nums[i], nums[i + 1])
+                e = absol(rel, nums[i + 2], nums[i + 3])
+                p0 = cur
+                for k in range(1, 9):
+                    t = k / 8.0
+                    mt = 1 - t
+                    pts.append((mt * mt * p0[0] + 2 * mt * t * c[0] + t * t * e[0],
+                                mt * mt * p0[1] + 2 * mt * t * c[1] + t * t * e[1]))
+                cur = e
+        elif u in ("C", "S"):
+            step = 6 if u == "C" else 4
+            for i in range(0, len(nums) - step + 1, step):
+                if u == "C":
+                    c1 = absol(rel, nums[i], nums[i + 1])
+                    c2 = absol(rel, nums[i + 2], nums[i + 3])
+                    e = absol(rel, nums[i + 4], nums[i + 5])
+                else:
+                    c1 = cur
+                    c2 = absol(rel, nums[i], nums[i + 1])
+                    e = absol(rel, nums[i + 2], nums[i + 3])
+                p0 = cur
+                for k in range(1, 9):
+                    t = k / 8.0
+                    mt = 1 - t
+                    pts.append((mt ** 3 * p0[0] + 3 * mt * mt * t * c1[0]
+                                + 3 * mt * t * t * c2[0] + t ** 3 * e[0],
+                                mt ** 3 * p0[1] + 3 * mt * mt * t * c1[1]
+                                + 3 * mt * t * t * c2[1] + t ** 3 * e[1]))
+                cur = e
+        elif u == "A":
+            for i in range(0, len(nums) - 6, 7):
+                e = absol(rel, nums[i + 5], nums[i + 6])
+                pts.extend(_arc_points(cur, nums[i], nums[i + 1], nums[i + 2],
+                                       nums[i + 3], nums[i + 4], e))
+                cur = e
+    return pts
+
+
+def _path_coords(d: str) -> tuple[list, list]:
+    """xs/ys der gesampelten Pfad-Punkte (siehe ``_path_points``)."""
+    pts = _path_points(d)
+    return [p[0] for p in pts], [p[1] for p in pts]
 
 
 def _parse_translate(transform: str) -> tuple[float, float]:
@@ -234,13 +333,20 @@ def collect_boxes(root: ET.Element):
             pts = [float(v) for v in re.findall(r"-?\d*\.?\d+", el.get("points", ""))]
             xs, ys = pts[0::2], pts[1::2]
             if xs and ys:
+                shifted = [(x + tx, y + ty) for x, y in zip(xs, ys)]
+                if name == "polygon" and len(shifted) > 1:
+                    shifted.append(shifted[0])
                 boxes.append(Box(min(xs) + tx, min(ys) + ty,
-                                 max(xs) + tx, max(ys) + ty, name))
+                                 max(xs) + tx, max(ys) + ty, name,
+                                 extra={"pts": shifted}))
         elif name == "path":
-            xs, ys = _path_coords(el.get("d", ""))
-            if xs and ys:
-                boxes.append(Box(min(xs) + tx, min(ys) + ty,
-                                 max(xs) + tx, max(ys) + ty, "path"))
+            pts = _path_points(el.get("d", ""))
+            if pts:
+                shifted = [(x + tx, y + ty) for x, y in pts]
+                xs = [p[0] for p in shifted]
+                ys = [p[1] for p in shifted]
+                boxes.append(Box(min(xs), min(ys), max(xs), max(ys), "path",
+                                 extra={"pts": shifted}))
 
         for child in el:
             if _localname(child.tag) != "tspan":
