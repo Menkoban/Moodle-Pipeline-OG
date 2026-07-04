@@ -95,9 +95,75 @@ function send(action, extra){
   sendPrompt('Kurs-Editor-Aktion:\n```json\n'+JSON.stringify(env)+'\n```');
   if(action==='save')setDirty(false);
 }
-/*__RENDER__*/
-function render(){document.getElementById('ed-title').textContent=(COURSE.course||{}).fullname||'Kurs';}
-function addSection(){}
+const TYPES=["label","page","url","resource","folder","book","assign","forum","glossary","choice","feedback","quiz"];
+const TLABEL={label:"Textfeld",page:"Seite",url:"Link",resource:"Datei",folder:"Ordner",book:"Buch",assign:"Aufgabe",forum:"Forum",glossary:"Glossar",choice:"Abstimmung",feedback:"Feedback",quiz:"Test"};
+function icon(n){return '<i class="ti ti-'+n+'" aria-hidden="true" style="font-size:15px;vertical-align:-2px"></i>';}
+function secs(){return COURSE.sections=COURSE.sections||[];}
+function moveSection(i,d){const s=secs(),j=i+d;if(j<0||j>=s.length)return;const t=s[i];s[i]=s[j];s[j]=t;setDirty(true);render();}
+function delSection(i){if(!confirm('Abschnitt "'+(secs()[i].name||i)+'" löschen?'))return;secs().splice(i,1);setDirty(true);render();}
+function addSection(){secs().push({name:"Neuer Abschnitt",summary:"",activities:[]});open.sec[secs().length-1]=true;setDirty(true);render();}
+function moveAct(si,ai,d){const a=secs()[si].activities,j=ai+d;if(j<0||j>=a.length)return;const t=a[ai];a[ai]=a[j];a[j]=t;setDirty(true);render();}
+function delAct(si,ai){const a=secs()[si].activities;if(!confirm('Aktivität "'+(a[ai].name||a[ai].type)+'" löschen?'))return;a.splice(ai,1);setDirty(true);render();}
+function addActivity(si,type){const a=secs()[si].activities=secs()[si].activities||[];
+  const nu={type:type,name:"Neue "+(TLABEL[type]||type)};
+  if(type==="page")nu.content="<p></p>";if(type==="quiz")nu.questions=[];
+  if(type==="glossary")nu.entries=[];if(type==="choice")nu.options=[];
+  if(type==="folder")nu.files=[];if(type==="book")nu.chapters=[];
+  if(type==="feedback")nu.items=[];if(type==="url")nu.externalurl="https://";
+  if(type==="resource")nu.file="";
+  a.push(nu);open.sec[si]=true;open.act[si+"_"+(a.length-1)]=true;setDirty(true);render();}
+function render(){
+  document.getElementById('ed-title').textContent=(COURSE.course||{}).fullname||'Kurs';
+  const root=document.getElementById('ed-sections');root.innerHTML='';
+  secs().forEach(function(sec,si){
+    const sd=document.createElement('div');sd.className='sec';sd.dataset.si=si;
+    const hidden=sec.visible===0?' <span class="chip">verborgen</span>':'';
+    sd.innerHTML='<div class="sec-h"><span class="schev">'+icon(open.sec[si]?'chevron-down':'chevron-right')+'</span>'
+      +'<input value="'+esc(sec.name||('Abschnitt '+si))+'" data-role="secname" style="flex:1;font-weight:500;border:none;background:transparent;box-shadow:none">'
+      +hidden+'<span class="chip">'+(sec.activities||[]).length+' Akt.</span>'
+      +'<button class="mini" data-op="secup" aria-label="Abschnitt nach oben">'+icon('arrow-up')+'</button>'
+      +'<button class="mini" data-op="secdown" aria-label="Abschnitt nach unten">'+icon('arrow-down')+'</button>'
+      +'<button class="mini" data-op="secdel" aria-label="Abschnitt löschen">'+icon('trash')+'</button></div>'
+      +'<div class="sec-b" style="display:'+(open.sec[si]?'block':'none')+'"></div>';
+    const body=sd.querySelector('.sec-b');
+    (sec.activities||[]).forEach(function(act,ai){
+      const key=si+'_'+ai;
+      const ad=document.createElement('div');ad.className='act';ad.dataset.si=si;ad.dataset.ai=ai;
+      ad.innerHTML='<div class="act-h"><span class="achev">'+icon(open.act[key]?'chevron-down':'chevron-right')+'</span>'
+        +'<span style="flex:1">'+esc(act.name||act.type)+'</span><span class="chip">'+(TLABEL[act.type]||act.type)+'</span>'
+        +'<button class="mini" data-op="actup" aria-label="nach oben">'+icon('arrow-up')+'</button>'
+        +'<button class="mini" data-op="actdown" aria-label="nach unten">'+icon('arrow-down')+'</button>'
+        +'<button class="mini" data-op="actdel" aria-label="löschen">'+icon('trash')+'</button></div>'
+        +'<div class="act-body" style="display:'+(open.act[key]?'block':'none')+'"></div>';
+      if(open.act[key])renderEditor(si,ai,ad.querySelector('.act-body'));
+      body.appendChild(ad);
+    });
+    const addRow=document.createElement('div');addRow.className='act';
+    addRow.innerHTML='<select data-role="addtype">'+TYPES.map(function(t){return '<option value="'+t+'">'+TLABEL[t]+'</option>';}).join('')+'</select> '
+      +'<button data-op="actadd">'+icon('plus')+' Aktivität</button>';
+    body.appendChild(addRow);
+    root.appendChild(sd);
+  });
+}
+document.getElementById('mbz-editor').addEventListener('click',function(e){
+  const btn=e.target.closest('[data-op]');
+  const op=btn?btn.dataset.op:null;
+  const secEl=e.target.closest('.sec[data-si]');if(!secEl)return;
+  const si=+secEl.dataset.si;const actEl=e.target.closest('.act[data-ai]');
+  const ai=actEl?+actEl.dataset.ai:null;
+  if(op==='secup')return moveSection(si,-1);if(op==='secdown')return moveSection(si,1);
+  if(op==='secdel')return delSection(si);
+  if(op==='actup')return moveAct(si,ai,-1);if(op==='actdown')return moveAct(si,ai,1);
+  if(op==='actdel')return delAct(si,ai);
+  if(op==='actadd')return addActivity(si,secEl.querySelector('[data-role=addtype]').value);
+  if(e.target.closest('.sec-h')&&!(e.target.dataset&&e.target.dataset.role)){open.sec[si]=!open.sec[si];return render();}
+  if(e.target.closest('.act-h')){const k=si+'_'+ai;open.act[k]=!open.act[k];return render();}
+});
+document.getElementById('mbz-editor').addEventListener('input',function(e){
+  const r=e.target.dataset&&e.target.dataset.role;
+  if(r==='secname'){const si=+e.target.closest('.sec').dataset.si;secs()[si].name=e.target.value;setDirty(true);}
+});
+function renderEditor(si,ai,el){el.innerHTML='';}
 /*__EDITORS__*/
 /*__ACTIONS__*/
 render();

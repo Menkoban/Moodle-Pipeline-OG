@@ -35,6 +35,21 @@ def test_idempotent(spec):
     assert build_widget(spec) == build_widget(spec)
 
 
+def test_structure_ops_present(spec):
+    out = build_widget(spec)
+    for marker in ["function render()", "function addSection()", "moveSection(",
+                   "delSection(", "moveAct(", "delAct(", "addActivity(",
+                   "data-si", "data-ai", "renderEditor("]:
+        assert marker in out, f"fehlt: {marker}"
+
+
+def test_all_supported_types_in_add_menu(spec):
+    out = build_widget(spec)
+    for t in ["label", "page", "url", "resource", "folder", "book", "assign",
+              "forum", "glossary", "choice", "feedback", "quiz"]:
+        assert f'"{t}"' in out
+
+
 def test_size_fallback_disables_inline_images(spec):
     big = json.loads(json.dumps(spec))
     filler = {"type": "page", "name": "F", "content": "<p>" + "x" * 4000 + "</p>"}
