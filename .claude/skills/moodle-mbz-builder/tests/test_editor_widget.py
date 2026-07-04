@@ -81,6 +81,17 @@ def test_envelope_actions_present(spec):
         assert a in out
 
 
+def test_wysiwyg_preview_combination(spec):
+    out = build_widget(spec)
+    # Vorschau-Optik + WYSIWYG: Diagramme inline im editierbaren Inhalt,
+    # beim Serialisieren zurueck zu @@PLUGINFILE@@-img
+    for marker in ["function inlineImgs(", "function serializeRich(",
+                   "svgwrap", "data-pf", "@@PLUGINFILE@@", "ed-meta"]:
+        assert marker in out, f"fehlt: {marker}"
+    # separate Diagramm-Anzeige unter dem Inhalt ist ersetzt
+    assert "Änderung via KI-Auftrag" not in out
+
+
 def test_size_fallback_disables_inline_images(spec):
     big = json.loads(json.dumps(spec))
     filler = {"type": "page", "name": "F", "content": "<p>" + "x" * 4000 + "</p>"}

@@ -53,14 +53,15 @@ def build_widget(spec, inline_images=True):
 
 TEMPLATE = r"""<h2 class="sr-only" style="position:absolute;left:-9999px">Bearbeitbarer Moodle-Kurs-Editor: Abschnitte und Aktivitaeten aendern, KI-Auftraege ausloesen, Kurs fertigstellen</h2>
 <div id="mbz-editor" style="color:var(--text-primary)">
-<div id="ed-head" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-  <span id="ed-title" style="font-size:16px;font-weight:500"></span>
+<div id="ed-head" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:2px">
+  <span id="ed-title" style="font-size:17px;font-weight:500"></span>
   <span id="dirty-badge" style="display:none;font-size:12px;background:var(--bg-warning);color:var(--text-warning);padding:2px 10px;border-radius:var(--radius)">ungespeichert</span>
   <span style="flex:1"></span>
   <button onclick="ED.send('save')"><i class="ti ti-device-floppy" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Speichern ↗</button>
   <button onclick="ED.send('video_recap')"><i class="ti ti-movie" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Video-Recap ↗</button>
   <button onclick="ED.send('finalize')"><i class="ti ti-package-export" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Fertigstellen → .mbz ↗</button>
 </div>
+<div id="ed-meta" style="font-size:13px;color:var(--text-secondary);margin-bottom:12px"></div>
 <div id="ed-sections"></div>
 <button style="margin-top:8px" onclick="ED.addSection()"><i class="ti ti-plus" aria-hidden="true" style="font-size:16px;vertical-align:-2px;margin-right:5px"></i>Abschnitt hinzufügen</button>
 </div>
@@ -81,6 +82,9 @@ TEMPLATE = r"""<h2 class="sr-only" style="position:absolute;left:-9999px">Bearbe
 #mbz-editor .rich p{margin:4px 0}
 #mbz-editor .rich ul,#mbz-editor .rich ol{margin:4px 0;padding-left:20px}
 #mbz-editor .rich img,#mbz-editor .rich svg{max-width:100%;height:auto}
+#mbz-editor .rich table{border-collapse:collapse;font-size:12.5px;margin:6px 0;width:100%}
+#mbz-editor .rich td,#mbz-editor .rich th{border:0.5px solid var(--border-strong,#999);padding:4px 7px;text-align:left}
+#mbz-editor .svgwrap{display:block;text-align:center;margin:8px 0;border:0.5px dashed var(--border);border-radius:var(--radius);padding:4px}
 #mbz-editor .ai-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:0.5px dashed var(--border)}
 </style>
 <script type="application/json" id="course-data">__COURSE_JSON__</script>
@@ -120,6 +124,10 @@ function addActivity(si,type){const a=secs()[si].activities=secs()[si].activitie
   a.push(nu);open.sec[si]=true;open.act[si+"_"+(a.length-1)]=true;setDirty(true);render();}
 function render(){
   document.getElementById('ed-title').textContent=(COURSE.course||{}).fullname||'Kurs';
+  const nAct=secs().reduce(function(s,x){return s+(x.activities||[]).length;},0);
+  document.getElementById('ed-meta').textContent=secs().length+' Abschnitte · '+nAct
+    +' Aktivitäten · Format: '+((COURSE.course||{}).format||'topics')
+    +' — Abschnitt anklicken, Aktivität aufklappen, direkt in der Ansicht editieren.';
   const root=document.getElementById('ed-sections');root.innerHTML='';
   secs().forEach(function(sec,si){
     const sd=document.createElement('div');sd.className='sec';sd.dataset.si=si;
@@ -172,17 +180,33 @@ document.getElementById('mbz-editor').addEventListener('input',function(e){
 function fld(label,inputHtml){return '<div class="fld"><label>'+label+'</label>'+inputHtml+'</div>';}
 function ta(val,rows){return '<textarea rows="'+(rows||4)+'">'+esc(val)+'</textarea>';}
 function rich(val){return '<div class="rich" contenteditable="true">'+(val||'<p></p>')+'</div>';}
-function bindRich(scope,idx,fn){const r=scope.querySelectorAll('.rich')[idx];if(r)r.addEventListener('input',function(){fn(this.innerHTML);setDirty(true);});return r;}
+function inlineImgs(a,html){
+  if(!a._inline_images)return html;
+  return String(html||'').replace(/<img[^>]*@@PLUGINFILE@@\/([^'"]+)['"][^>]*>/g,function(m,name){
+    const im=a._inline_images[name];
+    return im?'<span class="svgwrap" data-pf="'+name+'" contenteditable="false">'+im+'</span>':m;
+  });
+}
+function serializeRich(el){
+  const c=el.cloneNode(true);
+  c.querySelectorAll('.svgwrap').forEach(function(w){
+    const img=document.createElement('img');
+    img.setAttribute('src','@@PLUGINFILE@@/'+w.dataset.pf);
+    img.setAttribute('style','max-width:100%;height:auto;');
+    w.replaceWith(img);
+  });
+  return c.innerHTML;
+}
+function bindRich(scope,idx,fn){const r=scope.querySelectorAll('.rich')[idx];if(r)r.addEventListener('input',function(){fn(serializeRich(this));setDirty(true);});return r;}
 function bind(el,sel,fn){el.querySelectorAll(sel).forEach(fn);}
 function edPage(a,el){
   el.insertAdjacentHTML('beforeend',
-    fld('Inhalt',rich(a.content))
+    fld('Inhalt (Diagramme inline; Neuzeichnen via KI-Auftrag)',rich(inlineImgs(a,a.content)))
     +fld('Infoblatt (material)','<input type="checkbox" '+(a.material?'checked':'')+' data-f="material" style="width:auto">')
     +fld('Kernpunkte (eine pro Zeile, optional)',ta((a.material_bullets||[]).join('\n'),3)));
   bindRich(el,0,function(v){a.content=v;});
   el.querySelector('textarea').addEventListener('input',function(){a.material_bullets=this.value.split('\n').filter(Boolean);setDirty(true);});
   el.querySelector('[data-f=material]').addEventListener('change',function(){a.material=this.checked;setDirty(true);});
-  if(a._inline_images){for(const k in a._inline_images){el.insertAdjacentHTML('beforeend','<div class="fld"><label>Diagramm: '+esc(k)+' (Änderung via KI-Auftrag)</label><div style="max-width:480px">'+a._inline_images[k]+'</div></div>');}}
 }
 function edQuiz(a,el){
   a.questions=a.questions||[];
@@ -205,12 +229,12 @@ function edQuiz(a,el){
     inner+='<button class="mini" data-delq="'+qi+'" aria-label="Frage löschen">'+icon('trash')+' Frage</button>';
     qd.innerHTML=inner;el.appendChild(qd);
     const rs=qd.querySelectorAll(':scope > .fld .rich');
-    rs[0].addEventListener('input',function(){q.questiontext=this.innerHTML;setDirty(true);});
-    rs[1].addEventListener('input',function(){q.generalfeedback=this.innerHTML;setDirty(true);});
+    rs[0].addEventListener('input',function(){q.questiontext=serializeRich(this);setDirty(true);});
+    rs[1].addEventListener('input',function(){q.generalfeedback=serializeRich(this);setDirty(true);});
     if(q.type==='truefalse'){
       qd.querySelector('[data-q=correct]').addEventListener('change',function(){q.correct=this.value==='true';setDirty(true);});
-      rs[2].addEventListener('input',function(){q.feedbackcorrect=this.innerHTML;setDirty(true);});
-      rs[3].addEventListener('input',function(){q.feedbackwrong=this.innerHTML;setDirty(true);});
+      rs[2].addEventListener('input',function(){q.feedbackcorrect=serializeRich(this);setDirty(true);});
+      rs[3].addEventListener('input',function(){q.feedbackwrong=serializeRich(this);setDirty(true);});
     }else{
       bind(qd,'.ansblk',function(block,ni){
         const an=q.answers[ni];if(!an)return;
@@ -289,7 +313,7 @@ function renderEditor(si,ai,el){
   el.querySelector('[data-f=name]').addEventListener('input',function(){a.name=this.value;setDirty(true);});
   if(a.type!=='page'){
     el.insertAdjacentHTML('beforeend',fld('Beschreibung / Intro',rich(a.intro)));
-    el.lastElementChild.querySelector('.rich').addEventListener('input',function(){a.intro=this.innerHTML;setDirty(true);});
+    el.lastElementChild.querySelector('.rich').addEventListener('input',function(){a.intro=serializeRich(this);setDirty(true);});
   }
   if(a.type==='page')edPage(a,el);
   else if(a.type==='quiz')edQuiz(a,el);
