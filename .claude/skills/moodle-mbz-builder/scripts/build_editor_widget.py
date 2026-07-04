@@ -75,6 +75,12 @@ TEMPLATE = r"""<h2 class="sr-only" style="position:absolute;left:-9999px">Bearbe
 #mbz-editor .chip{font-size:12px;background:var(--surface-1);padding:1px 9px;border-radius:var(--radius);color:var(--text-secondary)}
 #mbz-editor .fld{margin:7px 0}
 #mbz-editor .fld>label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:2px}
+#mbz-editor .rich{border:0.5px solid var(--border);border-radius:var(--radius);padding:7px 9px;min-height:2em;font-size:13.5px;line-height:1.55;background:var(--surface-2);cursor:text}
+#mbz-editor .rich:focus{outline:none;box-shadow:0 0 0 1px var(--border-accent)}
+#mbz-editor .rich h1,#mbz-editor .rich h2,#mbz-editor .rich h3{font-size:15px;font-weight:500;margin:6px 0 3px}
+#mbz-editor .rich p{margin:4px 0}
+#mbz-editor .rich ul,#mbz-editor .rich ol{margin:4px 0;padding-left:20px}
+#mbz-editor .rich img,#mbz-editor .rich svg{max-width:100%;height:auto}
 #mbz-editor .ai-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:0.5px dashed var(--border)}
 </style>
 <script type="application/json" id="course-data">__COURSE_JSON__</script>
@@ -165,15 +171,16 @@ document.getElementById('mbz-editor').addEventListener('input',function(e){
 });
 function fld(label,inputHtml){return '<div class="fld"><label>'+label+'</label>'+inputHtml+'</div>';}
 function ta(val,rows){return '<textarea rows="'+(rows||4)+'">'+esc(val)+'</textarea>';}
+function rich(val){return '<div class="rich" contenteditable="true">'+(val||'<p></p>')+'</div>';}
+function bindRich(scope,idx,fn){const r=scope.querySelectorAll('.rich')[idx];if(r)r.addEventListener('input',function(){fn(this.innerHTML);setDirty(true);});return r;}
 function bind(el,sel,fn){el.querySelectorAll(sel).forEach(fn);}
 function edPage(a,el){
   el.insertAdjacentHTML('beforeend',
-    fld('Inhalt (HTML)',ta(a.content,8))
+    fld('Inhalt',rich(a.content))
     +fld('Infoblatt (material)','<input type="checkbox" '+(a.material?'checked':'')+' data-f="material" style="width:auto">')
     +fld('Kernpunkte (eine pro Zeile, optional)',ta((a.material_bullets||[]).join('\n'),3)));
-  const tas=el.querySelectorAll('textarea');
-  tas[tas.length-2].addEventListener('input',function(){a.content=this.value;setDirty(true);});
-  tas[tas.length-1].addEventListener('input',function(){a.material_bullets=this.value.split('\n').filter(Boolean);setDirty(true);});
+  bindRich(el,0,function(v){a.content=v;});
+  el.querySelector('textarea').addEventListener('input',function(){a.material_bullets=this.value.split('\n').filter(Boolean);setDirty(true);});
   el.querySelector('[data-f=material]').addEventListener('change',function(){a.material=this.checked;setDirty(true);});
   if(a._inline_images){for(const k in a._inline_images){el.insertAdjacentHTML('beforeend','<div class="fld"><label>Diagramm: '+esc(k)+' (Änderung via KI-Auftrag)</label><div style="max-width:480px">'+a._inline_images[k]+'</div></div>');}}
 }
@@ -182,34 +189,33 @@ function edQuiz(a,el){
   a.questions.forEach(function(q,qi){
     const qd=document.createElement('div');
     qd.style.cssText='border:0.5px solid var(--border);border-radius:var(--radius);padding:8px 10px;margin:8px 0';
-    let inner=fld('Frage '+(qi+1)+' ('+(q.type||'multichoice')+')',ta(q.questiontext,2))
-      +fld('Erklärung (generalfeedback)',ta(q.generalfeedback,2));
+    let inner=fld('Frage '+(qi+1)+' ('+(q.type||'multichoice')+')',rich(q.questiontext))
+      +fld('Erklärung (für alle nach dem Antworten)',rich(q.generalfeedback));
     if(q.type==='truefalse'){
       inner+=fld('Richtig?','<select data-q="correct"><option value="true"'+(q.correct?' selected':'')+'>Wahr</option><option value="false"'+(!q.correct?' selected':'')+'>Falsch</option></select>')
-        +fld('Feedback richtig',ta(q.feedbackcorrect,2))+fld('Feedback falsch',ta(q.feedbackwrong,2));
+        +fld('Feedback richtig',rich(q.feedbackcorrect))+fld('Feedback falsch',rich(q.feedbackwrong));
     }else{
       (q.answers=q.answers||[]).forEach(function(an,ni){
         inner+='<div class="ansblk" style="border-left:2px solid '+(an.correct?'var(--border-success)':'var(--border-danger)')+';border-radius:0;padding-left:8px;margin:6px 0">'
-          +fld('Antwort '+(ni+1)+' — korrekt: <input type="checkbox" data-an="'+ni+'" '+(an.correct?'checked':'')+' style="width:auto">',ta(an.text,1))
-          +fld('Feedback',ta(an.feedback,1))
+          +fld('Antwort '+(ni+1)+' — korrekt: <input type="checkbox" data-an="'+ni+'" '+(an.correct?'checked':'')+' style="width:auto">',rich(an.text))
+          +fld('Feedback',rich(an.feedback))
           +'<button class="mini" data-delan="'+ni+'" aria-label="Antwort löschen">'+icon('trash')+' Antwort</button></div>';});
       inner+='<button data-addan="1">'+icon('plus')+' Antwort</button> ';
     }
     inner+='<button class="mini" data-delq="'+qi+'" aria-label="Frage löschen">'+icon('trash')+' Frage</button>';
     qd.innerHTML=inner;el.appendChild(qd);
-    const tas=qd.querySelectorAll(':scope > .fld textarea');
-    tas[0].addEventListener('input',function(){q.questiontext=this.value;setDirty(true);});
-    tas[1].addEventListener('input',function(){q.generalfeedback=this.value;setDirty(true);});
+    const rs=qd.querySelectorAll(':scope > .fld .rich');
+    rs[0].addEventListener('input',function(){q.questiontext=this.innerHTML;setDirty(true);});
+    rs[1].addEventListener('input',function(){q.generalfeedback=this.innerHTML;setDirty(true);});
     if(q.type==='truefalse'){
       qd.querySelector('[data-q=correct]').addEventListener('change',function(){q.correct=this.value==='true';setDirty(true);});
-      tas[2].addEventListener('input',function(){q.feedbackcorrect=this.value;setDirty(true);});
-      tas[3].addEventListener('input',function(){q.feedbackwrong=this.value;setDirty(true);});
+      rs[2].addEventListener('input',function(){q.feedbackcorrect=this.innerHTML;setDirty(true);});
+      rs[3].addEventListener('input',function(){q.feedbackwrong=this.innerHTML;setDirty(true);});
     }else{
       bind(qd,'.ansblk',function(block,ni){
         const an=q.answers[ni];if(!an)return;
-        const t=block.querySelectorAll('textarea');
-        t[0].addEventListener('input',function(){an.text=this.value;setDirty(true);});
-        t[1].addEventListener('input',function(){an.feedback=this.value;setDirty(true);});
+        bindRich(block,0,function(v){an.text=v;});
+        bindRich(block,1,function(v){an.feedback=v;});
         block.querySelector('[data-an]').addEventListener('change',function(){an.correct=this.checked;setDirty(true);});
         block.querySelector('[data-delan]').addEventListener('click',function(){q.answers.splice(ni,1);setDirty(true);render();});
       });
@@ -239,10 +245,10 @@ function edGlossary(a,el){
   (a.entries=a.entries||[]).forEach(function(en,ei){
     const d=document.createElement('div');
     d.innerHTML=fld('Begriff','<input value="'+esc(en.concept)+'" style="width:100%;box-sizing:border-box">')
-      +fld('Definition (HTML)',ta(en.definition,2))
+      +fld('Definition',rich(en.definition))
       +'<button class="mini" aria-label="Begriff löschen">'+icon('trash')+'</button>';
     d.querySelector('input').addEventListener('input',function(){en.concept=this.value;setDirty(true);});
-    d.querySelector('textarea').addEventListener('input',function(){en.definition=this.value;setDirty(true);});
+    bindRich(d,0,function(v){en.definition=v;});
     d.querySelector('button').addEventListener('click',function(){a.entries.splice(ei,1);setDirty(true);render();});
     el.appendChild(d);});
   const b=document.createElement('button');b.innerHTML=icon('plus')+' Begriff';
@@ -257,10 +263,10 @@ function edBook(a,el){
   (a.chapters=a.chapters||[]).forEach(function(ch,ci){
     const d=document.createElement('div');
     d.innerHTML=fld('Kapitel '+(ci+1),'<input value="'+esc(ch.title)+'" style="width:100%;box-sizing:border-box">')
-      +fld('Inhalt (HTML)',ta(ch.content,4))
+      +fld('Inhalt',rich(ch.content))
       +'<button class="mini" aria-label="Kapitel löschen">'+icon('trash')+'</button>';
     d.querySelector('input').addEventListener('input',function(){ch.title=this.value;setDirty(true);});
-    d.querySelector('textarea').addEventListener('input',function(){ch.content=this.value;setDirty(true);});
+    bindRich(d,0,function(v){ch.content=v;});
     d.querySelector('button').addEventListener('click',function(){a.chapters.splice(ci,1);setDirty(true);render();});
     el.appendChild(d);});
   const b=document.createElement('button');b.innerHTML=icon('plus')+' Kapitel';
@@ -282,8 +288,8 @@ function renderEditor(si,ai,el){
   el.insertAdjacentHTML('beforeend',fld('Name','<input value="'+esc(a.name)+'" data-f="name" style="width:100%;box-sizing:border-box">'));
   el.querySelector('[data-f=name]').addEventListener('input',function(){a.name=this.value;setDirty(true);});
   if(a.type!=='page'){
-    el.insertAdjacentHTML('beforeend',fld('Beschreibung / Intro (HTML)',ta(a.intro,3)));
-    el.lastElementChild.querySelector('textarea').addEventListener('input',function(){a.intro=this.value;setDirty(true);});
+    el.insertAdjacentHTML('beforeend',fld('Beschreibung / Intro',rich(a.intro)));
+    el.lastElementChild.querySelector('.rich').addEventListener('input',function(){a.intro=this.innerHTML;setDirty(true);});
   }
   if(a.type==='page')edPage(a,el);
   else if(a.type==='quiz')edQuiz(a,el);

@@ -58,6 +58,15 @@ def test_field_editors_cover_types(spec):
         assert marker in out, f"fehlt: {marker}"
 
 
+def test_rich_editors_no_raw_html_textareas(spec):
+    out = build_widget(spec)
+    # HTML-Inhalte werden als contenteditable-Rich-Felder editiert,
+    # nicht als Roh-HTML-Textareas
+    for marker in ["function rich(", "contenteditable", "bindRich("]:
+        assert marker in out, f"fehlt: {marker}"
+    assert "ta(a.content" not in out and "ta(q.questiontext" not in out
+
+
 def test_ai_assist_wiring(spec):
     out = build_widget(spec)
     for marker in ["AI_PRESETS", "renderAiRow(", "'ai_assist'",
