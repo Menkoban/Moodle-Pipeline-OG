@@ -187,7 +187,13 @@ A full demo spec covering every supported type lives at
 ## Interaktiver Kurs-Editor (Widget) — Standard-Schritt vor dem Build
 
 Nach der Kurs-Generierung (fertige `course.json`) zeige dem Autor den Kurs im
-**bearbeitbaren Widget**, bevor du die `.mbz` baust:
+**bearbeitbaren Widget**, bevor du die `.mbz` baust. Das Widget ist die
+**bearbeitbare Vorschau**: Es rendert den Kurs in Vorschau-Optik (Titel +
+Meta-Zeile, Abschnitts-Kacheln, Diagramme **inline im Inhalt**, Quiz mit
+Antworten und Feedback) und macht genau diese Ansicht direkt editierbar
+(WYSIWYG). Inline-Diagramme sind als `svgwrap`-Marker geschützt und werden
+beim Senden automatisch zurück zu `@@PLUGINFILE@@`-`img`-Tags serialisiert —
+das Kurs-HTML bleibt sauber:
 
 1. Rufe einmalig `mcp__visualize__read_me` (`modules: ["interactive"]`) auf (still).
 2. `python <skill-dir>/scripts/build_editor_widget.py course.json -o editor.html`
