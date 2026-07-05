@@ -3,12 +3,14 @@
 pages of a moodle-mbz-builder course and wire them into the course.
 
 A page opts in with `"material": true`. For each such page this tool:
-  * renders a print PDF (title bar + the page's embedded diagram + key points),
-  * renders an editable PPTX (same content, diagram rasterised),
-  * inserts a `resource` (PDF) right after the page, so it is downloadable at
-    that spot in the course,
+  * renders a print PDF that mirrors the FULL Infoblatt (header bar, explanatory
+    prose, embedded diagram, tables/lists and the Merke box — the same content
+    as the page, not just a title + bullets),
+  * renders an editable PPTX (title bar + diagram + key points),
   * collects all PDFs and all PPTX into the hidden "Material für Lehrkräfte"
     section as two `folder`s (a PDF set for printing, a PPTX set for editing).
+    The PDF is intentionally NOT inserted after the page — the Infoblatt stays
+    alone at its spot in the course.
 
 Key points come from `"material_bullets": [...]` if given, else they are
 extracted from the page content (list items, else paragraphs).
@@ -88,30 +90,271 @@ def svg_to_png(svgpath, pngpath):
     doc.close(); os.remove(tmp)
 
 
-def make_pdf(title, svgpath, bullets, out):
+# ---- minimal HTML -> reportlab flowables (renders the FULL Infoblatt) --------
+# The PDF mirrors the page: header bar, explanatory prose, embedded diagram,
+# tables/lists and the Merke box — not just a title + bullets.
+
+from html.parser import HTMLParser as _HTMLParser
+
+_BLOCK = {"p", "div", "table", "ul", "ol", "img", "h1", "h2", "h3", "h4", "h5"}
+# Glyphs the built-in PDF font (Helvetica/WinAnsi) cannot draw -> strip them so
+# they don't become tofu boxes (emoji, dingbats, arrows, variation selectors).
+_EMOJI = re.compile(
+    "[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U00002B00-\U00002BFF"
+    "\U0001F1E6-\U0001F1FF️←-⇿⌀-⏿]")
+
+
+class _Node:
+    __slots__ = ("tag", "attrs", "children", "text")
+
+    def __init__(self, tag, attrs=None):
+        self.tag = tag
+        self.attrs = dict(attrs or {})
+        self.children = []
+        self.text = None
+
+
+class _DOM(_HTMLParser):
+    _VOID = {"br", "img", "hr"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.root = _Node("root")
+        self.stack = [self.root]
+
+    def handle_starttag(self, tag, attrs):
+        node = _Node(tag, attrs)
+        self.stack[-1].children.append(node)
+        if tag not in self._VOID:
+            self.stack.append(node)
+
+    def handle_startendtag(self, tag, attrs):
+        self.stack[-1].children.append(_Node(tag, attrs))
+
+    def handle_endtag(self, tag):
+        for i in range(len(self.stack) - 1, 0, -1):
+            if self.stack[i].tag == tag:
+                del self.stack[i:]
+                return
+
+    def handle_data(self, data):
+        if data:
+            t = _Node("#text")
+            t.text = data
+            self.stack[-1].children.append(t)
+
+
+def _parse_html(s):
+    p = _DOM()
+    p.feed(s or "")
+    return p.root
+
+
+def _clean(t):
+    return re.sub(r"\s+", " ", _EMOJI.sub("", (t or "").replace("→", "->")))
+
+
+def _esc(t):
+    return _clean(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _inline(node):
+    out = []
+    for c in node.children:
+        if c.tag == "#text":
+            out.append(_esc(c.text))
+        elif c.tag in ("b", "strong"):
+            out.append("<b>" + _inline(c) + "</b>")
+        elif c.tag in ("i", "em"):
+            out.append("<i>" + _inline(c) + "</i>")
+        elif c.tag == "br":
+            out.append("<br/>")
+        else:
+            out.append(_inline(c))
+    return "".join(out)
+
+
+def _style(n):
+    return n.attrs.get("style", "")
+
+
+def _bg(style):
+    m = re.search(r"background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,6})", style)
+    return m.group(1) if m else None
+
+
+def _leftaccent(style):
+    m = re.search(r"border-left\s*:[^;]*?(#[0-9a-fA-F]{3,6})", style)
+    return m.group(1) if m else None
+
+
+def _has_block(node):
+    return any(c.tag in _BLOCK for c in node.children)
+
+
+def _find(node, tag):
+    out = []
+    for c in node.children:
+        if c.tag == tag:
+            out.append(c)
+        out.extend(_find(c, tag))
+    return out
+
+
+def make_pdf(page, base, out):
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import mm
     from reportlab.lib import colors
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
+    from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table,
+                                    TableStyle, ListFlowable, ListItem)
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from svglib.svglib import svg2rlg
-    styles = getSampleStyleSheet()
-    h = ParagraphStyle("h", parent=styles["Title"], fontSize=18, alignment=0,
-                       textColor=colors.HexColor(GREEN_HEX), spaceAfter=4)
-    sub = ParagraphStyle("sub", parent=styles["Normal"], fontSize=10,
-                         textColor=colors.HexColor("#5f6368"), spaceAfter=10)
-    body = ParagraphStyle("body", parent=styles["Normal"], fontSize=11, leading=16)
-    doc = SimpleDocTemplate(out, pagesize=A4, topMargin=18 * mm, bottomMargin=18 * mm,
-                            leftMargin=20 * mm, rightMargin=20 * mm)
-    story = [Paragraph(html.escape(title), h), Paragraph("Infoblatt", sub)]
-    if svgpath and os.path.exists(svgpath):
-        d = svg2rlg(svgpath)
-        s = (165 * mm) / d.width
-        d.width *= s; d.height *= s; d.scale(s, s)
-        story += [d, Spacer(1, 8 * mm)]
-    if bullets:
-        story.append(ListFlowable([ListItem(Paragraph(html.escape(b), body), leftIndent=10)
-                                   for b in bullets], bulletType="bullet"))
+
+    imgs = {}
+    for p in page.get("images", []):
+        pth = p if os.path.isabs(p) else os.path.join(base, p)
+        imgs[os.path.basename(p)] = pth
+
+    ss = getSampleStyleSheet()
+    st = {
+        "bar": ParagraphStyle("bar", parent=ss["Normal"], fontSize=13, leading=17,
+                              textColor=colors.white, fontName="Helvetica-Bold"),
+        "body": ParagraphStyle("body", parent=ss["Normal"], fontSize=10.5, leading=15),
+        "h3": ParagraphStyle("h3", parent=ss["Normal"], fontSize=13, leading=16,
+                             spaceBefore=8, spaceAfter=3, fontName="Helvetica-Bold"),
+        "th": ParagraphStyle("th", parent=ss["Normal"], fontSize=9.5, leading=12,
+                             fontName="Helvetica-Bold"),
+        "td": ParagraphStyle("td", parent=ss["Normal"], fontSize=9.5, leading=12),
+    }
+    margin = 16 * mm
+    content_w = A4[0] - 2 * margin
+
+    def bar(text, bgcol):
+        t = Table([[Paragraph(text, st["bar"])]], colWidths=[content_w])
+        t.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor(bgcol)),
+            ("LEFTPADDING", (0, 0), (-1, -1), 9), ("RIGHTPADDING", (0, 0), (-1, -1), 9),
+            ("TOPPADDING", (0, 0), (-1, -1), 7), ("BOTTOMPADDING", (0, 0), (-1, -1), 7)]))
+        return t
+
+    def box(text, bgcol, accent):
+        cmds = [("BACKGROUND", (0, 0), (-1, -1), colors.HexColor(bgcol)),
+                ("LEFTPADDING", (0, 0), (-1, -1), 9), ("RIGHTPADDING", (0, 0), (-1, -1), 9),
+                ("TOPPADDING", (0, 0), (-1, -1), 6), ("BOTTOMPADDING", (0, 0), (-1, -1), 6)]
+        if accent:
+            cmds.append(("LINEBEFORE", (0, 0), (0, -1), 3, colors.HexColor(accent)))
+        t = Table([[Paragraph(text, st["body"])]], colWidths=[content_w])
+        t.setStyle(TableStyle(cmds))
+        return t
+
+    def table(node):
+        trs = _find(node, "tr")
+        data, spans, ncol, header = [], [], 0, set()
+        for ri, tr in enumerate(trs):
+            cells = [c for c in tr.children if c.tag in ("td", "th")]
+            row, col = [], 0
+            for cell in cells:
+                cs = int(cell.attrs.get("colspan", 1) or 1)
+                sty = st["th"] if cell.tag == "th" else st["td"]
+                row.append(Paragraph(_inline(cell).strip() or " ", sty))
+                if cell.tag == "th":
+                    header.add(ri)
+                if cs > 1:
+                    spans.append(("SPAN", (col, ri), (col + cs - 1, ri)))
+                    row.extend([""] * (cs - 1))
+                col += cs
+            if _bg(_style(tr)):
+                header.add(ri)
+            ncol = max(ncol, col)
+            data.append(row)
+        for r in data:
+            r.extend([""] * (ncol - len(r)))
+        cw = content_w / max(ncol, 1)
+        t = Table(data, colWidths=[cw] * ncol)
+        cmds = [("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#c9ccd1")),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 5), ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+                ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]
+        for ri in header:
+            cmds.append(("BACKGROUND", (0, ri), (-1, ri), colors.HexColor("#e1f5ee")))
+        cmds.extend(spans)
+        t.setStyle(TableStyle(cmds))
+        return t
+
+    def image(fn):
+        pth = imgs.get(fn)
+        if not (pth and os.path.exists(pth)):
+            return None
+        d = svg2rlg(pth)
+        if not d:
+            return None
+        s = content_w / d.width
+        if d.height * s > 150 * mm:
+            s = (150 * mm) / d.height
+        d.width *= s
+        d.height *= s
+        d.scale(s, s)
+        d.hAlign = "CENTER"
+        return d
+
+    story = []
+
+    def render(node):
+        for c in node.children:
+            tag = c.tag
+            if tag == "#text":
+                if c.text and c.text.strip():
+                    story.append(Paragraph(_esc(c.text), st["body"]))
+            elif tag == "div":
+                bgcol = _bg(_style(c))
+                if _has_block(c):
+                    render(c)
+                elif bgcol:
+                    txt = _inline(c).strip()
+                    if not txt:
+                        continue
+                    if re.search(r"color\s*:\s*(#fff(?:fff)?|white)", _style(c), re.I):
+                        story.append(bar(txt, bgcol))
+                    else:
+                        story.append(box(txt, bgcol, _leftaccent(_style(c))))
+                    story.append(Spacer(1, 5))
+                else:
+                    txt = _inline(c).strip()
+                    if txt:
+                        story.append(Paragraph(txt, st["body"]))
+            elif tag == "p":
+                bgcol = _bg(_style(c))
+                txt = _inline(c).strip()
+                if not txt:
+                    continue
+                story.append(box(txt, bgcol, _leftaccent(_style(c))) if bgcol
+                             else Paragraph(txt, st["body"]))
+                story.append(Spacer(1, 4))
+            elif tag in ("h2", "h3", "h4"):
+                story.append(Paragraph(_inline(c).strip(), st["h3"]))
+            elif tag in ("ul", "ol"):
+                items = [ci for ci in c.children if ci.tag == "li"]
+                flow = [ListItem(Paragraph(_inline(li).strip() or " ", st["body"]),
+                                 leftIndent=10) for li in items]
+                if flow:
+                    story.append(ListFlowable(flow, bulletType="bullet" if tag == "ul" else "1"))
+                    story.append(Spacer(1, 5))
+            elif tag == "table":
+                story.append(table(c))
+                story.append(Spacer(1, 5))
+            elif tag == "img":
+                im = image((c.attrs.get("src", "") or "").split("/")[-1])
+                if im is not None:
+                    story.append(im)
+                    story.append(Spacer(1, 5))
+            elif c.children:
+                render(c)
+
+    render(_parse_html(page.get("content", "")))
+    if not story:
+        story = [Paragraph(_esc(title_of(page)), st["h3"])]
+    doc = SimpleDocTemplate(out, pagesize=A4, topMargin=16 * mm, bottomMargin=16 * mm,
+                            leftMargin=margin, rightMargin=margin, title=title_of(page))
     doc.build(story)
 
 
@@ -193,11 +436,12 @@ def main():
                 bullets = extract_bullets(act)
                 pdfp = os.path.join(matdir, slug + ".pdf")
                 pptxp = os.path.join(matdir, slug + ".pptx")
-                make_pdf(title, svg, bullets, pdfp)
+                make_pdf(act, base, pdfp)
                 make_pptx(title, svg, bullets, pptxp, matdir)
                 pdfs.append(pdfp); pptxs.append(pptxp)
-                new_acts.append({"type": "resource", "name": f"{title} – Infoblatt (PDF)",
-                                 "intro": "<p>Zum Ausdrucken.</p>", "file": pdfp})
+                # The PDF is NOT inserted after the page: the Infoblatt stays
+                # alone at its spot in the course; all PDFs are collected in the
+                # hidden teacher section below.
         sec["activities"] = new_acts
 
     if pdfs:

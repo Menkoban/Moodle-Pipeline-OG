@@ -5,6 +5,12 @@ die Pflicht-Sequenz und die Bau-Konventionen, nach denen ein hochwertiger,
 vollständig ausgearbeiteter Kurs für die **berufliche Bildung** entsteht – und
 übersetzt sie in konkrete Felder der Kurs-JSON. Lies sie, bevor du einen Kurs baust.
 
+> **Vor dem Bauen zuerst fragen (Kurs-Steckbrief).** Kläre die relevanten
+> Steckbrief-Punkte mit dem Nutzer, *bevor* du den Kurs schreibst – gebündelt,
+> nur wo sinnvoll, mit Default-Vorschlag zum Bestätigen (die vollständige Frageliste
+> steht in `SKILL.md`, Schritt 1 „Intake first"). Erst mit diesen Antworten sitzt
+> die Handlungssituation, das Niveau und der Schwerpunkt wirklich passgenau.
+
 **Leitmodell:** das 5-Ebenen-Strukturmodell für Moodlekurse nach Henning Rode
 (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → Lernkurs).
 Gold-Standard-Beispiel, das jeden Punkt unten umsetzt: `assets/fewshot_bohrmaschine.json`
@@ -249,9 +255,11 @@ an eine konkrete eigene Handlung im Betrieb gebunden.
 ## 8. Downloadbare Materialien + Bau-Pipeline
 
 Infoblätter mit `"material": true` werden **automatisch** zu Download-Dateien:
-`make_materials.py` erzeugt pro Infoblatt ein **PDF** (Druck) und eine **PPTX**
-(editierbar), hängt das PDF als Download direkt hinter die Seite und sammelt alle
-PDFs + PPTX in der verborgenen Lehrkräfte-Sektion.
+`make_materials.py` erzeugt pro Infoblatt ein **PDF** (Druck – es bildet das
+**vollständige Infoblatt** ab: Kopfleiste, Fließtext, Diagramm, Tabellen/Listen,
+Merke-Box) und eine **PPTX** (editierbar) und sammelt alle PDFs + PPTX in der
+verborgenen Lehrkräfte-Sektion. Das PDF wird **nicht** hinter die Seite gehängt –
+im Kurs steht an der Stelle nur das Infoblatt selbst.
 
 **Pipeline (Standard für jeden Kurs):**
 ```
