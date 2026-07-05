@@ -33,6 +33,42 @@ this material for Moodle", or "add these activities into a Moodle course". If
 they only want to *understand* an existing `.mbz`, read `references/mbz-format.md`
 instead of running the generator.
 
+## Where finished courses live — output folder & reference library (project convention)
+
+**Collection folder (Sammelordner):**
+`C:\Users\User\OneDrive - HSOS\Desktop\Moodle-Kurse`
+The path **contains a space** — always quote it in shell commands
+(`"C:/Users/User/OneDrive - HSOS/Desktop/Moodle-Kurse"`).
+
+**One subfolder per course**, named after a slug of the course (the `.mbz`
+basename / course shortname). At the **end of every build**, copy the complete
+package into that subfolder — this is a standard delivery step, not optional:
+
+```
+Moodle-Kurse\
+  <kurs-slug>\
+    <kurs-slug>.mbz            ← the backup to import into Moodle
+    <kurs>_vorschau.html       ← the HTML preview
+    materials\                 ← auto-generated PDF + PPTX (+ PNG)
+    assets\                    ← the source SVG diagrams
+    course.json                ← source definition, with RELATIVE assets/… image paths
+```
+
+Write the stored `course.json` with **relative** `assets/<file>.svg` image paths
+(not absolute scratch paths) and copy `assets/` next to it, so every course
+folder is **self-contained and rebuildable**: running the pipeline with that
+folder as the working directory reproduces the `.mbz`. You may build in a
+scratch/working directory first; only the final deliverables get copied here.
+
+**This folder is also a REFERENCE library (knowledge extension).** Before
+authoring a new course, list `"…/Moodle-Kurse"` and — when relevant — read the
+`course.json` (and skim the `_vorschau.html`) of the courses already there. Treat
+them as worked examples **alongside** `assets/fewshot_bohrmaschine.json`: match
+the structure, wording, section sequence, Infoblatt/HTML styling, SVG conventions
+and depth the user has already established. The built-in few-shot sets the
+baseline; the user's own courses in this folder refine and extend it. If the
+folder is empty, fall back to the built-in few-shot only.
+
 ## Authoring high-quality courses — read this first for real courses
 
 Producing a *structurally valid* `.mbz` is the easy part. Producing a **didactically
@@ -45,8 +81,27 @@ gold-standard example. The course-design playbook is built on the **5-level
 structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul
 → Lernkurs) with a fixed section sequence. The short version of the method:
 
-1. **Frame it:** clarify trade/Lernfeld, target group, prior knowledge, scope
-   (one module ≈ 2 Unterrichtsstunden).
+1. **Intake first — ASK the user before building (Kurs-Steckbrief).** Before
+   writing any course JSON, run a short structured intake and *ask* the briefing
+   questions that make sense for this request. **Always as a selection menu:** each
+   point is a question with **2–4 concrete suggested options**, the best one marked
+   `(empfohlen)` — the user just clicks, and the built-in free-text option covers
+   any custom answer; use **multi-select** where several answers can apply (e.g.
+   activity types). Batch 2–4 questions at a time via the clarifying-questions UI,
+   **skip** anything already given or with a safe obvious default, and never
+   interrogate. Cover, where relevant:
+   - **Thema & Curriculum:** topic, trade/Fach + **Lernfeld**, position in the curriculum;
+   - **Zielgruppe & Vorwissen:** Bildungsgang, Ausbildungsjahr, prior knowledge, Sprachniveau;
+   - **Umfang & Einsatzform:** time budget (one module ≈ 2 Unterrichtsstunden), single module vs. Lernkurs, Präsenz / Flipped / Selbstlernen;
+   - **Schwerpunkt:** theory / calculation / measuring / assembly …;
+   - **Handlungssituation & Handlungsprodukt:** real operational context + what learners produce (offer to invent a realistic one);
+   - **Lernziele:** given by the user, or "please derive";
+   - **Verbindliche Fachdaten:** formulas, values, norms, safety facts, correct worked examples;
+   - **Vorhandenes Material:** own scripts/PDFs/images to embed (paths); which diagrams to draw; photos (placeholders only — cannot generate);
+   - **Aktivitäten & Prüfung:** activity types, formative vs. graded, rubric wishes;
+   - **Stil & Metadaten:** Du/Sie, course name + **unique shortname**, category, format.
+   Then apply the playbook defaults below for everything the user leaves open —
+   ask to sharpen the fit, don't block on it.
 2. **Define competence-based learning outcomes:** "Die Lernenden können
    [observable verb] [content] [context/criterion]" — never "kennen/verstehen".
 3. **Follow the fixed Lernabschnitt sequence:** Einführung → Grundlagen →
@@ -142,10 +197,12 @@ python <skill-dir>/scripts/validate_svg.py course.json --strict # measure text: 
 python <skill-dir>/scripts/make_materials.py course.json -o course.materialized.json
 ```
 
-This writes a PDF and an editable PPTX for every `material` page, inserts the PDF
-as a download right after its page, and collects all PDFs + PPTX into the hidden
-teacher section. Then build from the **materialized** JSON. (Skip this step only
-for a course with no Infoblätter to export.)
+This writes, for every `material` page, a print PDF that mirrors the **full
+Infoblatt** (header bar, prose, diagram, tables/lists, Merke box) and an editable
+PPTX, and collects all PDFs + PPTX into the hidden teacher section as two folders.
+The PDF is **not** inserted after the page — the Infoblatt stays alone at its
+spot. Then build from the **materialized** JSON. (Skip this step only for a course
+with no Infoblätter to export.)
 
 3. Build the `.mbz` (from the materialized JSON if you ran step 2):
 
@@ -234,10 +291,15 @@ bleiben Pfad-Referenzen).
 - `finalize` — volle Pipeline auf dem Envelope-Stand: `autofit_svg` →
   `validate_svg --strict` → `make_materials` → `build_mbz` → `validate_mbz` →
   `preview_mbz`. Deliverables (.mbz + Vorschau) an den User geben.
-- `video_recap` — NotebookLM-Flow (siehe
-  `references/notebooklm-video-recap.md`); falls in der Session nicht möglich
-  (kein Browser-Zugriff / User nicht eingeloggt), erkläre den Stand und lass
-  den Platzhalter im Kurs.
+- `video_recap` — erprobter NotebookLM-Flow, Schritt für Schritt in
+  `references/notebooklm-video-recap.md` (Dossier via
+  `export_course_dossier.py` → Browser via claude-in-chrome → Quelle als
+  „Kopierter Text" → Videoübersicht „Anpassen" mit Sprache Deutsch +
+  **Rückblick-Brief** (Vorlage in der Referenz — sonst wirkt das Video wie
+  ein Einstieg statt wie das Recap) → ~5 min pollen → ⋮/Herunterladen →
+  `set_recap_video.py --file` → Rebuild). Falls in der Session kein
+  Browser-Zugriff besteht oder der User nicht eingeloggt ist: Stand erklären,
+  Platzhalter im Kurs lassen.
 
 **Fehlerfälle:** Unparsebarer Envelope → letzte gültige `course.json` behalten,
 Widget daraus neu rendern und den Fehler im Chat erklären. Schlägt `finalize`
@@ -312,11 +374,14 @@ recognised. (Book-chapter inline images are not yet supported — use pages.)
 ## Downloadable materials (PDF + PowerPoint), auto-generated
 
 Set `"material": true` on an Infoblatt `page` and `make_materials.py` (Quick
-start step 2) will, for that page, generate a **print PDF** and an **editable
-PPTX** (title + the page's embedded diagram + key points), insert the PDF as a
-download right after the page, and add both to the hidden teacher section as
-folders. Provide `"material_bullets": ["…", "…"]` for the key points; if omitted
-they are extracted from the page content (list items, else paragraphs).
+start step 2) will, for that page, generate a **print PDF that mirrors the full
+Infoblatt** (header bar, explanatory prose, embedded diagram, tables/lists and
+Merke box — the same content as the page) and an **editable PPTX** (title + the
+page's embedded diagram + key points), and add both to the hidden teacher section
+as folders (a PDF set for printing, a PPTX set for editing). The PDF is **not**
+inserted after the page — the Infoblatt stays alone at its spot in the course.
+Provide `"material_bullets": ["…", "…"]` for the PPTX key points; if omitted they
+are extracted from the page content (list items, else paragraphs).
 
 ```json
 {"type": "page", "name": "Infoblatt: Aufbau der Standbohrmaschine", "material": true,
@@ -330,6 +395,52 @@ The tool reads diagrams from the page's `images`, rasterises them for the PPTX
 ships three ways — inline in the course, as PDF, and as editable PPTX — with no
 manual file wiring. The only material intentionally **not** generated is the
 **video summary** (a NotebookLM placeholder the author fills in later).
+
+## Interactive simulations (optional, where the topic fits)
+
+An interactive HTML simulation (drag a slider → values/picture update live) can
+turn a passive topic into an explorable one. **Use it only where a topic has a
+variable relationship worth exploring** — Ohm's law, series/parallel circuits,
+gear ratio, engine crank, dosage, interest, pressure/flow, … A topic with nothing
+to "drag" gets no simulation; forcing one is noise, not value.
+
+**Why a file, not a page/database:** Moodle's HTMLPurifier strips `<script>` from
+`page`, `book`, **database** and `label` content, so inline JS does **not** run
+there (only *static* HTML survives). A real **file** served from the file area
+*does* run JS. So a simulation ships as a **`resource`** (single self-contained
+`.html`) — or as SCORM if you want it embedded in-page with completion tracking.
+This is fully offline (no CDN), CSP-safe, light/dark-aware and keyboard-operable.
+
+Add a simulation to a section with a `simulation` activity — either from the
+built-in library or an inline spec:
+
+```json
+{"type": "simulation", "use": "reihenschaltung", "name": "Simulation: ausprobieren"}
+{"type": "simulation", "name": "…", "spec": { …see below… }}
+```
+
+`scripts/build_simulation.py` expands these into self-contained `.html` files
+(under `sims/`) and rewires each as a `resource`. Run it **first** in the pipeline
+(before `make_materials.py`):
+
+```
+build_simulation.py course.json     -o course.sim.json          # sims → file resources
+make_materials.py   course.sim.json -o course.materialized.json # PDFs/PPTX
+build_mbz.py        course.materialized.json -o course.mbz --wwwroot …
+```
+
+`python build_simulation.py --list` shows the library; `--emit <name> -o f.html`
+renders one standalone. After restoring, set the resource's display to *embed* or
+*pop-up* so the simulation opens in place.
+
+**Engine + spec (one engine, many subjects).** `scripts/sim_engine.py` holds a
+generic engine (sliders, KPI tiles, theme, layout) and `SIM_LIBRARY`. A spec is:
+`{title, subtitle, inputs:[{id,label,unit,min,max,step,default}],
+kpis:[{id,label,unit,dec,big?}], visual:"<svg…>", compute:"<JS body> return {…}",
+render:"<JS body>"}`. Only `compute` (the domain formulas) and `render`/`visual`
+(the picture) are subject-specific — the rest is identical for every trade. **To
+extend:** add a spec to `SIM_LIBRARY` (or pass one inline). Keep values on the
+slider `step` grid (a `default` off the grid gets snapped by the browser).
 
 ## Course definition reference
 

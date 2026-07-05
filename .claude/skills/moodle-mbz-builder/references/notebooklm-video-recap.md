@@ -1,9 +1,9 @@
 # Video-Recap via NotebookLM (Best-Effort-Workflow)
 
-Automatisiert den bislang manuellen Platzhalter „Videozusammenfassung" im
-Kurs-Recap. Status: **Folgeprojekt** — vor Produktivnutzung einen manuell
-begleiteten Spike fahren. Auslöser: `video_recap`-Action aus dem Editor-Widget
-oder direkte User-Bitte.
+Automatisiert den Platzhalter „Videozusammenfassung" im Kurs-Recap. Status:
+**erprobt** — kompletter Durchlauf am 2026-07-05 (Kurs „Drehen und Fräsen",
+zwei Videos generiert, heruntergeladen, eingebaut, .mbz validiert). Auslöser:
+`video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
 
 ## Grundsätze
 
@@ -18,30 +18,50 @@ oder direkte User-Bitte.
 - **Dauer kommunizieren:** Die Video-Generierung dauert mehrere Minuten.
   User vorab informieren; geduldig pollen, NICHT eng loopen.
 
-## Ablauf
+## Ablauf (erprobt 2026-07-05 — exakt so ausführen)
 
-1. Dossier erzeugen:
+1. **Dossier erzeugen:**
    `python <skill-dir>/scripts/export_course_dossier.py course.json -o dossier.md`
    — EIN konsolidiertes Markdown (Handlungssituation, Lernziele, alle
    Seiten/Bücher, Auftragstext, Glossar; OHNE Quiz-Lösungen, ohne verborgene
    Lehrkraft-Sektion, ohne Datei-/Link-/Organisations-Aktivitäten). Ein
    Dossier statt vieler Einzel-PDFs: weniger Quellen, kohärenterer Kontext,
    volle Kontrolle darüber, was das Video „weiß".
-2. User bitten, sich in Chrome bei NotebookLM einzuloggen; Browser-Tools laden
-   (ToolSearch, gebündelt).
-3. Neues Notebook anlegen (Titel = Kurs-Shortname), `dossier.md` als Quelle
-   hochladen.
-4. Video-Overview anfordern (Sprache Deutsch wählen, sofern verfügbar —
-   Qualität im Spike prüfen).
-5. Auf Fertigstellung warten (Minuten; moderat pollen).
-6. MP4 herunterladen → im Kursordner ablegen.
-7. Recap-Platzhalter ersetzen — **Ein-Schritt-Einbau** mit dem Helfer
-   `scripts/set_recap_video.py` (ersetzt die „Videozusammenfassung"-Leerstelle):
-   - Teilen-Link:  `python set_recap_video.py course.json --url https://…`
-   - Datei (MP4/Audio): `python set_recap_video.py course.json --file "<pfad>/recap.mp4"`
-   Danach normal bauen (`make_materials` → `build_mbz` → `validate` → `preview`);
-   falls das Widget offen ist, regenerieren und `.mbz` erst bei `finalize` bauen.
-   Der Link-Weg (`url`) ist schlanker (kein großes Video in der Sicherung).
+2. **Browser verbinden:** claude-in-chrome-Tools laden (ToolSearch,
+   gebündelt), `tabs_context_mcp{createIfEmpty:true}`. Wenn kein Browser
+   verbunden ist (`list_connected_browsers` = leer): User bitten, die
+   Claude-Erweiterung in Chrome mit seinem Konto anzumelden. Der User loggt
+   sich selbst bei notebooklm.google.com ein.
+3. **Notebook + Quelle:** notebooklm.google.com öffnen (legt automatisch ein
+   leeres Notebook an; „Willkommen"-Dialog mit Ok wegklicken). Quelle
+   einbringen über **„Quellen hinzufügen → Kopierter Text"** — NICHT
+   „Dateien hochladen" (Datei-Upload aus der Claude-Sandbox ist blockiert,
+   nur session-geteilte Dateien). Dossier-Inhalt in Blöcken à ~3–5k Zeichen
+   eintippen (ein Riesenblock läuft in einen 30s-CDP-Timeout), Ende per
+   Screenshot verifizieren, „Einfügen" klicken. NotebookLM benennt das
+   Notebook automatisch nach der Quelle.
+4. **Videoübersicht anfordern:** Studio-Kachel „Videoübersicht" → Chevron
+   (>) öffnet „Video-Zusammenfassung anpassen": Format „Erklärvideo",
+   **Sprache Deutsch** prüfen, in das Fokus-Feld („Worauf sollen sich die
+   KI-Moderatoren konzentrieren?") den **Brief** eintippen (Vorlagen unten —
+   für den Recap-Platzhalter IMMER die Rückblick-Variante), „Erstellen".
+5. **Warten:** Generierung ~5 min; moderat pollen (Screenshots im
+   ~1-Minuten-Abstand). Fertiges Video erscheint als Studio-Eintrag mit
+   Titel + Länge.
+6. **Herunterladen:** ⋮-Menü des Studio-Eintrags → „Herunterladen" → MP4
+   landet im Browser-Download-Ordner (`~/Downloads`, Titel mit Unterstrichen).
+   In den Kursordner (`assets/`) kopieren.
+7. **Recap-Platzhalter ersetzen** — Ein-Schritt-Einbau mit
+   `scripts/set_recap_video.py` (idempotent, ein erneuter Lauf tauscht das
+   Video aus):
+   - Datei (MP4): `python set_recap_video.py course.json --file "<pfad>/recap.mp4"`
+   - Teilen-Link: `python set_recap_video.py course.json --url https://…`
+     (schlanker: kein großes Video in der Sicherung — aber Lernende brauchen
+     dann Zugriff auf den Link)
+   Danach normal bauen (`make_materials` → `build_mbz` → `validate` →
+   `preview`) und **verifizieren**, dass die Video-Ressource im Kurs-Recap
+   sitzt; falls das Widget offen ist, regenerieren — `.mbz` erst bei
+   `finalize` bauen.
 
 **Der Brief entscheidet über die Funktion des Videos!** Ohne klare Vorgabe
 erzählt NotebookLM die Handlungssituation als NEUE Geschichte — das Video
@@ -76,10 +96,7 @@ Hinweis: Die Minutenangabe ist für NotebookLM nur ein Richtwert (bestellt
   → MP4 landet im Browser-Download-Ordner (~29 MB bei 5:32).
 - [x] Gesamtdauer akzeptabel: Generierung ~5 min (moderat pollen).
 
-**Automatisierungs-Fallen (beim nächsten Lauf beachten):**
-- `computer type` mit >10k Zeichen läuft in einen 30s-CDP-Timeout, tippt aber
-  im Hintergrund weiter — Dossier in **Blöcken à ~3–5k Zeichen** eintippen und
-  danach per Screenshot verifizieren, dass das Ende angekommen ist.
-- Beim ersten NotebookLM-Besuch erscheint ein „Willkommen"-Info-Dialog (nur
-  Ok) — wegklicken, sonst blockiert er die Klicks dahinter.
-- NotebookLM benennt das Notebook automatisch nach der Quelle.
+Alle dabei gefundenen Automatisierungs-Fallen sind oben in den Ablauf
+eingearbeitet (Kopierter Text statt Datei-Upload, Chunk-Typing,
+Willkommens-Dialog). Zweiter Lauf am selben Tag: Rückblick-Brief → Titel
+„Rückblick: Drehen & Fräsen", 4:17 min — das Framing im Brief wirkt.
