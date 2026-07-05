@@ -43,10 +43,25 @@ oder direkte User-Bitte.
    falls das Widget offen ist, regenerieren und `.mbz` erst bei `finalize` bauen.
    Der Link-Weg (`url`) ist schlanker (kein großes Video in der Sicherung).
 
-**Tipp:** `export_course_dossier.py` erzeugt die NotebookLM-Quelle; lege daneben
-optional einen kurzen Auftragstext (`*_notebooklm_brief.txt`: deutsche
-Audioübersicht, ~2–3 min, einfache Sprache, keine Testlösungen) als Vorlage fürs
-„Anpassen/Customize"-Feld ab.
+**Der Brief entscheidet über die Funktion des Videos!** Ohne klare Vorgabe
+erzählt NotebookLM die Handlungssituation als NEUE Geschichte — das Video
+fühlt sich dann wie ein Einstieg an, obwohl es im Kurs-Recap steht (real
+passiert am 2026-07-05). Lege daher fest, WELCHE Rolle das Video hat, und
+lege den Brief als `*_notebooklm_brief.txt` neben das Dossier:
+
+- **Kurs-Recap (Standard, ersetzt den Platzhalter):** ausdrücklich als
+  RÜCKBLICK framen: „Die Lernenden haben das Modul bereits durchgearbeitet.
+  Sprich durchgehend rückblickend (‚In diesem Modul haben Sie gelernt…').
+  Beginne NICHT mit der Handlungssituation als neuer Geschichte — erinnere
+  höchstens kurz daran. Fasse die Kernpunkte zusammen, Schluss: Transfer-
+  Impuls + Gratulation zum abgeschlossenen Modul." Dazu: Zielgruppe,
+  B1-Sprache, Sie-Anrede, 2–3 min, keine Testlösungen.
+- **Einstieg/Advance Organizer (optionale zweite Variante für Abschnitt 1):**
+  „Neugierig machen, die Handlungssituation als offene Frage aufwerfen,
+  Überblick über das Kommende geben, nichts auflösen."
+
+Hinweis: Die Minutenangabe ist für NotebookLM nur ein Richtwert (bestellt
+2–3 min, geliefert 5:32).
 
 ## Spike-Checkliste — BESTANDEN (2026-07-05, Kurs „Drehen und Fräsen")
 
