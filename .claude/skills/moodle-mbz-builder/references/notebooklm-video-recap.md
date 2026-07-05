@@ -35,10 +35,18 @@ oder direkte User-Bitte.
    Qualität im Spike prüfen).
 5. Auf Fertigstellung warten (Minuten; moderat pollen).
 6. MP4 herunterladen → im Kursordner ablegen.
-7. In der Kurs-JSON den Recap-Platzhalter ersetzen durch
-   `{"type": "resource", "name": "Videozusammenfassung", "file": "<pfad>/recap.mp4"}`
-   und (falls Widget offen) das Widget regenerieren; `.mbz` erst bei
-   `finalize` bauen.
+7. Recap-Platzhalter ersetzen — **Ein-Schritt-Einbau** mit dem Helfer
+   `scripts/set_recap_video.py` (ersetzt die „Videozusammenfassung"-Leerstelle):
+   - Teilen-Link:  `python set_recap_video.py course.json --url https://…`
+   - Datei (MP4/Audio): `python set_recap_video.py course.json --file "<pfad>/recap.mp4"`
+   Danach normal bauen (`make_materials` → `build_mbz` → `validate` → `preview`);
+   falls das Widget offen ist, regenerieren und `.mbz` erst bei `finalize` bauen.
+   Der Link-Weg (`url`) ist schlanker (kein großes Video in der Sicherung).
+
+**Tipp:** `export_course_dossier.py` erzeugt die NotebookLM-Quelle; lege daneben
+optional einen kurzen Auftragstext (`*_notebooklm_brief.txt`: deutsche
+Audioübersicht, ~2–3 min, einfache Sprache, keine Testlösungen) als Vorlage fürs
+„Anpassen/Customize"-Feld ab.
 
 ## Spike-Checkliste (vor erster echter Nutzung)
 
