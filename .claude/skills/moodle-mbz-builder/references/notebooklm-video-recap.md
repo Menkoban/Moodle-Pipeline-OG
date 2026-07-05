@@ -48,9 +48,23 @@ optional einen kurzen Auftragstext (`*_notebooklm_brief.txt`: deutsche
 Audioübersicht, ~2–3 min, einfache Sprache, keine Testlösungen) als Vorlage fürs
 „Anpassen/Customize"-Feld ab.
 
-## Spike-Checkliste (vor erster echter Nutzung)
+## Spike-Checkliste — BESTANDEN (2026-07-05, Kurs „Drehen und Fräsen")
 
-- [ ] Upload eines Markdown-Dossiers funktioniert
-- [ ] Video-Overview auf Deutsch verfügbar und didaktisch brauchbar
-- [ ] Download des MP4 automatisierbar
-- [ ] Gesamtdauer akzeptabel (User informieren)
+- [x] Quelle einbringen funktioniert — ABER: Datei-Upload aus der Sandbox ist
+  blockiert (nur session-geteilte Dateien). **Robuster Weg: „Kopierter Text"**
+  (Quellen hinzufügen → Kopierter Text → Dossier-Inhalt eintippen → Einfügen).
+- [x] Video-Overview auf Deutsch verfügbar: Kachel „Videoübersicht" →
+  Chevron öffnet „Anpassen" (Format Erklärvideo, Sprache Deutsch, Fokus-Feld
+  für den Brief). Ergebnis war didaktisch brauchbar (5:32 min, Titel und
+  roter Faden aus der Handlungssituation übernommen).
+- [x] Download klappt: ⋮-Menü der fertigen Videoübersicht → „Herunterladen"
+  → MP4 landet im Browser-Download-Ordner (~29 MB bei 5:32).
+- [x] Gesamtdauer akzeptabel: Generierung ~5 min (moderat pollen).
+
+**Automatisierungs-Fallen (beim nächsten Lauf beachten):**
+- `computer type` mit >10k Zeichen läuft in einen 30s-CDP-Timeout, tippt aber
+  im Hintergrund weiter — Dossier in **Blöcken à ~3–5k Zeichen** eintippen und
+  danach per Screenshot verifizieren, dass das Ende angekommen ist.
+- Beim ersten NotebookLM-Besuch erscheint ein „Willkommen"-Info-Dialog (nur
+  Ok) — wegklicken, sonst blockiert er die Klicks dahinter.
+- NotebookLM benennt das Notebook automatisch nach der Quelle.
