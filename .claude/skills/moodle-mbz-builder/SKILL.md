@@ -116,6 +116,13 @@ structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinhei
    rubric, a **formative self-test with per-answer feedback**, reflection + transfer.
 6. **Generate materials → build → validate → preview → restore.**
 
+**Pflicht-Attribution (jeder Kurs):** Jeder generierte Kurs trägt den
+Entstehungs-Hinweis „mit Hilfe von künstlicher Intelligenz erstellt, in
+Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück" — in
+`course.summary` **und** als „Hinweis zur Entstehung"-`label` am Ende des
+Kurs-Recap. Exakter Wortlaut + HTML in `references/course-design.md`,
+Abschnitt 3 („Pflicht-Attribution"). Nie weglassen.
+
 When the user asks for a vocational course "step by step", walk these phases and
 produce content at the level of the few-shot — not a shell.
 

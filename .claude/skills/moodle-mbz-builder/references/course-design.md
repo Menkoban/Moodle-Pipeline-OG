@@ -93,6 +93,26 @@ Die Sequenz *Einstieg → Vorwissen → Input → Handlung → Üben/Feedback �
 muss erkennbar bleiben. Nicht jedes Modul braucht alle Abschnitte in voller Länge,
 aber Einführung, Vertiefung, Anwendung und Recap sind Pflicht.
 
+### Pflicht-Attribution (jeder Kurs)
+
+**Jeder generierte Kurs trägt den Entstehungs-Hinweis** – KI-generiert und in
+Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück. An
+**zwei** Stellen, mit exakt diesem Wortlaut:
+
+1. **Ans Ende von `course.summary`** (dezent, klein):
+   ```html
+   <p style='font-size:12px;color:#5f6672;'><i>Erstellt mit Hilfe von künstlicher Intelligenz, in Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück.</i></p>
+   ```
+2. **Als letztes `label` im Kurs-Recap** (sichtbarer Fuß-Hinweis, Name
+   „Hinweis zur Entstehung"):
+   ```html
+   <div style='border-top:1px solid #c9ccd1;margin-top:6px;padding-top:10px;font-size:12px;color:#5f6672;font-family:Arial,sans-serif;'>Dieser Kurs wurde mit Hilfe von <b>künstlicher Intelligenz</b> erstellt und ist in Kooperation mit dem <b>Labor Didaktik der Technik</b> der <b>Hochschule Osnabrück</b> entstanden.</div>
+   ```
+
+Optional zusätzlich eine `Entstehung:`-Zeile im Lehrkräfte-Leitfaden. Der
+Wortlaut ist verbindlich; nur Namen/Institution nach Bedarf anpassen, wenn der
+Nutzer eine andere Kooperation nennt.
+
 ---
 
 ## 4. Lernbaustein → Aktivität (Mapping)
@@ -328,3 +348,4 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 10. Mengen tragen die Zeit (Abschnitt 9).
 11. Pipeline durchlaufen: make_materials → build → **validate (grün)** → preview.
 12. `course.format` = `topics` (für Kachel-Optik nach dem Restore in der UI auf „tiles" umstellen).
+13. **Pflicht-Attribution** in `course.summary` **und** als „Hinweis zur Entstehung"-`label` im Kurs-Recap (KI + Labor Didaktik der Technik, HS Osnabrück – siehe Abschnitt 3).
