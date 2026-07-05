@@ -1,20 +1,27 @@
-# Video-Recap via NotebookLM (Best-Effort-Workflow)
+# Video-Recap via NotebookLM (Pflicht-Schritt jedes Kurses)
 
-Automatisiert den Platzhalter „Videozusammenfassung" im Kurs-Recap. Status:
-**erprobt** — kompletter Durchlauf am 2026-07-05 (Kurs „Drehen und Fräsen",
-zwei Videos generiert, heruntergeladen, eingebaut, .mbz validiert). Auslöser:
-`video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
+Füllt den Platzhalter „Videozusammenfassung" im Kurs-Recap. **Dieser Schritt
+gehört zu jedem fertigen Kurs** (siehe SKILL.md „Quick start" Schritt 6 und
+course-design.md Pipeline) – nicht optional. Status: **erprobt** — kompletter
+Durchlauf am 2026-07-05 (Kurs „Drehen und Fräsen") und am 2026-07-05 erneut für
+den Kurs „Künstliche neuronale Netze". Auslöser: automatisch am Ende jedes
+Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
 
 ## Grundsätze
 
+- **Immer ausführen, außer es geht technisch nicht.** Der Video-Recap ist der
+  letzte Standard-Schritt jedes Kurses. Nur wenn kein Browser verbunden ist
+  (`list_connected_browsers` leer) oder der Nutzer bei NotebookLM nicht
+  eingeloggt ist, entfällt er – dann Platzhalter lassen, Nutzer informieren,
+  Video nachziehen. Nie kommentarlos überspringen.
 - **Keine Zugangsdaten an Claude.** Der User loggt sich selbst in Chrome bei
   notebooklm.google.com ein; Claude steuert danach die eingeloggte Session
   über die Browser-Tools (claude-in-chrome). Niemals Passwörter entgegennehmen
   oder in Login-Formulare tippen (Google-Bot-Erkennung + 2FA machen das
   ohnehin unzuverlässig).
-- **Best-Effort:** UI-Automatisierung ist fragil (Google-UI ändert sich).
-  Fallback ist immer: Platzhalter bleibt im Kurs, User erzeugt das Video
-  manuell.
+- **Best-Effort in der Ausführung:** UI-Automatisierung ist fragil (Google-UI
+  ändert sich). Bricht sie ab: Platzhalter bleibt im Kurs, User erzeugt das
+  Video manuell – aber der Schritt wird bei jedem Kurs *versucht*.
 - **Dauer kommunizieren:** Die Video-Generierung dauert mehrere Minuten.
   User vorab informieren; geduldig pollen, NICHT eng loopen.
 

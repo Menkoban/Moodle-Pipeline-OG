@@ -263,12 +263,18 @@ im Kurs steht an der Stelle nur das Infoblatt selbst.
 
 **Pipeline (Standard für jeden Kurs):**
 ```
-autofit_svg.py   assets/                                     # viewBox passgenau -> kein Clipping
-validate_svg.py  course.json --strict                        # Überlappungen/tspan finden (vor make_materials!)
-make_materials.py course.json -o course.materialized.json   # PDF/PPTX + Einhängen
-build_mbz.py     course.materialized.json -o course.mbz --wwwroot ...
-validate_mbz.py  course.mbz
-preview_mbz.py   course.materialized.json -o course_vorschau.html
+autofit_svg.py        assets/                                # viewBox passgenau -> kein Clipping
+validate_svg.py       course.json --strict                   # Überlappungen/tspan finden (vor make_materials!)
+build_simulation.py   course.json -o course.sim.json         # nur falls Simulationen -> Datei-Ressourcen
+make_materials.py     course.sim.json -o course.materialized.json  # PDF/PPTX + Einhängen
+build_mbz.py          course.materialized.json -o course.mbz --wwwroot ...
+validate_mbz.py       course.mbz
+preview_mbz.py        course.materialized.json -o course_vorschau.html
+--- danach IMMER: Video-Recap (NotebookLM) ---
+export_course_dossier.py course.json -o dossier.md           # Quelle fürs Video
+# NotebookLM-Flow (references/notebooklm-video-recap.md): Video erzeugen + herunterladen
+set_recap_video.py    course.json --file recap.mp4           # Platzhalter ersetzen
+# dann make_materials -> build_mbz -> validate -> preview ERNEUT (jetzt mit Video)
 ```
 Die beiden SVG-Schritte laufen **zuerst**, damit die (korrigierten) Diagramme in
 Kurs, PDF und PPTX identisch stimmen. `autofit_svg.py` musst du selbst ausführen
@@ -276,8 +282,14 @@ Kurs, PDF und PPTX identisch stimmen. `autofit_svg.py` musst du selbst ausführe
 `make_materials.py` (vor dem Rastern) und `build_mbz.py` (jeder Build, nur Warnung;
 `--strict-svg` bricht ab, `--no-svg-check` überspringt) – ein defektes Diagramm
 rutscht also auch dann nicht durch, wenn man den Schritt vergisst.
-Die einzige Material-Ausnahme: die **Videozusammenfassung** (NotebookLM-Platzhalter,
-bewusst nicht generiert). Liefere immer `.mbz` **und** die HTML-Vorschau aus.
+
+**Der Video-Recap gehört zu jedem fertigen Kurs (Pflicht-Schritt).** Die
+Videozusammenfassung im Kurs-Recap wird nicht lokal generiert, sondern über den
+NotebookLM-Flow (`references/notebooklm-video-recap.md`) erzeugt und mit
+`set_recap_video.py` eingebaut; danach wird der Kurs **neu gebaut**. Nur wenn in
+der Session kein Browser/kein NotebookLM-Login verfügbar ist, bleibt der
+Platzhalter stehen – dann den Nutzer informieren und das Video nachziehen.
+Liefere immer `.mbz` **und** die HTML-Vorschau aus.
 
 ---
 

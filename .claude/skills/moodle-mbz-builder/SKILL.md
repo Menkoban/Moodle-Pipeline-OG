@@ -235,7 +235,22 @@ feedback items, and file resources/folders. Images are inlined (SVG as markup,
 raster as base64), so the file stands alone. Treat this as a standard output of
 every build — deliver the preview together with the `.mbz`.
 
-6. In Moodle: *Course → Restore → upload `backup.mbz` →* restore as a new course
+6. **Video-Recap erzeugen — PFLICHT-SCHRITT bei jedem Kurs.** Der Kurs enthält
+   im Kurs-Recap den Platzhalter „Videozusammenfassung". **Fülle ihn immer**,
+   sofern technisch möglich: Führe den NotebookLM-Flow aus
+   `references/notebooklm-video-recap.md` aus (Dossier via
+   `export_course_dossier.py` → Browser via claude-in-chrome → Quelle als
+   „Kopierter Text" → Videoübersicht „Anpassen": Deutsch + **Rückblick-Brief** →
+   ~5 min pollen → herunterladen → `set_recap_video.py --file` → **Kurs neu
+   bauen**). Das ist kein optionaler Zusatz mehr, sondern gehört zu jedem
+   fertigen Kurs.
+   **Einzige Ausnahme (Fallback):** Ist in der Session kein Browser verbunden
+   (`list_connected_browsers` leer) oder der Nutzer bei NotebookLM nicht
+   eingeloggt, kann der Schritt nicht laufen — dann den Platzhalter im Kurs
+   lassen, den Nutzer bitten, sich einzuloggen, und das Video nachziehen,
+   sobald der Zugang steht. Niemals einfach überspringen ohne Hinweis.
+
+7. In Moodle: *Course → Restore → upload `backup.mbz` →* restore as a new course
    (or merge into an existing one).
 
 A full demo spec covering every supported type lives at
@@ -525,9 +540,9 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
 - `references/activity-types.md` — per-activity-type field schemas and source
   pointers; read before adding or editing an activity type.
 - `references/course-spec.md` — the JSON course-definition schema.
-- `references/notebooklm-video-recap.md` — Best-Effort-Workflow für die
-  automatische Videozusammenfassung (NotebookLM) inkl.
-  `export_course_dossier.py`; Grundlage des Folgeprojekts.
+- `references/notebooklm-video-recap.md` — **Pflicht-Schritt** am Ende jedes
+  Kurses: Video-Recap via NotebookLM (Dossier via `export_course_dossier.py`,
+  Einbau via `set_recap_video.py`). Immer ausführen, außer kein Browser/Login.
 - `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
   text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
   labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Run on
