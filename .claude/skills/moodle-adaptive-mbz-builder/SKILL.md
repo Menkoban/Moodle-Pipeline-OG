@@ -79,6 +79,38 @@ Generator-Bausteine dahinter (für Debugging): Quiz-grade_items in
 availability-Bedingungen mit symbolischen `ref`-Verweisen, die beim Build
 gegen die ID-Map aufgelöst werden — Sections (Kacheln) wie Module.
 
+## Pflicht-Ablauf mit Gates — Step-by-Step, nichts überspringen
+
+Jeder adaptive Kursauftrag läuft in DIESER Reihenfolge. **Lege beim Start
+für jedes Gate ein eigenes Todo an** (TaskCreate) und hake es erst ab,
+wenn das Gate GRÜN ist. Ein Schritt, dessen Ergebnis-Datei fehlt, ist
+NICHT passiert.
+
+1. **Adaptives Briefing** (nächster Abschnitt) → Gate: Autor hat den
+   **Vorschlags-Steckbrief bestätigt** (Pfade, Stufen, Schwellen, Motive).
+2. **Stufen-Spec (adaptiv.json) + Content + SVGs** → Gate:
+   `validate_svg.py --strict` Exit 0.
+3. **Expandieren**: `build_adaptive.py adaptiv.json -o course.json`
+   (schreibt auch die pathmap).
+4. **Editor-Widget**: `build_editor_widget.py course.json -o editor.html`
+   bauen UND via `mcp__visualize__show_widget` **rendern** (vorher still
+   `read_me`, modules `["interactive"]`). Bauen ohne Rendern erfüllt das
+   Gate NICHT. Zusätzlich Lese-Vorschau bauen und als Datei senden.
+5. **NotebookLM-Video SOFORT starten** (Dossier → Browser-Flow) —
+   parallel zu Schritt 6; Fallback-Regel siehe Video-Kapitel.
+6. **Pipeline**: `build_simulation` → `make_materials` → `build_mbz` →
+   Gate: `validate_mbz.py` Exit 0 → Gate: `simulate_pathways.py` Exit 0
+   (Ratschen-Test).
+7. **Video einbauen** (`set_recap_video.py`) → Rebuild → Re-Validate →
+   Re-Simulate.
+8. **Sammelordner-Ablage** (relative Pfade, assets/ mitkopieren).
+9. **SCHLUSS-GATE**: `python <skill-dir>/scripts/check_delivery.py
+   "<kursordner>"` — prüft maschinell: course.json relativ +
+   self-contained, .mbz + validate grün, Vorschau, editor.html,
+   materials/, Video eingebaut UND simulate_pathways grün. **Erst bei
+   Exit 0 ausliefern.** Ausnahmen (`--allow-video-placeholder` /
+   `--allow-no-widget`) IMMER im Chat begründen.
+
 ## Adaptives Briefing — PFLICHT-INTAKE vor jedem Kurs
 
 BEVOR irgendetwas gebaut wird, führe das adaptive Briefing als
