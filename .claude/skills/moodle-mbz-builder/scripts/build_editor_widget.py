@@ -42,12 +42,29 @@ def _enrich(spec, inline_images):
     return s
 
 
-def build_widget(spec, inline_images=True):
+def _ascii_safe(out):
+    """Verlustfreier ASCII-Transfer: Nicht-ASCII in <script>-Blöcken als
+    \\uXXXX-Escapes (JS/JSON-dekodiert), im HTML als numerische Entities."""
+    parts = re.split(r"(<script\b.*?</script>)", out, flags=re.S)
+    res = []
+    for p in parts:
+        if p.startswith("<script"):
+            res.append("".join(ch if ord(ch) < 128 else "\\u%04x" % ord(ch)
+                               for ch in p))
+        else:
+            res.append("".join(ch if ord(ch) < 128 else f"&#x{ord(ch):X};"
+                               for ch in p))
+    return "".join(res)
+
+
+def build_widget(spec, inline_images=True, ascii_safe=False):
     enriched = _enrich(spec, inline_images)
-    data = json.dumps(enriched, ensure_ascii=False).replace("</", "<\\/")
+    data = json.dumps(enriched, ensure_ascii=ascii_safe).replace("</", "<\\/")
     out = TEMPLATE.replace("__COURSE_JSON__", data)
+    if ascii_safe:
+        out = _ascii_safe(out)
     if inline_images and len(out) > MAX_WIDGET_CHARS:
-        return build_widget(spec, inline_images=False)
+        return build_widget(spec, inline_images=False, ascii_safe=ascii_safe)
     return out
 
 
@@ -390,10 +407,17 @@ def main():
     ap = argparse.ArgumentParser(description="Kurs-Editor-Widget aus course.json erzeugen")
     ap.add_argument("course_json")
     ap.add_argument("-o", "--output")
+    ap.add_argument("--no-inline-images", action="store_true",
+                    help="Diagramme nicht einbetten (kompakter Chat-Payload; "
+                         "Bilder bleiben Pfad-Referenzen)")
+    ap.add_argument("--ascii", action="store_true",
+                    help="ASCII-sicher ausgeben (JSON \\uXXXX + HTML-Entities) "
+                         "für verlustfreien Konsolen-Transfer")
     args = ap.parse_args()
     spec = json.load(open(args.course_json, encoding="utf-8"))
     out_path = args.output or (os.path.splitext(args.course_json)[0] + "_editor.html")
-    html_out = build_widget(spec)
+    html_out = build_widget(spec, inline_images=not args.no_inline_images,
+                            ascii_safe=args.ascii)
     open(out_path, "w", encoding="utf-8").write(html_out)
     print(f"Editor-Widget geschrieben: {out_path} ({len(html_out)} Zeichen)")
 

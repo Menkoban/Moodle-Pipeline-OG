@@ -24,6 +24,13 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
   Video manuell – aber der Schritt wird bei jedem Kurs *versucht*.
 - **Dauer kommunizieren:** Die Video-Generierung dauert mehrere Minuten.
   User vorab informieren; geduldig pollen, NICHT eng loopen.
+- **Wartezeit als Prüfzeit nutzen (Parallelität):** Den Video-Flow so früh
+  wie möglich starten (er braucht nur das Dossier aus `course.json`) und
+  WÄHREND der 5–10 min Generierung die restliche Pipeline fahren:
+  autofit/validate_svg → build_simulation → make_materials → build_mbz →
+  **validate_mbz (inkl. Tiefen-Checks: Glossar-Kette, Kachelfotos,
+  Attribution, Formularfelder)** → preview + Browser-Checks. Nach dem
+  Video-Download nur `set_recap_video.py` + kurzer Rebuild + Re-Validate.
 
 ## Ablauf (erprobt 2026-07-05 — exakt so ausführen)
 

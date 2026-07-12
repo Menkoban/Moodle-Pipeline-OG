@@ -33,6 +33,7 @@ want content under "Topic 1", put an (often empty-ish) section 0 first.
 |---|---|---|---|
 | `name` | string \| null | null | Section title. `null` → Moodle's default name ("Topic N"). |
 | `summary` | HTML string | `""` | Section description. |
+| `image` / `images` | path \| list | — | **Kachel-Bild(er)**. With `course.format: "tiles"`: becomes the REAL tile photo (format_tiles filearea + `tilephoto` section option + restore-plugin wiring; use text-free ~800×450 PNGs). Other formats: attached to the section filearea; reference in `summary` via `@@PLUGINFILE@@/<name>`, or leave the summary without `@@PLUGINFILE@@` and the first image is auto-embedded as a banner on top. |
 | `visible` | 0/1 | `1` | |
 | `activities` | array | `[]` | Activity objects, in display order. |
 
@@ -70,6 +71,8 @@ Type-specific fields:
 | `choice` | `options` (list of strings) |
 | `feedback` | `items`: list (see below) |
 | `quiz` | `grade` (max), `questions`: list (see below) |
+| `simulation` | *(preprocessed)* `use` (SIM_LIBRARY name) OR `spec` (inline sim spec) — `build_simulation.py` expands it into an interactive HTML `resource` (SKILL.md → "Interactive simulations"). |
+| `formular` | *(preprocessed)* `spec` `{title, subtitle?, storage_key?, blocks:[{heading}\|{html}\|{field:{id,label,type:text\|textarea\|number,unit?,rows?}}], note?}` — `build_simulation.py` renders a fillable worksheet (full-width fields, localStorage autosave, save-as-file, print) as an HTML `resource`. Fields are always EMPTY: no placeholders/example Rechenwege (a `placeholder` entry is ignored). See SKILL.md → "Ausfüllbare Arbeitsblätter". |
 
 ### Glossary entries (user data)
 

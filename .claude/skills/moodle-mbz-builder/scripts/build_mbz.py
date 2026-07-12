@@ -36,6 +36,40 @@ from typing import Any
 
 NULL = "$@NULL@$"  # Moodle backup encoding for SQL NULL (≠ empty string "")
 
+# Pflicht-Attribution: steht automatisch am ENDE JEDER Seite (page-Content und
+# Buch-Kapitel). Override pro Kurs via course.attribution (eigener Satz) bzw.
+# course.attribution = "" schaltet den Seitenfuß ab.
+ATTRIBUTION_SENTENCE = (
+    "Dieser Kurs ist mit Hilfe von Künstlicher Intelligenz und in Kooperation "
+    "mit dem Labor Didaktik der Technik der Hochschule Osnabrück entstanden."
+)
+
+
+def attribution_text(spec) -> str:
+    c = (spec or {}).get("course", {})
+    if "attribution" in c:
+        return c.get("attribution") or ""
+    return ATTRIBUTION_SENTENCE
+
+
+def attribution_footer(spec) -> str:
+    text = attribution_text(spec)
+    if not text:
+        return ""
+    return (
+        "<div style='margin-top:16px;padding-top:8px;border-top:1px solid "
+        "#c9ccd1;font-size:11.5px;color:#5f6672;font-family:Arial,sans-serif;'>"
+        f"<i>{text}</i></div>"
+    )
+
+
+def with_attribution(content: str, spec) -> str:
+    """Append the attribution footer to page-like HTML (idempotent)."""
+    text = attribution_text(spec)
+    if not text or text in (content or ""):
+        return content or ""
+    return (content or "") + attribution_footer(spec)
+
 # Moodle 4.1 baseline. A backup created with these values restores into 4.1 and
 # is forward-compatible with 4.2–4.5 (Moodle only warns on newer-than-target,
 # it does not hard-reject a general restore).
@@ -286,12 +320,109 @@ class MbzBuilder:
                 }
             )
 
+    def add_section_file(self, path_on_disk: str, sec_id: int,
+                         tilephoto: bool = False) -> list[int]:
+        """Attach a file to a section. Default: summary filearea (component
+        'course', filearea 'section', itemid = section id), referenced in the
+        summary via @@PLUGINFILE@@/<filename>. With tilephoto=True (Kachel-Foto
+        für format_tiles): component 'format_tiles', filearea 'tilephoto',
+        filepath '/tilephoto/' — genau wie das Plugin die Fotos speichert.
+        Returns the file-record ids for the section's inforef.xml."""
+        with open(path_on_disk, "rb") as fh:
+            data = fh.read()
+        contenthash = hashlib.sha1(data).hexdigest()
+        filename = os.path.basename(path_on_disk)
+        store_path = f"files/{contenthash[:2]}/{contenthash}"
+        if store_path not in self.files:
+            self.add_raw(store_path, data)
+        component = "format_tiles" if tilephoto else "course"
+        filearea = "tilephoto" if tilephoto else "section"
+        filepath = "/tilephoto/" if tilephoto else "/"
+        refs: list[int] = []
+        empty_hash = "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+        # directory records ("." entries) — one per filepath level
+        dirpaths = ["/"] if filepath == "/" else ["/", filepath]
+        for dp in dirpaths:
+            dirkey = (self.ids.course_contextid, component, filearea, sec_id, dp)
+            if dirkey in self._fileareadirs:
+                continue
+            self._fileareadirs.add(dirkey)
+            dir_id = self.ids.fileid()
+            self.file_records.append({
+                "id": dir_id, "contenthash": empty_hash,
+                "contextid": self.ids.course_contextid, "component": component,
+                "filearea": filearea, "itemid": sec_id, "filepath": dp,
+                "filename": ".", "filesize": 0, "mimetype": None,
+                "source": None, "sortorder": 0,
+            })
+            refs.append(dir_id)
+        file_id = self.ids.fileid()
+        self.file_records.append({
+            "id": file_id, "contenthash": contenthash,
+            "contextid": self.ids.course_contextid, "component": component,
+            "filearea": filearea, "itemid": sec_id, "filepath": filepath,
+            "filename": filename, "filesize": len(data),
+            "mimetype": _guess_mime(filename), "source": filename,
+            "sortorder": 1,
+        })
+        refs.append(file_id)
+        return refs
+
     def _build_section_files(
         self, sec: dict, sec_id: int, number: int, cmids: list[int]
     ) -> None:
         name = sec.get("name")
         summary = sec.get("summary", "")
         visible = sec.get("visible", 1)
+        # Kachel-Bilder: section "image"/"images".
+        # - format "tiles": das Bild wird ECHTES Kachel-Foto (format_tiles):
+        #   Datei in format_tiles/tilephoto//tilephoto/, Section-Format-Option
+        #   'tilephoto' (Dateiname) + plugin_format_tiles_section-Element mit
+        #   <dummysection/> (verbindet das Restore-Plugin, das die Datei-itemids
+        #   auf die neuen Section-IDs umschreibt). KEIN Banner im Summary.
+        # - andere Formate: Datei in der Section-Filearea; fehlt @@PLUGINFILE@@
+        #   im Summary, wird das erste Bild als Banner vorangestellt.
+        fmt = self.spec.get("course", {}).get("format", "topics")
+        tiles = fmt == "tiles"
+        images = sec.get("images") or ([sec["image"]] if sec.get("image") else [])
+        images = [i for i in images if i and os.path.exists(i)]
+        filerefs: list[int] = []
+        tiles_extra = ""
+        for img in images:
+            filerefs += self.add_section_file(img, sec_id, tilephoto=tiles)
+        if tiles and images:
+            fname = os.path.basename(images[0])
+            # Kachel-Foto-Verdrahtung für BEIDE format_tiles-Generationen:
+            # - NEU (>= 2024021400): plugin_format_tiles_section trägt
+            #   sectionid-Attribut + optiontype(1=PHOTO)/optionvalue/
+            #   tilesversion; das Restore-Plugin schreibt damit in
+            #   format_tiles_tile_options, mappt die Section-ID und stellt
+            #   die Foto-Datei über die 'itemid'-Zuordnung wieder her.
+            # - ALT (learnweb-Ära): liest die legacy-Zeile 'tilephoto' aus
+            #   course_format_options (Core restauriert sie bei Format-Match)
+            #   und braucht <dummysection/> als Verbindungs-Trigger für die
+            #   Datei-itemid-Neuzuordnung. Neue Versionen ignorieren bzw.
+            #   migrieren die legacy-Zeile (Fotos haben Vorrang, idempotent).
+            tiles_extra = (
+                f'  <course_format_options id="{self.ids.instance()}">\n'
+                f"    {el('format', 'tiles')}\n"
+                f"    {el('name', 'tilephoto')}\n"
+                f"    {el('value', fname)}\n"
+                f"  </course_format_options>\n"
+                f'  <plugin_format_tiles_section sectionid="{sec_id}">\n'
+                f"    {el('optiontype', 1)}\n"
+                f"    {el('optionvalue', fname)}\n"
+                f"    {el('tilesversion', 2024021400)}\n"
+                f"    <dummysection></dummysection>\n"
+                f"  </plugin_format_tiles_section>\n"
+            )
+        elif images and "@@PLUGINFILE@@" not in summary:
+            first = os.path.basename(images[0])
+            summary = (
+                f"<div class='sectionimage'><img src='@@PLUGINFILE@@/{first}' "
+                f"alt='' style='max-width:100%;height:auto;border-radius:8px;'>"
+                f"</div>" + summary
+            )
         body = (
             f'<section id="{sec_id}">\n'
             f"  {el('number', number)}\n"
@@ -302,10 +433,19 @@ class MbzBuilder:
             f"  {el('visible', visible)}\n"
             f'  <availabilityjson>{{"op":"&amp;","c":[],"showc":[]}}</availabilityjson>\n'
             f"  {el('timemodified', self.now)}\n"
+            f"{tiles_extra}"
             f"</section>"
         )
         self.add_xml(f"sections/section_{sec_id}/section.xml", body)
-        self.add_xml(f"sections/section_{sec_id}/inforef.xml", "<inforef>\n</inforef>")
+        if filerefs:
+            fr = "".join(
+                f"    <file>\n      <id>{fid}</id>\n    </file>\n"
+                for fid in filerefs
+            )
+            inforef = f"<inforef>\n  <fileref>\n{fr}  </fileref>\n</inforef>"
+        else:
+            inforef = "<inforef>\n</inforef>"
+        self.add_xml(f"sections/section_{sec_id}/inforef.xml", inforef)
 
     def _build_activity(self, act: dict, sec_id: int, sec_number: int) -> int:
         mod = act["type"]
@@ -457,7 +597,12 @@ class MbzBuilder:
             f"  <tags>\n  </tags>\n"
             f"  <customfields>\n  </customfields>\n"
             f"  <courseformatoptions>\n{fmt_options}  </courseformatoptions>\n"
-            f"</course>"
+            # format_tiles: Dummy-Element verbindet das Restore-Plugin des
+            # Kachelformats (aktiviert dessen after_restore_course-Aufräumen).
+            + ("  <plugin_format_tiles_course>\n"
+               "    <dummycourse></dummycourse>\n"
+               "  </plugin_format_tiles_course>\n" if fmt == "tiles" else "")
+            + f"</course>"
         )
         self.add_xml("course/course.xml", body)
 
@@ -612,7 +757,10 @@ class MbzBuilder:
                 f"    {el('lastname', u['lastname'])}\n"
                 f"    <firstnamephonetic></firstnamephonetic>\n    <lastnamephonetic></lastnamephonetic>\n"
                 f"    <middlename></middlename>\n    <alternatename></alternatename>\n"
-                f"    {el('mnethosturl', self.wwwroot)}\n"
+                # mnethosturl MUSS $@NULL@$ sein: eine gesetzte URL (ungleich der
+                # Ziel-Site) macht den Autor zum MNet-REMOTE-User, den Moodle beim
+                # Restore nicht anlegen darf -> User verworfen -> Glossar leer.
+                f"    <mnethosturl>{NULL}</mnethosturl>\n"
                 f"    <confirmed>1</confirmed>\n    <policyagreed>0</policyagreed>\n    <deleted>0</deleted>\n"
                 f"    <lang>de</lang>\n    <theme></theme>\n    <timezone>99</timezone>\n"
                 f"    {el('firstaccess', self.now)}\n    {el('lastaccess', self.now)}\n"
@@ -1116,7 +1264,7 @@ def b_page(ctx):
         f'  <page id="{ctx.instance}">\n'
         f"    {el('name', a.get('name', 'Page'))}\n"
         f"{_intro(a)}"
-        f"    {el('content', a.get('content', ''))}\n"
+        f"    {el('content', with_attribution(a.get('content', ''), ctx.b.spec))}\n"
         f"    {el('contentformat', 1)}\n"
         f"    {el('legacyfiles', 0)}\n"
         f"    <legacyfileslast>{NULL}</legacyfileslast>\n"
@@ -1190,7 +1338,7 @@ def b_book(ctx):
             f"        {el('pagenum', i)}\n"
             f"        {el('subchapter', 1 if ch.get('subchapter') else 0)}\n"
             f"        {el('title', ch.get('title', f'Chapter {i}'))}\n"
-            f"        {el('content', ch.get('content', ''))}\n"
+            f"        {el('content', with_attribution(ch.get('content', ''), ctx.b.spec))}\n"
             f"        {el('contentformat', 1)}\n"
             f"        {el('hidden', 0)}\n"
             f"        {el('timemcreated', ctx.b.now)}\n"  # sic: 'timemcreated'
@@ -1296,7 +1444,7 @@ def b_glossary(ctx):
                 f"        {el('definition', e.get('definition', ''))}\n"
                 f"        {el('definitionformat', 1)}\n"
                 f"        {el('definitiontrust', 0)}\n"
-                f"        {el('attachment', 0)}\n"
+                f"        <attachment></attachment>\n"
                 f"        {el('timecreated', ctx.b.now)}\n"
                 f"        {el('timemodified', ctx.b.now)}\n"
                 f"        {el('teacherentry', 1)}\n"
@@ -1307,7 +1455,6 @@ def b_glossary(ctx):
                 f"        {el('approved', 1)}\n"
                 f"        <aliases>\n        </aliases>\n"
                 f"        <ratings>\n        </ratings>\n"
-                f"        <entriestags>\n        </entriestags>\n"
                 f"      </entry>"
             )
         entries_xml = "\n" + "\n".join(rows) + "\n    "
@@ -1328,6 +1475,7 @@ def b_glossary(ctx):
         f"    {el('timecreated', ctx.b.now)}\n    {el('timemodified', ctx.b.now)}\n"
         f"    {el('completionentries', 0)}\n"
         f"    <entries>{entries_xml}</entries>\n"
+        f"    <entriestags>\n    </entriestags>\n"
         f"  </glossary>"
     )
 
@@ -1560,17 +1708,25 @@ def main(argv=None) -> int:
             print(f"NOTE: SVG diagram check skipped ({e}). "
                   f"Install reportlab to enable it.", file=sys.stderr)
 
-    # Third-party course formats (e.g. tiles) ship their own backup/restore
-    # handler that expects plugin-specific data this generator does not produce;
-    # restoring such a course can fail with "required parameter (contextid)".
-    # Built-in formats (topics/weeks) restore reliably. Warn but proceed.
+    # Course formats: topics/weeks (built-in) restore reliably. 'tiles'
+    # (third-party format_tiles) is now emitted with full plugin fidelity:
+    # course-/section-Format-Optionen, Kachel-Foto-Dateien (format_tiles/
+    # tilephoto//tilephoto/) und plugin_format_tiles_*-Elemente mit Dummy-
+    # Triggern für das Restore-Plugin. Voraussetzung: format_tiles ist auf der
+    # Ziel-Site installiert. Andere Drittanbieter-Formate bleiben ungetestet.
     fmt = spec.get("course", {}).get("format", "topics")
-    if fmt not in ("topics", "weeks"):
+    if fmt == "tiles":
         print(
-            f"WARNING: course format '{fmt}' is a third-party plugin. Restoring may"
-            " fail with a 'contextid' error because its format-plugin backup data"
-            " is not generated. Recommended: use 'topics' and switch the format in"
-            " the course settings after restoring.",
+            "NOTE: course format 'tiles' requires the format_tiles plugin on the"
+            " target Moodle. Tile photos (section 'image') are wired natively;"
+            " if the restore errors, rebuild with format 'topics' as fallback.",
+            file=sys.stderr,
+        )
+    elif fmt not in ("topics", "weeks"):
+        print(
+            f"WARNING: course format '{fmt}' is a third-party plugin without"
+            " dedicated support in this generator; restoring may fail."
+            " Recommended: 'topics' (or 'tiles' for Kachel-Fotos).",
             file=sys.stderr,
         )
 

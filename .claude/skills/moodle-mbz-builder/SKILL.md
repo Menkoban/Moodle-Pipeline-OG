@@ -120,8 +120,11 @@ structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinhei
 Entstehungs-Hinweis „mit Hilfe von künstlicher Intelligenz erstellt, in
 Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück" — in
 `course.summary` **und** als „Hinweis zur Entstehung"-`label` am Ende des
-Kurs-Recap. Exakter Wortlaut + HTML in `references/course-design.md`,
-Abschnitt 3 („Pflicht-Attribution"). Nie weglassen.
+Kurs-Recap. **Zusätzlich hängt `build_mbz.py` den Satz automatisch als
+Seitenfuß an das Ende JEDER Seite und jedes Buch-Kapitels** (auch in Vorschau
+und Druck-PDFs; idempotent, Override/Abschalten via `course.attribution`).
+Exakter Wortlaut + HTML in `references/course-design.md`, Abschnitt 3
+(„Pflicht-Attribution"). Nie weglassen.
 
 When the user asks for a vocational course "step by step", walk these phases and
 produce content at the level of the few-shot — not a shell.
@@ -225,7 +228,19 @@ python <skill-dir>/scripts/validate_mbz.py backup.mbz
 ```
 
 It checks the archive is a valid gzip tar, every XML is well-formed, and the
-cross-references in `moodle_backup.xml` line up with the files actually present.
+cross-references in `moodle_backup.xml` line up with the files actually
+present — **plus deep content checks** (all < 1 s): the complete glossary
+user-data chain (settings, userref, author with `mnethosturl=$@NULL@$`,
+approved entries, import fallback aboard), tiles Kachelfoto wiring
+(option ↔ file ↔ blob ↔ plugin element), the attribution footer on every
+page/book chapter, empty formular fields (no placeholder = no pre-typed
+Lösungsweg) with autosave/save button, and the compact no-scroll sim layout.
+Exit 1 on errors; warnings don't fail.
+
+**Timing/Parallelität:** start the NotebookLM video FIRST (it only needs the
+dossier from `course.json` and takes 5–10 min), then run the whole
+build+validation pipeline WHILE the video generates — validators never add
+wall-clock time. See the pipeline block in `references/course-design.md`.
 
 5. **Always generate a visual preview** alongside the `.mbz` so the author can
    review the whole course (every section + every activity with its full
@@ -251,6 +266,13 @@ every build — deliver the preview together with the `.mbz`.
    ~5 min pollen → herunterladen → `set_recap_video.py --file` → **Kurs neu
    bauen**). Das ist kein optionaler Zusatz mehr, sondern gehört zu jedem
    fertigen Kurs.
+   **Reihenfolge/Parallelität:** Da NotebookLM nur das Dossier braucht und
+   5–10 min rechnet, den Video-Flow so FRÜH wie möglich anstoßen (direkt nach
+   fertiger `course.json`) und die Schritte 2–5 (Materialien, Build,
+   Validatoren, Vorschau, Browser-Checks) WÄHREND der Wartezeit ausführen —
+   die Wartezeit wird so vollständig als Prüfzeit genutzt und die
+   Kursherstellung nicht verlängert. Nach dem Video-Einbau nur der kurze
+   Rebuild + `validate_mbz` erneut.
    **Einzige Ausnahme (Fallback):** Ist in der Session kein Browser verbunden
    (`list_connected_browsers` leer) oder der Nutzer bei NotebookLM nicht
    eingeloggt, kann der Schritt nicht laufen — dann den Platzhalter im Kurs
@@ -349,6 +371,14 @@ takes `generalfeedback`; `multichoice` answers take per-answer `feedback`;
 makes the generator emit a minimal `users.xml` (one author), a `<userref>` in
 the glossary's `inforef.xml`, and set `users=1` + the matching `*_userinfo`
 settings. On restore, keep "include user data" enabled so the entries appear.
+The author user is written with `mnethosturl = $@NULL@$` — **never** a real
+URL: a set URL that differs from the target site makes Moodle treat the author
+as a foreign MNet remote user it may not create, the user is dropped and the
+glossary arrives **empty** (this was a real bug). As a belt-and-braces
+fallback, `make_materials.py` additionally writes a **glossary import XML**
+(`materials/<slug>_import.xml`, Moodle's Glossar → „Einträge importieren"
+format) and attaches it in the hidden teacher section — so even a restore
+without user data can re-fill the glossary in two clicks.
 `feedback` items are part of the activity definition (no user data needed).
 
 Per-type fields are documented in `references/activity-types.md`. Common
@@ -392,6 +422,51 @@ diagrams as **SVG (or PNG) files** and embed them as `<img>` — that renders
 reliably. SVG is ideal for labelled technical diagrams; you can hand-author it
 (no rasteriser needed). `image/svg+xml`, `png`, `jpg`, `gif`, `webp` are
 recognised. (Book-chapter inline images are not yet supported — use pages.)
+
+## Kachel-Bilder (section images) — Standard für jeden Kurs
+
+Every visible content section (Kachel) gets an image: set `"image"` (one
+path) or `"images"` (list) on the section. What the generator does depends on
+`course.format`:
+
+**`format: "tiles"` (echte Kachel-Fotos, format_tiles):** the image becomes
+the REAL tile photo of the Kachel — exactly as if uploaded in the tiles UI.
+The generator stores the file as `format_tiles / tilephoto / itemid=sectionid`
+with filepath `/tilephoto/` and emits the wiring for BOTH plugin
+generations (union, mutually harmless):
+
+- **current format_tiles (>= 2024021400):** `plugin_format_tiles_section`
+  with `sectionid` ATTRIBUTE + `optiontype=1` (PHOTO) / `optionvalue=
+  <filename>` / `tilesversion` — its restore writes the new
+  `format_tiles_tile_options` table, maps the section id and restores the
+  photo file via the `itemid` mapping. This is what current installs need;
+  without it tiles show only the default icon.
+- **legacy (learnweb-era):** `course_format_options` row `tilephoto` in
+  `section.xml` (core restores it on format match) + `<dummysection/>`
+  trigger for the old file-itemid remap. Newer plugins migrate/ignore the
+  legacy row (photos take precedence, idempotent).
+
+No banner is injected into the summary. Requirements: format_tiles installed
+on the target Moodle; the admin setting **"Foto-Kacheln erlauben"
+(allowphototiles)** enabled — without it Moodle hides photos even when they
+restored correctly. **Author tile photos as text-free motif PNGs (~800×450)**
+— the tile title is overlaid by the plugin itself, and the photo is cropped
+cover-style (draw an SVG motif, rasterise via svglib→fitz like
+`make_materials` does). `validate_mbz.py` enforces the full chain
+(option ↔ file ↔ blob ↔ new-style element; missing dummysection = warn).
+
+```json
+{"course": {"format": "tiles", …},
+ "sections": [{"name": "1 · Einstieg", "image": "assets/kachel_einstieg.png", …}]}
+```
+
+**Other formats (topics/weeks):** the file goes to the section summary
+filearea (component `course`, filearea `section`) and — if the summary does
+not already reference `@@PLUGINFILE@@` — the first image is embedded as a
+banner on top of the summary. Author banners as slim SVGs (viewBox
+`0 0 1200 150`, tinted background + motiv + title). They run through the same
+SVG QA as the diagrams. `preview_mbz.py` shows section images at the top of
+each Kachel in both modes.
 
 ## Downloadable materials (PDF + PowerPoint), auto-generated
 
@@ -464,6 +539,50 @@ render:"<JS body>"}`. Only `compute` (the domain formulas) and `render`/`visual`
 extend:** add a spec to `SIM_LIBRARY` (or pass one inline). Keep values on the
 slider `step` grid (a `default` off the grid gets snapped by the browser).
 
+**Layout: everything on one screen.** The engine renders controls + results in
+a left column and the live view beside them, so on a normal display (≥ ~1280 px)
+the WHOLE simulation is visible **without scrolling** (narrow screens stack).
+Keep the `visual` viewBox flat-ish (e.g. 600×300) so it fits the height budget
+(`svg {max-height:56vh}`).
+
+## Ausfüllbare Arbeitsblätter (`formular`) — echte Eingabefelder mit Speichern
+
+For worksheets/protocols the learners actually FILL IN (Berechnungsprotokoll,
+Prüfprotokoll, Reflexionsbogen), never leave `__________` blanks in a `page` —
+nobody can type there. Use a **`formular`** activity instead; `build_simulation.py`
+expands it (same pass as simulations) into a self-contained HTML **file
+resource** rendered by `scripts/form_engine.py` with:
+
+- full-width inputs/textareas (long enough for a Rechenweg — no cramped gaps),
+- **fields are ALWAYS EMPTY** — no placeholders, no pre-typed example
+  Rechenwege (they would give the solution away; the engine ignores any
+  `placeholder` in the spec). Hints belong in the `note` or teacher material,
+- field `label`s may carry inline HTML — use `<sub>`/`<sup>` for
+  Formelzeichen-Indizes (`A<sub>1</sub> = π/4 · d<sub>1</sub>²`); the
+  Textdatei-Export strips tags automatically,
+- **Autosave** into `localStorage` per field (survives reload/navigation),
+- **„Als Textdatei speichern"** (downloads the answers — for the `assign` upload),
+- **„Drucken / als PDF speichern"** (print CSS) and **„Zurücksetzen"**.
+
+```json
+{"type": "formular", "name": "Berechnungs- und Prüfprotokoll (ausfüllbar)",
+ "spec": {
+   "title": "Berechnungs- und Prüfprotokoll",
+   "storage_key": "hydraulik_protokoll",
+   "blocks": [
+     {"heading": "Daten (gegeben)"},
+     {"html": "<table>…</table>"},
+     {"field": {"id": "a1", "label": "Kolbenfläche A1 (Rechenweg + Ergebnis)",
+                "unit": "cm²", "type": "text"}},
+     {"field": {"id": "begruendung", "label": "Begründung", "type": "textarea", "rows": 3}}
+   ],
+   "note": "Tipp …"}}
+```
+
+Pair it with the Praxisauftrag: learners save their answers as a file and hand
+that in via the `assign`. After restore set the resource display to *embed* or
+*new window*.
+
 ## Course definition reference
 
 Full JSON schema (all course/section/activity fields and defaults) is in
@@ -518,11 +637,14 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
   gate applies only to same-site *import*, not to normal restore.
 - `.ARCHIVE_INDEX` is generated for fidelity with real backups, but Moodle's
   restore does not strictly require it (it reads `moodle_backup.xml`).
-- **Course format:** use the built-in `topics` (or `weeks`). Third-party formats
-  like **`tiles`** have their own backup/restore handler that expects
-  plugin-specific data this generator does not emit, so a restored `tiles`
-  course can fail with *"required parameter (contextid)"*. For a kachel look,
-  ship `topics` and switch the format in the course settings after restoring.
+- **Course format:** built-in `topics`/`weeks` restore reliably everywhere.
+  **`tiles`** (third-party format_tiles) is emitted with full plugin fidelity
+  — course/section format options, tile photos in `format_tiles/tilephoto/
+  /tilephoto/` and `plugin_format_tiles_*` elements with dummy triggers, so
+  Kachel-Fotos restore natively (see "Kachel-Bilder"). Requires format_tiles
+  on the target site; if a target still errors on restore, rebuild with
+  `topics` as fallback (photos then need manual upload). Other third-party
+  formats remain unsupported.
 - User data (submissions, attempts, grades, posts) is intentionally **not**
   generated — backups are "without user info", which is what you want for
   distributing course templates. The one exception is **glossary entries**,
@@ -552,6 +674,11 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
   Einbau via `set_recap_video.py`). Immer ausführen, außer kein Browser/Login.
 - `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
   text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
-  labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Run on
-  `.svg`, a folder, or a `course.json` before `make_materials.py`. See the
-  "SVG-Autorenregeln" section of `references/course-design.md`.
+  labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Also lints
+  the **German typography conventions** (warn-level): units superscripted
+  (`cm2`/`cm^2` → `cm²`, `min-1` → `1/min`), Malpunkt `·` instead of `x`/`×`,
+  REAL umlauts ä/ö/ü/ß instead of ae/oe/ue transliterations (they render fine
+  in PDF/PPTX), decimal comma (`3,14`), minimum font size 10, near-centred /
+  near-flush labels (Bündigkeit) and text/box contrast. Scans activity images
+  AND section images. Run on `.svg`, a folder, or a `course.json` before
+  `make_materials.py`. See "SVG-Autorenregeln" in `references/course-design.md`.

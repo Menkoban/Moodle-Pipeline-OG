@@ -82,6 +82,99 @@ def _risky_glyphs(text):
     return bad
 
 
+# --------------------------------------------------------------------------- #
+# Typografie-Checks (deutsche Fach-Konventionen in Diagramm-Beschriftungen)
+# --------------------------------------------------------------------------- #
+import re
+
+# Einheiten mit nachgestellter 2/3 statt hochgestelltem ²/³ (cm2, mm^2, N/cm2 …)
+_RE_UNIT_SUP = re.compile(r"(?<![\w²³])((?:[A-Za-z]+/)?[cdk]?m)\s*\^?\s*([23])(?![\d\w])")
+# beliebige Caret-Hochstellung ("^2") — in SVG-Text immer falsch
+_RE_CARET = re.compile(r"\^")
+# "min-1" / "s-1" — ⁻ (U+207B) ist NICHT WinAnsi-sicher, daher 1/min empfehlen
+_RE_PER_UNIT = re.compile(r"\b(min|s)-1\b")
+# x oder × als Malzeichen zwischen zwei Operanden ("F = p x A", "4 x 8 mm")
+_RE_MAL = re.compile(r"(?<=[\w²³\)\]])\s+[x×]\s+(?=[\w\(])")
+# Dezimalpunkt statt Komma (3.14 → 3,14)
+_RE_DEZIMAL = re.compile(r"\d\.\d")
+# Formelzeichen mit Ziffern-Index in einer Zeile (A1, d2, F1 …) — die Ziffer
+# gehört TIEFGESTELLT (separates kleineres <text>-Element mit y-Versatz;
+# Unicode-Subskripte ₁₂ sind NICHT WinAnsi-sicher und daher tabu in SVGs)
+_RE_INDEX = re.compile(r"(?<![A-Za-z0-9_])([AdFUIRp])([0-9])(?![A-Za-z0-9_])")
+
+# ae/oe/ue-Transliterationen: präzise Stamm-Liste statt generischem Muster
+# (generisches "ue" träfe legitime Wörter wie "Steuerung", "neue", "aktuell").
+_TRANSLIT_STEMS = [
+    "fuer", "ueber", "uebung", "gruen", "drueck", "fluess", "waende",
+    "behaelt", "flaech", "groess", "oeffn", "waehl", "laeng", "staerk",
+    "hoehe", "hoeher", "waerm", "kuehl", "schluessel", "loesung", "loecher",
+    "zusaetz", "erklaer", "ausfuell", "pruef", "muess", "fuell", "fuehr",
+    "rueck", "stueck", "staend", "verstaend", "spaet", "frueh", "aender",
+    "haeuf", "laeuft", "raeder", "gehaeuse", "koerper", "schuetz",
+    "betraegt", "traegt", "erhoeh", "geraet", "qualitaet", "aktivitaet",
+    "gelaende", "waehrend", "naechst", "taeglich", "gemaess", "saeule",
+    "buendig", "duese", "oel",
+]
+_RE_TRANSLIT = re.compile(
+    r"[A-Za-zäöüÄÖÜß]*(?:" + "|".join(_TRANSLIT_STEMS) + r")[A-Za-zäöüÄÖÜß]*",
+    re.IGNORECASE)
+# ss statt ß nur bei eindeutigen Wörtern (kein "Fluss"/"Messung"-Fehlalarm)
+_RE_SS = re.compile(r"\b(gross\w*|weiss|heisst|schliess\w*|massnahme\w*|strasse\w*)\b",
+                    re.IGNORECASE)
+
+MIN_FONT_SIZE = 10.0   # kleinere Beschriftungen sind gedruckt kaum lesbar
+CENTER_TOL = 10.0      # "fast zentriert": mittig verankert, aber daneben
+ALIGN_TOL = 4.0        # "fast bündig": gestapelte Texte, um 1–4 px versetzt
+
+
+def _typo_issues(label):
+    """Konventions-Verstöße in einem Text-Label (deutsche Fachdiagramme)."""
+    out = []
+    for m in _RE_UNIT_SUP.finditer(label):
+        sup = "²" if m.group(2) == "2" else "³"
+        out.append(f"EINHEIT '{m.group(0)}' -> '{m.group(1)}{sup}' "
+                   f"(hochgestellt; ² und ³ rendern in PDF/PPTX)")
+    if "²" not in label and "³" not in label and _RE_CARET.search(label):
+        out.append("EINHEIT Caret-Hochstellung '^' -> echtes ²/³ verwenden")
+    for m in _RE_PER_UNIT.finditer(label):
+        out.append(f"EINHEIT '{m.group(0)}' -> '1/{m.group(1)}' "
+                   f"(hochgestelltes Minus ist nicht WinAnsi-sicher)")
+    if label.strip() in ("x", "×"):
+        out.append("MALZEICHEN einzelnes 'x' -> Malpunkt '·' verwenden")
+    elif _RE_MAL.search(label):
+        out.append(f"MALZEICHEN 'x' als Mal-Operator in '{label}' -> '·' verwenden")
+    if _RE_DEZIMAL.search(label):
+        out.append(f"DEZIMAL Punkt als Dezimaltrenner in '{label}' -> "
+                   f"deutsches Komma (3,14)")
+    for m in _RE_TRANSLIT.finditer(label):
+        out.append(f"UMLAUT Transliteration '{m.group(0)}' -> echte Umlaute "
+                   f"(ä/ö/ü/ß rendern in PDF/PPTX einwandfrei)")
+    for m in _RE_SS.finditer(label):
+        out.append(f"UMLAUT 'ss' statt 'ß' in '{m.group(0)}' -> ß verwenden")
+    for m in _RE_INDEX.finditer(label):
+        out.append(f"INDEX '{m.group(0)}' -> Ziffer tiefstellen (separates "
+                   f"kleineres <text>-Element mit y-Versatz; kein Unicode-₁)")
+    return out
+
+
+def _hex_lum(color):
+    """Relative Luminanz eines #rrggbb/#rgb-Farbwerts, sonst None."""
+    if not color or not color.startswith("#"):
+        return None
+    h = color[1:]
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
+    if len(h) != 6:
+        return None
+    try:
+        r, g, b = (int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+    except ValueError:
+        return None
+    def lin(c):
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+
+
 def _iter_svg_paths(inputs):
     """Expand inputs (globs, dirs, .svg, course .json) into a list of svg paths."""
     out = []
@@ -112,6 +205,10 @@ def _svgs_from_course(json_path):
         data = json.load(fh)
     paths = []
     for sec in data.get("sections", []):
+        sec_imgs = sec.get("images") or ([sec["image"]] if sec.get("image") else [])
+        for img in sec_imgs:
+            if str(img).lower().endswith(".svg"):
+                paths.append(img)
         for act in sec.get("activities", []):
             for img in act.get("images", []) or []:
                 if str(img).lower().endswith(".svg"):
@@ -249,6 +346,72 @@ def lint_file(path):
                     f"OVERLAP '{texts[i].label}' <-> '{texts[j].label}' "
                     f"(~{ow:.0f}x{oh:.0f}px)")
 
+    # 7) Typografie: Einheiten (² ³), Malpunkt ·, echte Umlaute, Dezimalkomma
+    for t in texts:
+        for msg in _typo_issues(t.label):
+            warns.append(msg)
+
+    # 8) Lesbarkeit: zu kleine Schrift (Ausnahme: tiefgestellte Index-Ziffern
+    #    wie die "1" in F1 — bewusst ~0.72 der Grundgröße)
+    for t in texts:
+        size = t.extra.get("size")
+        if size and size < MIN_FONT_SIZE and not re.fullmatch(r"\d{1,2}", t.label):
+            warns.append(f"FONTSIZE text '{t.label}' hat font-size {size:g} "
+                         f"(< {MIN_FONT_SIZE:g}) - gedruckt kaum lesbar")
+
+    # 9) Bündigkeit: fast-zentrierte und fast-bündige Beschriftungen
+    center_x = vx + vw / 2.0
+    for t in texts:
+        if t.extra.get("anchor") == "middle" and t.extra.get("ax") is not None:
+            off = abs(t.extra["ax"] - center_x)
+            if 0.5 < off <= CENTER_TOL and t.w > 0.4 * vw:
+                warns.append(
+                    f"BUENDIG text '{t.label}' ist mittig verankert, aber "
+                    f"{off:.0f}px neben der viewBox-Mitte ({center_x:g}) - "
+                    f"x={t.extra['ax']:g} angleichen")
+    for i in range(len(texts)):
+        for j in range(i + 1, len(texts)):
+            a, b = texts[i], texts[j]
+            if a.extra.get("anchor") != b.extra.get("anchor"):
+                continue
+            # nur zeilenartige Texte vergleichen — Einzel-Segmente
+            # (z. B. Index-Ziffern segmentierter Formelzeilen) ausnehmen
+            if a.w < 30 or b.w < 30:
+                continue
+            ax_, bx_ = a.extra.get("ax"), b.extra.get("ax")
+            if ax_ is None or bx_ is None:
+                continue
+            dx_ = abs(ax_ - bx_)
+            dy_ = abs(((a.y0 + a.y1) / 2) - ((b.y0 + b.y1) / 2))
+            if 0.5 < dx_ <= ALIGN_TOL and dy_ > 10:
+                warns.append(
+                    f"BUENDIG '{a.label}' und '{b.label}' sind um {dx_:.0f}px "
+                    f"versetzt (x={ax_:g} vs. {bx_:g}) - vermutlich bündig gemeint")
+
+    # 10) Kontrast: Text auf farbigem Kasten/Kreis mit zu wenig Leuchtdichte-Abstand
+    fills = [b for b in boxes
+             if b.tag in ("rect", "circle") and b.extra.get("fill")]
+    for t in texts:
+        tl = _hex_lum(t.extra.get("fill") or "#000000")
+        if tl is None:
+            continue
+        ax_ = t.extra.get("ax")
+        ay_ = (t.y0 + t.y1) / 2
+        if ax_ is None:
+            continue
+        containers = [r for r in fills
+                      if r.x0 <= ax_ <= r.x1 and r.y0 <= ay_ <= r.y1
+                      and (r.w * r.h) < 0.9 * vb_area]
+        if not containers:
+            continue
+        bg = _hex_lum(min(containers, key=lambda r: r.w * r.h).extra.get("fill"))
+        if bg is None:
+            continue
+        ratio = (max(tl, bg) + 0.05) / (min(tl, bg) + 0.05)
+        if ratio < 2.5:
+            warns.append(f"KONTRAST text '{t.label}' hebt sich kaum vom "
+                         f"Kasten ab (Kontrast {ratio:.1f}:1, < 2.5:1)")
+
     return errors, warns
 
 
@@ -268,13 +431,14 @@ def check_course_svgs(spec, base_dir=".", strict=False, out=None):
         pass
     svgs = []
     for sec in spec.get("sections", []):
-        for act in sec.get("activities", []):
-            for img in act.get("images", []) or []:
-                p = img if isinstance(img, str) else (img or {}).get("file")
-                if not p or not str(p).lower().endswith(".svg"):
-                    continue
-                cand = p if os.path.isabs(p) else os.path.join(base_dir, p)
-                svgs.append(cand if os.path.exists(cand) else p)
+        sec_imgs = sec.get("images") or ([sec["image"]] if sec.get("image") else [])
+        for img in list(sec_imgs) + [i for act in sec.get("activities", [])
+                                     for i in (act.get("images") or [])]:
+            p = img if isinstance(img, str) else (img or {}).get("file")
+            if not p or not str(p).lower().endswith(".svg"):
+                continue
+            cand = p if os.path.isabs(p) else os.path.join(base_dir, p)
+            svgs.append(cand if os.path.exists(cand) else p)
     svgs = [p for p in svgs if os.path.exists(p)]
     if not svgs:
         return 0, 0

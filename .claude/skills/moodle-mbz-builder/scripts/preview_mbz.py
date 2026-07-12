@@ -19,6 +19,15 @@ file is fully self-contained.
 """
 import argparse, base64, html, json, os, re, sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from build_mbz import with_attribution as _with_attribution
+except Exception:  # noqa: BLE001 - preview bleibt auch ohne build_mbz nutzbar
+    def _with_attribution(content, spec):
+        return content or ""
+
+_SPEC = {}  # aktuelles Kurs-Spec (für den Attributions-Fuß der Seiten)
+
 ICON = {"label": "ti-tag", "page": "ti-file-text", "quiz": "ti-help-circle",
         "assign": "ti-upload", "forum": "ti-messages", "choice": "ti-chart-bar",
         "glossary": "ti-book-2", "resource": "ti-file", "folder": "ti-folder",
@@ -101,11 +110,12 @@ def activity_body(a):
     if t == "label":
         return a.get("intro", "")
     if t == "page":
-        return inline_images(a.get("content", ""), imgmap)
+        return inline_images(_with_attribution(a.get("content", ""), _SPEC), imgmap)
     if t == "book":
         parts = [a.get("intro", "")]
         for ch in a.get("chapters", []):
-            parts.append(f"<h4>{html.escape(ch.get('title',''))}</h4>{inline_images(ch.get('content',''), imgmap)}")
+            parts.append(f"<h4>{html.escape(ch.get('title',''))}</h4>"
+                         f"{inline_images(_with_attribution(ch.get('content',''), _SPEC), imgmap)}")
         return "".join(parts)
     if t == "quiz":
         return render_quiz(a)
@@ -144,7 +154,29 @@ def render_activity(a):
             f"<div class='act-b collapsed'><div class='cc'>{body}</div></div></div>")
 
 
+def section_banner(s):
+    """Inline the section's Kachel-Bild (image/images), SVG as markup,
+    raster as data URI — same treatment as page images."""
+    imgs = s.get("images") or ([s["image"]] if s.get("image") else [])
+    if not imgs:
+        return ""
+    path = imgs[0] if isinstance(imgs[0], str) else (imgs[0] or {}).get("file")
+    if not path or not os.path.exists(path):
+        return ""
+    ext = os.path.splitext(path)[1].lower()
+    if ext == ".svg":
+        svg = re.sub(r"<\?xml[^>]*\?>", "", open(path, encoding="utf-8").read()).strip()
+        return f"<div class='sec-img'>{svg}</div>"
+    if ext in RASTER:
+        data = base64.b64encode(open(path, "rb").read()).decode()
+        return (f"<div class='sec-img'><img src='data:{RASTER[ext]};base64,{data}' "
+                f"style='max-width:100%;height:auto;border-radius:8px;'></div>")
+    return ""
+
+
 def build_html(spec):
+    global _SPEC
+    _SPEC = spec
     course = spec.get("course", {})
     title = html.escape(course.get("fullname", "Kurs"))
     secs = []
@@ -156,7 +188,7 @@ def build_html(spec):
         secs.append(f"<div class='sec'><div class='sec-h'><i class='ti ti-chevron-right schev'></i>"
                     f"<span class='st'>{html.escape(s.get('name') or f'Abschnitt {idx}')}{hidden}</span>"
                     f"<span class='cnt'>{len(s.get('activities', []))} Akt.</span></div>"
-                    f"<div class='sec-b'>{acts}</div></div>")
+                    f"<div class='sec-b'>{section_banner(s)}{acts}</div></div>")
     meta = (f"{len(spec.get('sections', []))} Abschnitte · {n_act} Aktivitäten · "
             f"Format: {course.get('format','topics')}")
     return TEMPLATE.format(title=title, meta=html.escape(meta), sections="".join(secs))
@@ -189,6 +221,7 @@ h1{{font-size:20px;font-weight:500;margin-bottom:2px}}.lead{{font-size:13px;colo
 .ans.ok{{color:#1d6e56}}.ans.no{{color:#a3322f}}.fb{{font-size:12px;color:#777;margin-left:18px}}
 .gfb{{font-size:12px;background:#f3f3ef;padding:6px 8px;border-radius:6px;margin-top:4px}}
 .gl{{padding:3px 0;border-bottom:1px dotted rgba(0,0,0,.15)}}
+.sec-img{{margin:10px 0 4px}}.sec-img svg,.sec-img img{{max-width:100%;height:auto;border-radius:8px;display:block}}
 .achev,.schev{{transition:transform .15s;color:#6b7177}}
 </style></head><body>
 <h1>{title}</h1><div class="lead">{meta} · Kachel anklicken → Aktivitätsliste; Aktivität anklicken → voller Inhalt.</div>

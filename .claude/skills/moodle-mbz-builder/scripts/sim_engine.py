@@ -34,28 +34,32 @@ _CSS = """
 @media(prefers-color-scheme:dark){:root{--bg:#1b1d1f;--card:#26292c;--ink:#e8eaed;--muted:#9aa0a6;--line:#3c4043}}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
-.wrap{max-width:900px;margin:0 auto;padding:18px}
-h1{font-size:22px;margin:0 0 2px}
-.sub{color:var(--muted);font-size:14px;margin:0 0 16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:720px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
-.card h2{font-size:15px;margin:0 0 10px;color:var(--blue)}
-.ctl{margin:12px 0}
-.ctl label{display:flex;justify-content:space-between;font-size:14px;font-weight:bold;margin-bottom:4px}
-.ctl .val{color:var(--blue)}
-input[type=range]{width:100%;accent-color:var(--blue)}
-.out{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.kpi{background:rgba(24,95,165,.08);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
-.kpi .k{font-size:12px;color:var(--muted)}
-.kpi .v{font-size:20px;font-weight:bold}
+/* Kompakt-Layout: Steuerung+Ergebnisse links, Live-Ansicht rechts — die ganze
+   Simulation ist auf einem ueblichen Bildschirm OHNE Scrollen sichtbar. */
+.wrap{max-width:1200px;margin:0 auto;padding:10px 16px 6px}
+.head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+h1{font-size:19px;margin:0}
+.sub{color:var(--muted);font-size:13px;margin:0}
+.grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:12px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.card+.card{margin-top:12px}
+.card h2{font-size:14px;margin:0 0 6px;color:var(--blue)}
+.ctl{margin:8px 0}
+.ctl label{display:flex;justify-content:space-between;font-size:13px;font-weight:bold;margin-bottom:2px;gap:8px}
+.ctl .val{color:var(--blue);white-space:nowrap}
+input[type=range]{width:100%;accent-color:var(--blue);margin:0}
+.out{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.kpi{background:rgba(24,95,165,.08);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+.kpi .k{font-size:11px;color:var(--muted)}
+.kpi .v{font-size:16px;font-weight:bold}
 .kpi.big{grid-column:1/3;background:rgba(29,122,63,.12)}
-.kpi.big .v{color:var(--green)}
-svg{width:100%;height:auto;display:block}
-.bar{height:34px;display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin-top:6px}
-.seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:bold;white-space:nowrap}
-.foot{color:var(--muted);font-size:12px;margin-top:14px;text-align:center}
-.note{background:#fbeec9;color:#5a4300;border-left:4px solid #ba7517;padding:8px 12px;border-radius:4px;font-size:13px;margin-top:12px}
+.kpi.big .v{color:var(--green);font-size:19px}
+svg{width:100%;height:auto;display:block;max-height:56vh}
+.bar{height:20px;display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin-top:4px}
+.seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:bold;white-space:nowrap}
+.foot{color:var(--muted);font-size:11px;margin:8px 0 0;text-align:center}
+.note{background:#fbeec9;color:#5a4300;border-left:4px solid #ba7517;padding:6px 10px;border-radius:4px;font-size:12px;margin-top:8px}
 """
 
 _ENGINE = """
@@ -97,16 +101,17 @@ _HTML = """<!doctype html>
 </head>
 <body>
 <div class="wrap" id="sim">
-  <h1>__TITLE__</h1>
-  <p class="sub">__SUBTITLE__</p>
+  <div class="head"><h1>__TITLE__</h1><p class="sub">__SUBTITLE__</p></div>
   <div class="grid">
-    <div class="card"><h2>Steuerung</h2><div id="controls"></div></div>
-    <div class="card"><h2>Ergebnisse</h2><div class="out" id="kpis"></div>__EXTRA__</div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <h2>__VISUAL_TITLE__</h2>
-    <div id="visual">__VISUAL__</div>
-    __NOTE__
+    <div>
+      <div class="card"><h2>Steuerung</h2><div id="controls"></div></div>
+      <div class="card"><h2>Ergebnisse</h2><div class="out" id="kpis"></div>__EXTRA__</div>
+    </div>
+    <div class="card">
+      <h2>__VISUAL_TITLE__</h2>
+      <div id="visual">__VISUAL__</div>
+      __NOTE__
+    </div>
   </div>
   <p class="foot">__FOOT__</p>
 </div>

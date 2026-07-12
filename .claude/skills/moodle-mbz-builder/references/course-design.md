@@ -93,6 +93,16 @@ Die Sequenz *Einstieg → Vorwissen → Input → Handlung → Üben/Feedback �
 muss erkennbar bleiben. Nicht jedes Modul braucht alle Abschnitte in voller Länge,
 aber Einführung, Vertiefung, Anwendung und Recap sind Pflicht.
 
+**Kachel-Bilder (Pflicht für sichtbare Abschnitte):** Jeder sichtbare
+Lernabschnitt bekommt per `"image"` ein Bild. Bevorzugt mit
+`course.format: "tiles"` — dann wird das Bild das **echte Kachel-Foto** des
+Kachelformats (format_tiles): **textfreies Motiv-PNG ~800×450** (der
+Kacheltitel wird vom Plugin selbst über das Foto gelegt; Motiv als SVG
+zeichnen, dann rastern), eine Akzentfarbe pro Abschnitt, getönter Hintergrund.
+Bei `topics` stattdessen Banner-SVG (viewBox `0 0 1200 150`, mit
+Titel/Untertitel) oben im Summary. Verborgene Lehrkräfte-Sektion braucht kein
+Bild. Details: SKILL.md → „Kachel-Bilder".
+
 ### Pflicht-Attribution (jeder Kurs)
 
 **Jeder generierte Kurs trägt den Entstehungs-Hinweis** – KI-generiert und in
@@ -108,6 +118,16 @@ Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück. An
    ```html
    <div style='border-top:1px solid #c9ccd1;margin-top:6px;padding-top:10px;font-size:12px;color:#5f6672;font-family:Arial,sans-serif;'>Dieser Kurs wurde mit Hilfe von <b>künstlicher Intelligenz</b> erstellt und ist in Kooperation mit dem <b>Labor Didaktik der Technik</b> der <b>Hochschule Osnabrück</b> entstanden.</div>
    ```
+
+3. **Automatisch am Ende JEDER Seite** (page-Content und Buch-Kapitel):
+   `build_mbz.py` hängt den Satz
+   *„Dieser Kurs ist mit Hilfe von Künstlicher Intelligenz und in Kooperation
+   mit dem Labor Didaktik der Technik der Hochschule Osnabrück entstanden."*
+   als dezenten Seitenfuß an (idempotent — steht der Satz schon im Content,
+   passiert nichts). Vorschau (`preview_mbz.py`) und Druck-PDFs
+   (`make_materials.py`) zeigen denselben Fuß. Override pro Kurs:
+   `course.attribution` (eigener Satz) bzw. `"attribution": ""` schaltet den
+   Seitenfuß ab — die beiden Stellen oben bleiben davon unberührt.
 
 Optional zusätzlich eine `Entstehung:`-Zeile im Lehrkräfte-Leitfaden. Der
 Wortlaut ist verbindlich; nur Namen/Institution nach Bedarf anpassen, wenn der
@@ -127,7 +147,19 @@ Nutzer eine andere Kooperation nennt.
 | Videozusammenfassung | `label` (Hinweis) + Platzhalter | Video extern via NotebookLM, **nicht** vom Skill erzeugt |
 | Glossar | `glossary` (mit `entries`) | Fachbegriffe, alphabetisch |
 | Praxisauftrag (Handlungsprodukt) | `assign` | Vorgehen + transparente Rubrik im Auftragstext |
+| Ausfüllbares Protokoll/Arbeitsblatt | `formular` | echte Eingabefelder + Autosave + Datei-Download; NIE `__`-Lücken in einer `page` |
 | Reflexion / Evaluation | `feedback` / `page` | unbenotet |
+
+**Ergebnisfelder-Regel:** Wo Lernende etwas eintragen sollen (Rechenweg,
+Messwert, Begründung), IMMER den `formular`-Baustein verwenden — volle
+Feldbreite (lang genug für den Rechenweg), Autosave im Browser, Abgabe als
+Textdatei/PDF über den Praxisauftrag. `__________`-Lücken in einer statischen
+Seite kann niemand ausfüllen.
+
+**Glossar-Restore-Hinweis:** Glossareinträge sind im Backup Nutzerdaten — beim
+Wiederherstellen „Nutzerdaten einschließen" aktiviert lassen. Für den Fall
+eines Restores ohne Nutzerdaten legt `make_materials.py` automatisch eine
+Glossar-Importdatei in die Lehrkräfte-Sektion (Glossar → Einträge importieren).
 
 **Verb-Konsistenz:** Ein Ziel mit „aufbauen/durchführen" wird per **Aufgabe**
 geprüft, nicht per Multiple-Choice. Wissen/Verstehen per **Quiz**.
@@ -225,6 +257,43 @@ prüfe sie danach automatisch (nicht nur per Augenschein):
   das Symbol weg. Pfeile (→ ↑) und der Malpunkt · rendern dagegen. `validate_svg.py`
   warnt vor riskanten Glyphen.
 
+### Typografie-Konventionen in SVG-Text (Pflicht — der Validator prüft sie)
+
+Diese Konventionen gelten für JEDE Beschriftung in selbst gezeichneten SVGs
+(Diagramme UND Kachel-Banner). Alle genannten Zeichen sind WinAnsi-sicher und
+rendern in Kurs, PDF und PPTX einwandfrei:
+
+- **Echte Umlaute:** ä ö ü ß Ä Ö Ü — **niemals** ae/oe/ue-Transliteration
+  („Flaeche", „gross", „Oel" sind Fehler; „Fläche", „groß", „Öl" ist richtig).
+- **Einheiten hochgestellt:** cm² mm² m² m³ (echtes ²/³, U+00B2/U+00B3) —
+  nie „cm2" oder „cm^2". Ausnahme „pro"-Einheiten: **„1/min" statt „min⁻¹"**
+  (das hochgestellte Minus U+207B ist NICHT WinAnsi-sicher und wird zum Kästchen).
+- **Malpunkt:** `·` (U+00B7) als Mal-Operator — nie „x" oder „×"
+  (`F = p · A`).
+- **Formelzeichen-Indizes TIEFGESTELLT:** A₁, d₂, F₁ — nie „A1"/„d2" in
+  Normalgröße. Im **HTML** (Seiten, Quiz, Formular-Labels, Aufträge) als
+  `A<sub>1</sub>`; in **Simulationen** (nur Browser) als Unicode ₁ ₂; in
+  **SVG-Diagrammen** als separates kleineres `<text>`-Element mit y-Versatz
+  (~0,72 der Grundgröße, +0,28·size), Breiten mit `stringWidth` berechnen —
+  Unicode-₁₂ ist NICHT WinAnsi-sicher und in SVGs tabu. Leerzeichen in
+  segmentierten Formelzeilen nie mitrendern (SVG trimmt sie), nur als
+  x-Vorschub einrechnen. Die PDFs übernehmen `<sub>`/`<sup>` automatisch
+  (ReportLab). Prüfung: INDEX-Check in `validate_svg.py` (SVG-Text) und
+  `validate_mbz.py` (Kurs-HTML).
+- **Dezimalkomma:** deutsche Schreibweise `3,14` — nie `3.14`.
+- **Mindest-Schriftgröße 10** — kleiner ist gedruckt unlesbar.
+- **Bündigkeit:** mittig verankerte Titel/Fußzeilen exakt auf die
+  viewBox-Mitte setzen; gestapelte gleich verankerte Texte exakt auf
+  dieselbe x-Koordinate (der Validator meldet 1–4-px-Versätze als
+  „fast bündig/fast zentriert").
+- **Kontrast:** Text muss sich von seinem Kasten/Kreis abheben
+  (Leuchtdichte-Kontrast ≥ 2,5:1); heller Text auf mittelblauer Füllung
+  ist ein typischer Verstoß.
+
+`validate_svg.py` meldet Verstöße als Warnungen (unter `--strict` schlagen sie
+den Build fehl); die Prüfung läuft automatisch in `make_materials.py` und
+`build_mbz.py` mit.
+
 **Pflicht-Prüfung (deterministisch, misst echte Textbreiten):**
 
 ```bash
@@ -281,21 +350,38 @@ Merke-Box) und eine **PPTX** (editierbar) und sammelt alle PDFs + PPTX in der
 verborgenen Lehrkräfte-Sektion. Das PDF wird **nicht** hinter die Seite gehängt –
 im Kurs steht an der Stelle nur das Infoblatt selbst.
 
-**Pipeline (Standard für jeden Kurs):**
+**Pipeline (Standard für jeden Kurs — Video zuerst starten, Rest parallel):**
+
+Die NotebookLM-Video-Generierung dauert 5–10 Minuten und braucht als Input NUR
+das Dossier (aus `course.json`). Deshalb: **Video-Flow zuerst anstoßen und die
+gesamte Build+Validierungs-Pipeline WÄHREND der Wartezeit laufen lassen** —
+so verlängern die Validatoren die Kursherstellung um keine Sekunde:
+
 ```
+# (1) VIDEO STARTEN (sofort, sobald course.json steht)
+export_course_dossier.py course.json -o dossier.md           # Quelle fürs Video
+# NotebookLM-Flow starten (references/notebooklm-video-recap.md) -> generiert im Hintergrund
+
+# (2) PARALLEL, während NotebookLM rechnet (~5-10 min):
 autofit_svg.py        assets/                                # viewBox passgenau -> kein Clipping
-validate_svg.py       course.json --strict                   # Überlappungen/tspan finden (vor make_materials!)
-build_simulation.py   course.json -o course.sim.json         # nur falls Simulationen -> Datei-Ressourcen
+validate_svg.py       course.json --strict                   # Diagramm-QA + Typografie
+build_simulation.py   course.json -o course.sim.json         # Sims/Formulare -> Datei-Ressourcen
 make_materials.py     course.sim.json -o course.materialized.json  # PDF/PPTX + Einhängen
 build_mbz.py          course.materialized.json -o course.mbz --wwwroot ...
-validate_mbz.py       course.mbz
+validate_mbz.py       course.mbz                             # Struktur + TIEFEN-CHECKS
 preview_mbz.py        course.materialized.json -o course_vorschau.html
---- danach IMMER: Video-Recap (NotebookLM) ---
-export_course_dossier.py course.json -o dossier.md           # Quelle fürs Video
-# NotebookLM-Flow (references/notebooklm-video-recap.md): Video erzeugen + herunterladen
+# Browser-Checks (Sim ohne Scrollen, Formularfelder leer+Autosave) ebenfalls jetzt
+
+# (3) SOBALD DAS VIDEO FERTIG IST:
 set_recap_video.py    course.json --file recap.mp4           # Platzhalter ersetzen
-# dann make_materials -> build_mbz -> validate -> preview ERNEUT (jetzt mit Video)
+# Kurz-Rebuild: build_simulation -> make_materials -> build_mbz -> validate_mbz
 ```
+
+`validate_mbz.py` prüft neben der Struktur automatisch die **inhaltlichen
+Ketten** (Glossar-Nutzerdaten-Kette inkl. mnethosturl, tiles-Kachelfoto-
+Verdrahtung, Attributions-Fuß je Seite, leere Formularfelder, Sim-Kompakt-
+layout) — alle Checks zusammen < 1 s. Findet der finale Kurz-Rebuild in (3)
+noch einen Fehler, korrigieren und (3) wiederholen; das Video bleibt gültig.
 Die beiden SVG-Schritte laufen **zuerst**, damit die (korrigierten) Diagramme in
 Kurs, PDF und PPTX identisch stimmen. `autofit_svg.py` musst du selbst ausführen
 (es *ändert* die SVGs); die **Prüfung** läuft zusätzlich **automatisch** in
@@ -349,3 +435,7 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 11. Pipeline durchlaufen: make_materials → build → **validate (grün)** → preview.
 12. `course.format` = `topics` (für Kachel-Optik nach dem Restore in der UI auf „tiles" umstellen).
 13. **Pflicht-Attribution** in `course.summary` **und** als „Hinweis zur Entstehung"-`label` im Kurs-Recap (KI + Labor Didaktik der Technik, HS Osnabrück – siehe Abschnitt 3).
+14. **Kachel-Bild** auf jedem sichtbaren Abschnitt (`"image"`, Banner-SVG, Abschnitt 3).
+15. **Typografie-Validator warnungsfrei** (echte Umlaute, ²/³, Malpunkt ·, Dezimalkomma, Bündigkeit, Kontrast — Abschnitt 6).
+16. **Ergebnisfelder als `formular`** (ausfüllbar + speicherbar), keine `__`-Lücken in Seiten.
+17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox).

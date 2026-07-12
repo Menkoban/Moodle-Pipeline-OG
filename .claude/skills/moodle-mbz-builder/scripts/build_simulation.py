@@ -23,6 +23,7 @@ import argparse, copy, json, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sim_engine  # noqa: E402
+import form_engine  # noqa: E402
 
 
 def slugify(name):
@@ -90,6 +91,24 @@ def main():
                     "type": "resource",
                     "name": title,
                     "intro": act.get("intro", "<p>Interaktive Simulation – Regler ziehen, Werte ändern sich sofort. Zum Öffnen anklicken.</p>"),
+                    "file": path,
+                    "completion": act.get("completion", 1),
+                })
+                count += 1
+            elif act.get("type") == "formular":
+                # Ausfüllbares Arbeitsblatt/Protokoll -> HTML-Datei-Ressource
+                # (echte Eingabefelder + Autosave; siehe form_engine.py).
+                fspec = act.get("spec") or {}
+                title = act.get("name") or fspec.get("title", "Arbeitsblatt")
+                fspec.setdefault("title", title)
+                slug = slugify(act.get("name") or fspec.get("title"))
+                os.makedirs(outdir, exist_ok=True)
+                path = os.path.join(outdir, slug + ".html")
+                open(path, "w", encoding="utf-8").write(form_engine.render(fspec))
+                acts.append({
+                    "type": "resource",
+                    "name": title,
+                    "intro": act.get("intro", "<p>Ausfüllbares Arbeitsblatt – deine Eingaben werden automatisch im Browser gespeichert; am Ende als Datei speichern oder drucken.</p>"),
                     "file": path,
                     "completion": act.get("completion", 1),
                 })

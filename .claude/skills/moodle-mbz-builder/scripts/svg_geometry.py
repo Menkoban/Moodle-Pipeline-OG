@@ -311,15 +311,18 @@ def collect_boxes(root: ET.Element):
                 boxes.append(Box(x0, y - size * 0.8, x1, y + size * 0.2,
                                  "text", txt.strip()[:60],
                                  extra={"styled_tspan": _has_styled_tspan(el),
-                                        "anchor": anchor}))
+                                        "anchor": anchor, "size": size,
+                                        "ax": x, "fill": el.get("fill")}))
         elif name == "rect":
             x = _num(el.get("x")) + tx
             y = _num(el.get("y")) + ty
             boxes.append(Box(x, y, x + _num(el.get("width")),
-                             y + _num(el.get("height")), "rect"))
+                             y + _num(el.get("height")), "rect",
+                             extra={"fill": el.get("fill")}))
         elif name == "circle":
             cx, cy, r = _num(el.get("cx")) + tx, _num(el.get("cy")) + ty, _num(el.get("r"))
-            boxes.append(Box(cx - r, cy - r, cx + r, cy + r, "circle"))
+            boxes.append(Box(cx - r, cy - r, cx + r, cy + r, "circle",
+                             extra={"fill": el.get("fill")}))
         elif name == "ellipse":
             cx, cy = _num(el.get("cx")) + tx, _num(el.get("cy")) + ty
             rx, ry = _num(el.get("rx")), _num(el.get("ry"))

@@ -167,6 +167,12 @@ def _inline(node):
             out.append("<b>" + _inline(c) + "</b>")
         elif c.tag in ("i", "em"):
             out.append("<i>" + _inline(c) + "</i>")
+        elif c.tag == "sub":
+            # ReportLab-Paragraph kennt <sub>/<super> nativ -> Indizes wie
+            # A<sub>1</sub> erscheinen auch im Druck-PDF tiefgestellt.
+            out.append("<sub>" + _inline(c) + "</sub>")
+        elif c.tag == "sup":
+            out.append("<super>" + _inline(c) + "</super>")
         elif c.tag == "br":
             out.append("<br/>")
         else:
@@ -391,6 +397,48 @@ def make_pptx(title, svgpath, bullets, out, workdir):
     prs.save(out)
 
 
+def _xesc(s):
+    return (str(s or "").replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;"))
+
+
+def make_glossary_import_xml(gl, out_path):
+    """Write a Moodle glossary IMPORT file (Glossar -> Einträge importieren)
+    for the given glossary activity. Fallback for the restore quirk that
+    glossary entries are user data: restores without 'Nutzerdaten einschließen'
+    arrive with an empty glossary — this file re-fills it in two clicks."""
+    rows = []
+    for e in gl.get("entries", []):
+        rows.append(
+            "      <ENTRY>\n"
+            f"        <CONCEPT>{_xesc(e.get('concept'))}</CONCEPT>\n"
+            f"        <DEFINITION>{_xesc(e.get('definition'))}</DEFINITION>\n"
+            "        <FORMAT>1</FORMAT>\n"
+            "        <USEDYNALINK>1</USEDYNALINK>\n"
+            "        <CASESENSITIVE>0</CASESENSITIVE>\n"
+            "        <FULLMATCH>1</FULLMATCH>\n"
+            "        <TEACHERENTRY>1</TEACHERENTRY>\n"
+            "      </ENTRY>"
+        )
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        "<GLOSSARY>\n  <INFO>\n"
+        f"    <NAME>{_xesc(gl.get('name', 'Glossar'))}</NAME>\n"
+        f"    <INTRO>{_xesc(gl.get('intro', ''))}</INTRO>\n"
+        "    <INTROFORMAT>1</INTROFORMAT>\n"
+        "    <ALLOWDUPLICATEDENTRIES>0</ALLOWDUPLICATEDENTRIES>\n"
+        "    <DISPLAYFORMAT>dictionary</DISPLAYFORMAT>\n"
+        "    <SHOWSPECIAL>1</SHOWSPECIAL>\n    <SHOWALPHABET>1</SHOWALPHABET>\n"
+        "    <SHOWALL>1</SHOWALL>\n    <ALLOWCOMMENTS>0</ALLOWCOMMENTS>\n"
+        "    <USEDYNALINK>1</USEDYNALINK>\n    <DEFAULTAPPROVAL>1</DEFAULTAPPROVAL>\n"
+        "    <GLOBALGLOSSARY>0</GLOBALGLOSSARY>\n    <ENTBYPAGE>10</ENTBYPAGE>\n"
+        "    <ENTRIES>\n" + "\n".join(rows) + "\n    </ENTRIES>\n"
+        "  </INFO>\n</GLOSSARY>\n"
+    )
+    with open(out_path, "w", encoding="utf-8") as fh:
+        fh.write(xml)
+
+
 def ensure_teacher_section(spec):
     for s in spec["sections"]:
         if s.get("visible") == 0:
@@ -436,7 +484,16 @@ def main():
                 bullets = extract_bullets(act)
                 pdfp = os.path.join(matdir, slug + ".pdf")
                 pptxp = os.path.join(matdir, slug + ".pptx")
-                make_pdf(act, base, pdfp)
+                # Attributions-Fuß auch im Druck-PDF (idempotent angehängt)
+                pdf_act = act
+                try:
+                    import build_mbz as _bm
+                    pdf_act = dict(act)
+                    pdf_act["content"] = _bm.with_attribution(
+                        act.get("content", ""), spec)
+                except Exception:  # noqa: BLE001
+                    pass
+                make_pdf(pdf_act, base, pdfp)
                 make_pptx(title, svg, bullets, pptxp, matdir)
                 pdfs.append(pdfp); pptxs.append(pptxp)
                 # The PDF is NOT inserted after the page: the Infoblatt stays
@@ -452,6 +509,30 @@ def main():
         teacher["activities"].append({"type": "folder",
             "name": "Alle Infoblätter als PowerPoint (bearbeitbar)",
             "intro": "<p>Editierbare PPTX-Versionen zum Anpassen.</p>", "files": pptxs})
+
+    # Glossar-Fallback: Einträge sind im Moodle-Backup NUTZERDATEN. Wird beim
+    # Wiederherstellen "Nutzerdaten einschließen" abgewählt (oder fehlt das
+    # Recht dazu), kommt das Glossar leer an. Für diesen Fall liegt hier eine
+    # Import-Datei bereit: Glossar öffnen -> (Zahnrad) Einträge importieren.
+    gl_imports = []
+    for sec in spec["sections"]:
+        for act in sec["activities"]:
+            if act.get("type") == "glossary" and act.get("entries"):
+                slug = slugify(act.get("name", "glossar"))
+                p = os.path.join(matdir, slug + "_import.xml")
+                make_glossary_import_xml(act, p)
+                gl_imports.append(p)
+    if gl_imports:
+        teacher = ensure_teacher_section(spec)
+        teacher["activities"].append({"type": "resource",
+            "name": "Glossar-Importdatei (Fallback)",
+            "intro": ("<p><b>Nur nötig, falls das Glossar nach dem Import leer "
+                      "ist</b> (das passiert, wenn beim Wiederherstellen "
+                      "„Nutzerdaten einschließen“ abgewählt war): Glossar "
+                      "öffnen → Zahnrad/„Mehr“ → <b>Einträge importieren</b> → "
+                      "diese XML-Datei wählen → importieren. Die Fachbegriffe "
+                      "sind danach vollständig da.</p>"),
+            "file": gl_imports[0]})
 
     out = args.output or (os.path.splitext(args.course_json)[0] + ".materialized.json")
     json.dump(spec, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
