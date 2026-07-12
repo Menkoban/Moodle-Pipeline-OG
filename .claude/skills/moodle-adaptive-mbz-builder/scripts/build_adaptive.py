@@ -200,9 +200,37 @@ def expand(spec: dict) -> tuple[dict, dict]:
         pathmap["stufen"].append(entry)
         prev_tests = cur_tests
 
-    # ---- Abschluss-Abschnitt (optional) ----------------------------------- #
-    if ad.get("abschluss_section"):
-        sections.append(copy.deepcopy(ad["abschluss_section"]))
+    # ---- Abschluss-Abschnitt: Kurs-Recap nach Rode-Pflicht-Sequenz -------- #
+    # Der Lernkurs endet wie im linearen Skill mit einem Kurs-Recap:
+    # Videozusammenfassung-Platzhalter (NotebookLM, via set_recap_video.py
+    # befüllbar) + „Hinweis zur Entstehung" (Pflicht-Attribution). Beides wird
+    # automatisch ergänzt, falls der Autor es nicht selbst vorgesehen hat.
+    abschluss = copy.deepcopy(ad.get("abschluss_section") or
+                              {"name": "Abschluss & Kurs-Recap",
+                               "summary": "<p>Rückblick, Video-Recap und dein "
+                                          "Gesamtergebnis.</p>",
+                               "activities": []})
+    acts = abschluss.setdefault("activities", [])
+    have = " ".join(a.get("name", "").lower() for a in acts)
+    if "video" not in have:
+        acts.append({
+            "type": "label", "name": "Videozusammenfassung",
+            "intro": "<p>🎬 Kurze Videozusammenfassung der wichtigsten "
+                     "Punkte (NotebookLM).</p>",
+        })
+    if "entstehung" not in have:
+        try:
+            from build_mbz import ATTRIBUTION_SENTENCE as _attr
+        except ImportError:
+            _attr = ("Dieser Kurs ist mit Hilfe von Künstlicher Intelligenz "
+                     "und in Kooperation mit dem Labor Didaktik der Technik "
+                     "der Hochschule Osnabrück entstanden.")
+        acts.append({
+            "type": "label", "name": "Hinweis zur Entstehung",
+            "intro": ("<p style=\"font-size:12px;color:#5f6672;\"><i>"
+                      f"{_attr}</i></p>"),
+        })
+    sections.append(abschluss)
 
     # ---- Gradebook: kumulatives Doku-Item (Null-Item-Trick) ---------------- #
     out["gradebook"] = {

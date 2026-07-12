@@ -76,6 +76,44 @@ Generator-Bausteine dahinter (für Debugging): Quiz-grade_items in
 availability-Bedingungen mit symbolischen `ref`-Verweisen, die beim Build
 gegen die ID-Map aufgelöst werden — Sections (Kacheln) wie Module.
 
+## Rode-Strukturmodell im adaptiven Kurs — VERBINDLICH
+
+Das adaptive System ist KEINE eigene Didaktik, sondern das 5-Ebenen-Modell
+(Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → Lernkurs)
+aus `references/course-design.md` — nur verzweigt. Zuordnung:
+
+| Rode-Ebene            | Adaptiv                                             |
+|-----------------------|-----------------------------------------------------|
+| Lernkurs              | der adaptive Kurs                                   |
+| Lerneinheit/Modul     | **Stufe** (Themen-Etappe mit Testpunkt)             |
+| Lernabschnitt         | **Niveau-Kachel** (+ Förder-Kachel als Vertiefung „anders erklärt") |
+| Lernbaustein          | Aktivität in der Kachel (Infoblatt, Übung, Test)    |
+| Lernelement           | Inhaltselement (Diagramm, Merke-Box, Frage)         |
+
+Pflicht-Sequenz, adaptiv abgebildet: **Einführung** = Intro-Kachel
+(Handlungssituation + Funktionsweise des adaptiven Systems, fügt
+`build_adaptive.py` automatisch ein) → **Grundlagen/Vertiefung/Anwendung** =
+JEDE Niveau-Kachel durchläuft diese Dreischritt-Logik kompakt (Infoblatt mit
+`material: true` und eigenem SVG → Anwendungs-/Übungsaufgabe → Niveau-Test);
+die drei Niveaus differenzieren nach Komplexität, nicht nur nach Textmenge →
+**Kurs-Recap** = Abschluss-Kachel; `build_adaptive.py` ergänzt dort
+automatisch den „Videozusammenfassung"-Platzhalter (NotebookLM) und den
+„Hinweis zur Entstehung" (Pflicht-Attribution) → **Material für Lehrkräfte**
+= versteckte Sektion, entsteht wie im linearen Skill durch
+`make_materials.py`.
+
+**Der komplette Autorenprozess des linearen Skills gilt unverändert** — nur
+eben auf der Stufen-Spec statt der flachen Kursliste: Kurs-Steckbrief-Intake
+zuerst (mit den adaptiven Zusatzfragen: Schwellen, Gewichte, Einstieg,
+max. Versuche), `course-design.md` lesen, Referenzkurse im Sammelordner
+sichten, Kachel-Fotos (`image` je Niveau-/Förder-Kachel — drei Niveaus einer
+Stufe dürfen dasselbe Motiv in Varianten nutzen), Infoblatt-Bauplan,
+Glossar, Formulare/Simulationen wo passend. Und die volle Nachbearbeitung:
+Editor-Widget vor dem Build, `make_materials`-PDF/PPTX, Vorschau-HTML,
+NotebookLM-Video-Recap (Pflicht, mit Browser-Fallback-Regel), Ablage im
+Sammelordner. Der einzige adaptive Zusatzschritt ist `simulate_pathways.py`
+als Abnahme-Gate.
+
 ## Where finished courses live — output folder & reference library (project convention)
 
 **Collection folder (Sammelordner):**
