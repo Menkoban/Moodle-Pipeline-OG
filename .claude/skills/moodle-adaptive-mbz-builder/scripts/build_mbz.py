@@ -947,7 +947,11 @@ class MbzBuilder:
             "  <grade_items>\n" + "\n".join(items) + "\n  </grade_items>\n"
             "  <grade_letters>\n  </grade_letters>\n"
             "  <grade_settings>\n"
-            f'    <grade_setting id="{NULL}">\n'
+            # id LEER lassen, nie $@NULL@$: Moodle dekodiert den NULL-
+            # Platzhalter nur in Element-Texten, nicht in Attributen — der
+            # literale String landet sonst in backup_ids_temp.itemid (int)
+            # und bricht den Restore mit dmlwriteexception ab.
+            '    <grade_setting id="">\n'
             "      <name>minmaxtouse</name>\n"
             "      <value>1</value>\n"
             "    </grade_setting>\n"
