@@ -1,17 +1,20 @@
 ---
 name: moodle-adaptive-mbz-builder
 description: >-
-  Generates ADAPTIVE, branching Moodle courses (.mbz, Moodle 4.1+) with three
-  niveau paths per stage (Anfänger/Mittel/Fortgeschritten), permeable up-/
-  downgrading via performance-based availability windows, a repeat loop with
-  cap, and a level-weighted cumulative documentation score (Null-Item trick,
-  decoupled from placement). Use this skill whenever the user wants adaptive
-  Lernpfade, verzweigte/niveaudifferenzierte Moodle-Kurse, Einstufung/
-  Durchlässigkeit, adaptive Kurssicherungen, or mentions "adaptiver Kurs",
-  "Lernpfad", "Niveaustufen" together with Moodle/.mbz. Inherits the full
-  linear course toolchain (sections, pages, quizzes, glossary, tiles photos,
-  simulations, fillable forms). For plain LINEAR courses use the sibling skill
-  moodle-mbz-builder instead.
+  Generates ADAPTIVE, branching Moodle courses (.mbz, Moodle 4.1+) with 2-4
+  configurable parallel paths per stage (default Anfänger/Mittel/
+  Fortgeschritten; differentiation by Niveau, Sprachniveau, Fachsprache or
+  combinations), permeable up-/downgrading via performance-based availability
+  windows, a repeat loop with cap, and a level-weighted cumulative
+  documentation score (Null-Item trick, decoupled from placement). Starts
+  with a mandatory briefing (paths, differentiation, stages, thresholds).
+  Use this skill whenever the user wants adaptive Lernpfade, verzweigte/
+  niveaudifferenzierte Moodle-Kurse, Einstufung/Durchlässigkeit, adaptive
+  Kurssicherungen, or mentions "adaptiver Kurs", "Lernpfad", "Niveaustufen"
+  together with Moodle/.mbz. Inherits the full linear course toolchain
+  (sections, pages, quizzes, glossary, tiles photos, simulations, fillable
+  forms). For plain LINEAR courses use the sibling skill moodle-mbz-builder
+  instead.
 ---
 
 # Moodle Adaptive .mbz Builder
@@ -75,6 +78,45 @@ Generator-Bausteine dahinter (für Debugging): Quiz-grade_items in
 `gradebook.xml` mit kumulativem Calculated-Item (`=##giID##*Gewicht + …`),
 availability-Bedingungen mit symbolischen `ref`-Verweisen, die beim Build
 gegen die ID-Map aufgelöst werden — Sections (Kacheln) wie Module.
+
+## Adaptives Briefing — PFLICHT-INTAKE vor jedem Kurs
+
+BEVOR irgendetwas gebaut wird, führe das adaptive Briefing als
+Auswahl-Fragen (AskUserQuestion, 2–4 Optionen, beste mit „(empfohlen)",
+Batch von 2–4 Fragen). Es ERGÄNZT den Kurs-Steckbrief des linearen
+Skills (Thema, Zielgruppe, Lernziele … — siehe unten) um die adaptiven
+Grundsatzentscheidungen:
+
+1. **Wonach differenzieren?** (multiSelect — Kombinationen sind erlaubt)
+   - Niveau/Komplexität (empfohlen) — anspruchsvollere Aufgaben je Pfad
+   - Sprachniveau — gleiche Fachlichkeit, einfachere Sprache (kurze Sätze,
+     Alltagsbilder) auf den unteren Pfaden
+   - Fachsprachlichkeit — von alltagssprachlich zu normgerechter Fachsprache
+   - Eigene Dimension (Freitext)
+   Bei Kombination die Pfade als kombinierte Profile benennen (z. B.
+   „Einstieg in einfacher Sprache" / „Standard" / „Fachniveau kompakt").
+2. **Wie viele parallele Pfade?** 3 (empfohlen) / 2 / 4 — mehr als 4 wird
+   unübersichtlich und vervielfacht den Content-Aufwand.
+3. **Wie viele Stufen (Kachel-Etappen mit Testpunkt)?** Aus dem Zeitbudget
+   ableiten und konkret vorschlagen: 3 (empfohlen bei 2–4 Zeitstunden
+   Stoff) / 2 / 4–5.
+4. **Einstieg:** alle auf dem mittleren Pfad (empfohlen) / alle auf dem
+   untersten Pfad / freie Wahl in Stufe 1 (`einstieg: "frei"`).
+
+**Danach einen konkreten Vorschlags-Steckbrief vorlegen** (das ist der
+Teil, den der Autor bestätigt, bevor Content produziert wird): benannte
+Pfade mit 1-Satz-Profil je Pfad, Stufentitel aus dem Thema, Schwellen
+(Default 80/40/50), Gewichte (Default linear 1,0 → 2,0 über die Pfade),
+max. Versuche (Default 3), Kachelfoto-Motive je Stufe. Erst nach
+Bestätigung expandieren und bauen.
+
+Technisch landet das Briefing in der Spec als `adaptive.niveaus`
+(geordnete Pfadliste mit key+label, 2–4 Stück), `adaptive.differenzierung`
+(Liste der Dimensionen) und `adaptive.einstieg` (Pfad-Key oder "frei") —
+siehe `references/adaptive-spec.md`. Die Verzweigungsmatrix, Gewichte und
+Förder-Fenster generalisiert `build_adaptive.py` automatisch auf die
+Pfadanzahl; unerreichbare Kacheln (z. B. der unterste Pfad direkt nach
+einem hohen Einstieg) werden bewusst NICHT emittiert.
 
 ## Rode-Strukturmodell im adaptiven Kurs — VERBINDLICH
 

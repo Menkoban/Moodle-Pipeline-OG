@@ -34,13 +34,27 @@ import json
 import os
 import sys
 
-NIVEAUS = ("anfaenger", "mittel", "fortgeschritten")
-NIVEAU_LABEL = {"anfaenger": "Anfänger", "mittel": "Mittel",
-                "fortgeschritten": "Fortgeschritten"}
+# Default: klassische 3 Niveaupfade. Über adaptive.niveaus frei
+# konfigurierbar (2–4 Pfade, beliebige keys/Labels, geordnet von
+# niedrigster zu höchster Anforderung) — z. B. Differenzierung nach
+# Sprache: [{"key":"einfache-sprache",...},{"key":"standard",...},
+# {"key":"fachsprache",...}].
+DEFAULT_NIVEAUS = [
+    {"key": "anfaenger", "label": "Anfänger"},
+    {"key": "mittel", "label": "Mittel"},
+    {"key": "fortgeschritten", "label": "Fortgeschritten"},
+]
 
-DEFAULT_GEWICHTE = {"anfaenger": 1.0, "mittel": 1.5, "fortgeschritten": 2.0}
 DEFAULT_SCHWELLEN = {"aufstieg": 80, "abstieg": 40,
                      "fortgeschritten_halten": 50, "hysterese_abstieg": None}
+
+
+def default_gewichte(order: list[str]) -> dict[str, float]:
+    """Linear gespreizte Gewichte 1,0 … 2,0 über die Pfad-Reihenfolge."""
+    k = len(order)
+    if k == 1:
+        return {order[0]: 1.0}
+    return {key: round(1.0 + i / (k - 1), 2) for i, key in enumerate(order)}
 
 
 def _cond(ref: str, mn=None, mx=None) -> dict:
@@ -74,8 +88,25 @@ def expand(spec: dict) -> tuple[dict, dict]:
     if not stufen:
         raise SystemExit("adaptive.stufen ist leer.")
 
-    einstieg = ad.get("einstieg", "mittel")
-    gewichte = {**DEFAULT_GEWICHTE, **(ad.get("gewichte") or {})}
+    # ---- Niveaupfade (konfigurierbar, geordnet niedrig -> hoch) ----------- #
+    niv_defs = ad.get("niveaus") or DEFAULT_NIVEAUS
+    niv_defs = [{"key": n} if isinstance(n, str) else dict(n) for n in niv_defs]
+    order = [n["key"] for n in niv_defs]
+    if len(order) < 2:
+        raise SystemExit("adaptive.niveaus braucht mindestens 2 Pfade "
+                         "(sonst gibt es nichts zu adaptieren).")
+    if len(order) != len(set(order)):
+        raise SystemExit(f"adaptive.niveaus: doppelte keys in {order}.")
+    labels = {n["key"]: n.get("label", n["key"].replace("-", " ").title())
+              for n in niv_defs}
+    top = order[-1]
+    k = len(order)
+
+    einstieg = ad.get("einstieg") or order[k // 2]
+    if einstieg not in order and einstieg not in ("frei", "alle"):
+        raise SystemExit(f"adaptive.einstieg '{einstieg}' ist kein Pfad-Key "
+                         f"aus {order} (oder 'frei').")
+    gewichte = {**default_gewichte(order), **(ad.get("gewichte") or {})}
     sw = {**DEFAULT_SCHWELLEN, **(ad.get("schwellen") or {})}
     auf = float(sw["aufstieg"])
     ab = float(sw["hysterese_abstieg"] or sw["abstieg"])
@@ -86,6 +117,9 @@ def expand(spec: dict) -> tuple[dict, dict]:
     sections: list[dict] = []
     pathmap: dict = {
         "einstieg": einstieg,
+        "niveaus": order,
+        "labels": labels,
+        "differenzierung": ad.get("differenzierung") or ["niveau"],
         "schwellen": {"aufstieg": auf, "abstieg": ab,
                       "fortgeschritten_halten": halt},
         "gewichte": gewichte,
@@ -98,17 +132,45 @@ def expand(spec: dict) -> tuple[dict, dict]:
     # ---- Abschnitt 0: Intro (mit Erklärung des adaptiven Systems) -------- #
     intro = copy.deepcopy(ad.get("intro_section") or
                           {"name": "Über diesen Kurs", "activities": []})
+    pfade_txt = " · ".join(labels[key] for key in order)
     intro.setdefault("activities", []).insert(0, {
         "type": "label", "name": "So funktioniert dieser Kurs",
         "intro": (
-            "<p>🧭 <b>Dieser Kurs passt sich dir an.</b> Jede Stufe gibt es in "
-            "drei Niveaus. Nach jedem Test öffnet sich automatisch die Kachel, "
-            "die zu deiner aktuellen Leistung passt — du kannst jederzeit auf- "
-            "und absteigen. Deine Gesamtbewertung zählt Tests auf höherem "
-            "Niveau stärker; sie dokumentiert deinen Weg, steuert ihn aber "
-            "nicht.</p>"),
+            f"<p>🧭 <b>Dieser Kurs passt sich dir an.</b> Jede Stufe gibt es "
+            f"in {k} Varianten ({pfade_txt}). Nach jedem Test öffnet sich "
+            "automatisch die Kachel, die zu deiner aktuellen Leistung passt — "
+            "du kannst jederzeit auf- und absteigen. Deine Gesamtbewertung "
+            "zählt Tests auf anspruchsvolleren Pfaden stärker; sie "
+            "dokumentiert deinen Weg, steuert ihn aber nicht.</p>"),
     })
     sections.append(intro)
+
+    # ---- Verzweigungsmatrix, generisch für k Pfade ------------------------ #
+    def _bands_from(i: int) -> list[tuple]:
+        """Bänder (min, max, ziel_index) für den Vortest von Pfad-Index i.
+        Oberster Pfad: halten ab `halt`, sonst eine Stufe runter. Andere:
+        < ab runter (Index 0 bleibt unten), [ab, auf) halten, >= auf rauf."""
+        if i == k - 1:
+            return [(None, halt, k - 2), (halt, None, k - 1)]
+        raw = [(None, ab, max(i - 1, 0)), (ab, auf, i),
+               (auf, None, min(i + 1, k - 1))]
+        merged: list[list] = []
+        for mn, mx, t in raw:
+            if merged and merged[-1][2] == t and merged[-1][1] == mn:
+                merged[-1][1] = mx
+            else:
+                merged.append([mn, mx, t])
+        return [tuple(b) for b in merged]
+
+    def _window_conds(prev_tests: dict[str, str], nkey: str) -> list[dict]:
+        """availability-Fenster für Ziel-Pfad nkey aus allen Vortests."""
+        j = order.index(nkey)
+        conds = []
+        for pkey, pref in prev_tests.items():
+            for mn, mx, t in _bands_from(order.index(pkey)):
+                if t == j:
+                    conds.append(_cond(pref, mn=mn, mx=mx))
+        return conds
 
     # ---- Stufen ----------------------------------------------------------- #
     def niveau_section(s: int, stufe: dict, nkey: str, conds: list[dict] | None) -> dict:
@@ -119,10 +181,10 @@ def expand(spec: dict) -> tuple[dict, dict]:
         test["idnumber"] = ref
         test["grade"] = 100            # Prozent-Semantik für die Fenster
         test["attempts"] = max_versuche
-        test["gradepass"] = ab if nkey != "fortgeschritten" else halt
+        test["gradepass"] = halt if nkey == top else ab
         test.setdefault("completion", 1)
         sec = {
-            "name": f"S{s} · {stufe['name']} — {nv.get('titel', NIVEAU_LABEL[nkey])}",
+            "name": f"S{s} · {stufe['name']} — {nv.get('titel', labels[nkey])}",
             "summary": nv.get("summary", ""),
             "activities": list(copy.deepcopy(nv.get("activities", []))) + [test],
         }
@@ -140,34 +202,26 @@ def expand(spec: dict) -> tuple[dict, dict]:
                  "tests": {}, "foerder": None}
         cur_tests: dict[str, str] = {}
 
-        if idx == 1 and einstieg == "mittel":
-            niveaus_hier = ["mittel"]
-        else:
-            niveaus_hier = list(NIVEAUS)
+        fehlend = [key for key in order if key not in stufe.get("niveaus", {})]
+        if fehlend:
+            raise SystemExit(f"Stufe {idx} '{stufe.get('name')}': Pfad(e) "
+                             f"{fehlend} fehlen in stufe.niveaus.")
 
-        for nkey in niveaus_hier:
-            if idx == 1:
-                conds = None  # Stufe 1: offen (mittel für alle / freie Wahl)
-            else:
-                conds = []
-                # Fenster gemäß Verzweigungsmatrix, nur für existierende Vortests
-                if nkey == "anfaenger":
-                    if "anfaenger" in prev_tests:
-                        conds.append(_cond(prev_tests["anfaenger"], mx=auf))
-                    if "mittel" in prev_tests:
-                        conds.append(_cond(prev_tests["mittel"], mx=ab))
-                elif nkey == "mittel":
-                    if "anfaenger" in prev_tests:
-                        conds.append(_cond(prev_tests["anfaenger"], mn=auf))
-                    if "mittel" in prev_tests:
-                        conds.append(_cond(prev_tests["mittel"], mn=ab, mx=auf))
-                    if "fortgeschritten" in prev_tests:
-                        conds.append(_cond(prev_tests["fortgeschritten"], mx=halt))
-                else:  # fortgeschritten
-                    if "mittel" in prev_tests:
-                        conds.append(_cond(prev_tests["mittel"], mn=auf))
-                    if "fortgeschritten" in prev_tests:
-                        conds.append(_cond(prev_tests["fortgeschritten"], mn=halt))
+        if idx == 1:
+            # Alle starten auf dem Einstiegs-Pfad; 'frei' = freie Wahl.
+            niveaus_hier = [(key, None) for key in
+                            ([einstieg] if einstieg in order else order)]
+        else:
+            # Nur ERREICHBARE Pfade emittieren: ein Pfad ohne Fenster aus der
+            # Vorstufe (z. B. der unterste direkt nach einem hohen Einstieg)
+            # bekäme sonst KEINE Bedingung und stünde dauerhaft offen.
+            niveaus_hier = []
+            for key in order:
+                conds = _window_conds(prev_tests, key)
+                if conds:
+                    niveaus_hier.append((key, conds))
+
+        for nkey, conds in niveaus_hier:
             sec = niveau_section(idx, stufe, nkey, conds)
             sections.append(sec)
             entry["sections"][nkey] = sec["name"]
@@ -177,13 +231,8 @@ def expand(spec: dict) -> tuple[dict, dict]:
         # Förder-/Wiederhol-Kachel dieser Stufe (Deckel = Quiz-Versuche)
         foerder = stufe.get("foerder")
         if foerder:
-            f_conds = []
-            if "anfaenger" in cur_tests:
-                f_conds.append(_cond(cur_tests["anfaenger"], mx=ab))
-            if "mittel" in cur_tests:
-                f_conds.append(_cond(cur_tests["mittel"], mx=ab))
-            if "fortgeschritten" in cur_tests:
-                f_conds.append(_cond(cur_tests["fortgeschritten"], mx=halt))
+            f_conds = [_cond(cur_tests[key], mx=(halt if key == top else ab))
+                       for key in order if key in cur_tests]
             f_sec = {
                 "name": f"S{idx} · {stufe['name']} — {foerder.get('titel', 'Fördervariante')}",
                 "summary": foerder.get("summary",

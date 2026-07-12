@@ -171,7 +171,21 @@ def main(mbz_path: str, pathmap_path: str) -> int:
 
     sw = pm["schwellen"]
     auf, ab, halt = sw["aufstieg"], sw["abstieg"], sw["fortgeschritten_halten"]
+    order = list(pm.get("niveaus") or NIVEAUS)   # geordnet niedrig -> hoch
+    top = order[-1]
     errors, infos = [], []
+
+    def expected_next(pkey: str, score: float) -> str:
+        """Soll-Zielpfad nach der Verzweigungsmatrix (Referenz-Logik,
+        unabhängig vom Generator implementiert)."""
+        i = order.index(pkey)
+        if i == len(order) - 1:
+            return order[i] if score >= halt else order[i - 1]
+        if score >= auf:
+            return order[min(i + 1, len(order) - 1)]
+        if score >= ab:
+            return order[i]
+        return order[max(i - 1, 0)]
 
     def sec_tree(name):
         if name not in secs:
@@ -209,37 +223,34 @@ def main(mbz_path: str, pathmap_path: str) -> int:
                if eval_tree(sec_tree(nm), {pid: score})]
         return vis[0] if len(vis) == 1 else None
 
+    def check_transition(stage_idx: int, pkey: str, score: float, szenario: str):
+        ref = stufen[stage_idx - 1]["tests"].get(pkey)
+        if not ref:
+            return
+        want = expected_next(pkey, score)
+        got = next_niveau(stage_idx, ref, score)
+        if got != want:
+            errors.append(f"RATSCHE: {szenario} ({pkey}, {score}%) führt zu "
+                          f"'{got}' statt '{want}'")
+
     if len(stufen) >= 2:
-        start_ref = stufen[0]["tests"].get("mittel") or list(stufen[0]["tests"].values())[0]
-        up = next_niveau(1, start_ref, auf + 5)
-        if up != "fortgeschritten":
-            errors.append(f"RATSCHE: starker Start ({auf+5}%) führt zu "
-                          f"'{up}' statt 'fortgeschritten'")
-        stay = next_niveau(1, start_ref, (ab + auf) / 2)
-        if stay != "mittel":
-            errors.append(f"RATSCHE: mittlere Leistung führt zu '{stay}' statt 'mittel'")
-        down = next_niveau(1, start_ref, ab - 5)
-        if down != "anfaenger":
-            errors.append(f"RATSCHE: schwacher Start ({ab-5}%) führt zu "
-                          f"'{down}' statt 'anfaenger'")
+        start_key = (pm.get("einstieg") if pm.get("einstieg") in stufen[0]["tests"]
+                     else list(stufen[0]["tests"])[0])
+        check_transition(1, start_key, auf + 5, "starker Start")
+        check_transition(1, start_key, (ab + auf) / 2, "mittlere Leistung")
+        check_transition(1, start_key, ab - 5, "schwacher Start")
     if len(stufen) >= 3:
-        fort_ref = stufen[1]["tests"].get("fortgeschritten")
-        if fort_ref:
-            d = next_niveau(2, fort_ref, halt - 5)
-            if d != "mittel":
-                errors.append(f"RATSCHE: schwacher Fortgeschrittener ({halt-5}%) "
-                              f"steigt nicht ab (-> '{d}' statt 'mittel')")
-            h = next_niveau(2, fort_ref, halt + 5)
-            if h != "fortgeschritten":
-                errors.append(f"RATSCHE: solider Fortgeschrittener ({halt+5}%) "
-                              f"hält das Niveau nicht (-> '{h}')")
-        anf_ref = stufen[1]["tests"].get("anfaenger")
-        if anf_ref:
-            u = next_niveau(2, anf_ref, auf + 5)
-            if u != "mittel":
-                errors.append(f"RATSCHE: starker Anfänger ({auf+5}%) steigt "
-                              f"nicht auf (-> '{u}' statt 'mittel')")
-    infos.append("Ratschen-Szenarien: Auf-/Abstieg symmetrisch geprüft")
+        # Symmetrie über ALLE Pfade der Stufe 2: rauf, halten, runter
+        for pkey in stufen[1]["tests"]:
+            if pkey == top:
+                check_transition(2, pkey, halt + 5, "solider Top-Pfad hält")
+                check_transition(2, pkey, halt - 5, "schwacher Top-Pfad steigt ab")
+            else:
+                check_transition(2, pkey, auf + 5, "starker Pfad steigt auf")
+                check_transition(2, pkey, (ab + auf) / 2, "Pfad hält Niveau")
+                check_transition(2, pkey, ab - 5, "schwacher Pfad steigt ab")
+    infos.append("Ratschen-Szenarien: Auf-/Abstieg symmetrisch geprüft "
+                 f"({len(order)} Pfade: {', '.join(order)})")
 
     # ---- 3) FÖRDER + 4) DECKEL -------------------------------------------- #
     for st in stufen:
@@ -248,7 +259,7 @@ def main(mbz_path: str, pathmap_path: str) -> int:
         f_tree = sec_tree(st["foerder"])
         for nk, ref in st["tests"].items():
             pid = by_ref.get(ref)
-            thr = halt if nk == "fortgeschritten" else ab
+            thr = halt if nk == top else ab
             if pid is None:
                 continue
             if not eval_tree(f_tree, {pid: thr - 5}):
@@ -292,7 +303,8 @@ def main(mbz_path: str, pathmap_path: str) -> int:
         # Beispielrechnung: ein konkreter Lernweg
         sample = []
         for st in stufen:
-            nk = "mittel" if "mittel" in st["tests"] else list(st["tests"])[0]
+            nk = (pm.get("einstieg") if pm.get("einstieg") in st["tests"]
+                  else list(st["tests"])[0])
             sample.append((st["tests"][nk], 70.0, pm["gewichte"][nk]))
         expect = sum(g * w for _, g, w in sample)
         infos.append(f"Kumulativ-Formel verifiziert; Beispielweg (überall 70 %) "

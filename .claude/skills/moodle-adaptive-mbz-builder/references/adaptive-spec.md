@@ -12,6 +12,12 @@ simulate_pathways`). Didaktik/Herleitung: `adaptive-lernpfade.md`.
 {
   "course": { … wie gehabt (fullname, shortname, format "tiles", …) … },
   "adaptive": {
+    "niveaus": [
+      { "key": "anfaenger", "label": "Anfänger" },
+      { "key": "mittel", "label": "Mittel" },
+      { "key": "fortgeschritten", "label": "Fortgeschritten" }
+    ],
+    "differenzierung": ["niveau"],
     "einstieg": "mittel",
     "gewichte": { "anfaenger": 1.0, "mittel": 1.5, "fortgeschritten": 2.0 },
     "schwellen": {
@@ -48,17 +54,30 @@ simulate_pathways`). Didaktik/Herleitung: `adaptive-lernpfade.md`.
 
 ## Feste Regeln des Expanders
 
-- **Einstieg** (`einstieg: "mittel"`): Stufe 1 besteht NUR aus der
-  Mittel-Kachel + Mittel-Test (alle starten gleich). `"wahl"`: alle drei
-  Stufe-1-Kacheln offen. Ab Stufe 2 greifen immer die Niveau-Fenster.
-- **Niveau-Fenster (Stufe s ≥ 2)** — OR über die Tests der Vorstufe,
-  harte Kanten (Moodle-grade-Bedingung: erfüllt wenn `min ≤ note < max`):
-  - Anfänger(s):  `anf(s-1) ∈ [abstieg, aufstieg)` ODER `mittel(s-1) < abstieg`
-  - Mittel(s):    `anf(s-1) ≥ aufstieg` ODER `mittel(s-1) ∈ [abstieg, aufstieg)`
-                  ODER `fort(s-1) < fortgeschritten_halten`
-  - Fortgeschritten(s): `mittel(s-1) ≥ aufstieg` ODER `fort(s-1) ≥ fortgeschritten_halten`
-  - Anfänger(s) zusätzlich: `anf(s-1) < abstieg` → bleibt Anfänger, aber die
-    **Förder-Kachel der Vorstufe** wird sichtbar (Wiederholschleife).
+- **Pfade (`niveaus`)**: geordnete Liste (niedrigste → höchste Anforderung),
+  **2–4 Pfade**, keys frei wählbar (auch Kurzform als Strings:
+  `"niveaus": ["basis", "standard", "profi"]`). Fehlt das Feld, gelten die
+  klassischen drei (anfaenger/mittel/fortgeschritten). Jede Stufe MUSS
+  unter `stufe.niveaus` für jeden key einen Eintrag haben.
+- **`differenzierung`**: Liste der Dimensionen (`niveau`, `sprache`,
+  `fachsprache`, frei) — reine Autoren-/Briefing-Metadaten; die Mechanik
+  (Fenster, Gewichte) ist für alle Dimensionen identisch, die Inhalte je
+  Pfad setzen die Differenzierung um.
+- **Einstieg** (`einstieg`): Pfad-Key → Stufe 1 besteht NUR aus dieser
+  Kachel (alle starten gleich; Default: der mittlere Pfad). `"frei"`:
+  alle Stufe-1-Kacheln offen. Ab Stufe 2 greifen immer die Fenster.
+- **Verzweigungsmatrix (generisch, Pfad-Index i von 0..k−1)** — OR über
+  die Tests der Vorstufe, harte Kanten (`min ≤ note < max`):
+  - oberster Pfad (i = k−1): `≥ fortgeschritten_halten` hält, sonst → k−2
+  - alle anderen: `≥ aufstieg` → i+1 · `[abstieg, aufstieg)` → i ·
+    `< abstieg` → max(i−1, 0)
+  - **Erreichbarkeit**: Ein Pfad, den aus der Vorstufe kein Fenster
+    erreichen kann (z. B. der unterste direkt nach einem hohen Einstieg),
+    wird in dieser Stufe NICHT emittiert — sonst stünde er ohne Bedingung
+    dauerhaft offen. Er taucht wieder auf, sobald er erreichbar ist.
+- **Gewichte-Default**: linear 1,0 → 2,0 über die Pfad-Reihenfolge
+  (k=2: 1,0/2,0 · k=3: 1,0/1,5/2,0 · k=4: 1,0/1,33/1,67/2,0); per
+  `gewichte` je key überschreibbar.
 - **Wiederholschleife + Deckel**: Förder-Kachel(s-1) sichtbar wenn irgendein
   Test(s-1) unter seiner Mindestschwelle liegt; die Tests erlauben
   `max_versuche` Versuche (Bewertungsmethode: bester Versuch) — der Deckel
