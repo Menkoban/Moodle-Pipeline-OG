@@ -1,23 +1,30 @@
 ---
-name: moodle-mbz-builder
+name: moodle-adaptive-mbz-builder
 description: >-
-  Generates valid Moodle backup files (.mbz) for Moodle 4.1+ from a simple JSON
-  course definition — including sections, resources (label, page, url, file,
-  folder, book) and activities (assign, quiz with questions, forum, glossary,
-  choice, feedback), with real file attachments. Use this skill whenever the
-  user wants to create, build, generate, or assemble a Moodle course/backup/
-  .mbz file, restore-ready Moodle content, a "Sicherung" / "Kurssicherung", or
-  asks to turn course material into something importable into Moodle — even if
-  they don't say ".mbz" explicitly. Also use it to add individual learning
-  materials ("Arbeitsmaterialien") or activities ("Aktivitäten") into a Moodle
-  backup.
+  Generates ADAPTIVE, branching Moodle courses (.mbz, Moodle 4.1+) with three
+  niveau paths per stage (Anfänger/Mittel/Fortgeschritten), permeable up-/
+  downgrading via performance-based availability windows, a repeat loop with
+  cap, and a level-weighted cumulative documentation score (Null-Item trick,
+  decoupled from placement). Use this skill whenever the user wants adaptive
+  Lernpfade, verzweigte/niveaudifferenzierte Moodle-Kurse, Einstufung/
+  Durchlässigkeit, adaptive Kurssicherungen, or mentions "adaptiver Kurs",
+  "Lernpfad", "Niveaustufen" together with Moodle/.mbz. Inherits the full
+  linear course toolchain (sections, pages, quizzes, glossary, tiles photos,
+  simulations, fillable forms). For plain LINEAR courses use the sibling skill
+  moodle-mbz-builder instead.
 ---
 
-# Moodle .mbz Builder
+# Moodle Adaptive .mbz Builder
 
-Generate restore-ready Moodle 2 backup files (`.mbz`) for **Moodle 4.1+** from a
-high-level JSON course definition. No Moodle installation is required to build
-the file; you import it via *Course administration → Restore* in Moodle.
+Generate restore-ready Moodle 2 backup files (`.mbz`) for **Moodle 4.1+** —
+including **adaptive, verzweigende Lernpfade**: drei Niveaupfade pro Stufe,
+Konvergenz an den Testpunkten, leistungsbasierte Ein-/Abstufung über
+Moodle-Bordmittel (Restrict access auf Kachel-Ebene) und ein niveaugewichteter
+kumulativer Dokumentations-Score (Null-Item-Trick) — vollständig plugin-frei.
+
+Dieser Skill ist die adaptive Erweiterung des linearen `moodle-mbz-builder`
+und erbt dessen komplette Toolchain (alle Aktivitätstypen, Kachel-Fotos,
+Simulationen, Formulare, Materialien-Pipeline, Validatoren).
 
 A `.mbz` is just a **gzip-compressed tar archive** of XML files (the "moodle2"
 backup format). The hard part is that the XML files cross-reference each other
@@ -26,12 +33,48 @@ files. This skill's generator handles all of that for you.
 
 ## When to use this
 
-Trigger this skill when the user wants to **produce a Moodle course or backup
-file** they can restore/import — phrasings like "erstelle eine mbz", "generiere
-einen Moodle-Kurs", "Kurssicherung bauen", "create a Moodle backup", "package
-this material for Moodle", or "add these activities into a Moodle course". If
-they only want to *understand* an existing `.mbz`, read `references/mbz-format.md`
-instead of running the generator.
+Trigger this skill when the user wants an **adaptive/verzweigte Moodle course**
+— phrasings like "adaptiver Kurs", "adaptive Lernpfade", "Niveaustufen mit
+Auf-/Abstieg", "Einstufung nach Testergebnis", "verzweigter Moodle-Kurs". For
+plain linear courses the sibling skill `moodle-mbz-builder` is the right tool;
+this skill can build those too, but the linear skill stays untouched as the
+stable baseline. If the user only wants to *understand* an existing `.mbz`,
+read `references/mbz-format.md`.
+
+## Adaptive Lernpfade — Kernkonzept & Pipeline
+
+Didaktik/Herleitung: `references/adaptive-lernpfade.md` (PFLICHTLEKTÜRE —
+insbesondere §3 Ratschen-Problem). Eingabeschema: `references/adaptive-spec.md`.
+
+**Zentrales Konstruktionsprinzip: Einstufung ⊥ Bewertung.** Die Kachel-
+Sichtbarkeit hängt NUR an der Note des letzten Tests relativ zum aktuellen
+Niveau (availability-Fenster, harte Kanten `min ≤ Note < max`); der gewichtete
+kumulative Gesamtscore (Calculated-Item) dokumentiert den Lernweg fürs
+Zeugnis und steuert NICHTS.
+
+```
+build_adaptive.py    adaptiv.json -o course.json      # Stufen -> verzweigte Sections
+                                                      #  + <course>.pathmap.json
+build_simulation.py  course.json -o course.sim.json   # Sims/Formulare wie gehabt
+make_materials.py    course.sim.json -o course.materialized.json
+build_mbz.py         course.materialized.json -o kurs.mbz --wwwroot …
+validate_mbz.py      kurs.mbz                         # inkl. Check 13: adaptive Verdrahtung
+simulate_pathways.py kurs.mbz course.pathmap.json     # PFLICHT: Ratschen-Test
+preview_mbz.py       course.materialized.json -o vorschau.html
+```
+
+`simulate_pathways.py` ist der Abnahme-Test jedes adaptiven Kurses: Abdeckung
+(jede Note 0–100 öffnet GENAU eine Folgekachel), Ratschen-Szenarien (starker
+Anfänger steigt auf, schwacher Fortgeschrittener ab), Förder-Fenster,
+Versuchs-Deckel, Kumulativ-Gewichte, Entkopplung. Erst bei Exit 0 ausliefern;
+der echte Restore-Klicktest auf einer Moodle-Instanz bleibt Pflicht-QA des
+Autors (Testuser je Pfad).
+
+Generator-Bausteine dahinter (für Debugging): Quiz-grade_items in
+`activities/quiz_X/grades.xml` (idnumber `test-s{Stufe}-{niveau}`), Root-
+`gradebook.xml` mit kumulativem Calculated-Item (`=##giID##*Gewicht + …`),
+availability-Bedingungen mit symbolischen `ref`-Verweisen, die beim Build
+gegen die ID-Map aufgelöst werden — Sections (Kacheln) wie Module.
 
 ## Where finished courses live — output folder & reference library (project convention)
 

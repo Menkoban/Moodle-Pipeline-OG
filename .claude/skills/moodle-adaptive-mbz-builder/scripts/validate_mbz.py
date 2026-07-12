@@ -28,6 +28,7 @@ Exit code 0 = all checks passed (warnings allowed), 1 = problems found.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 import tarfile
@@ -306,6 +307,99 @@ def _deep_checks(tar, members, contents, problems, warns, info):
         ex = ", ".join(f"'{h[1]}' in {h[0]}" for h in hits[:4])
         warns.append(f"INDEX: {len(hits)} Formelzeichen-Indizes nicht "
                      f"tiefgestellt (A<sub>1</sub>) — z. B. {ex}")
+
+    # ---- 13. Adaptive Verdrahtung (availability + Gradebook) -------------- #
+    # Die stillen Restore-Fallen aus dem Moodle-4.1-Quellcode:
+    # (a) op '&'/'!|' braucht showc (Länge == c), op '|'/'!&' braucht show —
+    #     sonst coding_exception SPÄT im Restore (restore_update_availability).
+    # (b) grade-id muss int sein und als grade_item-id im Backup existieren —
+    #     sonst wird sie still zu id:0 (Kachel dauerhaft gesperrt).
+    # (c) ##gi<id>##-Tokens in Formeln müssen auf existierende Items zeigen.
+    # (d) ROOT-gradebook.xml erlaubt nur manual|course|category.
+    # (e) grade_item-ids backup-weit eindeutig.
+    gi_ids: set[str] = set()
+    dup_ids: set[str] = set()
+    calc_item_ids: set[int] = set()
+    for path, data in contents.items():
+        if not (path == "gradebook.xml" or path.endswith("/grades.xml")):
+            continue
+        for m in re.finditer(r'<grade_item id="(\d+)">((?:(?!</grade_item>).)*)', data, re.S):
+            gid, body = m.group(1), m.group(2)
+            if gid in gi_ids:
+                dup_ids.add(gid)
+            gi_ids.add(gid)
+            it = re.search(r"<itemtype>(\w+)</itemtype>", body)
+            calc = re.search(r"<calculation>([^<]+)</calculation>", body)
+            if calc and calc.group(1) != "$@NULL@$":
+                calc_item_ids.add(int(gid))
+            if path == "gradebook.xml" and it and it.group(1) not in (
+                    "manual", "course", "category"):
+                problems.append(f"gradebook.xml: itemtype '{it.group(1)}' in "
+                                f"ROOT verboten (nur manual|course|category)")
+    if dup_ids:
+        problems.append(f"gradebook: doppelte grade_item-ids {sorted(dup_ids)}")
+
+    def _check_av_tree(src, raw):
+        try:
+            tree = json.loads(raw)
+        except Exception:  # noqa: BLE001
+            problems.append(f"{src}: availability ist kein gültiges JSON")
+            return
+        def walk(t):
+            op = t.get("op")
+            c = t.get("c", [])
+            if op in ("&", "!|"):
+                if not isinstance(t.get("showc"), list) and t is tree:
+                    problems.append(f"{src}: op '{op}' ohne showc-Liste "
+                                    f"(coding_exception beim Restore)")
+                elif t is tree and len(t.get("showc", [])) != len(c):
+                    problems.append(f"{src}: showc-Länge != Anzahl Bedingungen")
+            elif op in ("|", "!&") and t is tree and "show" not in t:
+                problems.append(f"{src}: op '{op}' ohne show-Feld "
+                                f"(coding_exception beim Restore)")
+            for cond in c:
+                if "op" in cond:
+                    walk(cond)
+                    continue
+                if cond.get("type") != "grade":
+                    continue
+                gid = cond.get("id")
+                if not isinstance(gid, int):
+                    problems.append(f"{src}: grade-id {gid!r} ist kein "
+                                    f"JSON-Integer")
+                elif str(gid) not in gi_ids:
+                    problems.append(f"{src}: grade-id {gid} existiert in "
+                                    f"keinem grade_item — wird beim Restore "
+                                    f"still zu id:0 (dauerhaft gesperrt)")
+                elif gid in calc_item_ids:
+                    problems.append(f"{src}: Einstufung referenziert das "
+                                    f"KUMULATIVE Calculated-Item {gid} — "
+                                    f"Ratschen-Effekt (Referenz §3)!")
+        walk(tree)
+
+    n_av = 0
+    for path, data in contents.items():
+        if re.match(r"sections/section_\d+/section\.xml$", path):
+            m = re.search(r"<availabilityjson>(.*?)</availabilityjson>", data, re.S)
+            if m and m.group(1) not in ("$@NULL@$", ""):
+                raw = ET.fromstring(data).findtext("availabilityjson") or ""
+                if '"c":[]' not in raw.replace(" ", ""):
+                    n_av += 1
+                    _check_av_tree(path, raw)
+        elif path.endswith("/module.xml"):
+            raw = ET.fromstring(data).findtext("availability") or ""
+            if raw and raw != "$@NULL@$":
+                n_av += 1
+                _check_av_tree(path, raw)
+    # (c) Formel-Tokens
+    gb = contents.get("gradebook.xml", "")
+    for tok in re.findall(r"##gi(\d+)##", gb):
+        if tok not in gi_ids:
+            problems.append(f"gradebook.xml: Formel-Token ##gi{tok}## zeigt "
+                            f"auf kein grade_item — bleibt beim Restore kaputt")
+    if n_av or gi_ids:
+        info.append(f"adaptiv: {n_av} availability-Bäume, "
+                    f"{len(gi_ids)} grade_items geprüft")
 
 
 def _report(info: list[str], warns: list[str], problems: list[str]) -> None:
