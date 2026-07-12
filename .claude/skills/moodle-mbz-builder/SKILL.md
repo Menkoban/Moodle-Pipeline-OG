@@ -33,6 +33,35 @@ this material for Moodle", or "add these activities into a Moodle course". If
 they only want to *understand* an existing `.mbz`, read `references/mbz-format.md`
 instead of running the generator.
 
+## Pflicht-Ablauf mit Gates — Step-by-Step, nichts überspringen
+
+Jeder Kursauftrag läuft in DIESER Reihenfolge. **Lege beim Start für jedes
+Gate ein eigenes Todo an** (TaskCreate) und hake es erst ab, wenn das Gate
+GRÜN ist — „hab ich sinngemäß gemacht" zählt nicht. Ein Schritt, dessen
+Ergebnis-Datei fehlt, ist NICHT passiert.
+
+1. **Briefing** (Kurs-Steckbrief inkl. Kachelzahl-Frage, s. u.) →
+   Gate: Autor hat den **Vorschlags-Steckbrief bestätigt**.
+2. **course.json + SVGs schreiben** → Gate: `autofit_svg.py` gelaufen und
+   `validate_svg.py --strict` Exit 0.
+3. **Editor-Widget**: `build_editor_widget.py … -o editor.html` bauen UND
+   via `mcp__visualize__show_widget` **rendern** (vorher einmal still
+   `read_me`, modules `["interactive"]`). Die Datei zu bauen ohne zu
+   rendern erfüllt das Gate NICHT — der Autor muss den Kurs im Chat
+   bearbeiten können. Zusätzlich Lese-Vorschau bauen und als Datei senden.
+4. **NotebookLM-Video SOFORT starten** (Dossier exportieren → Browser-Flow)
+   — läuft parallel zu Schritt 5; Fallback-Regel siehe Video-Kapitel.
+5. **Pipeline**: `build_simulation` (falls Sims/Formulare) →
+   `make_materials` → `build_mbz` → Gate: `validate_mbz.py` Exit 0.
+6. **Video einbauen** (`set_recap_video.py`) → Rebuild → Re-Validate.
+7. **Sammelordner-Ablage** (relative Pfade, assets/ mitkopieren, s. u.).
+8. **SCHLUSS-GATE**: `python <skill-dir>/scripts/check_delivery.py
+   "<kursordner>"` — prüft maschinell: course.json relativ +
+   self-contained, .mbz + validate grün, Vorschau, editor.html,
+   materials/ vollständig, Video eingebaut. **Erst bei Exit 0
+   ausliefern.** Bewusste Ausnahmen (z. B. `--allow-video-placeholder`,
+   wenn kein Browser verbunden ist) IMMER im Chat begründen.
+
 ## Where finished courses live — output folder & reference library (project convention)
 
 **Collection folder (Sammelordner):**
