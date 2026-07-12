@@ -1,0 +1,10 @@
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Generated when running the pipeline on a course placed inside the skill dir
+assets/materials/
+assets/png/
+*_vorschau.html
+*.materialized.json
+*.mbz
