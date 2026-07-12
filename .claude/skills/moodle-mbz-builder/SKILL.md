@@ -99,9 +99,23 @@ structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinhei
    - **Verbindliche Fachdaten:** formulas, values, norms, safety facts, correct worked examples;
    - **Vorhandenes Material:** own scripts/PDFs/images to embed (paths); which diagrams to draw; photos (placeholders only — cannot generate);
    - **Aktivitäten & Prüfung:** activity types, formative vs. graded, rubric wishes;
+   - **Struktur & Kachelzahl (IMMER fragen):** wie viele inhaltliche
+     Kacheln/Lernabschnitte der Kurs bekommen soll — als Auswahlfrage mit
+     konkreten, aus Thema + Zeitbudget abgeleiteten Vorschlägen, z. B.
+     „5 Kacheln: Einstieg / Theorie / Praxis / Anwendung / Recap (empfohlen)"
+     vs. kompakter (3–4) vs. ausführlicher (6–7). Die Pflicht-Sequenz unten
+     bleibt das Gerüst; die Kachelzahl entscheidet, wie fein Grundlagen/
+     Vertiefung aufgeteilt werden. Glossar + Lehrkraft-Sektion zählen extra;
    - **Stil & Metadaten:** Du/Sie, course name + **unique shortname**, category, format.
    Then apply the playbook defaults below for everything the user leaves open —
    ask to sharpen the fit, don't block on it.
+   **Vorschlags-Steckbrief (PFLICHT, vor der Content-Produktion):** Lege dem
+   Autor nach dem Intake einen konkreten Kursvorschlag zur Bestätigung vor —
+   benannte Kacheln mit je einem Satz Inhalt, geplante Aktivitäten je Kachel
+   (Infoblätter/Quiz/Auftrag/Simulation/Formular), **Kachelfoto-Motiv je
+   Kachel** (ein Motiv-Stichwort pro Kachel, siehe „Kachel-Bilder"),
+   Handlungssituation in 2 Sätzen und die Lernziele. Erst wenn der Autor
+   bestätigt (oder gezielt umbaut), wird Content geschrieben und gebaut.
 2. **Define competence-based learning outcomes:** "Die Lernenden können
    [observable verb] [content] [context/criterion]" — never "kennen/verstehen".
 3. **Follow the fixed Lernabschnitt sequence:** Einführung → Grundlagen →
