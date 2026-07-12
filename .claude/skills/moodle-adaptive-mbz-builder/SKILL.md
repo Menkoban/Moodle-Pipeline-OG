@@ -225,6 +225,12 @@ structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinhei
    - **Stil & Metadaten:** Du/Sie, course name + **unique shortname**, category, format.
    Then apply the playbook defaults below for everything the user leaves open —
    ask to sharpen the fit, don't block on it.
+   **Vorschlags-Steckbrief (PFLICHT, vor der Content-Produktion):** Wie im
+   „Adaptiven Briefing" oben beschrieben — benannte Pfade + Stufentitel +
+   Aktivitäten-Mix je Kachel + Kachelfoto-Motive + Handlungssituation +
+   Lernziele dem Autor zur Bestätigung vorlegen; erst danach Content
+   schreiben und bauen. (Die Struktur-Fragen Pfadanzahl/Stufenanzahl stellt
+   das adaptive Briefing.)
 2. **Define competence-based learning outcomes:** "Die Lernenden können
    [observable verb] [content] [context/criterion]" — never "kennen/verstehen".
 3. **Follow the fixed Lernabschnitt sequence:** Einführung → Grundlagen →
