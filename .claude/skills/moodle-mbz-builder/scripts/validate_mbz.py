@@ -36,40 +36,58 @@ import xml.etree.ElementTree as ET
 
 
 # --- Rechnungs-Heuristik: Ergebnis ohne Einheit (beratend, nie fatal) ------- #
-# Einheiten-Token (längste Alternativen zuerst, damit "kV" vor "V" greift).
-_UNIT = (r"(?:kV|mV|µV|V|mA|µA|kA|A|kΩ|MΩ|Ω|kW|MW|VA|var|W|kN|Nm|N|hPa|kPa|MPa|Pa|"
-         r"mbar|bar|mm|cm|dm|km|µm|nm|m|ms|µs|ns|min|h|s|°C|K|°|kg|mg|µg|g|t|"
-         r"kHz|MHz|GHz|Hz|mF|µF|nF|pF|F|mH|µH|H|kWh|Wh|kJ|MJ|J|ml|l|%)")
+# Zahl inkl. Tausender-Leerzeichen ("14 400") und deutschem Dezimalkomma.
+_NUM = r"[-+]?\d+(?:[  ]\d{3})*(?:[.,]\d+)?"
+# Einheiten-Token: "1/min"-Formen, Symbole, ausgeschriebene Einheiten
+# (längere Alternativen zuerst, damit "kV" vor "V" greift).
+_UNIT = (r"(?:1/min|1/s|1/h|kV|mV|µV|V|mA|µA|kA|A|kΩ|MΩ|Ω|kW|MW|VA|var|W|kN|Nm|N|"
+         r"hPa|kPa|MPa|Pa|mbar|bar|mm|cm|dm|km|µm|nm|m|ms|µs|ns|min|h|s|°C|K|°|"
+         r"kg|mg|µg|g|t|kHz|MHz|GHz|Hz|mF|µF|nF|pF|F|mH|µH|H|kWh|Wh|kJ|MJ|J|ml|l|%|"
+         r"Ohm|Volt|Ampere|Watt|Newton|Pascal|Hertz|Joule|Sekunden|Sekunde|"
+         r"Minuten|Minute|Stunden|Stunde|Meter|Grad|Prozent)")
 _UNIT_TOKEN_RX = re.compile(r"(?<![A-Za-zµ°])" + _UNIT + r"(?![A-Za-zµ])")
-_RESULT_RX = re.compile(r"=\s*[-+]?\d+(?:[.,]\d+)?")
-_RESULT_UNIT_RX = re.compile(r"=\s*[-+]?\d+(?:[.,]\d+)?\s*" + _UNIT + r"(?![A-Za-zµ])")
-# dimensionslose Größen (kein Fehlalarm): Wirkungsgrad, Reibzahl, Übersetzung …
-_DIMLESS = {"η", "μ", "µ", "ε", "φ", "λ", "i", "z", "cos", "sin", "tan", "cosφ"}
+_RESULT_RX = re.compile(r"=\s*(" + _NUM + r")")
+_RESULT_UNIT_RX = re.compile(r"=\s*" + _NUM + r"\s*" + _UNIT + r"(?![A-Za-zµ])")
+# Zahl gefolgt von Operator/Hochzahl -> Formel-Term, kein Ergebnis (z. B.
+# "n = 60 · f / p", "= 6²").
+_RESULT_OP_RX = re.compile(r"=\s*" + _NUM + r"\s*[/·*×^²³+\-−]")
+# Nur klar einheitenbehaftete Größen melden (hohe Präzision statt Vollständigkeit).
+# Mehrdeutige/dimensionslose Symbole (A=Ampere/Fläche, p=Druck/Polpaar,
+# n=Drehzahl/Anzahl, i/z=Übersetzung/Zähl, η=Wirkungsgrad, NN-Gewichte) bewusst
+# NICHT enthalten -> keine Fehlalarme auf dimensionslosen Größen.
+_QUANTITY = {"U", "I", "R", "P", "F", "M", "Q", "W", "E", "s", "v", "d", "l"}
+_LHS_SYM_RX = re.compile(r"([A-Za-z])[ _]?\d*\s*$")
 
 
 def _readable_text(raw: str) -> str:
-    """XML-escapetes HTML -> lesbarer Klartext: entschärfen, Tags strippen,
-    Leerraum zusammenfassen."""
-    txt = html.unescape(raw)              # &lt;p&gt; -> <p>, &amp; -> &
-    txt = re.sub(r"<[^>]+>", " ", txt)    # HTML-Tags entfernen
+    """XML-escapetes (ggf. doppelt, z. B. &amp;#183;) HTML -> lesbarer Klartext:
+    entschärfen, Tags strippen, Leerraum zusammenfassen."""
+    txt = raw
+    for _ in range(3):                     # doppelte Escapes auflösen
+        new = html.unescape(txt)
+        if new == txt:
+            break
+        txt = new
+    txt = re.sub(r"<[^>]+>", " ", txt)     # HTML-Tags entfernen
     return re.sub(r"\s+", " ", txt).strip()
 
 
 def _calc_unit_warnings(text: str) -> list[str]:
     """Beratend: in einem Rechenkontext (Text mit '=' UND einem Einheiten-Token)
-    ein Ergebnis '= <Zahl>' melden, dem KEINE Einheit folgt. Dimensionslose
-    Größen (η, i, cos φ …) werden übersprungen. Nie fatal."""
+    ein Ergebnis '<Größe> = <Zahl>' melden, dem KEINE Einheit folgt — aber nur,
+    wenn die linke Größe klar einheitenbehaftet ist (U, I, R, P, F …). Nie fatal."""
     if "=" not in text or not _UNIT_TOKEN_RX.search(text):
         return []
     out, seen = [], set()
     for m in _RESULT_RX.finditer(text):
         if _RESULT_UNIT_RX.match(text, m.start()):
-            continue  # Einheit folgt direkt -> ok
-        lhs = text[max(0, m.start() - 12):m.start()].strip()
-        sym = re.split(r"[\s(]+", lhs)[-1] if lhs else ""
-        if sym in _DIMLESS:
-            continue  # dimensionslose Größe
-        snip = text[m.start():m.end()].strip()
+            continue  # Einheit folgt -> ok
+        if _RESULT_OP_RX.match(text, m.start()):
+            continue  # Formel-Term (Operator/Hochzahl folgt) -> kein Ergebnis
+        sym = _LHS_SYM_RX.search(text[max(0, m.start() - 14):m.start()])
+        if not sym or sym.group(1) not in _QUANTITY:
+            continue  # keine klar einheitenbehaftete Größe -> nicht melden
+        snip = re.sub(r"\s+", " ", m.group(0)).strip()
         if snip not in seen:
             seen.add(snip)
             out.append(snip)
