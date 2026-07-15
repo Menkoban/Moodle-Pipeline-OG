@@ -339,17 +339,26 @@ def collect_boxes(root: ET.Element):
                 shifted = [(x + tx, y + ty) for x, y in zip(xs, ys)]
                 if name == "polygon" and len(shifted) > 1:
                     shifted.append(shifted[0])
+                closed = (name == "polygon") or (
+                    len(shifted) > 2 and math.hypot(
+                        shifted[0][0] - shifted[-1][0],
+                        shifted[0][1] - shifted[-1][1]) <= 0.5)
                 boxes.append(Box(min(xs) + tx, min(ys) + ty,
                                  max(xs) + tx, max(ys) + ty, name,
-                                 extra={"pts": shifted}))
+                                 extra={"pts": shifted, "path_closed": closed}))
         elif name == "path":
-            pts = _path_points(el.get("d", ""))
+            d = el.get("d", "")
+            pts = _path_points(d)
             if pts:
                 shifted = [(x + tx, y + ty) for x, y in pts]
                 xs = [p[0] for p in shifted]
                 ys = [p[1] for p in shifted]
+                closed = bool(re.search(r"[Zz]", d)) or (
+                    len(shifted) > 2 and math.hypot(
+                        shifted[0][0] - shifted[-1][0],
+                        shifted[0][1] - shifted[-1][1]) <= 0.5)
                 boxes.append(Box(min(xs), min(ys), max(xs), max(ys), "path",
-                                 extra={"pts": shifted}))
+                                 extra={"pts": shifted, "path_closed": closed}))
 
         for child in el:
             if _localname(child.tag) != "tspan":
