@@ -29,18 +29,39 @@ Kurs-Recap → Glossar → Material für Lehrkräfte*.
 
 ---
 
-## Voraussetzungen & Installation
+## Herunterladen & installieren
 
-- **Python 3.11+**
-- Den Skill-Ordner an einen festen Ort legen (bei Claude Code: `~/.claude/skills/moodle-mbz-builder`).
-- Einmalig die Abhängigkeiten installieren (für Materialien-Pipeline **und** die automatische Diagramm-Prüfung):
+Dies ist ein **[Claude-Code-Skill](https://docs.claude.com/en/docs/claude-code)** —
+du klonst ihn in den Skills-Ordner deiner Claude-Code-Installation
+(`~/.claude/skills/`); danach findet Claude ihn automatisch. Voraussetzung:
+**Git** und **Python 3.11+**.
+
+**Linux / macOS** (auch Windows Git-Bash):
 
 ```bash
-python -m pip install -r <skill-dir>/requirements.txt
+git clone https://github.com/Menkoban/moodle-mbz-builder ~/.claude/skills/moodle-mbz-builder
+python3 -m pip install -r ~/.claude/skills/moodle-mbz-builder/requirements.txt
 ```
+
+**Windows (PowerShell):**
+
+```powershell
+git clone https://github.com/Menkoban/moodle-mbz-builder "$HOME\.claude\skills\moodle-mbz-builder"
+python -m pip install -r "$HOME\.claude\skills\moodle-mbz-builder\requirements.txt"
+```
+
+> **Privates Repo?** Vorher anmelden — am einfachsten mit der GitHub-CLI:
+> `gh auth login`, dann `gh repo clone Menkoban/moodle-mbz-builder <zielpfad>`.
+> Alternativ per SSH: `git clone git@github.com:Menkoban/moodle-mbz-builder <zielpfad>`.
+> Ist das Repo öffentlich, funktioniert der HTTPS-Befehl oben direkt.
+
+**Aktualisieren:** `git -C ~/.claude/skills/moodle-mbz-builder pull`
+(Windows: `git -C "$HOME\.claude\skills\moodle-mbz-builder" pull`).
 
 Der Skill ist self-contained: alle Skripte finden einander relativ zum Ordner,
 egal wohin er installiert wird. Kein Moodle nötig, um die `.mbz` zu bauen.
+`requirements.txt` deckt die Materialien-Pipeline **und** die automatische
+Diagramm-Prüfung ab.
 
 ---
 
