@@ -166,10 +166,33 @@ kein bestehender Testlauf ändert sich.
 - Default-Ausgabe unverändert: kein Bau-Skript importiert `didactic_profiles`;
   die Registry ist reine, nicht verdrahtete Datenquelle.
 
+## Volle Verdrahtung — UMGESETZT (2026-07-15)
+
+Entscheidungen (Autor-Input): Default = **Rode** (Handlungssituation am Anfang,
+Recap am Ende); die Auswahl wird im Briefing **IMMER** angeboten, auch bei nur
+einem Profil (Anzahl ≥ 1); Skill-Split pro Konzept ist ein **Zukunfts**-Ziel
+(jetzt nur vorbereiten, nicht umsetzen).
+
+Umgesetzt (rein Prompt-/Doku-Ebene — Bau-Skripte bleiben sequenz-agnostisch,
+Default `rode` = byte-identische Ausgabe):
+- **SKILL.md Schritt 1:** neue Pflicht-Briefing-Frage „Didaktisches Konzept
+  (IMMER fragen — auch bei nur einem Profil)" → Profile via
+  `python scripts/didactic_profiles.py`, Persistenz in `course.didaktik_profil`
+  (Default `"rode"`).
+- **SKILL.md Schritt 3:** „Follow the section sequence of the CHOSEN didactic
+  profile" statt fester Rode-Sequenz; `rode` = unveränderte Sequenz.
+- **SKILL.md `quality_check` (b):** prüft die Pflicht-Sequenz des aktiven Profils.
+- **course-design.md §3:** als profil-parametrisch gekennzeichnet (Tabelle = `rode`).
+- **`make_materials.py`:** unverändert nötig — findet die Lehrkraft-Sektion bereits
+  über `visible:0`, nicht über den Namen (profil-agnostisch).
+- **Split-Bereitschaft:** je Profil `guidance_ref` (Rode → `course-design.md`
+  Kap. 1–7; Stub → offen). So lässt sich ein Profil samt Leitfaden später zu
+  einem eigenständigen Konzept-Skill herauslösen; der kombinierte Skill behält
+  die Auswahl über ALLE Profile.
+
 ## Geparkt / Folge
 
-- Verdrahtung gemäß Migrationspfad (Briefing-Frage → `course.didaktik_profil` →
-  Steckbrief/`quality_check`).
-- 2. Profil vom Stub zum vollen Modell ausbauen (inkl. `references/`-Guidance).
-- Übrige Stränge (Schwester-Specs): O1 Recap, O2 Speed, O3 Simulationen sowie die
-  Diagramm-/Rechen-Stränge.
+- **Skill-Split pro Konzept** (Zukunft): ein Profil + `guidance_ref`-Doku zu einem
+  eigenständigen Skill herauslösen (nur vorbereitet, nicht umgesetzt).
+- 2. Profil (`vollstaendige-handlung`) vom Stub zum vollen Modell ausbauen (inkl.
+  eigener `references/`-Guidance).

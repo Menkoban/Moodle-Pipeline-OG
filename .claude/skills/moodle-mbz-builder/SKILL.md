@@ -140,6 +140,14 @@ structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinhei
      vs. kompakter (3–4) vs. ausführlicher (6–7). Die Pflicht-Sequenz unten
      bleibt das Gerüst; die Kachelzahl entscheidet, wie fein Grundlagen/
      Vertiefung aufgeteilt werden. Glossar + Lehrkraft-Sektion zählen extra;
+   - **Didaktisches Konzept (IMMER fragen — auch bei nur EINEM Profil):** welchem
+     didaktischen Konzept der Kurs folgt. Verfügbare Profile listet
+     `python <skill-dir>/scripts/didactic_profiles.py` (Default `rode` = das
+     bisherige 5-Ebenen-Modell: Handlungssituation am Anfang, Recap am Ende).
+     **Immer als Auswahlfrage anbieten**, selbst wenn die Registry nur ein Profil
+     hat. Das gewählte Konzept in `course.didaktik_profil` persistieren (Default
+     `"rode"`); dessen `section_sequence` bestimmt die Lernabschnitts-Folge
+     (s. Schritt 3);
    - **Stil & Metadaten:** Du/Sie, course name + **unique shortname**, category, format.
    Then apply the playbook defaults below for everything the user leaves open —
    ask to sharpen the fit, don't block on it.
@@ -152,10 +160,14 @@ structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinhei
    bestätigt (oder gezielt umbaut), wird Content geschrieben und gebaut.
 2. **Define competence-based learning outcomes:** "Die Lernenden können
    [observable verb] [content] [context/criterion]" — never "kennen/verstehen".
-3. **Follow the fixed Lernabschnitt sequence:** Einführung → Grundlagen →
+3. **Follow the section sequence of the CHOSEN didactic profile**
+   (`course.didaktik_profil`, default `rode`): read it via
+   `didactic_profiles.get_profile(key)["section_sequence"]`. For the default
+   **`rode`** that is the unchanged sequence Einführung → Grundlagen →
    Vertiefung → Anwendung/Handlungsprodukt → Kurs-Recap → Glossar → Material für
    Lehrkräfte (the complete-action model / AVIVA is the *rationale* behind the
-   Anwendung section). Anchor everything in one **Handlungssituation**.
+   Anwendung section). Other profiles define their own sequence — follow THAT
+   one. Anchor everything in one **Handlungssituation**.
 4. **Build each Infoblatt to the Bauplan:** intro + explanatory prose + an
    embedded self-drawn SVG diagram + key points + a Merke box; mark it
    `material: true` for auto PDF/PPTX.
@@ -382,8 +394,10 @@ bleiben Pfad-Referenzen).
   überarbeiten).
 - `quality_check` — kursweiter Konsistenz-Check auf dem Envelope-Stand:
   (a) Constructive Alignment: Lernziele ↔ Testfragen ↔ Praxisauftrag decken
-  sich (Verb-Konsistenz!), (b) Pflicht-Sequenz vollständig (Einführung /
-  Vertiefung / Anwendung / Recap), (c) Zeitbudget ~25 Wörter/Lernminute je
+  sich (Verb-Konsistenz!), (b) Pflicht-Sequenz des gewählten Profils
+  (`course.didaktik_profil`, Default `rode`) vollständig — für `rode`:
+  Einführung / Vertiefung / Anwendung / Recap; sonst
+  `get_profile(key)["rules"]["pflicht_abschnitte"]`, (c) Zeitbudget ~25 Wörter/Lernminute je
   Abschnitt, (d) Infoblatt-Bauplan (Fließtext ≥120 Wörter, Diagramm, Merke),
   (e) Feedback-Vollständigkeit in Quizzes, (f) Rechenbeispiele folgen dem
   Bauplan (Gegeben/Gesucht → Formel → Einsetzen → Ergebnis), (g) jede

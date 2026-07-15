@@ -74,3 +74,18 @@ def test_get_profile_returns_copy():
     p = get_profile("rode")
     p["section_sequence"].append({"title": "Hack"})
     assert section_titles("rode") == RODE_PFLICHT_SEQUENZ
+
+
+def test_every_profile_has_guidance_ref():
+    # Split-Bereitschaft: jedes Profil verweist auf seinen Autoren-Leitfaden,
+    # damit es später zu einem eigenständigen Konzept-Skill werden kann.
+    for prof in PROFILES.values():
+        assert prof.get("guidance_ref"), f"{prof['key']} ohne guidance_ref"
+
+
+def test_list_profiles_default_first_for_briefing():
+    # Das Briefing bietet IMMER eine Auswahl an (auch bei nur einem Profil),
+    # Default (rode) zuerst.
+    listed = list_profiles()
+    assert listed and listed[0][0] == DEFAULT_PROFILE_KEY
+    assert all(isinstance(name, str) and name for _, name in listed)

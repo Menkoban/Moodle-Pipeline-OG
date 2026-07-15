@@ -15,10 +15,19 @@ Registry benannter Profile, jedes mit eigener Abschnitts-Sequenz und
 Regel-Zusammenfassung. `DEFAULT_PROFILE_KEY = "rode"` bildet exakt das heutige
 Verhalten ab.
 
-WICHTIG (additive Stufe): Dieses Modul ist eine **Datenquelle**. Es ist an
-KEINER Stelle in die Generierung verdrahtet – der Kursbau läuft unverändert,
-die Ausgabe ändert sich nicht. Die Verdrahtung (Briefing-Frage, Fluss in
-Steckbrief/quality_check) folgt in der eigentlichen Implementierung; siehe
+VERDRAHTUNG (Prompt-Ebene): Das gewählte Profil wird im **Briefing** immer
+abgefragt (auch bei nur einem Profil) und in `course.didaktik_profil`
+(Default `"rode"`) persistiert; SKILL.md („Follow the section sequence…",
+`quality_check` (b)) und `references/course-design.md` §3 folgen der
+`section_sequence` / den `pflicht_abschnitte` des aktiven Profils. Die
+Bau-Skripte bleiben sequenz-agnostisch → Default `rode` = byte-identische
+Ausgabe wie zuvor.
+
+SPLIT-BEREITSCHAFT (Zukunft, NICHT umgesetzt): Jedes Profil ist ein
+self-contained Dict (name, beschreibung, section_sequence, rules, guidance_ref).
+`guidance_ref` zeigt auf den Autoren-Leitfaden des Konzepts. So lässt sich später
+ein Profil samt Leitfaden zu einem eigenständigen Konzept-Skill herauslösen,
+während der kombinierte Skill die Auswahl über ALLE Profile behält. Details:
 `docs/superpowers/specs/2026-07-15-didaktik-profile-design.md`.
 """
 import copy
@@ -38,6 +47,9 @@ _RODE = {
         "(Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → "
         "Lernkurs) für die berufliche Bildung. Default-Konzept des Skills."
     ),
+    # Autoren-Leitfaden dieses Konzepts (für einen späteren eigenständigen
+    # Konzept-Skill vollständig hier referenzierbar):
+    "guidance_ref": "references/course-design.md (Kap. 1–7)",
     # Index-0-Wrapper vor den nummerierten Lernabschnitten (course-design.md §3).
     "intro_section": {
         "key": "ueber-modul",
@@ -103,6 +115,7 @@ _VOLLSTAENDIGE_HANDLUNG = {
         "Begründung im Hintergrund zu sein. Für stark handlungszentrierte "
         "Projektaufträge."
     ),
+    "guidance_ref": "STUB – eigener Konzept-Leitfaden noch zu schreiben",
     "intro_section": {
         "key": "auftrag",
         "title": "Der Auftrag",

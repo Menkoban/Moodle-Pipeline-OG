@@ -75,6 +75,14 @@ Verbindliches Vokabular. Es bildet sich **eins zu eins** auf die Skill-Architekt
 
 ## 3. Pflicht-Sequenz der Lernabschnitte (mit Zeitbudgets)
 
+> **Profil-parametrisch:** Die Abschnitts-Sequenz kommt aus dem im Briefing
+> gewählten **didaktischen Profil** (`course.didaktik_profil`, Default `rode` —
+> siehe `scripts/didactic_profiles.py` / `get_profile(key)["section_sequence"]`).
+> Die Tabelle unten IST die Sequenz des Default-Profils `rode` (unverändert).
+> Ein anderes Profil bringt seine eigene Sequenz + Pflicht-Abschnitte mit; dann
+> gilt dessen `section_sequence` statt dieser Tabelle. Die restlichen Regeln
+> dieses Kapitels (Infoblatt-Bauplan, Feedback, Zeitbudget) sind konzept-neutral.
+
 Die Sektionen eines Moduls folgen dieser Reihenfolge. Index 0 ist ein kurzer
 „Über dieses Modul"-Abschnitt (Begrüßung + Ablauf), danach die nummerierten
 Lernabschnitte:
