@@ -50,8 +50,8 @@ Rechnungs-Brüche werden als **MathJax-Inline-Mathematik** geschrieben:
 | Surface | Verhalten | Umsetzung |
 |---|---|---|
 | **Moodle-Seite/Buch** | MathJax-Filter rendert `\(\frac…\)` nativ | build_mbz lässt den Text unangetastet (kein Code) |
-| **Vorschau** (`preview_mbz`) | echter Stapel-Bruch per CSS | `to_css()` vor dem Einbetten |
-| **Editor-Widget** (`build_editor_widget`) | echter Stapel-Bruch per CSS | `to_css()` beim Rendern |
+| **Vorschau** (`preview_mbz`) | echter Stapel-Bruch per CSS | `to_css()` auf dem fertigen HTML |
+| **Editor-Widget** (`build_editor_widget`) | zeigt die **LaTeX-Quelle** `\(\frac…\)` | **bewusst KEINE** Transformation — der Editor schreibt den Stand nach `course.json` zurück; ein gerenderter Span würde die Quelle beim Speichern zerstören (wie ein Quelltext-Editor) |
 | **PDF-Material** (`make_materials`) | Rückfall `Zähler/Nenner` | `to_slash()` vor dem HTML-Parsen |
 | **Einheiten** | normaler Text/Slash | nie in `\frac` gewickelt |
 
@@ -112,10 +112,10 @@ einem `\frac` erzeugen erwartete Ausgabe (Stapel bzw. Slash).
 
 1. `scripts/fraction_render.py`: `to_slash`, `to_css` + Unit-Tests.
 2. `make_materials.py`: `to_slash` vor `_parse_html` einhängen.
-3. `preview_mbz.py`: `to_css` beim Einbetten des Seiten-/Buch-HTML.
-4. `build_editor_widget.py`: `to_css` beim Rendern.
-5. `course-design.md`: Autorenregel Brüche/Einheiten.
-6. Lab-Spike (Restore einer `\frac`-Probe) + Sichtprüfung.
+3. `preview_mbz.py`: `to_css` auf dem fertigen Vorschau-HTML.
+4. `course-design.md`: Autorenregel Brüche/Einheiten.
+5. Lab-Spike (Restore einer `\frac`-Probe) + Sichtprüfung.
+   (Editor-Widget bewusst unverändert — zeigt LaTeX-Quelle.)
 
 ## Geparkt / Folge
 
