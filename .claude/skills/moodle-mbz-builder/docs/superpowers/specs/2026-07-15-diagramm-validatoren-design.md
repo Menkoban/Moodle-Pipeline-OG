@@ -118,7 +118,10 @@ existiert bereits (Start = pts[0], Ende = pts[-1]).
 
 **V4a — Beinahe-Schluss (near-miss closure):** für jede `path`/`polyline`-Box,
 die **nicht** geschlossen ist und **≥ 3** Punkte hat (echte Figur, keine
-2-Punkt-Linie):
+2-Punkt-Linie). **`polygon` ist ausgenommen** — SVG-Polygone sind per
+Spezifikation immer geschlossen, und `svg_geometry.collect_boxes` hängt bei
+`polygon` den Startpunkt ohnehin automatisch an (`extra["pts"]` endet stets am
+Start). Betroffen sind also offene `path`/`polyline`-Umrisse:
 - `gap = dist(pts[0], pts[-1])`
 - Melden, wenn **alle** gelten:
   - `2 px < gap ≤ 12 px` (nah dran, aber offen — kalibrierbares Band),
