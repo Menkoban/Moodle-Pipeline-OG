@@ -16,6 +16,11 @@ Checks per SVG:
   * TSPAN  (error)   — a styled inline <tspan> without its own x; svglib renders
     it on top of the following text (the "eibfaidhe genau EIN Weg" trap). Use
     separate <text> elements instead.
+  * ACHSE  (warn)    — a diagram marked data-diagram-type="chart" is missing an
+    axis line, or an axis title (a non-numeric label) on the x or y axis.
+  * SKALA  (warn)    — such a chart has fewer than 2 numeric scale values on an axis.
+  * FIGUR  (warn)    — an open path/polyline outline whose start and end nearly
+    meet (2-12px gap on a 2D figure) — likely an unclosed figure; close with Z.
 
 Inputs may be .svg files, directories (scanned recursively), or a course JSON
 (every activity/page `images` entry is checked).

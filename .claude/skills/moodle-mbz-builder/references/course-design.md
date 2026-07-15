@@ -257,6 +257,24 @@ prüfe sie danach automatisch (nicht nur per Augenschein):
   das Symbol weg. Pfeile (→ ↑) und der Malpunkt · rendern dagegen. `validate_svg.py`
   warnt vor riskanten Glyphen.
 
+### Koordinaten-Diagramme (Charts) — Achsen, Skala, geschlossene Figuren
+
+- **Chart markieren:** Ein Diagramm mit Koordinatenachsen (Kennlinie,
+  Messkurve, Balken über einer Werteachse) bekommt am Wurzel-`<svg>` das
+  Attribut `data-diagram-type="chart"`. Nur so prüft `validate_svg.py` die
+  Achsen — Schaltpläne, Anatomiebilder und Piktogramme bleiben unberührt.
+- **Achsentitel (Pflicht bei Charts):** jede Achse braucht einen beschrifteten
+  Titel mit Größe/Einheit (z. B. „t in s", „U / V", „Kraft F") — nicht nur
+  Zahlen. Fehlt er → Warnung `ACHSE`.
+- **Skalierung (Pflicht bei Charts):** jede Achse braucht mindestens zwei
+  numerische Skalenwerte entlang der Achse (Teilstriche zusätzlich empfohlen).
+  Weniger als zwei → Warnung `SKALA`.
+- **Figuren schließen (alle Diagramme):** geschlossene Formen als `polygon`
+  oder als `path` mit abschließendem `Z` zeichnen, nicht als offene Linienkette
+  mit einer kleinen Lücke. Eine Restlücke von 2–12 px → Warnung `FIGUR`.
+
+Alle drei sind warn-Level und blocken damit das `validate_svg.py --strict`-Gate.
+
 ### Typografie-Konventionen in SVG-Text (Pflicht — der Validator prüft sie)
 
 Diese Konventionen gelten für JEDE Beschriftung in selbst gezeichneten SVGs
