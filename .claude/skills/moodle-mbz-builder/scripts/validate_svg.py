@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import math
 import os
 import sys
 
@@ -412,7 +413,37 @@ def lint_file(path):
             warns.append(f"KONTRAST text '{t.label}' hebt sich kaum vom "
                          f"Kasten ab (Kontrast {ratio:.1f}:1, < 2.5:1)")
 
+    # 11) V4a: geschlossene Figuren (alle Diagramme)
+    warns += _figure_closure_warnings(boxes)
+
     return errors, warns
+
+
+def _figure_closure_warnings(boxes):
+    """V4a — an open path/polyline outline whose start and end nearly meet is
+    likely an unclosed figure. Conservative: only 2-12px gaps on a 2D figure
+    whose endpoints nearly return to the start (so open curves/leaders, whose
+    endpoints are far apart, are never flagged). polygons are inherently closed
+    and carry path_closed=True."""
+    warns = []
+    for b in boxes:
+        if b.tag not in ("path", "polyline"):
+            continue
+        if b.extra.get("path_closed"):
+            continue
+        pts = b.extra.get("pts") or []
+        if len(pts) < 3:
+            continue
+        gap = math.hypot(pts[0][0] - pts[-1][0], pts[0][1] - pts[-1][1])
+        if not (2.0 < gap <= 12.0):
+            continue
+        if b.w <= 10 or b.h <= 10:            # a flat line, not a figure
+            continue
+        if gap >= 0.15 * math.hypot(b.w, b.h):  # endpoints don't return to start
+            continue
+        warns.append(f"FIGUR nicht geschlossen (Luecke ~{gap:.0f}px) - Pfad "
+                     f"mit Z schliessen oder Endpunkte treffen lassen")
+    return warns
 
 
 def check_course_svgs(spec, base_dir=".", strict=False, out=None):
