@@ -385,6 +385,16 @@ Schritt für Schritt diesem Muster — nur ReportLab-sicheres HTML (`<b>`, `<sub
 - **V6 — echte Aufgaben aus der Handlungssituation:** jede Aufgabe/Rechnung ist
   in den realen betrieblichen Kontext des Kurses eingebettet (Bedarf, Zweck:
   „In der Steuerung …, damit …") — NIE ein nacktes „Berechne R".
+- **Brüche in Rechnungen — echt setzen:** Brüche als MathJax schreiben:
+  `\(\frac{Zähler}{Nenner}\)` — Moodle rendert daraus einen echten Bruch
+  (`\(\frac{3}{4}\)` erscheint als echtes ¾), die Vorschau zeigt ihn gestapelt,
+  das PDF fällt auf `Zähler/Nenner` zurück. Nur der Bruch selbst ist MathJax; die
+  umgebende Gleichung (`R = \(\frac{U}{I}\) = 6 Ω`) bleibt normaler Text.
+- **Einheiten NICHT als Bruch:** m/s, km/h und besonders lange/zusammengesetzte
+  Einheiten (z. B. die der Gravitationskonstante) bleiben normaler Text/Slash —
+  nie in `\frac` zwingen. Voraussetzung fürs echte Bruch-Rendering: der
+  **MathJax-Filter** ist im Ziel-Moodle aktiv (4.x-Standard); sonst zeigt Moodle
+  den LaTeX-Quelltext.
 
 `validate_mbz.py` meldet beratend (nicht-fatal) eine Ergebniszeile ohne Einheit
 im Rechenkontext (`EINHEIT:`).
