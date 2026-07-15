@@ -127,6 +127,9 @@ MIN_FONT_SIZE = 10.0   # kleinere Beschriftungen sind gedruckt kaum lesbar
 CENTER_TOL = 10.0      # "fast zentriert": mittig verankert, aber daneben
 ALIGN_TOL = 4.0        # "fast bündig": gestapelte Texte, um 1–4 px versetzt
 
+# rein numerisches Label (Skalenwert): "0", "-5", "3,14", "10.5"
+_NUMERIC_RX = re.compile(r"^-?\d+(?:[.,]\d+)?$")
+
 
 def _typo_issues(label):
     """Konventions-Verstöße in einem Text-Label (deutsche Fachdiagramme)."""
@@ -225,6 +228,7 @@ def lint_file(path):
     except Exception as e:  # noqa: BLE001
         return ([f"parse error: {e}"], [])
 
+    is_chart = (root.get("data-diagram-type") == "chart")
     vx, vy, vw, vh = G.get_viewbox(root)
     vx1, vy1 = vx + vw, vy + vh
     boxes = G.collect_boxes(root)
@@ -413,10 +417,81 @@ def lint_file(path):
             warns.append(f"KONTRAST text '{t.label}' hebt sich kaum vom "
                          f"Kasten ab (Kontrast {ratio:.1f}:1, < 2.5:1)")
 
-    # 11) V4a: geschlossene Figuren (alle Diagramme)
+    # 11) V1/V3: Chart-Achsen + Skala (nur markierte Charts)
+    if is_chart:
+        warns += _chart_axis_warnings(boxes, vx, vy, vw, vh)
+
+    # 12) V4a: geschlossene Figuren (alle Diagramme)
     warns += _figure_closure_warnings(boxes)
 
     return errors, warns
+
+
+def _segments(boxes):
+    """All straight segments (x1,y1,x2,y2) from line/polyline/polygon/path boxes."""
+    segs = []
+    for b in boxes:
+        if b.tag == "line":
+            seg = b.extra.get("seg")
+            if seg:
+                segs.append(seg)
+        elif b.tag in ("path", "polyline", "polygon"):
+            pts = b.extra.get("pts") or []
+            for k in range(len(pts) - 1):
+                segs.append((pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1]))
+    return segs
+
+
+def _find_axes(boxes, vx, vy, vw, vh):
+    """Longest near-horizontal segment in the lower half = x-axis; longest
+    near-vertical segment in the left part = y-axis. Returns (x_axis, y_axis),
+    each (x1,y1,x2,y2) or None."""
+    x_axis = y_axis = None
+    x_best = y_best = 0.0
+    for (x1, y1, x2, y2) in _segments(boxes):
+        dx, dy = x2 - x1, y2 - y1
+        length = math.hypot(dx, dy)
+        if abs(dy) <= 2 and min(y1, y2) >= vy + 0.5 * vh and length >= 0.4 * vw:
+            if length > x_best:
+                x_best, x_axis = length, (x1, y1, x2, y2)
+        if abs(dx) <= 2 and min(x1, x2) <= vx + 0.4 * vw and length >= 0.4 * vh:
+            if length > y_best:
+                y_best, y_axis = length, (x1, y1, x2, y2)
+    return x_axis, y_axis
+
+
+def _chart_axis_warnings(boxes, vx, vy, vw, vh):
+    """V1 (axis titles) — only called for diagrams marked
+    data-diagram-type="chart". V3 (scale) is added in a later task."""
+    warns = []
+    texts = [b for b in boxes if b.tag == "text" and b.label]
+    x_axis, y_axis = _find_axes(boxes, vx, vy, vw, vh)
+
+    def is_num(t):
+        return bool(_NUMERIC_RX.match(t.label.strip()))
+
+    def cx(t):
+        return (t.x0 + t.x1) / 2.0
+
+    def cy(t):
+        return (t.y0 + t.y1) / 2.0
+
+    if x_axis is None:
+        warns.append("ACHSE keine x-Achsenlinie erkennbar (Chart markiert)")
+    else:
+        ax_y = (x_axis[1] + x_axis[3]) / 2.0
+        if not any((not is_num(t)) and cy(t) > ax_y for t in texts):
+            warns.append("ACHSE x-Achse ohne Beschriftung (Achsentitel fehlt)")
+
+    if y_axis is None:
+        warns.append("ACHSE keine y-Achsenlinie erkennbar (Chart markiert)")
+    else:
+        # lenient: y-titles are often rotated (position unreliable) -> any
+        # non-numeric text in the left third counts as a title.
+        if not any((not is_num(t)) and cx(t) < vx + vw / 3.0 for t in texts):
+            warns.append("ACHSE y-Achse ohne Beschriftung (Achsentitel fehlt)")
+
+    return warns
 
 
 def _figure_closure_warnings(boxes):
