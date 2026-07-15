@@ -41,6 +41,22 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
    Lehrkraft-Sektion, ohne Datei-/Link-/Organisations-Aktivitäten). Ein
    Dossier statt vieler Einzel-PDFs: weniger Quellen, kohärenterer Kontext,
    volle Kontrolle darüber, was das Video „weiß".
+   **Diagramme (Strang O1, 2026-07-15):** das Dossier ist reiner Text —
+   NotebookLM sieht eingebettete SVG-Diagramme nicht, wenn sie nur als
+   `@@PLUGINFILE@@`-Referenz im Seiten-HTML stecken. `export_course_dossier.py`
+   hängt deshalb pro Abschnitt automatisch einen Block
+   „**Abbildungen in diesem Modul**" an, sobald Seiten dieses Abschnitts
+   `.svg`-Diagramme in `images` referenzieren — mit einer kurzen
+   Textbeschreibung je Diagramm (`<title>`/`<desc>` des SVG, sonst sichtbare
+   `<text>`-Labels, sonst der Dateiname). So kann die Video-Narration auf die
+   Diagramme Bezug nehmen, obwohl sie nur den Dossier-Text als Quelle bekommt.
+   Rein additiv: Kurse ohne Diagramme erzeugen dasselbe Dossier wie zuvor.
+   Design: `docs/superpowers/specs/2026-07-15-recap-diagramme-design.md`.
+   **Optionaler Zusatzschritt (manuell, siehe Punkt 3):** wer will, dass
+   NotebookLM die Diagramme *tatsächlich sieht* statt nur textuell referenziert
+   zu bekommen, lädt zusätzlich die Material-PDFs (`make_materials.py`) oder
+   eine Kurs-Vorschau **manuell** als weitere Quelle hoch — siehe Caveat unten,
+   das wird NICHT automatisiert.
 2. **Browser verbinden:** claude-in-chrome-Tools laden (ToolSearch,
    gebündelt), `tabs_context_mcp{createIfEmpty:true}`. Wenn kein Browser
    verbunden ist (`list_connected_browsers` = leer): User bitten, die
@@ -54,6 +70,16 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
    eintippen (ein Riesenblock läuft in einen 30s-CDP-Timeout), Ende per
    Screenshot verifizieren, „Einfügen" klicken. NotebookLM benennt das
    Notebook automatisch nach der Quelle.
+   - **Optional, manuell (Diagramme als echte Bild-Quelle, nicht nur Text):**
+     zusätzlich über „Quellen hinzufügen → Dateien hochladen" die
+     Material-PDFs (`make_materials.py`-Output, enthält die SVGs eingebettet)
+     oder eine Kurs-Vorschau hochladen. **Caveat:** Datei-Upload aus der
+     Claude-Sandbox ist unzuverlässig — nur **session-geteilte Dateien**
+     funktionieren zuverlässig über die Browser-Tools. Dieser Schritt bleibt
+     deshalb dem Nutzer überlassen (Claude wählt/lädt hier keine Datei
+     automatisiert hoch) und ist rein optional: der Diagramm-Abschnitt im
+     Dossier (siehe Punkt 1) liefert bereits ohne diesen Schritt eine
+     textuelle Grundlage, auf die das Video Bezug nehmen kann.
 4. **Videoübersicht anfordern:** Studio-Kachel „Videoübersicht" → Chevron
    (>) öffnet „Video-Zusammenfassung anpassen": Format „Erklärvideo",
    **Sprache Deutsch** prüfen, in das Fokus-Feld („Worauf sollen sich die
