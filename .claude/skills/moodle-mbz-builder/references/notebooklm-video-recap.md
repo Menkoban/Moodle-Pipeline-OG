@@ -72,6 +72,19 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
    - Teilen-Link: `python set_recap_video.py course.json --url https://…`
      (schlanker: kein großes Video in der Sicherung — aber Lernende brauchen
      dann Zugriff auf den Link)
+
+   **Größen-Hinweis:** Große eingebettete MP4s blähen die Sicherung auf
+   (38-MB-Kurs restauriert im 4.5-Lab problemlos, braucht aber Upload-Limit
+   und Geduld; sehr knappe shared-Hosting-Limits können zum Abbruch führen).
+   `validate_mbz.py` warnt ab 10-MB-Einzeldatei / 20-MB-Archiv. Alternativen:
+   `--url` (Teilen-Link) oder die MP4 separat neben die `.mbz` legen.
+   *Debug-Lehre (2026-07-15):* Ein Restore-Abbruch bei ~75 % mit „Fehler beim
+   Schreiben der Datenbank" lag NICHT am 38-MB-Video, sondern an einem
+   NULL-Feld im mod_feedback-Item (siehe activity-types.md, Quirks) — die
+   Fehlerseite „Weitere Informationen" zeigt irreführend „Notwendiger
+   Parameter (contextid) fehlt". Bei solchen Abbrüchen: Kurs im lokalen
+   Moodle-Lab per CLI restaurieren, dort steht das exakte fehlgeschlagene
+   SQL-Statement.
    Danach normal bauen (`make_materials` → `build_mbz` → `validate` →
    `preview`) und **verifizieren**, dass die Video-Ressource im Kurs-Recap
    sitzt; falls das Widget offen ist, regenerieren — `.mbz` erst bei

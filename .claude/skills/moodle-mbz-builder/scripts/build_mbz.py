@@ -1036,14 +1036,44 @@ class ActivityContext:
 
     # -- question categories (quiz) -------------------------------------- #
     def register_quiz_questions(self, questions: list[dict]) -> tuple[int, list[dict]]:
-        """Create a course-context question category holding the given questions.
-        Returns (categoryid, [ {slot, qbe_id, maxmark} ... ]) for quiz slots."""
+        """Create the quiz's question categories AT THE QUIZ MODULE CONTEXT
+        (contextlevel 70), the way real Moodle 4.x stores quiz-owned questions.
+
+        Each quiz gets its OWN root 'top' category plus a child category that
+        holds the questions, both at this quiz's module context — so the category
+        contextid is UNIQUE per quiz and matches the question_reference
+        ``usingcontextid``. Lumping every quiz's questions into one shared
+        COURSE-context bank (all categories at contextid=course) is what made
+        restore abort with "A required parameter (contextid) was missing": the
+        4.x question-bank restore (restore_move_module_questions_categories)
+        expects module-owned questions to live at the module context, then moves
+        them into the recreated module once its context mapping exists.
+
+        Returns (child_categoryid, [ {slot, qbe_id, maxmark} ... ]) for quiz slots."""
         b = self.b
-        top_id = b.ensure_question_top_category()  # single root per context
-        cat_id = b.ids.qcat()
-        # child sortorder after top(0): 999, 1000, ... (one per quiz category)
-        child_sortorder = 999 + max(len(b.question_categories) - 1, 0)
         site = b.wwwroot.replace("https://", "").replace("http://", "")
+        # Per-quiz root 'top' category at the MODULE context (parent = 0). One
+        # 'top' per context is exactly what Moodle's restore enforces, and each
+        # quiz module context is its own context, so this stays valid.
+        top_id = b.ids.qcat()
+        top_stamp = f"{site}+{b.now}+top{top_id}"
+        top_xml = (
+            f'  <question_category id="{top_id}">\n'
+            f"    <name>top</name>\n"
+            f"    <contextid>{self.modctx}</contextid>\n"
+            f"    <contextlevel>70</contextlevel>\n"
+            f"    <contextinstanceid>{self.cmid}</contextinstanceid>\n"
+            f"    <info></info>\n    <infoformat>0</infoformat>\n"
+            f"    <stamp>{top_stamp}</stamp>\n    <parent>0</parent>\n"
+            f"    <sortorder>0</sortorder>\n    <idnumber>{NULL}</idnumber>\n"
+            f"    <question_bank_entries>\n    </question_bank_entries>\n"
+            f"  </question_category>"
+        )
+        # 'top' must precede its child in questions.xml.
+        b.question_categories.append({"id": top_id, "xml": top_xml})
+        # expose for the quiz's inforef annotation (b_quiz reads this)
+        self.quiz_top_catid = top_id
+        cat_id = b.ids.qcat()
         entries_xml = []
         slots = []
         for i, q in enumerate(questions, start=1):
@@ -1071,19 +1101,21 @@ class ActivityContext:
         cat_xml = (
             f'  <question_category id="{cat_id}">\n'
             f"    <name>{xesc(self.act.get('name','Quiz'))} Questions</name>\n"
-            f"    <contextid>{b.ids.course_contextid}</contextid>\n"
-            f"    <contextlevel>50</contextlevel>\n"
-            f"    <contextinstanceid>{b.ids.course_id}</contextinstanceid>\n"
+            f"    <contextid>{self.modctx}</contextid>\n"
+            f"    <contextlevel>70</contextlevel>\n"
+            f"    <contextinstanceid>{self.cmid}</contextinstanceid>\n"
             f"    <info></info>\n    <infoformat>0</infoformat>\n"
             f"    <stamp>{cat_stamp}</stamp>\n    <parent>{top_id}</parent>\n"
-            f"    <sortorder>{child_sortorder}</sortorder>\n    <idnumber>{NULL}</idnumber>\n"
+            f"    <sortorder>999</sortorder>\n    <idnumber>{NULL}</idnumber>\n"
             f"    <question_bank_entries>\n" + "\n".join(entries_xml) + "\n"
             f"    </question_bank_entries>\n"
             f"  </question_category>"
         )
         b.question_categories.append({"id": cat_id, "xml": cat_xml})
-        if cat_id not in b.course_question_catref:
-            b.course_question_catref.append(cat_id)
+        # NOTE: module-context categories are annotated ONLY in this quiz's own
+        # inforef.xml (top + child), exactly like real Moodle backups. The
+        # course inforef references only course-context categories — listing
+        # module categories there deviates from real backups.
         return cat_id, slots
 
     def _question_xml(self, q: dict, qid: int, stamp: str) -> str:
@@ -1511,7 +1543,11 @@ def _feedback_item(ctx, it, pos):
     t = it.get("type", "label")
     required = it.get("required", 0)
     if t == "label":
-        name, label, pres, hasvalue = None, f"info{pos}", it.get("text", ""), 0
+        # name MUST be the empty string, never NULL: mdl_feedback_item.name is
+        # NOT NULL DEFAULT '' — a $@NULL@$ here aborts the whole restore with
+        # dmlwriteexception "Column 'name' cannot be null" (real bug 2026-07-15,
+        # killed everything after the feedback activity).
+        name, label, pres, hasvalue = "", f"info{pos}", it.get("text", ""), 0
     elif t == "multichoice":
         # 'r' = radio (single choice); '>>>>>' separates subtype from options,
         # '|' separates options. el() will escape the '>' as &gt;.
@@ -1540,7 +1576,7 @@ def _feedback_item(ctx, it, pos):
         f"        {el('position', pos)}\n"
         f"        {el('required', 1 if required else 0)}\n"
         f"        {el('dependitem', 0)}\n"
-        f"        <dependvalue>{NULL}</dependvalue>\n"
+        f"        <dependvalue></dependvalue>\n"
         f"        <options></options>\n"
         f"      </item>"
     )
@@ -1575,8 +1611,9 @@ def b_quiz(ctx):
     instances_xml = ""
     if questions:
         cat_id, slots = ctx.register_quiz_questions(questions)
-        # reference both the root 'top' category and this quiz's child category
-        ctx.question_catref = [ctx.b.q_top_catid, cat_id]
+        # reference this quiz's own 'top' category and its child category
+        # (both at this quiz's module context)
+        ctx.question_catref = [ctx.quiz_top_catid, cat_id]
         rows = []
         for s in slots:
             rows.append(
@@ -1644,8 +1681,16 @@ def b_quiz(ctx):
         f"    {el('showuserpicture', 0)}\n    {el('showblocks', 0)}\n"
         f"    {el('completionattemptsexhausted', 0)}\n    {el('completionminattempts', 0)}\n"
         f"    {el('allowofflineattempts', 0)}\n"
-        f"{feedbacks_xml}"
         f"    <question_instances>\n{instances_xml}\n    </question_instances>\n"
+        f'    <sections>\n      <section id="{ctx.b.ids.qinstance()}">\n'
+        f"        <firstslot>1</firstslot>\n"
+        f"        <heading></heading>\n"
+        f"        <shufflequestions>0</shufflequestions>\n"
+        f"      </section>\n    </sections>\n"
+        f"{feedbacks_xml}"
+        f"    <overrides>\n    </overrides>\n"
+        f"    <grades>\n    </grades>\n"
+        f"    <attempts>\n    </attempts>\n"
         f"  </quiz>"
     )
 

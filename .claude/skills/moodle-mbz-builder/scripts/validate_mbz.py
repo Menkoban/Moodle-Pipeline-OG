@@ -139,11 +139,71 @@ def main(path: str) -> int:
                     f"{ctxid}; Moodle allows only one 'top' per context"
                 )
 
+    # 8. quiz-owned question categories must live at the quiz MODULE context
+    #    (contextlevel 70), with contextid == that quiz's question_reference
+    #    usingcontextid. Lumping every quiz's questions into the shared COURSE
+    #    context (all categories at the course contextid) makes Moodle's 4.x
+    #    question-bank restore abort with "A required parameter (contextid) was
+    #    missing" — the qbank machinery expects module-owned questions at the
+    #    module context. This guards against that regression.
+    if "questions.xml" in contents:
+        module_ctx_ids = {
+            (cat.findtext("contextid") or "").strip()
+            for cat in ET.fromstring(contents["questions.xml"]).iter("question_category")
+            if (cat.findtext("contextlevel") or "").strip() == "70"
+        }
+        for m, data in contents.items():
+            if re.match(r"activities/quiz_\d+/quiz\.xml$", m):
+                for uc in ET.fromstring(data).iter("usingcontextid"):
+                    ucid = (uc.text or "").strip()
+                    if ucid and ucid not in module_ctx_ids:
+                        problems.append(
+                            f"{m}: question_reference usingcontextid {ucid} has no "
+                            f"matching module-context (contextlevel=70) question_category "
+                            f"in questions.xml — quiz questions must live at the quiz "
+                            f"module context; a shared course-context bank makes restore "
+                            f"fail with 'required parameter (contextid) was missing'"
+                        )
+                        break
+
     info.append(f"activities: {sum(1 for _ in contents_el.iter('activity'))}")
     info.append(f"users: {len(user_ids)}, userrefs: {n_userref}")
     info.append(f"sections: {sum(1 for _ in contents_el.iter('section'))}")
 
+    # 8b. feedback items: name/dependvalue/options are NOT NULL DEFAULT ''
+    #     columns in mdl_feedback_item — a $@NULL@$ there aborts the restore
+    #     with dmlwriteexception "Column 'name' cannot be null" and kills every
+    #     activity after the feedback (real bug 2026-07-15). Must be '' instead.
+    for m, data in contents.items():
+        if re.match(r"activities/feedback_\d+/feedback\.xml$", m):
+            for item in ET.fromstring(data).iter("item"):
+                for fieldname in ("name", "dependvalue", "options", "label"):
+                    if (item.findtext(fieldname) or "").strip() == "$@NULL@$":
+                        problems.append(
+                            f"{m}: feedback item <{fieldname}> ist $@NULL@$ — die Spalte "
+                            f"ist NOT NULL DEFAULT ''; Restore bricht mit dmlwriteexception "
+                            f"ab (leeren String emittieren)"
+                        )
+
     warns: list[str] = []
+
+    # 9. archive/media size — big embedded media (e.g. an MP4 video) makes the
+    #    SYNCHRONOUS restore on shared hosting exceed execution/gateway limits.
+    #    The restore then dies mid-way (everything before is committed, the tail
+    #    activities are missing) and the broken page flow surfaces as
+    #    "A required parameter (contextid) was missing". Real school-Moodle
+    #    backups are typically a few MB. Warn early instead of failing late.
+    total = sum(m.size for m in tar.getmembers())
+    big = [(m.name, m.size) for m in tar.getmembers() if m.size > 10 * 1024 * 1024]
+    if big or total > 20 * 1024 * 1024:
+        detail = ", ".join(f"{n} ({s // (1024*1024)} MB)" for n, s in big) or "-"
+        warns.append(
+            f"GROESSE: Archiv {total // (1024*1024)} MB, grosse Datei(en): {detail} — "
+            f"Restore-Timeout-Risiko auf shared Hosting (Abbruch mittendrin, "
+            f"'required parameter contextid missing' als Folgefehler). Grosse Videos "
+            f"besser verlinken (set_recap_video.py --url) oder separat hochladen."
+        )
+
     _deep_checks(tar, set(members), contents, problems, warns, info)
 
     _report(info, warns, problems)
