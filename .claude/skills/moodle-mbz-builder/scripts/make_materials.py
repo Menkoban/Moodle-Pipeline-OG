@@ -96,6 +96,8 @@ def svg_to_png(svgpath, pngpath):
 
 from html.parser import HTMLParser as _HTMLParser
 
+from fraction_render import to_slash
+
 _BLOCK = {"p", "div", "table", "ul", "ol", "img", "h1", "h2", "h3", "h4", "h5"}
 # Glyphs the built-in PDF font (Helvetica/WinAnsi) cannot draw -> strip them so
 # they don't become tofu boxes (emoji, dingbats, arrows, variation selectors).
@@ -356,7 +358,7 @@ def make_pdf(page, base, out):
             elif c.children:
                 render(c)
 
-    render(_parse_html(page.get("content", "")))
+    render(_parse_html(to_slash(page.get("content", ""))))
     if not story:
         story = [Paragraph(_esc(title_of(page)), st["h3"])]
     doc = SimpleDocTemplate(out, pagesize=A4, topMargin=16 * mm, bottomMargin=16 * mm,
