@@ -498,4 +498,4 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 14. **Kachel-Bild** auf jedem sichtbaren Abschnitt (`"image"`, Banner-SVG, Abschnitt 3).
 15. **Typografie-Validator warnungsfrei** (echte Umlaute, ²/³, Malpunkt ·, Dezimalkomma, Bündigkeit, Kontrast — Abschnitt 6).
 16. **Ergebnisfelder als `formular`** (ausfüllbar + speicherbar), keine `__`-Lücken in Seiten.
-17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox).
+17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox). **Animation/Manipulation sind Standard**, wo das Thema etwas Bewegtes hergibt — Spec-Felder `animate` (Zeit-Loop mit Play/Pause/Speed) und `inputs[].type: select/toggle` (Schalter/Szenario statt nur Regler). **Challenge-Modus** (`challenge`) nur auf ausdrücklichen Wunsch einbauen — als ankreuzbare Option im Briefing nennen, nicht automatisch ergänzen.

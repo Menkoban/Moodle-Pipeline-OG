@@ -560,6 +560,13 @@ variable relationship worth exploring** — Ohm's law, series/parallel circuits,
 gear ratio, engine crank, dosage, interest, pressure/flow, … A topic with nothing
 to "drag" gets no simulation; forcing one is noise, not value.
 
+**Animation and manipulation are the standard now, not decoration.** Where the
+topic has something worth watching move, the live graphic itself should react —
+bars grow, a needle swings, current flows, a curve traces — not just the numbers
+beside it change. Manipulation should also go beyond sliders where a scenario
+switch fits better (a switch open/closed, an operating mode). See "Engine + spec"
+below for the fields that drive this (`animate`, `inputs[].type`).
+
 **Why a file, not a page/database:** Moodle's HTMLPurifier strips `<script>` from
 `page`, `book`, **database** and `label` content, so inline JS does **not** run
 there (only *static* HTML survives). A real **file** served from the file area
@@ -591,18 +598,41 @@ renders one standalone. After restoring, set the resource's display to *embed* o
 
 **Engine + spec (one engine, many subjects).** `scripts/sim_engine.py` holds a
 generic engine (sliders, KPI tiles, theme, layout) and `SIM_LIBRARY`. A spec is:
-`{title, subtitle, inputs:[{id,label,unit,min,max,step,default}],
+`{title, subtitle, inputs:[{id,label,unit,min,max,step,default,type?}],
 kpis:[{id,label,unit,dec,big?}], visual:"<svg…>", compute:"<JS body> return {…}",
-render:"<JS body>"}`. Only `compute` (the domain formulas) and `render`/`visual`
-(the picture) are subject-specific — the rest is identical for every trade. **To
-extend:** add a spec to `SIM_LIBRARY` (or pass one inline). Keep values on the
-slider `step` grid (a `default` off the grid gets snapped by the browser).
+render:"<JS body>", animate?:"<JS body>", challenge?:{...}}`. Only `compute` (the
+domain formulas) and `render`/`visual` (the picture) are subject-specific — the
+rest is identical for every trade. **To extend:** add a spec to `SIM_LIBRARY`
+(or pass one inline). Keep values on the slider `step` grid (a `default` off the
+grid gets snapped by the browser).
+
+Three spec fields are **optional and backward-compatible** — a spec without them
+renders exactly as before:
+
+- **`animate`** — a JS body `(root, s, o, t)` (`t` = seconds since Play, already
+  speed-scaled). If present, the engine adds a **Play/Pause** button, a **speed**
+  control (0.25×–4×) and a `requestAnimationFrame` loop that calls `animate`
+  every frame (playback starts **paused**; **Reset** sets `t=0`). Use it for
+  anything that runs over time — a sine wave, a moving piston, a charging
+  capacitor.
+- **`inputs[].type`** — `"range"` (default, as before), `"select"`
+  (`options:[{value,label}]`) or `"toggle"` (on/off) — for manipulation that is a
+  choice or a switch rather than a slider (e.g. "Schalter offen/geschlossen",
+  Betriebsart). `state()` reads all three types the same way, so `compute`/
+  `render`/`animate` don't need special-case code per type.
+- **`challenge`** — **opt-in**: only add it when a course explicitly asks for a
+  task-and-feedback simulation; mention it as an optional feature in the
+  Briefing, don't add it by default. Shape: `{prompt, check:"<JS body>(s,o) →
+  bool", success, hint}`. When present the engine renders a challenge card
+  (task + "Prüfen" button) that evaluates `check` against the current state and
+  shows `success` or `hint`. No `challenge` field → no card, unchanged behaviour.
 
 **Layout: everything on one screen.** The engine renders controls + results in
 a left column and the live view beside them, so on a normal display (≥ ~1280 px)
 the WHOLE simulation is visible **without scrolling** (narrow screens stack).
 Keep the `visual` viewBox flat-ish (e.g. 600×300) so it fits the height budget
-(`svg {max-height:56vh}`).
+(`svg {max-height:56vh}`). Play/Pause, speed and the challenge card sit in this
+same column (or under the graphic) — they must not force a scroll either.
 
 ## Ausfüllbare Arbeitsblätter (`formular`) — echte Eingabefelder mit Speichern
 
