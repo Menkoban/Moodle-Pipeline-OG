@@ -110,6 +110,11 @@ NICHT passiert.
    materials/, Video eingebaut UND simulate_pathways grün. **Erst bei
    Exit 0 ausliefern.** Ausnahmen (`--allow-video-placeholder` /
    `--allow-no-widget`) IMMER im Chat begründen.
+   *Optionaler Live-Restore:* ist der Skill `moodle-testinstanz` installiert,
+   restauriert das Gate die `.mbz` automatisch ins lokale Moodle-Lab. Fehlt der
+   Skill oder ist das Lab nicht erreichbar → still übersprungen (Gate bleibt
+   grün); **rot nur bei echtem Restore-Fehler.** `--require-live-restore`
+   erzwingt den Test.
 
 ## Adaptives Briefing — PFLICHT-INTAKE vor jedem Kurs
 

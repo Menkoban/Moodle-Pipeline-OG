@@ -8,6 +8,7 @@ begründet werden.
 Usage:
     python check_delivery.py <kursordner> [--allow-video-placeholder]
                                           [--allow-no-widget]
+                                          [--require-live-restore]
 
 Prüft im Ordner:
   1. course.json (bzw. course.materialized.json) vorhanden, alle
@@ -20,6 +21,10 @@ Prüft im Ordner:
   6. referenzierte relative Assets existieren
   7. Video-Recap eingebaut (kein 'Videozusammenfassung'-label-Platzhalter)
   8. adaptiv (auto-erkannt an *.pathmap.json): simulate_pathways.py grün
+  9. Live-Restore (OPTIONAL): ist der Skill 'moodle-testinstanz' installiert,
+     wird die .mbz wirklich ins lokale Moodle-Lab restauriert. Fehlt der Skill
+     oder ist das Lab nicht erreichbar -> WARN + weiter (Gate bleibt grün);
+     rot nur bei echtem Restore-Fehler. --require-live-restore erzwingt ihn.
 """
 from __future__ import annotations
 
@@ -33,6 +38,14 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ABS_RX = re.compile(r"^(?:[A-Za-z]:[/\\]|[/\\])")
+
+# Optionaler Live-Restore-Skill (siehe docs/superpowers/specs/
+# 2026-07-15-moodle-testinstanz-restore-gate-design.md). Fehlt er, laeuft das
+# Gate wie bisher (nur statische Checks).
+TESTINSTANZ_HOME = os.environ.get(
+    "MOODLE_TESTINSTANZ_HOME",
+    os.path.expanduser("~/.claude/skills/moodle-testinstanz"),
+)
 
 
 def walk_paths(node, keys=("image", "file")):
@@ -58,6 +71,54 @@ def walk_activities(spec):
             yield a
 
 
+def live_restore_probe(mbz_path, require):
+    """Optionaler dynamischer Check: echte .mbz gegen das lokale Moodle-Lab
+    restaurieren. Gibt (ok, warn, fehler) zurueck. Weiches Gate:
+      - Skript fehlt    -> skip (leer)          ausser --require-live-restore
+      - Lab down (rc=3) -> WARN                  ausser --require-live-restore
+      - Restore-Fehler  -> FEHLER (Gate rot)
+    Exit-Code-Vertrag von run_restore.py:
+      --health        : 0 = Lab up, 3 = Lab down/fehlt
+      <mbz> [--json]  : 0 = ok, 2 = echter Restore-Fehler, 3 = Lab verloren
+    """
+    ok, warn, fehler = [], [], []
+    runner = os.path.join(TESTINSTANZ_HOME, "scripts", "run_restore.py")
+    if not os.path.exists(runner):
+        if require:
+            fehler.append("--require-live-restore gesetzt, aber Skill "
+                          f"'moodle-testinstanz' nicht gefunden ({runner})")
+        return ok, warn, fehler  # sonst still ueberspringen (Gate wie bisher)
+
+    # Preflight: laeuft das Lab ueberhaupt?
+    h = subprocess.run([sys.executable, runner, "--health"],
+                       capture_output=True, text=True)
+    if h.returncode != 0:
+        msg = ("Moodle-Lab nicht erreichbar — Live-Restore uebersprungen "
+               f"(rc={h.returncode}: {h.stdout.strip()[-200:]})")
+        (fehler if require else warn).append(msg)
+        return ok, warn, fehler
+
+    # Echter Restore
+    r = subprocess.run([sys.executable, runner, mbz_path, "--json"],
+                       capture_output=True, text=True)
+    if r.returncode == 0:
+        ver = ""
+        try:
+            info = json.loads(r.stdout)
+            ver = (f" (Moodle {info.get('moodle_version', '?')}, "
+                   f"tiles={info.get('format_tiles')})")
+        except Exception:
+            pass
+        ok.append(f"Live-Restore gruen: Kurs geht hoch{ver}")
+    elif r.returncode == 3:
+        (fehler if require else warn).append(
+            "Lab waehrend Restore verloren — uebersprungen")
+    else:  # rc == 2 (oder unerwartet) -> echter Fehler
+        tail = (r.stdout + r.stderr).strip()[-800:]
+        fehler.append(f"LIVE-RESTORE FAIL (Moodle lehnt .mbz ab):\n{tail}")
+    return ok, warn, fehler
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Deliverable-Gate eines Kursordners.")
     ap.add_argument("folder")
@@ -65,6 +126,9 @@ def main() -> int:
                     help="Video-Recap fehlt bewusst (kein Browser/Login) — im Chat begründen!")
     ap.add_argument("--allow-no-widget", action="store_true",
                     help="Editor-Widget fehlt bewusst — im Chat begründen!")
+    ap.add_argument("--require-live-restore", action="store_true",
+                    help="Live-Restore gegen moodle-testinstanz erzwingen — "
+                         "Abwesenheit/Lab-down werden dann zum Fehler.")
     args = ap.parse_args()
     d = args.folder
     fehler, warn, ok = [], [], []
@@ -163,6 +227,15 @@ def main() -> int:
     elif os.path.exists(sim):
         fehler.append("adaptiver Skill, aber keine *.pathmap.json im Ordner "
                       "(build_adaptive.py nicht gelaufen?)")
+
+    # 9. Live-Restore (optional, nur wenn Skill moodle-testinstanz vorhanden)
+    if len(mbzs) == 1:
+        lok, lwarn, lfehler = live_restore_probe(mbzs[0], args.require_live_restore)
+        ok += lok
+        warn += lwarn
+        fehler += lfehler
+    elif args.require_live_restore:
+        fehler.append("--require-live-restore, aber keine eindeutige .mbz im Ordner")
 
     enc = dict(encoding="utf-8", errors="replace")
     out = open(sys.stdout.fileno(), "w", closefd=False, **enc)
