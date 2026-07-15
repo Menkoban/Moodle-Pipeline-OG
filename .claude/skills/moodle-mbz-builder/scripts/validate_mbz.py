@@ -409,6 +409,18 @@ def _deep_checks(tar, members, contents, problems, warns, info):
         warns.append(f"INDEX: {len(hits)} Formelzeichen-Indizes nicht "
                      f"tiefgestellt (A<sub>1</sub>) — z. B. {ex}")
 
+    # ---- 13. Rechnungen ohne Einheit (beratend) -------------------------- #
+    for path, data in contents.items():
+        if not re.match(r"activities/(page|book)_\d+/\w+\.xml$", path):
+            continue
+        for block in re.findall(r"<content>(.*?)</content>", data, re.S):
+            snips = _calc_unit_warnings(_readable_text(block))
+            if snips:
+                warns.append(
+                    f"EINHEIT: mögliche Rechnung(en) ohne Einheit in "
+                    f"{path.split('/')[1]}: " + ", ".join(f"'{s}'" for s in snips)
+                    + " (Einheit ergänzen?)")
+
 
 def _report(info: list[str], warns: list[str], problems: list[str]) -> None:
     for i in info:
