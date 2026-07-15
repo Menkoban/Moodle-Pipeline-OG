@@ -84,3 +84,14 @@ def test_unmarked_chartlike_svg_has_no_axis_warnings(tmp_path):
     p = _write(tmp_path, body, chart=False)
     errors, warns = lint_file(p)
     assert not any(w.startswith(("ACHSE", "SKALA")) for w in warns), warns
+
+
+def test_chart_missing_y_scale_flags_skala(tmp_path):
+    # Drop two of the three y-axis numbers -> only one numeric value left.
+    body = (_GOOD_CHART
+            .replace('<text x="45" y="140" font-size="12" text-anchor="end">50</text>', "")
+            .replace('<text x="45" y="34" font-size="12" text-anchor="end">100</text>', ""))
+    p = _write(tmp_path, body, chart=True)
+    errors, warns = lint_file(p)
+    assert any(w.startswith("SKALA") and "y-Achse" in w for w in warns), warns
+    assert not any(w.startswith("SKALA") and "x-Achse" in w for w in warns), warns

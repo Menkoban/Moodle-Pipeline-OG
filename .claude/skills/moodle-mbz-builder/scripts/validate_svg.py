@@ -482,14 +482,19 @@ def _chart_axis_warnings(boxes, vx, vy, vw, vh):
         ax_y = (x_axis[1] + x_axis[3]) / 2.0
         if not any((not is_num(t)) and cy(t) > ax_y for t in texts):
             warns.append("ACHSE x-Achse ohne Beschriftung (Achsentitel fehlt)")
+        if sum(1 for t in texts if is_num(t) and cy(t) > ax_y) < 2:
+            warns.append("SKALA x-Achse ohne Skalierung (< 2 numerische Werte)")
 
     if y_axis is None:
         warns.append("ACHSE keine y-Achsenlinie erkennbar (Chart markiert)")
     else:
+        ax_x = (y_axis[0] + y_axis[2]) / 2.0
         # lenient: y-titles are often rotated (position unreliable) -> any
         # non-numeric text in the left third counts as a title.
         if not any((not is_num(t)) and cx(t) < vx + vw / 3.0 for t in texts):
             warns.append("ACHSE y-Achse ohne Beschriftung (Achsentitel fehlt)")
+        if sum(1 for t in texts if is_num(t) and cx(t) < ax_x) < 2:
+            warns.append("SKALA y-Achse ohne Skalierung (< 2 numerische Werte)")
 
     return warns
 
