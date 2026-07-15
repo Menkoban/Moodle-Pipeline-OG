@@ -39,6 +39,47 @@ def _need():
                  f"svglib reportlab pymupdf python-pptx pillow")
 
 
+def _enable_font_cache():
+    """Make svglib parse each TrueType font file at most ONCE per process.
+
+    svglib's ``FontMap.find_font`` drops the weight/style when it falls through
+    to ``register_font`` (it calls ``register_font(family, guessed_file)`` with
+    the default normal/normal), so a bold/italic lookup is stored under the base
+    family name and the weighted key never hits the family cache. Every
+    ``svg2rlg`` render therefore re-runs reportlab's ``TTFont`` extraction on the
+    same Arial/… files — ~5 s of the material step for a course with several
+    diagrams (each SVG is rendered twice: vector into the PDF, rasterised for the
+    PPTX).
+
+    Fix: memoise ``register_font`` per process. A repeat call with identical
+    arguments returns the first result without re-registering. reportlab keeps
+    the TTFont from the first registration — fonts are designed to be registered
+    once and reused across documents — so the rendered PDF/PPTX bytes are
+    IDENTICAL; only the redundant font-file parse is skipped. Verified against a
+    frozen-clock byte manifest of the built .mbz (output unchanged).
+    """
+    try:
+        from svglib import fonts as _sf
+    except Exception:  # noqa: BLE001 - optional dependency
+        return
+    if getattr(_sf.FontMap, "_o2_font_cache", False):
+        return
+    _orig = _sf.FontMap.register_font
+
+    def _cached(self, font_family, font_path=None, weight="normal",
+                style="normal", rlgFontName=None):
+        cache = self.__dict__.setdefault("_o2_regcache", {})
+        key = (font_family, font_path, weight, style, rlgFontName)
+        if key in cache:
+            return cache[key]
+        res = _orig(self, font_family, font_path, weight, style, rlgFontName)
+        cache[key] = res
+        return res
+
+    _sf.FontMap.register_font = _cached
+    _sf.FontMap._o2_font_cache = True
+
+
 def slugify(name):
     s = re.sub(r"^infoblatt[:\s-]*", "", name.strip(), flags=re.I)
     s = re.sub(r"[^a-zA-Z0-9]+", "_", s).strip("_").lower()
@@ -76,6 +117,7 @@ def title_of(page):
 def svg_to_pdf(svgpath, pdfpath):
     from svglib.svglib import svg2rlg
     from reportlab.graphics import renderPDF
+    _enable_font_cache()
     renderPDF.drawToFile(svg2rlg(svgpath), pdfpath)
 
 
@@ -83,6 +125,7 @@ def svg_to_png(svgpath, pngpath):
     from svglib.svglib import svg2rlg
     from reportlab.graphics import renderPDF
     import fitz
+    _enable_font_cache()
     tmp = pngpath + ".tmp.pdf"
     renderPDF.drawToFile(svg2rlg(svgpath), tmp)
     doc = fitz.open(tmp)
@@ -217,6 +260,7 @@ def make_pdf(page, base, out):
                                     TableStyle, ListFlowable, ListItem)
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from svglib.svglib import svg2rlg
+    _enable_font_cache()
 
     imgs = {}
     for p in page.get("images", []):
