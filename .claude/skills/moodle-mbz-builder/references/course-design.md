@@ -357,6 +357,38 @@ Quiz braucht `overallfeedback` (Prozentbänder mit Feed-Forward). Nie nur „ric
 **Reflexion & Transfer** (Recap): Rückblick aufs eigene Lernen + Transferauftrag,
 an eine konkrete eigene Handlung im Betrieb gebunden.
 
+### Rechenbeispiele & Aufgaben (Pflicht — geg/ges, Einheiten, echte Situation)
+
+**Rechenbeispiel-Bauplan (kopierbares Muster).** Jede vorgerechnete Aufgabe folgt
+Schritt für Schritt diesem Muster — nur ReportLab-sicheres HTML (`<b>`, `<sub>`,
+`<sup>`), damit es in Moodle-Seite, Vorschau UND PDF ankommt:
+
+```html
+<div class="rechenbeispiel">
+  <h4>Rechenbeispiel: <Titel></h4>
+  <p><b>Situation:</b> <realer betrieblicher Kontext + konkrete Frage></p>
+  <p><b>Gegeben:</b> <Größe = Wert Einheit; …></p>
+  <p><b>Gesucht:</b> <Größe in Einheit></p>
+  <p><b>Formel:</b> <symbolische Formel></p>
+  <p><b>Einsetzen:</b> <Werte mit Einheiten eingesetzt></p>
+  <p><b>Ergebnis:</b> <Wert Einheit></p>
+</div>
+```
+
+- **V5 — nachvollziehbar:** immer Gegeben/Gesucht → Formel (symbolisch) →
+  Einsetzen → Ergebnis; optional eine Plausibilitätszeile. Keine Rechnung, die
+  „vom Himmel fällt".
+- **V7 — Einheiten in JEDER Zeile:** jede physikalische Größe trägt ihre Einheit
+  (gegeben, eingesetzt, Ergebnis). Keine nackten Zahlen. Einheiten-Konventionen
+  wie bei SVG-Text (echte ²/³, Malpunkt ·, `1/min`). Division vorerst als Slash
+  `U/I` (echter Bruchstrich folgt separat).
+- **V6 — echte Aufgaben aus der Handlungssituation:** jede Aufgabe/Rechnung ist
+  in den realen betrieblichen Kontext des Kurses eingebettet (Bedarf, Zweck:
+  „In der Steuerung …, damit …") — NIE ein nacktes „Berechne R".
+
+`validate_mbz.py` meldet beratend (nicht-fatal) eine Ergebniszeile ohne Einheit
+im Rechenkontext (`EINHEIT:`).
+
 ---
 
 ## 8. Downloadbare Materialien + Bau-Pipeline
