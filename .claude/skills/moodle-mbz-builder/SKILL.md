@@ -61,6 +61,11 @@ Ergebnis-Datei fehlt, ist NICHT passiert.
    materials/ vollständig, Video eingebaut. **Erst bei Exit 0
    ausliefern.** Bewusste Ausnahmen (z. B. `--allow-video-placeholder`,
    wenn kein Browser verbunden ist) IMMER im Chat begründen.
+   *Optionaler Live-Restore:* ist der Skill `moodle-testinstanz` installiert,
+   restauriert das Gate die `.mbz` automatisch ins lokale Moodle-Lab. Fehlt der
+   Skill oder ist das Lab nicht erreichbar → still übersprungen (Gate bleibt
+   grün); **rot nur bei echtem Restore-Fehler.** `--require-live-restore`
+   erzwingt den Test.
 
 ## Where finished courses live — output folder & reference library (project convention)
 
@@ -276,9 +281,17 @@ present — **plus deep content checks** (all < 1 s): the complete glossary
 user-data chain (settings, userref, author with `mnethosturl=$@NULL@$`,
 approved entries, import fallback aboard), tiles Kachelfoto wiring
 (option ↔ file ↔ blob ↔ plugin element), the attribution footer on every
-page/book chapter, empty formular fields (no placeholder = no pre-typed
-Lösungsweg) with autosave/save button, and the compact no-scroll sim layout.
-Exit 1 on errors; warnings don't fail.
+page/book chapter, quiz question categories at the module context, no
+`$@NULL@$` in NOT-NULL feedback-item columns, empty formular fields (no
+placeholder = no pre-typed Lösungsweg) with autosave/save button, archive/
+media size, and the compact no-scroll sim layout. Exit 1 on errors; warnings
+don't fail.
+
+**Echter Restore-Test / Restore-Fehler diagnostizieren:** Auf diesem Rechner
+existiert ein **lokales Moodle-Lab** (portable, ohne Docker) — siehe
+`references/moodle-lab.md`. Schlägt ein Restore auf dem Ziel-Moodle fehl,
+IMMER zuerst dort per CLI reproduzieren (zeigt das exakte SQL); nach größeren
+Generator-Änderungen als E2E-Gate nutzen.
 
 **Timing/Parallelität:** start the NotebookLM video FIRST (it only needs the
 dossier from `course.json` and takes 5–10 min), then run the whole
@@ -715,6 +728,14 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
 - `references/notebooklm-video-recap.md` — **Pflicht-Schritt** am Ende jedes
   Kurses: Video-Recap via NotebookLM (Dossier via `export_course_dossier.py`,
   Einbau via `set_recap_video.py`). Immer ausführen, außer kein Browser/Login.
+- `references/moodle-lab.md` — **lokales Moodle-Restore-Lab** (portable PHP +
+  MariaDB + Moodle 4.5 unter `~/.claude/moodle-lab/`, Projekt-Konvention
+  dieses Rechners): CLI-Restore mit DEVELOPER-Debugging zeigt bei
+  Restore-Fehlern das exakte fehlgeschlagene SQL. **Bei jedem
+  Restore-Fehler auf dem Ziel-Moodle zuerst dort reproduzieren** — die
+  Fehlerseiten des Ziel-Moodles sind ohne Admin-Rechte wertlos und
+  irreführend; zwei reale Blocker wurden nur so gefunden. Auch als
+  E2E-Gate nach größeren Generator-Änderungen.
 - `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
   text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
   labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Also lints
