@@ -8,3 +8,6 @@ assets/png/
 *_vorschau.html
 *.materialized.json
 *.mbz
+
+# Word/Office Lock-Dateien
+~$*

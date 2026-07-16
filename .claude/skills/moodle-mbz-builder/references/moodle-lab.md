@@ -23,9 +23,15 @@ C:\Users\User\.claude\moodle-lab\
   **debug = DEVELOPER + debugdisplay=1 sind bereits an.**
 - Dauerhafter Standort seit 2026-07-15 (vorher flüchtig unter `%TEMP%`);
   entspricht dem `MOODLE_LAB_HOME`-Vertrag des `moodle-testinstanz`-Skills.
-  Die beiliegenden Zips erlauben den Wiederaufbau (~15 min). Das Moodle ist
-  **minimal extrahiert** (admin/cli hat nur install/restore_backup/upgrade) —
-  fehlende Dateien bei Bedarf aus `moodle.zip` nachziehen.
+  Die beiliegenden Zips erlauben den Wiederaufbau (~15 min). Der Moodle-Baum
+  ist seit 2026-07-15 **vollständig** (23k fehlende Dateien nachextrahiert —
+  vorher rissen delete_course/Kommentar-Hooks mit „Class not found"). Der
+  **Papierkorb (tool_recyclebin) ist deaktiviert**, damit Teardown echte
+  Löschung ist.
+- **Bevorzugter Zugriff:** über den Skill `moodle-testinstanz`
+  (`scripts/run_restore.py --health | <mbz> [--json|--keep]`) — er startet
+  die DB selbst, restauriert über Moodles CLI und räumt Wegwerf-Kurse
+  wieder ab. Die Roh-Kommandos unten braucht man nur noch für Sonderfälle.
 
 ## Bedienung
 
