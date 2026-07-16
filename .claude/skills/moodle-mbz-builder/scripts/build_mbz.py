@@ -384,7 +384,7 @@ class MbzBuilder:
         #   im Summary, wird das erste Bild als Banner vorangestellt.
         fmt = self.spec.get("course", {}).get("format", "topics")
         tiles = fmt == "tiles"
-        images = sec.get("images") or ([sec["image"]] if sec.get("image") else [])
+        images = _section_images(sec)
         images = [i for i in images if i and os.path.exists(i)]
         filerefs: list[int] = []
         tiles_extra = ""
@@ -1250,6 +1250,42 @@ class ActivityContext:
         return "\n".join(parts)
 
 
+def _section_images(sec):
+    """Cover-/Banner-Bildquellen einer Section: 'images' (Liste) ODER 'image'
+    ODER — als Alias, damit der Key nicht still verpufft — 'tilephoto'. In
+    Format 'tiles' wird daraus ein echtes Kachel-Titelbild, sonst ein Banner
+    im Section-Inhalt."""
+    return (sec.get("images")
+            or ([sec["image"]] if sec.get("image") else [])
+            or ([sec["tilephoto"]] if sec.get("tilephoto") else []))
+
+
+def _section_image_warnings(spec):
+    """Guard gegen still verpuffende Kachelfotos. Ein 'tilephoto' wird NUR im
+    Format 'tiles' zum Kachel-Titelbild; unter 'topics'/'weeks' erscheint es
+    höchstens als Banner im Section-Inhalt — genau dieser Autoren-Fehler blieb
+    bisher unbemerkt (validate_mbz sah bei 'topics' nichts zu prüfen)."""
+    warns = []
+    fmt = spec.get("course", {}).get("format", "topics")
+    has_photo = False
+    for i, sec in enumerate(spec.get("sections", [])):
+        if _section_images(sec):
+            has_photo = True
+        if sec.get("tilephoto") and fmt != "tiles":
+            warns.append(
+                f"Section {i} ('{sec.get('name', '')}') hat ein 'tilephoto', "
+                f"aber course.format='{fmt}' — es erscheint NICHT als "
+                f"Kachel-Titelbild. Für echte Kachelbilder format:'tiles' setzen "
+                f"(oder das Bild als 'image' als Section-Banner belassen)."
+            )
+    if fmt == "tiles" and not has_photo:
+        warns.append(
+            "course.format='tiles', aber keine Section hat ein Kachelfoto "
+            "(image/images/tilephoto) — die Kacheln bleiben ohne Titelbild."
+        )
+    return warns
+
+
 def _guess_mime(filename: str) -> str:
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
     return {
@@ -1774,6 +1810,9 @@ def main(argv=None) -> int:
             " Recommended: 'topics' (or 'tiles' for Kachel-Fotos).",
             file=sys.stderr,
         )
+
+    for w in _section_image_warnings(spec):
+        print(f"WARNING: {w}", file=sys.stderr)
 
     builder = MbzBuilder(spec, args.wwwroot)
     data = builder.build()
