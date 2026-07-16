@@ -46,10 +46,19 @@ import svg_geometry as G
 
 EPS = 1.0            # viewBox tolerance in user units
 OVERLAP_EPS = 2.5    # min overlap (both axes) to count as hiding content
+LEADER_TAIL = 18.0   # a hit within this distance of a text-endpoint is the
+                     # leader tail (exempt); farther = the stroke body crossing
 
 
 def _pt_in_box(px, py, b, pad):
     return b.x0 - pad <= px <= b.x1 + pad and b.y0 - pad <= py <= b.y1 + pad
+
+
+def _seg_endpoint_dist(seg, pt):
+    """Distance from the nearer of the segment's own two endpoints to pt."""
+    x1, y1, x2, y2 = seg
+    return min(math.hypot(x1 - pt[0], y1 - pt[1]),
+               math.hypot(x2 - pt[0], y2 - pt[1]))
 
 
 def _seg_hits_box(seg, b, pad=1.0):
@@ -306,17 +315,36 @@ def lint_file(path):
         for t in texts:
             if not t.label:
                 continue
-            ends_here = (_pt_in_box(first[0], first[1], t, 6)
-                         or _pt_in_box(last[0], last[1], t, 6))
-            if ends_here:
+            hits = [s for s in segs if _seg_hits_box(s, t, pad=0.5)]
+            if not hits:
                 continue
-            if any(_seg_hits_box(s, t, pad=0.5) for s in segs):
-                warns.append(f"{kind} crosses text '{t.label}'")
+            # A leader line/arrow may legitimately END at the label, but only
+            # the tail near that endpoint is exempt. A hit far from every
+            # endpoint sitting in the label is the stroke body sweeping across
+            # it (e.g. a rotation arrow whose head merely lands beside the
+            # caption). Flag when such a far hit exists.
+            inside = [pt for pt in (first, last)
+                      if _pt_in_box(pt[0], pt[1], t, 6)]
+            if inside:
+                far = [s for s in hits
+                       if all(_seg_endpoint_dist(s, e) > LEADER_TAIL
+                              for e in inside)]
+                if not far:
+                    continue
+            warns.append(f"{kind} crosses text '{t.label}'")
 
-    # 4b) filled shapes (polygons — arrowheads, markers) covering a text label.
-    #     No leader exemption: a filled shape on top of text always hides it.
+    # 4b) filled shapes (polygons — arrowheads, markers — and filled <path>,
+    #     e.g. a hand/blob) covering a text label. No leader exemption: a
+    #     filled shape on top of text always hides it. Unfilled stroke paths
+    #     are handled by the crossing check above, so skip fill:none paths.
     for sh in boxes:
-        if sh.tag not in ("polygon", "polyline"):
+        if sh.tag in ("polygon", "polyline"):
+            pass
+        elif sh.tag == "path":
+            fill = (sh.extra.get("fill") or "").strip().lower()
+            if fill in ("", "none"):
+                continue
+        else:
             continue
         for t in texts:
             if not t.label:

@@ -358,7 +358,8 @@ def collect_boxes(root: ET.Element):
                         shifted[0][0] - shifted[-1][0],
                         shifted[0][1] - shifted[-1][1]) <= 0.5)
                 boxes.append(Box(min(xs), min(ys), max(xs), max(ys), "path",
-                                 extra={"pts": shifted, "path_closed": closed}))
+                                 extra={"pts": shifted, "path_closed": closed,
+                                        "fill": el.get("fill")}))
 
         for child in el:
             if _localname(child.tag) != "tspan":
