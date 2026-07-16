@@ -52,11 +52,13 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
    Diagramme Bezug nehmen, obwohl sie nur den Dossier-Text als Quelle bekommt.
    Rein additiv: Kurse ohne Diagramme erzeugen dasselbe Dossier wie zuvor.
    Design: `docs/superpowers/specs/2026-07-15-recap-diagramme-design.md`.
-   **Optionaler Zusatzschritt (manuell, siehe Punkt 3):** wer will, dass
-   NotebookLM die Diagramme *tatsächlich sieht* statt nur textuell referenziert
-   zu bekommen, lädt zusätzlich die Material-PDFs (`make_materials.py`) oder
-   eine Kurs-Vorschau **manuell** als weitere Quelle hoch — siehe Caveat unten,
-   das wird NICHT automatisiert.
+   **Zusätzliche Bild-Quelle (Strang #9, 2026-07-16 — jetzt STANDARD, nicht
+   mehr optional):** damit NotebookLM die Diagramme *tatsächlich sieht* statt
+   sie nur textuell referenziert zu bekommen, erzeugt `make_materials.py`
+   zusätzlich ein kombiniertes **`materials/Kurs-Materialdossier.pdf`** (alle
+   Infoblätter mit ihren Diagrammen in EINER PDF). Diese Datei wird in Punkt 3
+   als zweite Quelle hochgeladen — der Upload funktioniert zuverlässig, sobald
+   die Datei **session-geteilt** ist (per `SendUserFile` in die Session gegeben).
 2. **Browser verbinden:** claude-in-chrome-Tools laden (ToolSearch,
    gebündelt), `tabs_context_mcp{createIfEmpty:true}`. Wenn kein Browser
    verbunden ist (`list_connected_browsers` = leer): User bitten, die
@@ -70,16 +72,16 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
    eintippen (ein Riesenblock läuft in einen 30s-CDP-Timeout), Ende per
    Screenshot verifizieren, „Einfügen" klicken. NotebookLM benennt das
    Notebook automatisch nach der Quelle.
-   - **Optional, manuell (Diagramme als echte Bild-Quelle, nicht nur Text):**
-     zusätzlich über „Quellen hinzufügen → Dateien hochladen" die
-     Material-PDFs (`make_materials.py`-Output, enthält die SVGs eingebettet)
-     oder eine Kurs-Vorschau hochladen. **Caveat:** Datei-Upload aus der
-     Claude-Sandbox ist unzuverlässig — nur **session-geteilte Dateien**
-     funktionieren zuverlässig über die Browser-Tools. Dieser Schritt bleibt
-     deshalb dem Nutzer überlassen (Claude wählt/lädt hier keine Datei
-     automatisiert hoch) und ist rein optional: der Diagramm-Abschnitt im
-     Dossier (siehe Punkt 1) liefert bereits ohne diesen Schritt eine
-     textuelle Grundlage, auf die das Video Bezug nehmen kann.
+   - **Bild-Quelle hinzufügen (STANDARD, Diagramme als echte Bild-Quelle):**
+     das kombinierte `materials/Kurs-Materialdossier.pdf` (aus
+     `make_materials.py`, enthält alle Infoblätter + SVG-Diagramme) ZUERST per
+     **`SendUserFile`** in die Session geben — dann ist es session-geteilt und
+     für die Browser-Tools sichtbar. Danach in NotebookLM „Quellen hinzufügen →
+     Dateien hochladen" und diese PDF wählen. So sieht NotebookLM die Diagramme
+     als echte Bild-Quelle, nicht nur als Text. **Nur** falls die Datei NICHT
+     session-geteilt werden kann (reiner Sandbox-Upload ist unzuverlässig),
+     entfällt der Schritt — der Diagramm-Textblock aus Punkt 1 trägt dann
+     allein.
 4. **Videoübersicht anfordern:** Studio-Kachel „Videoübersicht" → Chevron
    (>) öffnet „Video-Zusammenfassung anpassen": Format „Erklärvideo",
    **Sprache Deutsch** prüfen, in das Fokus-Feld („Worauf sollen sich die

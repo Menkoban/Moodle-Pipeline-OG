@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="640" height="440" fill="#4a5568"/>
+  <rect x="0" y="0" width="640" height="440" fill="#ffffff" opacity="0.06"/>
+  <circle cx="60" cy="60" r="30" fill="#ffffff" opacity="0.9"/>
+  <text x="60" y="70" text-anchor="middle" font-size="30" font-weight="bold" fill="#4a5568">AZ</text>
+
+  <path d="M 320 175 C 285 155 235 155 205 172 L 205 320 C 235 303 285 303 320 323 Z" stroke="#ffffff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 320 175 C 355 155 405 155 435 172 L 435 320 C 405 303 355 303 320 323 Z" stroke="#ffffff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="320" y1="185" x2="320" y2="323" stroke="#ffffff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

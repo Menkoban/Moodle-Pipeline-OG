@@ -89,7 +89,7 @@ def test_real_fewshot_asset_used_as_regression_smoke():
     """assets/*.svg im Skill haben (Stand heute) kein <title>/<desc> — der
     Text-Label-Fallback muss also fuer den echten Bestand greifen."""
     repo_root = os.path.join(os.path.dirname(__file__), "..")
-    svg_path = os.path.join(repo_root, "assets", "bohrmaschine_aufbau.svg")
+    svg_path = os.path.join(repo_root, "assets", "aufbau_standbohrmaschine.svg")
     if not os.path.exists(svg_path):
         return  # Asset optional; Test bleibt robust, falls es fehlt/umbenannt wird
     desc = describe_svg(svg_path)

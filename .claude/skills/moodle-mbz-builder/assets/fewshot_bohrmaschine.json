@@ -1,10 +1,11 @@
 {
   "filename": "sicherung-moodle2-bohrmaschine-standbohrmaschine.mbz",
   "course": {
-    "fullname": "Sicher bohren an der Standbohrmaschine",
-    "shortname": "MT-LS-Bohrmaschine",
-    "summary": "<p>Lernmodul zur <b>Nutzung und Handhabung der Standbohrmaschine</b> (Metalltechnik, Ausbildungsvorbereitung / Berufsfachschule). Ausgehend von einer echten Werkstattsituation lernen Sie, ein Werkstück sicher zu spannen, den passenden Bohrer und die richtige Drehzahl zu wählen und einen Bohrvorgang sicher durchzuführen.</p><p><b>Handlungsprodukt:</b> eine fachgerecht gebohrte Flachstahl-Lasche mit ausgefülltem Arbeits- und Prüfprotokoll. <b>Umfang:</b> ca. 2 Unterrichtsstunden.</p>",
-    "format": "topics",
+    "didaktik_profil": "rode",
+    "fullname": "Sicher und maßhaltig bohren an der Standbohrmaschine",
+    "shortname": "MT-Bohren-Standbohrmaschine",
+    "summary": "<p>Lernmodul für die <b>duale Ausbildung Metalltechnik (1. Lehrjahr)</b>: Ausgehend von einer technischen Zeichnung fertigen Sie vier Bohrungen in eine Grundplatte – sicher, maßhaltig und mit der jeweils <b>berechneten Drehzahl</b>. Mit interaktiver Drehzahl-Simulation, Rechenbeispielen und ausfüllbarem Prüfprotokoll.</p><p><b>Handlungsprodukt:</b> die fertig gebohrte Grundplatte mit ausgefülltem Berechnungs- und Prüfprotokoll. <b>Umfang:</b> ca. 3–4 Unterrichtsstunden.</p><p><em>Dieser Kurs ist mit Hilfe von künstlicher Intelligenz erstellt, in Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück.</em></p>",
+    "format": "tiles",
     "category_name": "Metalltechnik",
     "author": {
       "firstname": "Kurs",
@@ -21,191 +22,185 @@
         {
           "type": "label",
           "name": "Begrüßung",
-          "intro": "<p>🔧 <b>Willkommen im Modul „Sicher bohren an der Standbohrmaschine\".</b> Sie lösen eine echte Aufgabe aus der Werkstatt – Schritt für Schritt. Arbeiten Sie die Kacheln 1 bis 5 der Reihe nach durch. Glossar und Materialien helfen Ihnen unterwegs.</p>"
+          "intro": "<p>🔧 <b>Willkommen im Modul „Sicher und maßhaltig bohren an der Standbohrmaschine\".</b> Sie lösen einen echten Fertigungsauftrag aus der Ausbildungswerkstatt – von der Zeichnung bis zum geprüften Bauteil. Arbeiten Sie die Kacheln 1 bis 6 der Reihe nach durch; das Glossar hilft Ihnen unterwegs.</p>"
         },
         {
           "type": "page",
-          "name": "Deine Aufgabe und der Ablauf",
+          "name": "So arbeiten Sie mit diesem Modul",
           "showdescription": 1,
           "completion": 1,
           "intro": "<p>Verschaffen Sie sich zuerst einen Überblick.</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>So läuft dieses Modul ab</div><div style='padding:14px 16px;'><p style='margin-top:0;'>An der <b>Standbohrmaschine</b> (Säulen- oder Tischbohrmaschine) bohren Sie Löcher in Metall. Wichtig sind dabei <b>Sicherheit</b> und das <b>richtige Vorgehen</b>.</p><ol><li><b>Einführung</b> – Ihre Werkstattaufgabe und die Lernziele</li><li><b>Grundlagen</b> – die Maschine und den Bohrer kennenlernen</li><li><b>Vertiefung</b> – sicher und richtig bohren</li><li><b>Anwendung</b> – Sie bohren selbst (Handlungsprodukt)</li><li><b>Kurs-Recap</b> – wiederholen und selbst einschätzen</li></ol><div style='background:#e6f1fb;border-left:4px solid #378add;padding:8px 12px;'>💡 <b>Tipp:</b> Lassen Sie sich Zeit bei den Sicherheitshinweisen – sie schützen Ihre Gesundheit.</div></div></div>"
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>So läuft dieses Modul ab</div><div style='padding:14px 16px;'><p style='margin-top:0;'>An der <b>Standbohrmaschine</b> fertigen Sie Bohrungen nach Zeichnung. Dafür brauchen Sie drei Dinge: sicheres Arbeiten, das richtige Einrichten und die passende <b>Drehzahl</b> – die Sie in diesem Modul selbst berechnen lernen.</p><ol><li><b>Einführung</b> – Ihr Fertigungsauftrag und die Lernziele</li><li><b>Grundlagen</b> – Maschine und Spiralbohrer kennenlernen</li><li><b>Sicher einrichten</b> – Schutzmaßnahmen, Spannen und Ankörnen</li><li><b>Drehzahl berechnen</b> – Formel, Kennlinie und Simulation</li><li><b>Anwendung</b> – Sie bohren die Grundplatte (Handlungsprodukt)</li><li><b>Kurs-Recap</b> – wiederholen und selbst einschätzen</li></ol><div style='background:#e6f1fb;border-left:4px solid #378add;padding:8px 12px;'>💡 <b>Tipp:</b> Nehmen Sie sich Zeit für die Sicherheitsregeln und das Rechenbeispiel – beides brauchen Sie direkt am Bohrtag.</div></div></div>"
         }
       ]
     },
     {
-      "name": "1 · Einführung",
-      "summary": "<p>Ihre Aufgabe in der Werkstatt und das, was Sie am Ende können.</p>",
+      "name": "1 · Einführung: Ihr Bohrauftrag",
+      "summary": "<p>Ihre Aufgabe in der Ausbildungswerkstatt und die Ziele dieses Moduls.</p>",
+      "image": "assets/cover_einfuehrung.png",
       "activities": [
         {
           "type": "page",
-          "name": "Deine Aufgabe in der Werkstatt",
+          "name": "Ihr Auftrag in der Ausbildungswerkstatt",
           "completion": 1,
-          "intro": "<p>Lesen Sie die Situation aufmerksam.</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Handlungssituation · Erste Woche im Praktikum</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Sie machen ein Praktikum bei der <b>Schlosserei Brinkmann</b>. Am zweiten Tag legt Ihr Anleiter eine <b>Flachstahl-Lasche</b> auf die Werkbank und sagt:</p><div style='border-left:4px solid #1d9e75;padding:6px 12px;font-style:italic;color:#333;'>„Da müssen vier 8-mm-Löcher rein – an der Standbohrmaschine. Mach das mal fertig, ich komme gleich wieder.\"</div><p>Sie stehen zum ersten Mal <b>allein</b> vor der Säulenbohrmaschine. Damit nichts schiefgeht und das Ergebnis stimmt, müssen Sie wissen, wie man die Maschine sicher bedient.</p><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;'><b>Leitfrage:</b> Wie bohren Sie die vier Löcher sicher und richtig?</div></div></div>"
+          "intro": "<p>Lesen Sie die Situation aufmerksam – sie begleitet Sie durch das ganze Modul.</p>",
+          "images": [
+            "assets/bauteil_zeichnung.svg"
+          ],
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Handlungssituation · Auftrag aus der Ausbildungswerkstatt</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Sie sind im <b>ersten Lehrjahr</b> Ihrer Ausbildung im Metallbereich. Ihre Ausbilderin legt Ihnen eine technische Zeichnung auf den Tisch:</p><div style='border-left:4px solid #1d9e75;padding:6px 12px;font-style:italic;color:#333;'>„Für die Vorrichtung brauchen wir zehn dieser Grundplatten. Fertigen Sie zuerst ein Musterstück: vier Bohrungen nach Zeichnung, maßhaltig und entgratet. Die Drehzahlen berechnen Sie bitte selbst – nicht raten!\"</div><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/bauteil_zeichnung.svg' alt='Zeichnung der Grundplatte mit vier Bohrungen' style='max-width:100%;height:auto;'></div><p>Die Zeichnung zeigt eine Grundplatte aus S235 mit <b>zwei Ø-5-mm-Bohrungen</b>, <b>einer Ø-8-mm-Bohrung</b> und <b>einer Ø-10-mm-Bohrung</b>. Sie arbeiten an der Standbohrmaschine – zum ersten Mal weitgehend selbstständig.</p><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;'><b>Leitfrage:</b> Wie fertigen Sie die vier Bohrungen sicher, maßhaltig und mit der jeweils richtigen Drehzahl?</div></div></div>"
         },
         {
           "type": "page",
-          "name": "Das kannst du am Ende",
+          "name": "Das können Sie am Ende",
           "completion": 1,
           "intro": "<p>Diese Ziele erreichen Sie in diesem Modul.</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Lernziele</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Nach diesem Modul können Sie:</p><ul><li>die <b>Hauptbauteile und Bedienelemente</b> einer Standbohrmaschine benennen,</li><li>die wichtigsten <b>Sicherheits- und Schutzmaßnahmen</b> beim Bohren beschreiben und einhalten,</li><li>ein <b>Werkstück sicher einspannen</b> und einen Bohrer fachgerecht einsetzen,</li><li>die passende <b>Drehzahl</b> zum Bohrerdurchmesser auswählen,</li><li>einen <b>Bohrvorgang selbstständig durchführen</b> und das Ergebnis prüfen.</li></ul></div></div>"
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Lernziele</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Nach diesem Modul können Sie:</p><ul><li>die <b>Hauptbauteile und Bedienelemente</b> der Standbohrmaschine benennen und ihre Aufgabe erklären,</li><li>die <b>Sicherheitsregeln</b> beim Bohren nennen, begründen und einhalten,</li><li>ein Werkstück <b>fachgerecht spannen und ankörnen</b>,</li><li>die <b>Drehzahl aus Schnittgeschwindigkeit und Durchmesser berechnen</b> und an der Maschine einstellen,</li><li>die Bohrungen <b>selbstständig fertigen, prüfen und dokumentieren</b>.</li></ul><div style='background:#e6f1fb;border-left:4px solid #378add;padding:8px 12px;'>💡 Das Berechnen der Drehzahl ist neu für viele – dafür gibt es ein ausführliches Rechenbeispiel und eine Simulation zum Ausprobieren.</div></div></div>"
         },
         {
           "type": "choice",
-          "name": "Einschätzung: Wie sicher fühlst du dich beim Bohren?",
+          "name": "Einschätzung: Wie viel Erfahrung haben Sie mit dem Bohren?",
           "intro": "<p>Diese kurze, anonyme Einschätzung aktiviert Ihr Vorwissen – es gibt kein richtig oder falsch.</p>",
           "options": [
-            "Das ist ganz neu für mich",
-            "Schon mal gesehen, aber unsicher",
-            "Habe ich schon selbst gemacht"
+            "Ich habe noch nie an einer Standbohrmaschine gearbeitet",
+            "Ich habe schon zugeschaut oder unter Anleitung gebohrt",
+            "Ich habe schon selbstständig gebohrt, aber nie die Drehzahl berechnet",
+            "Ich habe schon Drehzahlen berechnet und eingestellt"
           ]
         }
       ]
     },
     {
-      "name": "2 · Grundlagen",
-      "summary": "<p>Lernen Sie die Standbohrmaschine und den Bohrer kennen.</p>",
+      "name": "2 · Grundlagen: Maschine und Werkzeug",
+      "summary": "<p>Lernen Sie die Standbohrmaschine und den Spiralbohrer kennen.</p>",
+      "image": "assets/cover_grundlagen.png",
       "activities": [
-        {
-          "type": "page",
-          "name": "Infoblatt: Bohren in der Metalltechnik",
-          "completion": 1,
-          "intro": "<p>Worum geht es überhaupt?</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Bohren in der Metalltechnik</div><div style='padding:14px 16px;'><p style='margin-top:0;'><b>Bohren</b> ist eines der wichtigsten Fertigungsverfahren in der Metalltechnik. Mit einem drehenden <b>Bohrer</b> wird ein rundes Loch in ein Werkstück gearbeitet – zum Beispiel, um später eine Schraube durchzustecken oder ein Bauteil zu verbinden.</p><p>Beim Bohren dreht sich der Bohrer schnell und drückt sich gleichzeitig in das Metall. Seine Schneiden trennen dabei kleine Späne ab, die durch die Spiralnuten nach oben transportiert werden – so entsteht nach und nach ein rundes Loch. Damit das Loch genau an der richtigen Stelle sitzt und sauber wird, muss das Werkstück fest liegen und der Bohrer gerade geführt sein. Genau das leistet die Standbohrmaschine. In der Werkstatt brauchst du gebohrte Löcher ständig: für Schrauben, Niete, Bolzen oder Gewinde.</p><p>Man unterscheidet zwei Arten von Maschinen:</p><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Handbohrmaschine</th><th align='left'>Standbohrmaschine</th></tr><tr><td>tragbar, frei geführt</td><td>fest aufgebaut, geführte Spindel</td></tr><tr><td>für Montage vor Ort</td><td>für genaue, sichere Löcher in der Werkstatt</td></tr></table><p>In diesem Modul arbeiten Sie an der <b>Standbohrmaschine</b>. Sie führt den Bohrer gerade und ermöglicht so genaue Löcher – wenn man sie richtig bedient.</p><div style='background:#e6f1fb;border-left:4px solid #378add;padding:8px 12px;'>💡 Genau und sicher gebohrt wird nur mit der <b>Standbohrmaschine</b> – darum geht es hier.</div></div></div>",
-          "material": true,
-          "material_bullets": [
-            "Bohren = wichtiges Fertigungsverfahren der Metalltechnik",
-            "Handbohrmaschine: tragbar, für Montage vor Ort",
-            "Standbohrmaschine: fest, geführt, für genaue sichere Löcher"
-          ]
-        },
         {
           "type": "page",
           "name": "Infoblatt: Aufbau der Standbohrmaschine",
           "completion": 1,
-          "intro": "<p>Die wichtigsten Bauteile auf einen Blick.</p>",
+          "intro": "<p>Die wichtigsten Bauteile und ihre Aufgaben.</p>",
           "images": [
-            "assets/bohrmaschine_aufbau.svg"
+            "assets/aufbau_standbohrmaschine.svg"
           ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Aufbau der Standbohrmaschine</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Die Standbohrmaschine besteht aus wenigen Hauptbauteilen. Präge dir vor allem <b>Bohrfutter</b>, <b>Maschinenschraubstock</b>, <b>Vorschubhebel</b> und <b>Not-Aus</b> ein.</p><p>Die Bauteile arbeiten zusammen: Der Motor treibt über einen Riemen die Spindel an, in der das Bohrfutter mit dem Bohrer steckt. Mit dem Vorschubhebel ziehst du den drehenden Bohrer nach unten in das Werkstück. Das Werkstück steht fest auf dem Bohrtisch und ist im Maschinenschraubstock eingespannt – so hast du beide Hände frei und arbeitest sicher. Über die Drehzahleinstellung passt du die Geschwindigkeit an Bohrer und Werkstoff an. Den Not-Aus-Schalter solltest du immer in Reichweite wissen.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/bohrmaschine_aufbau.svg' alt='Beschriftete Standbohrmaschine' style='max-width:100%;height:auto;'></div><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Bauteil</th><th align='left'>Aufgabe</th></tr><tr><td><b>Bohrfutter</b></td><td>hält den Bohrer fest</td></tr><tr><td><b>Spindel</b></td><td>überträgt die Drehbewegung auf den Bohrer</td></tr><tr><td><b>Vorschubhebel</b></td><td>bewegt den Bohrer nach unten ins Werkstück</td></tr><tr><td><b>Bohrtisch</b></td><td>trägt das Werkstück bzw. den Schraubstock</td></tr><tr><td><b>Maschinenschraubstock</b></td><td>spannt das Werkstück sicher ein</td></tr><tr><td><b>Not-Aus</b></td><td>stoppt die Maschine im Notfall sofort</td></tr></table><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;margin-top:12px;'>⚠ <b>Merke:</b> Lage des <b>Not-Aus</b> kennen, bevor du die Maschine startest.</div></div></div>",
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Aufbau der Standbohrmaschine</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Die Standbohrmaschine führt den Bohrer <b>senkrecht und geführt</b> in das Werkstück – deshalb werden die Bohrungen genauer als mit einer Handbohrmaschine. Damit Sie die Maschine sicher bedienen können, müssen Sie ihre Hauptbauteile kennen.</p><p>Die Bauteile arbeiten zusammen: Der <b>Antrieb im Bohrkopf</b> treibt die <b>Spindel</b> an. In der Spindel sitzt das <b>Bohrfutter</b>, das den <b>Spiralbohrer</b> festhält. Mit dem <b>Vorschubhebel</b> senken Sie den drehenden Bohrer in das Werkstück ab. Das Werkstück liegt auf dem <b>Bohrtisch</b> und ist im <b>Maschinenschraubstock</b> gespannt – so bleiben beide Hände frei. Die <b>Säule</b> trägt Bohrkopf und Tisch, die <b>Fußplatte</b> gibt der Maschine ihren sicheren Stand. Den roten <b>Not-Aus-Schalter</b> müssen Sie blind finden können, bevor Sie die Maschine starten.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/aufbau_standbohrmaschine.svg' alt='Beschriftete Standbohrmaschine' style='max-width:100%;height:auto;'></div><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Bauteil</th><th align='left'>Aufgabe</th></tr><tr><td><b>Bohrfutter</b></td><td>hält den Bohrer zentrisch fest</td></tr><tr><td><b>Spindel</b></td><td>überträgt die Drehbewegung auf den Bohrer</td></tr><tr><td><b>Vorschubhebel</b></td><td>senkt den Bohrer ins Werkstück</td></tr><tr><td><b>Bohrtisch</b></td><td>trägt Schraubstock und Werkstück</td></tr><tr><td><b>Maschinenschraubstock</b></td><td>spannt das Werkstück sicher</td></tr><tr><td><b>Not-Aus</b></td><td>stoppt die Maschine im Notfall sofort</td></tr></table><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;margin-top:12px;'>⚠ <b>Merke:</b> Erst die Lage des <b>Not-Aus</b> einprägen, dann die Maschine starten.</div></div></div>",
           "material": true,
           "material_bullets": [
-            "Bohrfutter: hält den Bohrer fest",
-            "Vorschubhebel: bewegt den Bohrer nach unten",
+            "Bohrfutter: hält den Bohrer zentrisch",
+            "Vorschubhebel: senkt den Bohrer ins Werkstück",
             "Maschinenschraubstock: spannt das Werkstück",
             "Not-Aus: stoppt die Maschine sofort"
           ]
         },
         {
           "type": "page",
-          "name": "Infoblatt: Der Bohrer und seine Teile",
+          "name": "Infoblatt: Der Spiralbohrer",
           "completion": 1,
-          "intro": "<p>Was ist ein Spiralbohrer?</p>",
+          "intro": "<p>Ihr Werkzeug für die vier Bohrungen.</p>",
           "images": [
-            "assets/bohrer_anatomie.svg"
+            "assets/spiralbohrer.svg"
           ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Der Spiralbohrer</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Zum Bohren in Metall verwendet man meist einen <b>Spiralbohrer</b> aus HSS (Schnellarbeitsstahl). Er hat mehrere Teile mit unterschiedlichen Aufgaben.</p><p>Der Spiralbohrer ist aus HSS (Schnellarbeitsstahl) und dadurch hart genug, um Stahl zu schneiden. Die beiden Spiralnuten haben eine wichtige Doppelaufgabe: Sie befördern die Späne aus dem Loch heraus und lassen Kühlmittel an die Schneide. Vorne sitzen die Hauptschneiden, die das Material abtragen. Wichtig ist ein scharfer Bohrer mit dem richtigen Spitzenwinkel (bei Stahl 118°). Ein stumpfer Bohrer rutscht, wird heiß und erzeugt ein schlechtes Loch – dann muss er nachgeschliffen oder ausgetauscht werden.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/bohrer_anatomie.svg' alt='Spiralbohrer mit beschrifteten Teilen' style='max-width:100%;height:auto;'></div><ul><li><b>Schaft:</b> wird ins Bohrfutter gespannt.</li><li><b>Spiralnut:</b> führt die Späne nach oben aus dem Loch.</li><li><b>Hauptschneide und Spitze:</b> trennen das Material.</li><li><b>Spitzenwinkel:</b> für normalen Stahl 118°.</li></ul><div style='background:#e6f1fb;border-left:4px solid #378add;padding:8px 12px;'>💡 Ein <b>scharfer</b> Bohrer schneidet leichter und erzeugt ein saubereres Loch.</div></div></div>",
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Der Spiralbohrer</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Für die Bohrungen in die Grundplatte verwenden Sie <b>Spiralbohrer aus HSS</b> (Schnellarbeitsstahl) – in den Durchmessern 5, 8 und 10 mm, genau wie in der Zeichnung gefordert.</p><p>Jeder Teil des Bohrers hat eine Aufgabe: Der <b>Schaft</b> wird bis zum Anschlag ins Bohrfutter gespannt. Die beiden <b>Spiralnuten</b> befördern die Späne aus der Bohrung heraus und lassen Kühlschmierstoff an die Schneide. Vorne sitzen die <b>Hauptschneiden</b>, die das Material abtragen; ihr <b>Spitzenwinkel</b> beträgt bei Stahl 118°. Ein <b>scharfer</b> Bohrer schneidet leicht, bleibt kühler und erzeugt eine saubere Bohrung. Ein stumpfer Bohrer dagegen quietscht, wird heiß, drückt statt zu schneiden – und muss nachgeschliffen oder ersetzt werden.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/spiralbohrer.svg' alt='Spiralbohrer mit beschrifteten Teilen' style='max-width:100%;height:auto;'></div><ul><li><b>Schaft:</b> Spannfläche für das Bohrfutter.</li><li><b>Spiralnuten:</b> führen die Späne ab und leiten Kühlung zu.</li><li><b>Hauptschneiden:</b> tragen das Material ab.</li><li><b>Spitzenwinkel:</b> 118° für normalen Stahl.</li></ul><div style='background:#e6f1fb;border-left:4px solid #378add;padding:8px 12px;'>💡 <b>Merke:</b> Prüfen Sie den Bohrer immer, bevor Sie ihn einspannen. Die Schneiden müssen scharf sein, und der Schaft muss sauber und unbeschädigt sein – nur dann schneidet der Bohrer sicher und erzeugt eine saubere Bohrung.</div></div></div>",
           "material": true,
           "material_bullets": [
             "Schaft: wird ins Bohrfutter gespannt",
-            "Spiralnut: führt die Späne ab",
-            "Hauptschneide + Spitze: trennen das Material",
+            "Spiralnuten: führen die Späne ab",
+            "Hauptschneiden: tragen das Material ab",
             "Spitzenwinkel bei Stahl: 118 Grad"
           ]
         },
         {
           "type": "quiz",
-          "name": "Vorwissens-Check (Selbsttest, zählt nicht)",
+          "name": "Selbsttest: Maschine und Werkzeug",
           "completion": 1,
-          "intro": "<p>Testen Sie Ihr Vorwissen. Der Test ist <b>formativ</b>: beliebig oft, mit sofortiger Rückmeldung. Die Note zählt nicht.</p>",
+          "intro": "<p>Prüfen Sie Ihr Wissen aus den beiden Infoblättern. Der Test ist <b>formativ</b>: beliebig viele Versuche, sofortige Rückmeldung, die Note zählt nicht.</p>",
           "grade": 100,
           "overallfeedback": [
             {
               "min": 0,
-              "text": "<p>Noch viel Neuland – das ist völlig okay! Arbeiten Sie die Vertiefung in Ruhe durch.</p>"
+              "text": "<p>Noch unsicher – lesen Sie die beiden Infoblätter in Ruhe noch einmal.</p>"
             },
             {
-              "min": 50,
-              "text": "<p>Solide Basis. Achten Sie in der Vertiefung auf die unsicheren Punkte.</p>"
+              "min": 60,
+              "text": "<p>Gute Basis! Schauen Sie sich die unsicheren Bauteile noch einmal am Bild an.</p>"
             },
             {
-              "min": 80,
-              "text": "<p>Starkes Vorwissen! Nutzen Sie die Vertiefung zur Sicherung.</p>"
+              "min": 85,
+              "text": "<p>Sehr gut – Sie kennen Maschine und Werkzeug.</p>"
             }
           ],
           "questions": [
             {
-              "type": "truefalse",
-              "name": "Handschuhe",
-              "questiontext": "<p>Beim Bohren an der Standbohrmaschine sollte man Arbeitshandschuhe tragen.</p>",
-              "correct": false,
-              "generalfeedback": "<p>An rotierenden Maschinen sind Handschuhe <b>verboten</b> – sie können eingezogen werden. Pflicht ist die Schutzbrille.</p>",
-              "feedbackcorrect": "<p>Richtig! Handschuhe sind an der Bohrmaschine gefährlich.</p>",
-              "feedbackwrong": "<p>Achtung: Handschuhe sind verboten, weil sie erfasst werden können.</p>"
-            },
-            {
-              "type": "multichoice",
-              "name": "Werkstück halten",
-              "questiontext": "<p>Wie wird ein kleines Werkstück beim Bohren richtig gehalten?</p>",
-              "generalfeedback": "<p>Werkstücke gehören <b>fest eingespannt</b> – niemals mit der Hand.</p>",
-              "answers": [
-                {
-                  "text": "Mit dem Maschinenschraubstock fest einspannen",
-                  "correct": true,
-                  "feedback": "<p>Richtig: So kann sich das Werkstück nicht mitdrehen.</p>"
-                },
-                {
-                  "text": "Mit der Hand festhalten",
-                  "correct": false,
-                  "feedback": "<p>Sehr gefährlich – der Bohrer kann das Werkstück mitreißen.</p>"
-                },
-                {
-                  "text": "Locker auf den Tisch legen",
-                  "correct": false,
-                  "feedback": "<p>Ein loses Werkstück wird zum gefährlichen „Propeller\".</p>"
-                }
-              ]
-            },
-            {
               "type": "multichoice",
               "name": "Bohrfutter",
-              "questiontext": "<p>Welches Bauteil hält den Bohrer?</p>",
-              "generalfeedback": "<p>Das Bohrfutter spannt den Bohrer; mit dem Futterschlüssel wird es festgezogen.</p>",
+              "questiontext": "<p>Welches Bauteil hält den Spiralbohrer fest?</p>",
+              "generalfeedback": "<p>Das <b>Bohrfutter</b> spannt den Bohrerschaft zentrisch; es sitzt an der Spindel.</p>",
               "answers": [
                 {
                   "text": "Das Bohrfutter",
                   "correct": true,
-                  "feedback": "<p>Richtig.</p>"
+                  "feedback": "<p>Richtig – es sitzt an der Spindel und spannt den Schaft.</p>"
                 },
                 {
-                  "text": "Der Bohrtisch",
+                  "text": "Der Maschinenschraubstock",
                   "correct": false,
-                  "feedback": "<p>Der Bohrtisch trägt das Werkstück.</p>"
+                  "feedback": "<p>Der Schraubstock spannt das <b>Werkstück</b>, nicht den Bohrer.</p>"
                 },
                 {
-                  "text": "Die Säule",
+                  "text": "Der Vorschubhebel",
                   "correct": false,
-                  "feedback": "<p>Die Säule trägt Tisch und Kopf.</p>"
+                  "feedback": "<p>Der Vorschubhebel senkt den Bohrer ab – festhalten tut ihn das Bohrfutter.</p>"
+                }
+              ]
+            },
+            {
+              "type": "multichoice",
+              "name": "Spiralnuten",
+              "questiontext": "<p>Welche Aufgabe haben die Spiralnuten des Bohrers?</p>",
+              "generalfeedback": "<p>Die Spiralnuten transportieren die Späne aus der Bohrung und lassen Kühlschmierstoff an die Schneide.</p>",
+              "answers": [
+                {
+                  "text": "Sie führen die Späne aus der Bohrung ab",
+                  "correct": true,
+                  "feedback": "<p>Richtig – und sie leiten Kühlung an die Schneide.</p>"
+                },
+                {
+                  "text": "Sie machen den Bohrer leichter",
+                  "correct": false,
+                  "feedback": "<p>Das Gewicht spielt hier keine Rolle – es geht um den Späne-Transport.</p>"
+                },
+                {
+                  "text": "Sie verhindern das Verlaufen des Bohrers",
+                  "correct": false,
+                  "feedback": "<p>Gegen das Verlaufen hilft das Ankörnen, nicht die Nut.</p>"
                 }
               ]
             },
             {
               "type": "truefalse",
-              "name": "Not-Aus",
-              "questiontext": "<p>Man sollte vor dem Bohren wissen, wo der Not-Aus-Schalter ist.</p>",
+              "name": "Geführte Spindel",
+              "questiontext": "<p>Die Standbohrmaschine führt den Bohrer senkrecht – deshalb werden die Bohrungen genauer als mit der Handbohrmaschine.</p>",
               "correct": true,
-              "generalfeedback": "<p>Im Notfall muss die Maschine sofort gestoppt werden können.</p>",
+              "generalfeedback": "<p>Genau das ist der Vorteil der geführten Spindel: gerade, maßhaltige Bohrungen.</p>",
               "feedbackcorrect": "<p>Richtig.</p>",
-              "feedbackwrong": "<p>Doch – der Not-Aus muss vor dem Start bekannt sein.</p>"
+              "feedbackwrong": "<p>Doch – die geführte Spindel ist der große Vorteil der Standbohrmaschine.</p>"
+            },
+            {
+              "type": "truefalse",
+              "name": "Not-Aus",
+              "questiontext": "<p>Die Lage des Not-Aus-Schalters muss ich erst kennen, wenn tatsächlich etwas passiert.</p>",
+              "correct": false,
+              "generalfeedback": "<p>Im Notfall bleibt keine Zeit zum Suchen – die Lage des Not-Aus prägen Sie sich <b>vor</b> dem Start ein.</p>",
+              "feedbackcorrect": "<p>Richtig erkannt – vorher einprägen!</p>",
+              "feedbackwrong": "<p>Nein: Den Not-Aus müssen Sie <b>vor</b> dem Einschalten blind finden können.</p>"
             }
           ]
         }
       ]
     },
     {
-      "name": "3 · Vertiefung: Sicher und richtig bohren",
-      "summary": "<p>Das Fachwissen für Ihren Bohrauftrag – Schritt für Schritt mit Infoblättern.</p>",
+      "name": "3 · Sicher einrichten: Schutz, Spannen, Ankörnen",
+      "summary": "<p>Die Sicherheitsregeln und das richtige Einrichten – Pflichtwissen vor dem ersten Span.</p>",
+      "image": "assets/cover_einrichten.png",
       "activities": [
         {
           "type": "page",
@@ -213,324 +208,365 @@
           "completion": 1,
           "intro": "<p>Das Wichtigste zuerst: Ihre Sicherheit.</p>",
           "images": [
-            "assets/sicherheit_piktogramme.svg"
+            "assets/sicherheit_bohren.svg"
           ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#a3322f;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Sicherheit beim Bohren</div><div style='padding:14px 16px;'><p style='margin-top:0;'>An rotierenden Maschinen gelten klare Regeln. Sie schützen Ihre Augen, Hände und Haare.</p><p>Warum diese Regeln? An der drehenden Spindel wird alles Lose blitzschnell erfasst und mitgerissen – deshalb keine Handschuhe, kein Schmuck und keine offenen Haare. Beim Bohren fliegen heiße, scharfe Späne weg; die Schutzbrille schützt deine Augen. Späne niemals mit der Hand wegwischen, sondern mit dem Handfeger – und nur bei stehender Maschine. Ein fest eingespanntes Werkstück kann sich nicht zum gefährlichen „Propeller\" drehen. Diese Regeln kosten nur Sekunden, verhindern aber schwere Verletzungen.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/sicherheit_piktogramme.svg' alt='Sicherheits-Piktogramme' style='max-width:100%;height:auto;'></div><ul><li>✅ <b>Schutzbrille</b> tragen – Späne fliegen.</li><li>⛔ <b>Keine Handschuhe</b>, kein Schmuck, keine weiten Ärmel.</li><li>✅ <b>Lange Haare</b> mit Haarnetz oder Mütze sichern.</li><li>⛔ <b>Späne nie mit der Hand</b> entfernen – Handfeger benutzen, Maschine vorher ausschalten.</li><li>✅ <b>Not-Aus</b> kennen, bevor du startest.</li></ul><div style='background:#fdeceb;border-left:4px solid #d8312c;padding:8px 12px;'>⚠ Diese Regeln gelten <b>immer</b> – auch bei „nur einem schnellen Loch\".</div></div></div>",
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#a3322f;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Sicherheit beim Bohren</div><div style='padding:14px 16px;'><p style='margin-top:0;'>An rotierenden Maschinen gelten klare Regeln – sie schützen Ihre Augen, Hände und Haare. Jede dieser Regeln hat einen konkreten Grund.</p><p>Die drehende Spindel erfasst alles, was lose ist, blitzschnell: Deshalb sind <b>Handschuhe, Schmuck und weite Ärmel verboten</b> und lange Haare werden mit Haarnetz oder Mütze gesichert. Beim Bohren fliegen heiße, scharfkantige Späne – die <b>Schutzbrille</b> ist darum Pflicht, ohne Ausnahme. Späne entfernen Sie <b>nie mit der bloßen Hand</b>, sondern mit Handfeger oder Spänehaken, und nur bei <b>stehender Maschine</b>. Vor dem Einschalten ziehen Sie den <b>Futterschlüssel</b> ab, sonst wird er zum Geschoss. Diese Handgriffe kosten Sekunden – sie verhindern Verletzungen, die Sie Wochen kosten würden.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/sicherheit_bohren.svg' alt='Sicherheitsregeln als Piktogramme' style='max-width:100%;height:auto;'></div><ul><li><b>Schutzbrille tragen</b> – immer, ohne Ausnahme.</li><li><b>Keine Handschuhe, kein Schmuck, keine weiten Ärmel.</b></li><li><b>Lange Haare sichern</b> (Haarnetz oder Mütze).</li><li><b>Späne nie mit der Hand</b> – Handfeger, Maschine steht.</li><li><b>Futterschlüssel abziehen</b>, Not-Aus kennen.</li></ul><div style='background:#fdeceb;border-left:4px solid #d8312c;padding:8px 12px;'>⚠ Diese Regeln gelten <b>immer</b> – auch wenn es „nur ein schnelles Loch\" sein soll.</div></div></div>",
           "material": true,
           "material_bullets": [
-            "Schutzbrille tragen (Pflicht)",
+            "Schutzbrille tragen (Pflicht, ohne Ausnahme)",
             "Keine Handschuhe, kein Schmuck, keine weiten Ärmel",
             "Lange Haare sichern",
             "Späne nie mit der Hand entfernen",
-            "Not-Aus vor dem Start kennen"
+            "Futterschlüssel abziehen, Not-Aus kennen"
           ]
         },
         {
           "type": "page",
           "name": "Infoblatt: Werkstück spannen und ankörnen",
           "completion": 1,
-          "intro": "<p>Damit nichts verrutscht.</p>",
+          "intro": "<p>Damit nichts verrutscht und die Bohrung dort sitzt, wo sie hingehört.</p>",
           "images": [
-            "assets/werkstueck_spannen.svg"
+            "assets/spannen_ankoernen.svg"
           ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Werkstück spannen und ankörnen</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Ein Werkstück darf sich beim Bohren <b>nicht mitdrehen</b>. Deshalb wird es immer fest gespannt.</p><p>Beim Bohren wirkt eine große Drehkraft auf das Werkstück. Besonders im Moment, in dem der Bohrer unten durchbricht, kann er das Werkstück „fangen\" und herumreißen. Ein fest im Schraubstock gespanntes Werkstück kann das nicht. Mit dem Körner schlägst du vorher eine kleine Vertiefung an der Bohrstelle ein – sie führt die Bohrerspitze, damit der Bohrer nicht wegrutscht und das Loch genau dort entsteht, wo es hingehört.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/werkstueck_spannen.svg' alt='Werkstück richtig und falsch gehalten' style='max-width:100%;height:auto;'></div><ol><li>Werkstück in den <b>Maschinenschraubstock</b> spannen.</li><li>Schraubstock möglichst auf dem Bohrtisch <b>festsetzen</b>.</li><li>Bohrstelle vorher <b>ankörnen</b> – so rutscht der Bohrer nicht weg.</li></ol><div style='background:#fdeceb;border-left:4px solid #d8312c;padding:8px 12px;'>⚠ Niemals mit der Hand festhalten! Wenn der Bohrer „fängt\", reißt er das Werkstück mit.</div></div></div>",
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Werkstück spannen und ankörnen</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Ihre Grundplatte darf sich beim Bohren <b>nicht bewegen</b> – weder mitdrehen noch verrutschen. Und jede Bohrung muss <b>genau auf dem angerissenen Punkt</b> sitzen. Beides erreichen Sie mit zwei Handgriffen: Spannen und Ankörnen.</p><p>Beim Bohren wirkt ein großes Drehmoment auf das Werkstück. Besonders in dem Moment, in dem der Bohrer unten durchbricht, kann er das Werkstück „fangen\" und herumreißen – ein loses Blech wird dann zum gefährlichen Schläger. Ein im <b>Maschinenschraubstock</b> gespanntes Werkstück kann das nicht. Mit dem <b>Körner</b> schlagen Sie vorher eine kleine Vertiefung genau auf den Kreuzungspunkt des Anrisses: Sie führt die Bohrerspitze, damit der Bohrer nicht verläuft und die Bohrung maßhaltig an der richtigen Stelle entsteht.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/spannen_ankoernen.svg' alt='Richtig gespannt im Schraubstock, falsch mit der Hand gehalten' style='max-width:100%;height:auto;'></div><ol><li>Bohrungsmitten <b>anreißen</b> und <b>ankörnen</b>.</li><li>Werkstück in den <b>Maschinenschraubstock</b> spannen.</li><li>Schraubstock ausrichten, bei größeren Bohrungen auf dem Tisch <b>festsetzen</b>.</li></ol><div style='background:#fdeceb;border-left:4px solid #d8312c;padding:8px 12px;'>⚠ <b>Niemals</b> das Werkstück mit der Hand festhalten – wenn der Bohrer „fängt\", reißt er es mit.</div></div></div>",
           "material": true,
           "material_bullets": [
-            "Werkstück immer in den Schraubstock spannen",
-            "Bohrstelle vorher ankörnen",
-            "Niemals mit der Hand festhalten - Verletzungsgefahr!"
-          ]
-        },
-        {
-          "type": "page",
-          "name": "Infoblatt: Drehzahl richtig wählen",
-          "completion": 1,
-          "intro": "<p>Schnell oder langsam?</p>",
-          "images": [
-            "assets/drehzahl_schaubild.svg"
-          ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Drehzahl richtig wählen</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Die <b>Drehzahl</b> sagt, wie schnell sich der Bohrer dreht (in Umdrehungen pro Minute, min⁻¹). Faustregel:</p><p>Entscheidend ist nicht die Drehzahl allein, sondern wie schnell sich die Schneide am Rand des Bohrers bewegt (die Schnittgeschwindigkeit). Bei einem großen Bohrer legt der Rand pro Umdrehung einen längeren Weg zurück als bei einem kleinen – deshalb muss ein großer Bohrer langsamer drehen. Stimmt die Drehzahl nicht, wird der Bohrer zu heiß und schnell stumpf (zu schnell) oder das Loch wird unsauber (zu langsam). Die Tabelle nimmt dir das Rechnen ab: Durchmesser ablesen, passenden Wert einstellen.</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/drehzahl_schaubild.svg' alt='Drehzahl-Schaubild' style='max-width:100%;height:auto;'></div><p><b>Kleiner Bohrer = hohe Drehzahl. Großer Bohrer = niedrige Drehzahl.</b> Härtere Werkstoffe brauchen kleinere Drehzahlen als weiche.</p><div style='background:#f1efe8;border:1px solid #d3d1c7;padding:10px 12px;'><b>Rechenbeispiel (so wählst du den Tabellenwert):</b><br>Du bohrst ein <b>8-mm-Loch in Stahl</b>. In der Tabelle steht für Ø 8 mm: <b>ca. 600 min⁻¹</b>. Stelle an der Maschine den Wert ein, der am nächsten liegt (z. B. 560 oder 630 min⁻¹). <br>Bei Stahl zusätzlich <b>Kühlschmierstoff</b> verwenden – das schont den Bohrer.</div></div></div>",
-          "material": true,
-          "material_bullets": [
-            "Kleiner Bohrer = hohe Drehzahl",
-            "Großer Bohrer = niedrige Drehzahl",
-            "Stahl, 8 mm: ca. 600 min-1",
-            "Bei Stahl Kühlschmierstoff verwenden"
-          ]
-        },
-        {
-          "type": "page",
-          "name": "Infoblatt: Bohren Schritt für Schritt",
-          "completion": 1,
-          "intro": "<p>Der komplette Ablauf.</p>",
-          "images": [
-            "assets/bohrvorgang_schritte.svg"
-          ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Bohren Schritt für Schritt</div><div style='padding:14px 16px;'><div style='text-align:center;margin:0 0 10px;'><img src='@@PLUGINFILE@@/bohrvorgang_schritte.svg' alt='Ablauf in sechs Schritten' style='max-width:100%;height:auto;'></div><p>Die Reihenfolge hat einen Sinn: Erst alles vorbereiten und sichern, dann einschalten – so gerätst du nicht in Hektik. Beim Bohren gibst du gleichmäßigen, ruhigen Druck; zu viel Druck lässt den Bohrer verlaufen oder brechen. Kurz bevor der Bohrer unten durchbricht, nimmst du den Druck zurück, weil er dort leicht „fängt\". Erst wenn die Maschine ganz steht, fasst du das Werkstück an und entfernst die Späne. Zum Schluss entgratest du den scharfen Lochrand.</p><ol><li>Schutzbrille auf, Werkstück gespannt, Bohrstelle gekörnt.</li><li>Passenden Bohrer einsetzen, <b>Futterschlüssel abziehen</b>.</li><li>Drehzahl einstellen (Tabelle).</li><li>Maschine einschalten, mit dem Vorschubhebel <b>gleichmäßig</b> bohren; bei Stahl kühlen.</li><li>Maschine ausschalten, <b>Stillstand abwarten</b>.</li><li>Grat entfernen (entgraten), Loch prüfen.</li></ol><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;'>⚠ Erst wenn die Maschine <b>steht</b>: Werkstück entnehmen und Späne entfernen.</div></div></div>",
-          "material": true,
-          "material_bullets": [
-            "1. Brille auf, spannen, ankörnen",
-            "2. Bohrer einsetzen, Futterschlüssel abziehen",
-            "3. Drehzahl einstellen",
-            "4. Einschalten, gleichmäßig bohren, kühlen",
-            "5. Ausschalten, Stillstand abwarten",
-            "6. Entgraten und prüfen"
-          ]
-        },
-        {
-          "type": "page",
-          "name": "Infoblatt: Häufige Fehler und ihre Ursachen",
-          "completion": 1,
-          "intro": "<p>Aus Fehlern lernen.</p>",
-          "images": [
-            "assets/fehlerbilder.svg"
-          ],
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#854f0b;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Häufige Fehler</div><div style='padding:14px 16px;'><div style='text-align:center;margin:0 0 10px;'><img src='@@PLUGINFILE@@/fehlerbilder.svg' alt='Drei häufige Fehlerbilder' style='max-width:100%;height:auto;'></div><p>Aus dem Ergebnis kannst du ablesen, was schiefgelaufen ist – und es beim nächsten Mal gezielt besser machen. Ein verlaufenes Loch zeigt, dass nicht angekörnt oder nicht fest gespannt wurde. Ein unrundes oder zu großes Loch deutet auf ein lockeres Werkstück oder eine falsche Drehzahl hin. Ein scharfer Grat am Rand entsteht durch einen stumpfen Bohrer oder fehlendes Entgraten. Die Tabelle zeigt zu jedem Fehler die Ursache und die passende Abhilfe.</p><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#fbeec9;'><th align='left'>Fehler</th><th align='left'>Ursache</th><th align='left'>Abhilfe</th></tr><tr><td>Bohrer verläuft</td><td>nicht angekörnt</td><td>ankörnen, spannen</td></tr><tr><td>Loch unrund</td><td>locker / Drehzahl falsch</td><td>fest spannen, Drehzahl anpassen</td></tr><tr><td>Grat am Rand</td><td>stumpf / nicht entgratet</td><td>scharfer Bohrer, entgraten</td></tr></table></div></div>",
-          "material": true,
-          "material_bullets": [
-            "Bohrer verläuft -> ankörnen, spannen",
-            "Loch unrund -> fest spannen, Drehzahl anpassen",
-            "Grat am Rand -> scharfer Bohrer, entgraten"
+            "Anreißen und ankörnen: Bohrung sitzt maßhaltig",
+            "Immer im Maschinenschraubstock spannen",
+            "Niemals mit der Hand festhalten"
           ]
         },
         {
           "type": "quiz",
-          "name": "Arbeitsblatt 1: Sicherheit und Spannen",
+          "name": "Selbsttest: Sicherheit und Einrichten",
           "completion": 1,
-          "intro": "<p>Überprüfen Sie die Infoblätter zu Sicherheit und Spannen. Beliebig viele Versuche.</p>",
+          "intro": "<p>Prüfen Sie die Infoblätter zu Sicherheit und Einrichten. Beliebig viele Versuche.</p>",
           "grade": 100,
           "overallfeedback": [
             {
               "min": 0,
-              "text": "<p>Schauen Sie noch einmal in die Infoblätter „Sicherheit\" und „Werkstück spannen\".</p>"
+              "text": "<p>Bitte beide Infoblätter noch einmal lesen – die Sicherheitsregeln brauchen Sie am Bohrtag auswendig.</p>"
             },
             {
               "min": 60,
-              "text": "<p>Gut auf dem Weg!</p>"
+              "text": "<p>Gut auf dem Weg – festigen Sie die unsicheren Punkte.</p>"
             },
             {
               "min": 85,
-              "text": "<p>Sehr gut!</p>"
+              "text": "<p>Sehr gut – Sie richten sicher ein!</p>"
             }
           ],
           "questions": [
             {
               "type": "multichoice",
               "name": "Pflicht-Schutz",
-              "questiontext": "<p>Welche Schutzmaßnahme ist beim Bohren <b>Pflicht</b>?</p>",
-              "generalfeedback": "<p>Die Schutzbrille schützt die Augen vor Spänen.</p>",
+              "questiontext": "<p>Welche Schutzausrüstung ist beim Bohren an der Standbohrmaschine <b>Pflicht</b>?</p>",
+              "generalfeedback": "<p>Die Schutzbrille schützt vor heißen, scharfkantigen Spänen – sie ist immer Pflicht.</p>",
               "answers": [
                 {
-                  "text": "Schutzbrille tragen",
+                  "text": "Schutzbrille",
                   "correct": true,
-                  "feedback": "<p>Richtig.</p>"
+                  "feedback": "<p>Richtig – immer und ohne Ausnahme.</p>"
                 },
                 {
-                  "text": "Arbeitshandschuhe tragen",
+                  "text": "Arbeitshandschuhe",
                   "correct": false,
-                  "feedback": "<p>Nein – Handschuhe sind verboten.</p>"
+                  "feedback": "<p>Im Gegenteil: Handschuhe sind an rotierenden Maschinen <b>verboten</b>.</p>"
                 },
                 {
-                  "text": "Gehörschutz reicht aus",
+                  "text": "Gehörschutz genügt",
                   "correct": false,
-                  "feedback": "<p>Ersetzt nicht den Augenschutz.</p>"
+                  "feedback": "<p>Gehörschutz ersetzt nicht den Augenschutz.</p>"
                 }
               ]
             },
             {
               "type": "truefalse",
-              "name": "Spannen",
-              "questiontext": "<p>Das Werkstück muss vor dem Bohren sicher eingespannt werden.</p>",
-              "correct": true,
-              "generalfeedback": "<p>Ein gespanntes Werkstück kann sich nicht mitdrehen.</p>",
-              "feedbackcorrect": "<p>Richtig.</p>",
-              "feedbackwrong": "<p>Doch – immer einspannen.</p>"
-            },
-            {
-              "type": "truefalse",
-              "name": "Späne",
-              "questiontext": "<p>Späne darf man mit der Hand wegwischen, solange man vorsichtig ist.</p>",
+              "name": "Handschuhe",
+              "questiontext": "<p>Arbeitshandschuhe schützen beim Bohren die Hände und sollten getragen werden.</p>",
               "correct": false,
-              "generalfeedback": "<p>Späne sind scharf und heiß – immer Handfeger benutzen, Maschine vorher aus.</p>",
-              "feedbackcorrect": "<p>Richtig erkannt.</p>",
-              "feedbackwrong": "<p>Nein – nie mit der Hand.</p>"
+              "generalfeedback": "<p>Handschuhe können von der drehenden Spindel erfasst und samt Hand eingezogen werden – deshalb sind sie an der Bohrmaschine <b>verboten</b>.</p>",
+              "feedbackcorrect": "<p>Richtig erkannt – Handschuhe sind hier gefährlich.</p>",
+              "feedbackwrong": "<p>Nein: An rotierenden Maschinen sind Handschuhe verboten, weil sie erfasst werden können.</p>"
             },
             {
               "type": "multichoice",
-              "name": "Vor dem Bohren",
-              "questiontext": "<p>Was tun Sie, damit der Bohrer nicht verläuft?</p>",
-              "generalfeedback": "<p>Der Körnerpunkt führt die Bohrerspitze.</p>",
+              "name": "Ankörnen",
+              "questiontext": "<p>Warum körnen Sie die Bohrstelle an, bevor Sie bohren?</p>",
+              "generalfeedback": "<p>Der Körnerpunkt führt die Bohrerspitze – der Bohrer verläuft nicht und die Bohrung sitzt maßhaltig.</p>",
               "answers": [
                 {
-                  "text": "Bohrstelle ankörnen",
+                  "text": "Damit der Bohrer nicht verläuft und die Bohrung an der richtigen Stelle sitzt",
                   "correct": true,
                   "feedback": "<p>Richtig.</p>"
                 },
                 {
-                  "text": "Schneller bohren",
+                  "text": "Damit der Bohrer schärfer wird",
                   "correct": false,
-                  "feedback": "<p>Das hilft nicht – der Bohrer verläuft eher.</p>"
+                  "feedback": "<p>Ankörnen verändert den Bohrer nicht – es führt seine Spitze.</p>"
                 },
                 {
-                  "text": "Mehr Druck geben",
+                  "text": "Damit man schneller bohren kann",
                   "correct": false,
-                  "feedback": "<p>Zu viel Druck verschlimmert es.</p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "quiz",
-          "name": "Arbeitsblatt 2: Drehzahl, Ablauf und Fehler",
-          "completion": 1,
-          "intro": "<p>Überprüfen Sie die Infoblätter zu Drehzahl, Ablauf und Fehlern.</p>",
-          "grade": 100,
-          "overallfeedback": [
-            {
-              "min": 0,
-              "text": "<p>Wiederholen Sie die Infoblätter „Drehzahl\", „Schritt für Schritt\" und „Häufige Fehler\".</p>"
-            },
-            {
-              "min": 60,
-              "text": "<p>Gut!</p>"
-            },
-            {
-              "min": 85,
-              "text": "<p>Sehr gut – bereit für die Praxis!</p>"
-            }
-          ],
-          "questions": [
-            {
-              "type": "multichoice",
-              "name": "Drehzahl groß",
-              "questiontext": "<p>Sie bohren mit einem <b>großen</b> Bohrer (10 mm) in Stahl. Welche Drehzahl?</p>",
-              "generalfeedback": "<p>Großer Bohrer → niedrige Drehzahl (ca. 500 min⁻¹).</p>",
-              "answers": [
-                {
-                  "text": "Eine niedrige Drehzahl",
-                  "correct": true,
-                  "feedback": "<p>Richtig.</p>"
-                },
-                {
-                  "text": "Eine hohe Drehzahl",
-                  "correct": false,
-                  "feedback": "<p>Zu schnell – der Bohrer überhitzt.</p>"
-                },
-                {
-                  "text": "Egal",
-                  "correct": false,
-                  "feedback": "<p>Die Drehzahl hängt vom Durchmesser ab.</p>"
-                }
-              ]
-            },
-            {
-              "type": "multichoice",
-              "name": "8mm Stahl",
-              "questiontext": "<p>Welche Drehzahl passt etwa für ein 8-mm-Loch in Stahl?</p>",
-              "generalfeedback": "<p>Laut Tabelle ca. 600 min⁻¹.</p>",
-              "answers": [
-                {
-                  "text": "ca. 600 min⁻¹",
-                  "correct": true,
-                  "feedback": "<p>Richtig.</p>"
-                },
-                {
-                  "text": "ca. 1500 min⁻¹",
-                  "correct": false,
-                  "feedback": "<p>Das wäre für einen kleinen 3-mm-Bohrer.</p>"
-                },
-                {
-                  "text": "ca. 100 min⁻¹",
-                  "correct": false,
-                  "feedback": "<p>Viel zu langsam.</p>"
-                }
-              ]
-            },
-            {
-              "type": "multichoice",
-              "name": "Vor Einschalten",
-              "questiontext": "<p>Was gehört unmittelbar dazu, bevor Sie einschalten?</p>",
-              "generalfeedback": "<p>Der Futterschlüssel muss raus – sonst wird er weggeschleudert.</p>",
-              "answers": [
-                {
-                  "text": "Futterschlüssel abziehen",
-                  "correct": true,
-                  "feedback": "<p>Richtig.</p>"
-                },
-                {
-                  "text": "Handschuhe anziehen",
-                  "correct": false,
-                  "feedback": "<p>Verboten.</p>"
-                },
-                {
-                  "text": "Späne wegwischen",
-                  "correct": false,
-                  "feedback": "<p>Niemals mit der Hand.</p>"
+                  "feedback": "<p>Es geht um Genauigkeit, nicht um Geschwindigkeit.</p>"
                 }
               ]
             },
             {
               "type": "truefalse",
-              "name": "Stillstand",
-              "questiontext": "<p>Nach dem Bohren erst die Maschine ausschalten und den Stillstand abwarten, bevor man das Werkstück entnimmt.</p>",
-              "correct": true,
-              "generalfeedback": "<p>Sicherheit zuerst – nie in die laufende Maschine greifen.</p>",
-              "feedbackcorrect": "<p>Richtig.</p>",
-              "feedbackwrong": "<p>Doch – immer Stillstand abwarten.</p>"
-            },
-            {
-              "type": "multichoice",
-              "name": "Loch unrund",
-              "questiontext": "<p>Das Loch ist unrund geworden. Was war wahrscheinlich die Ursache?</p>",
-              "generalfeedback": "<p>Lockeres Werkstück oder falsche Drehzahl.</p>",
-              "answers": [
-                {
-                  "text": "Werkstück war nicht fest gespannt",
-                  "correct": true,
-                  "feedback": "<p>Richtig – fest spannen.</p>"
-                },
-                {
-                  "text": "Die Schutzbrille saß zu fest",
-                  "correct": false,
-                  "feedback": "<p>Das hat damit nichts zu tun.</p>"
-                },
-                {
-                  "text": "Der Bohrtisch war zu groß",
-                  "correct": false,
-                  "feedback": "<p>Nein.</p>"
-                }
-              ]
+              "name": "Mit der Hand halten",
+              "questiontext": "<p>Ein kleines, flaches Werkstück darf man beim Bohren mit der Hand festhalten, wenn man kräftig zupackt.</p>",
+              "correct": false,
+              "generalfeedback": "<p>Gerade flache Teile reißt der Bohrer beim Durchbruch mit – <b>immer</b> im Maschinenschraubstock spannen.</p>",
+              "feedbackcorrect": "<p>Richtig – niemals mit der Hand.</p>",
+              "feedbackwrong": "<p>Nein: Beim Durchbruch „fängt\" der Bohrer das Werkstück – schwere Handverletzungen drohen.</p>"
             }
           ]
         }
       ]
     },
     {
-      "name": "4 · Anwendung: Dein Bohrauftrag",
-      "summary": "<p>Jetzt bohren Sie selbst – Ihr Handlungsprodukt.</p>",
+      "name": "4 · Drehzahl berechnen und einstellen",
+      "summary": "<p>Von der Schnittgeschwindigkeit zur richtigen Drehzahl – mit Rechenbeispiel, Kennlinie und Simulation.</p>",
+      "image": "assets/cover_drehzahl.png",
       "activities": [
         {
           "type": "page",
-          "name": "Arbeitsplan und Prüfprotokoll (Vorlage)",
+          "name": "Infoblatt: Die richtige Drehzahl berechnen",
           "completion": 1,
-          "intro": "<p>Nutzen Sie diese Vorlage für Planung und Dokumentation.</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Arbeitsplan und Prüfprotokoll</div><div style='padding:14px 16px;'><h3 style='margin-top:0;'>Arbeitsplan (ausfüllen)</h3><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Schritt</th><th align='left'>Tätigkeit</th><th align='left'>Was beachten?</th></tr><tr><td>1</td><td>Schutzausrüstung</td><td>Schutzbrille, keine Handschuhe</td></tr><tr><td>2</td><td>Werkstück spannen</td><td>Schraubstock, ankörnen</td></tr><tr><td>3</td><td>Bohrer und Drehzahl</td><td>8 mm → ca. 600 min⁻¹</td></tr><tr><td>4</td><td>Bohren</td><td>gleichmäßiger Vorschub, kühlen</td></tr><tr><td>5</td><td>Prüfen und entgraten</td><td>Maschine steht</td></tr></table><h3>Prüfprotokoll (ausfüllen)</h3><ul><li>Alle 4 Löcher gebohrt: ☐ ja ☐ nein</li><li>Durchmesser 8 mm eingehalten: ☐ i. O. ☐ nicht i. O.</li><li>Löcher entgratet: ☐ ja ☐ nein</li><li>Sicher gearbeitet (Brille, gespannt, Schlüssel ab): ☐ ja ☐ nein</li></ul></div></div>"
+          "intro": "<p>Das Rechen-Herzstück des Moduls – hier berechnen Sie die Drehzahl für Ihre Bohrungen.</p>",
+          "images": [
+            "assets/drehzahl_kennlinie.svg"
+          ],
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Die richtige Drehzahl berechnen</div><div style='padding:14px 16px;'><p style='margin-top:0;'>Nicht die Drehzahl allein entscheidet über eine gute Bohrung, sondern die <b>Schnittgeschwindigkeit</b>: die Geschwindigkeit, mit der sich die Schneide am Umfang des Bohrers durch das Material bewegt. Für jeden Werkstoff gibt es Richtwerte aus dem Tabellenbuch – für <b>S235-Stahl mit HSS-Bohrer rund 15 m/min</b>. Ein dicker Bohrer legt pro Umdrehung am Umfang einen längeren Weg zurück als ein dünner. Damit die Schnittgeschwindigkeit stimmt, muss ein <b>großer Bohrer also langsamer drehen</b> als ein kleiner.</p><p>Aus Schnittgeschwindigkeit und Durchmesser berechnen Sie die Drehzahl:</p><div class='rechenbeispiel' style='background:#f1efe8;border:1px solid #d3d1c7;border-radius:6px;padding:10px 14px;'><h4 style='margin-top:0;'>Rechenbeispiel (Musterlösung): Drehzahl für die Ø-8-mm-Bohrung</h4><p><b>Situation:</b> Für die Grundplatte bohren Sie die Ø-8-mm-Bohrung in S235-Stahl mit einem HSS-Bohrer. Das Tabellenbuch nennt die Schnittgeschwindigkeit 15 m/min. Welche Drehzahl stellen Sie an der Maschine ein?</p><p><b>Gegeben:</b> Schnittgeschwindigkeit v<sub>c</sub> = 15 m/min; Bohrerdurchmesser d = 8 mm</p><p><b>Gesucht:</b> Drehzahl n in 1/min</p><p><b>Formel:</b> n = \\(\\frac{v_c}{π · d}\\)</p><p><b>Schritt 1 – Einheiten angleichen:</b> v<sub>c</sub> und d brauchen dieselbe Längeneinheit. Wir rechnen in Metern: d = 8 mm = 0,008 m (die Schnittgeschwindigkeit ist bereits in m/min).</p><p><b>Schritt 2 – Nenner ausrechnen:</b> π · d = 3,14 · 0,008 m = 0,0251 m. Das ist der Umfang des Bohrers – der Weg, den die Schneide pro Umdrehung zurücklegt.</p><p><b>Schritt 3 – Einsetzen und teilen:</b> n = 15 m/min ÷ 0,0251 m ≈ 597 1/min.</p><p><b>Schritt 4 – Einheiten prüfen:</b> m/min ÷ m = 1/min. Die Meter kürzen sich weg, übrig bleibt „pro Minute\" – genau die Einheit einer Drehzahl. ✓</p><p><b>Ergebnis:</b> n ≈ 597 1/min ≈ <b>600 1/min</b></p><p><b>Schritt 5 – Maschinenstufe wählen:</b> Die Standbohrmaschine hat feste Drehzahlstufen. Wählen Sie die nächstliegende, z. B. 560 oder 630 1/min – lieber etwas zu langsam als zu schnell.</p><p><b>Plausibilität:</b> Die Kennlinie unten zeigt für Ø 8 mm ebenfalls rund 600 1/min – der Wert passt.</p></div><p style='margin-top:12px;'>Die <b>Kennlinie</b> zeigt denselben Zusammenhang grafisch – so können Sie Drehzahlen auch ohne Rechnung überschlagen:</p><div style='text-align:center;margin:10px 0;'><img src='@@PLUGINFILE@@/drehzahl_kennlinie.svg' alt='Drehzahl-Kennlinie: Drehzahl über Bohrerdurchmesser für Stahl' style='max-width:100%;height:auto;'></div><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;'>⚠ <b>Merke:</b> Großer Durchmesser = niedrige Drehzahl. Bei Stahl zusätzlich <b>Kühlschmierstoff</b> verwenden – das schont Bohrer und Bohrung.</div></div></div>",
+          "material": true,
+          "material_bullets": [
+            "Schnittgeschwindigkeit S235/HSS: 15 m/min",
+            "Formel: n = vc / (Pi mal d)",
+            "8 mm in Stahl: rund 600 1/min",
+            "Großer Bohrer = niedrige Drehzahl",
+            "Bei Stahl Kühlschmierstoff verwenden"
+          ]
+        },
+        {
+          "type": "simulation",
+          "name": "Simulation: Drehzahl ausprobieren",
+          "intro": "<p>Verändern Sie Durchmesser und Werkstoff – die Drehzahl und die Bohrerdrehung reagieren sofort. Lösen Sie danach die kleine Aufgabe in der Simulation.</p>",
+          "spec": {
+            "title": "Drehzahl an der Standbohrmaschine",
+            "subtitle": "Wählen Sie Bohrerdurchmesser und Werkstoff – Drehzahl und Drehbewegung reagieren sofort.",
+            "inputs": [
+              {
+                "id": "d",
+                "label": "Bohrerdurchmesser d",
+                "unit": "mm",
+                "min": 2,
+                "max": 12,
+                "step": 1,
+                "default": 8
+              },
+              {
+                "id": "vc",
+                "label": "Werkstoff",
+                "type": "select",
+                "options": [
+                  {
+                    "value": 15,
+                    "label": "Stahl S235 · 15 m/min"
+                  },
+                  {
+                    "value": 40,
+                    "label": "Aluminium · 40 m/min"
+                  }
+                ]
+              }
+            ],
+            "kpis": [
+              {
+                "id": "n",
+                "label": "Drehzahl n",
+                "unit": "1/min",
+                "dec": 0,
+                "big": true
+              },
+              {
+                "id": "vcout",
+                "label": "Schnittgeschwindigkeit",
+                "unit": "m/min",
+                "dec": 0
+              },
+              {
+                "id": "weg",
+                "label": "Weg der Schneide je Umdrehung",
+                "unit": "mm",
+                "dec": 1
+              }
+            ],
+            "compute": "var vc=+s.vc;var n=vc*1000/(Math.PI*s.d);return {n:n, vcout:vc, weg:Math.PI*s.d};",
+            "visual_title": "Blick von oben auf das Bohrfutter (live)",
+            "visual": "<svg viewBox='0 0 600 300' font-family='Arial,Helvetica,sans-serif'><circle cx='300' cy='150' r='112' fill='#dfe3e8' stroke='#5f6368' stroke-width='3'/><g id='rotor'><polygon points='300,58 288,96 312,96' fill='#5f6368'/><polygon points='380,196 344,178 356,158' fill='#5f6368'/><polygon points='220,196 244,158 256,178' fill='#5f6368'/><circle cx='300' cy='74' r='7' fill='#d8312c'/></g><circle id='svgBohrer' cx='300' cy='150' r='24' fill='#9aa0a6' stroke='#1a1a1a' stroke-width='2'/><circle cx='300' cy='150' r='4' fill='#1a1a1a'/><text id='svgN' x='300' y='288' text-anchor='middle' font-size='15' font-weight='bold' fill='#185fa5'>n = 600 1/min</text><text id='svgD' x='108' y='40' font-size='13' fill='#1a1a1a'>d = 8 mm</text></svg>",
+            "render": "var e=function(id){return root.querySelector('#'+id);};e('svgN').textContent='n = '+o.n.toFixed(0)+' 1/min';e('svgD').textContent='d = '+s.d+' mm';e('svgBohrer').setAttribute('r',(s.d*3).toFixed(0));",
+            "animate": "var g=root.querySelector('#rotor');if(g){var ang=visDeg(o.n, t)%360;g.setAttribute('transform','rotate('+ang.toFixed(1)+' 300 150)');}",
+            "note": "⚠ <b>Beobachten Sie:</b> Größerer Durchmesser bedeutet niedrigere Drehzahl – bei gleichem Werkstoff. Aluminium erlaubt eine höhere Schnittgeschwindigkeit als Stahl. Tipp: Mit dem Tempo-Regler (bis 0,1× Zeitlupe) lässt sich die Drehung verlangsamen; die angezeigte Drehzahl n bleibt dabei exakt.",
+            "foot": "Interaktive Simulation · Metalltechnik · Drehzahl beim Bohren",
+            "challenge": {
+              "prompt": "Stellen Sie Durchmesser und Werkstoff so ein, dass die Drehzahl zwischen 550 und 650 1/min liegt – passend zur 8-mm-Bohrung Ihres Auftrags.",
+              "check": "return o.n>=550 && o.n<=650;",
+              "success": "Genau richtig: Mit d = 8 mm und Stahl liegt die Drehzahl bei rund 600 1/min – so stellen Sie die Maschine am Bohrtag ein.",
+              "hint": "Noch nicht im Zielbereich. Tipp: Ein größerer Durchmesser senkt die Drehzahl – probieren Sie d = 8 mm mit Stahl S235."
+            }
+          }
+        },
+        {
+          "type": "page",
+          "name": "Infoblatt: Bohren Schritt für Schritt",
+          "completion": 1,
+          "intro": "<p>Der komplette Ablauf für den Bohrtag.</p>",
+          "images": [
+            "assets/bohrablauf.svg"
+          ],
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Infoblatt · Bohren Schritt für Schritt</div><div style='padding:14px 16px;'><div style='text-align:center;margin:0 0 10px;'><img src='@@PLUGINFILE@@/bohrablauf.svg' alt='Bohrablauf in sechs Schritten' style='max-width:100%;height:auto;'></div><p style='margin-top:0;'>Die Reihenfolge hat einen Sinn: Erst wird alles vorbereitet und gesichert, dann eingeschaltet – so geraten Sie nicht in Hektik. Beim Bohren geben Sie <b>gleichmäßigen, ruhigen Vorschub</b>: Zu viel Druck lässt den Bohrer verlaufen oder brechen, zu wenig lässt ihn reiben und heiß werden. Kurz bevor der Bohrer unten durchbricht, nehmen Sie den Druck zurück – am Durchbruch „fängt\" der Bohrer besonders leicht. Erst wenn die Maschine <b>ganz steht</b>, entnehmen Sie das Werkstück und entfernen die Späne mit dem Handfeger. Zum Schluss <b>entgraten</b> Sie den scharfen Bohrungsrand, messen die Durchmesser und tragen die Ergebnisse in Ihr Prüfprotokoll ein.</p><ol><li>PSA anlegen, Werkstück spannen, Bohrstelle ankörnen.</li><li>Bohrer einspannen, <b>Futterschlüssel abziehen</b>.</li><li>Drehzahl <b>berechnen</b> und einstellen.</li><li>Bohren mit gleichmäßigem Vorschub, bei Stahl kühlen.</li><li>Ausschalten, <b>Stillstand abwarten</b>.</li><li>Entgraten, messen, Protokoll ausfüllen.</li></ol><div style='background:#fbeec9;border-left:4px solid #ba7517;padding:8px 12px;'>⚠ Erst wenn die Maschine <b>steht</b>: Werkstück entnehmen und Späne entfernen.</div></div></div>",
+          "material": true,
+          "material_bullets": [
+            "1. PSA, spannen, ankörnen",
+            "2. Bohrer einspannen, Schlüssel abziehen",
+            "3. Drehzahl berechnen und einstellen",
+            "4. Gleichmäßig bohren, kühlen",
+            "5. Ausschalten, Stillstand abwarten",
+            "6. Entgraten, messen, protokollieren"
+          ]
         },
         {
           "type": "quiz",
-          "name": "Sicherheits-Kurzcheck vor dem Start",
+          "name": "Selbsttest: Drehzahl und Ablauf",
           "completion": 1,
-          "intro": "<p>Kurzer Check, bevor Sie an die Maschine gehen. Bitte alle Punkte sicher beantworten.</p>",
+          "intro": "<p>Prüfen Sie Rechnung, Kennlinie und Ablauf. Beliebig viele Versuche – nutzen Sie gern die Simulation als Hilfe.</p>",
           "grade": 100,
           "overallfeedback": [
             {
               "min": 0,
-              "text": "<p>Bitte die Sicherheitsregeln noch einmal ansehen, bevor Sie bohren.</p>"
+              "text": "<p>Gehen Sie das Rechenbeispiel noch einmal Schritt für Schritt durch und probieren Sie die Simulation aus.</p>"
+            },
+            {
+              "min": 60,
+              "text": "<p>Gut! Prüfen Sie die unsicheren Punkte mit der Kennlinie.</p>"
+            },
+            {
+              "min": 85,
+              "text": "<p>Sehr gut – Sie sind bereit für den Bohrauftrag!</p>"
+            }
+          ],
+          "questions": [
+            {
+              "type": "multichoice",
+              "name": "Formel",
+              "questiontext": "<p>Mit welcher Formel berechnen Sie die Drehzahl aus Schnittgeschwindigkeit und Bohrerdurchmesser?</p>",
+              "generalfeedback": "<p>n = v<sub>c</sub> / (π · d) – Schnittgeschwindigkeit geteilt durch Umfangsweg pro Umdrehung.</p>",
+              "answers": [
+                {
+                  "text": "n = v<sub>c</sub> / (π · d)",
+                  "correct": true,
+                  "feedback": "<p>Richtig.</p>"
+                },
+                {
+                  "text": "n = π · d / v<sub>c</sub>",
+                  "correct": false,
+                  "feedback": "<p>Das wäre der Kehrwert – die Drehzahl würde mit dem Durchmesser steigen.</p>"
+                },
+                {
+                  "text": "n = v<sub>c</sub> · π · d",
+                  "correct": false,
+                  "feedback": "<p>Multiplizieren ist falsch – die Schnittgeschwindigkeit wird durch den Umfangsweg geteilt.</p>"
+                }
+              ]
+            },
+            {
+              "type": "multichoice",
+              "name": "8 mm Stahl",
+              "questiontext": "<p>Welche Drehzahl passt für die Ø-8-mm-Bohrung in S235 (Schnittgeschwindigkeit 15 m/min)?</p>",
+              "generalfeedback": "<p>n = 15 m/min geteilt durch (π · 0,008 m) ≈ 600 1/min – siehe Rechenbeispiel.</p>",
+              "answers": [
+                {
+                  "text": "ca. 600 1/min",
+                  "correct": true,
+                  "feedback": "<p>Richtig – wie im Rechenbeispiel.</p>"
+                },
+                {
+                  "text": "ca. 1500 1/min",
+                  "correct": false,
+                  "feedback": "<p>Das passt zu einem kleinen 3-mm-Bohrer, nicht zu 8 mm.</p>"
+                },
+                {
+                  "text": "ca. 100 1/min",
+                  "correct": false,
+                  "feedback": "<p>Viel zu langsam – der Bohrer würde reiben statt schneiden.</p>"
+                }
+              ]
+            },
+            {
+              "type": "multichoice",
+              "name": "Kennlinie ablesen",
+              "questiontext": "<p>Lesen Sie aus der Kennlinie ab: Welche Drehzahl passt etwa für die Ø-5-mm-Bohrung in Stahl?</p>",
+              "generalfeedback": "<p>Bei d = 5 mm zeigt die Kennlinie rund 950 1/min (rechnerisch: 15 m/min / (π · 0,005 m) ≈ 955 1/min).</p>",
+              "answers": [
+                {
+                  "text": "ca. 950 1/min",
+                  "correct": true,
+                  "feedback": "<p>Richtig abgelesen.</p>"
+                },
+                {
+                  "text": "ca. 400 1/min",
+                  "correct": false,
+                  "feedback": "<p>Das wäre der Wert für einen deutlich größeren Bohrer (ca. 12 mm).</p>"
+                },
+                {
+                  "text": "ca. 2400 1/min",
+                  "correct": false,
+                  "feedback": "<p>Das wäre der Wert für einen sehr kleinen 2-mm-Bohrer.</p>"
+                }
+              ]
+            },
+            {
+              "type": "truefalse",
+              "name": "Großer Bohrer",
+              "questiontext": "<p>Je größer der Bohrerdurchmesser, desto niedriger muss die Drehzahl sein – bei gleichem Werkstoff.</p>",
+              "correct": true,
+              "generalfeedback": "<p>Richtig: Der Umfangsweg pro Umdrehung wächst mit dem Durchmesser – also muss die Drehzahl sinken, damit die Schnittgeschwindigkeit stimmt.</p>",
+              "feedbackcorrect": "<p>Richtig.</p>",
+              "feedbackwrong": "<p>Doch – sehen Sie sich die fallende Kennlinie an: großer Durchmesser, niedrige Drehzahl.</p>"
+            },
+            {
+              "type": "truefalse",
+              "name": "Futterschlüssel",
+              "questiontext": "<p>Der Futterschlüssel muss vor dem Einschalten der Maschine abgezogen sein.</p>",
+              "correct": true,
+              "generalfeedback": "<p>Ein steckender Futterschlüssel wird beim Anlauf weggeschleudert – immer sofort abziehen.</p>",
+              "feedbackcorrect": "<p>Richtig.</p>",
+              "feedbackwrong": "<p>Doch – ein steckender Schlüssel wird zum Geschoss.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5 · Anwendung: Grundplatte bohren",
+      "summary": "<p>Jetzt fertigen Sie das Musterstück – Ihr Handlungsprodukt.</p>",
+      "image": "assets/cover_anwendung.png",
+      "activities": [
+        {
+          "type": "quiz",
+          "name": "Sicherheits-Kurzcheck vor dem Start",
+          "completion": 1,
+          "intro": "<p>Kurzer Check, bevor Sie an die Maschine gehen – bitte alle Punkte sicher beantworten.</p>",
+          "grade": 100,
+          "overallfeedback": [
+            {
+              "min": 0,
+              "text": "<p>Bitte die Sicherheitsregeln in Kachel 3 noch einmal ansehen, bevor Sie bohren.</p>"
             },
             {
               "min": 100,
-              "text": "<p>Top – Sie dürfen mit Aufsicht an die Maschine.</p>"
+              "text": "<p>Alles sicher – Sie dürfen mit Aufsicht an die Maschine.</p>"
             }
           ],
           "questions": [
@@ -539,221 +575,307 @@
               "name": "Brille",
               "questiontext": "<p>Ich trage eine Schutzbrille.</p>",
               "correct": true,
-              "generalfeedback": "<p>Pflicht.</p>",
+              "generalfeedback": "<p>Pflicht – ohne Ausnahme.</p>",
               "feedbackcorrect": "<p>Gut.</p>",
-              "feedbackwrong": "<p>Erst Schutzbrille aufsetzen.</p>"
+              "feedbackwrong": "<p>Erst die Schutzbrille aufsetzen, dann an die Maschine.</p>"
             },
             {
               "type": "truefalse",
               "name": "Schlüssel",
               "questiontext": "<p>Der Futterschlüssel ist abgezogen.</p>",
               "correct": true,
-              "generalfeedback": "<p>Sonst wird er weggeschleudert.</p>",
+              "generalfeedback": "<p>Sonst wird er beim Anlauf weggeschleudert.</p>",
               "feedbackcorrect": "<p>Gut.</p>",
-              "feedbackwrong": "<p>Schlüssel abziehen!</p>"
+              "feedbackwrong": "<p>Schlüssel abziehen – sofort nach dem Spannen.</p>"
             },
             {
               "type": "truefalse",
               "name": "Gespannt",
-              "questiontext": "<p>Mein Werkstück ist fest im Schraubstock gespannt.</p>",
+              "questiontext": "<p>Meine Grundplatte ist fest im Maschinenschraubstock gespannt und die Bohrstellen sind angekörnt.</p>",
               "correct": true,
-              "generalfeedback": "<p>Nie mit der Hand halten.</p>",
+              "generalfeedback": "<p>Nur ein gespanntes, gekörntes Werkstück lässt sich sicher und maßhaltig bohren.</p>",
               "feedbackcorrect": "<p>Gut.</p>",
-              "feedbackwrong": "<p>Erst spannen.</p>"
+              "feedbackwrong": "<p>Erst spannen und ankörnen – dann bohren.</p>"
             }
           ]
         },
         {
           "type": "assign",
-          "name": "Praxisauftrag: Vier Löcher in die Lasche",
+          "name": "Praxisauftrag: Grundplatte nach Zeichnung bohren",
           "completion": 1,
           "grade": 100,
-          "intro": "<p><b>Ausgangssituation:</b> Sie sind im Praktikum bei der Schlosserei Brinkmann. Auf der Werkbank liegt die Flachstahl-Lasche.</p><p><b>Ihr Auftrag:</b> Bohren Sie <b>vier Löcher mit 8 mm</b> sauber und sicher in die Lasche.</p><p><b>Vorgehen:</b></p><ol><li>Schutzbrille aufsetzen, Arbeitsplatz vorbereiten.</li><li>Werkstück <b>einspannen</b> und Bohrstellen <b>ankörnen</b>.</li><li>8-mm-Bohrer einsetzen, <b>Futterschlüssel abziehen</b>, Drehzahl (ca. 600 min⁻¹) einstellen.</li><li><b>Bohren</b> – gleichmäßiger Vorschub, bei Stahl kühlen.</li><li>Maschine ausschalten, <b>entgraten</b>, Ergebnis <b>prüfen</b> und Protokoll ausfüllen.</li></ol><p><b>Rahmen:</b> Werkstatt, ca. 30 Minuten, mit Aufsicht der Lehrkraft.</p><p><b>Abgabe:</b> die gebohrte Lasche + ausgefülltes Arbeits- und Prüfprotokoll (Foto oder PDF).</p><h4>Bewertungskriterien (transparent vorab)</h4><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Kriterium</th><th align='left'>sehr gut</th><th align='left'>grundlegend</th><th align='left'>nicht ausreichend</th></tr><tr><td>Sicherheit</td><td>alle Regeln eingehalten</td><td>kleinere Hinweise nötig</td><td>Regeln missachtet</td></tr><tr><td>Einrichten</td><td>sauber gespannt und gekörnt</td><td>leicht ungenau</td><td>nicht gespannt</td></tr><tr><td>Ausführung</td><td>4 Löcher maßhaltig, sauber</td><td>Löcher ok, leichte Mängel</td><td>fehlerhaft/unvollständig</td></tr><tr><td>Ergebnis</td><td>entgratet, Protokoll vollständig</td><td>Protokoll lückenhaft</td><td>nicht entgratet / kein Protokoll</td></tr></table>"
+          "intro": "<p><b>Ausgangssituation:</b> Sie fertigen das Musterstück für die Vorrichtung – die Grundplatte nach Zeichnung (zwei Bohrungen Ø 5 mm, eine Ø 8 mm, eine Ø 10 mm in S235).</p><p><b>Maße nach Zeichnung</b> (Lage der Bohrungen, gemessen ab der linken unteren Ecke der Platte):</p><table border='1' cellpadding='5' style='border-collapse:collapse;'><tr style='background:#e1f5ee;'><th align='left'>Bohrung</th><th align='left'>Ø</th><th align='left'>x (von links)</th><th align='left'>y (von unten)</th></tr><tr><td>A</td><td>5 mm</td><td>20 mm</td><td>15 mm</td></tr><tr><td>B</td><td>5 mm</td><td>20 mm</td><td>45 mm</td></tr><tr><td>C</td><td>8 mm</td><td>55 mm</td><td>30 mm</td></tr><tr><td>D</td><td>10 mm</td><td>80 mm</td><td>30 mm</td></tr></table><p><b>Ihr Auftrag:</b></p><ol><li>Berechnen Sie für <b>jeden Durchmesser</b> die Drehzahl (Schnittgeschwindigkeit 15 m/min) und tragen Sie Rechenweg und Ergebnis in das <b>Berechnungs- und Prüfprotokoll</b> ein (nächste Aktivität).</li><li>Richten Sie den Arbeitsplatz ein: PSA anlegen, Werkstück spannen und die vier Bohrstellen an den bemaßten Positionen (Tabelle oben) ankörnen.</li><li>Bohren Sie die vier Bohrungen mit der jeweils berechneten, an der Maschine eingestellten Drehzahl; bei Stahl kühlen.</li><li>Entgraten Sie die Bohrungen, messen Sie die Durchmesser und vervollständigen Sie das Protokoll.</li></ol><p><b>Rahmen:</b> Ausbildungswerkstatt, ca. 45 Minuten, mit Aufsicht.</p><p><b>Abgabe:</b> Foto der fertigen Grundplatte + das gespeicherte Berechnungs- und Prüfprotokoll (Textdatei oder PDF).</p><h4>Bewertungskriterien (transparent vorab)</h4><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Kriterium</th><th align='left'>sehr gut</th><th align='left'>grundlegend</th><th align='left'>nicht ausreichend</th></tr><tr><td>Sicherheit</td><td>alle Regeln selbstständig eingehalten</td><td>kleinere Hinweise nötig</td><td>Regeln missachtet</td></tr><tr><td>Drehzahl-Berechnung</td><td>alle drei Drehzahlen korrekt mit Rechenweg und Einheiten</td><td>Rechenweg mit kleinen Fehlern</td><td>keine nachvollziehbare Rechnung</td></tr><tr><td>Einrichten</td><td>sauber gespannt, alle Bohrstellen gekörnt</td><td>leicht ungenau</td><td>nicht gespannt oder nicht gekörnt</td></tr><tr><td>Ausführung und Ergebnis</td><td>vier Bohrungen maßhaltig, entgratet, Protokoll vollständig</td><td>Bohrungen in Ordnung, kleine Mängel</td><td>fehlerhaft oder unvollständig</td></tr></table>"
+        },
+        {
+          "type": "formular",
+          "name": "Berechnungs- und Prüfprotokoll (ausfüllbar)",
+          "spec": {
+            "title": "Berechnungs- und Prüfprotokoll – Grundplatte",
+            "storage_key": "bohren_grundplatte_protokoll",
+            "blocks": [
+              {
+                "heading": "1 · Drehzahlen berechnen (Rechenweg und Ergebnis mit Einheit)"
+              },
+              {
+                "html": "<p>Schnittgeschwindigkeit für S235 mit HSS-Bohrer: <b>15 m/min</b>. Formel: n = v<sub>c</sub> / (π · d). Rechnen Sie wie im Rechenbeispiel: Gegeben – Gesucht – Formel – Einsetzen – Ergebnis.</p>"
+              },
+              {
+                "field": {
+                  "id": "n5",
+                  "label": "Drehzahl für Ø 5 mm (Rechenweg + Ergebnis)",
+                  "unit": "1/min",
+                  "type": "text"
+                }
+              },
+              {
+                "field": {
+                  "id": "n8",
+                  "label": "Drehzahl für Ø 8 mm (Rechenweg + Ergebnis)",
+                  "unit": "1/min",
+                  "type": "text"
+                }
+              },
+              {
+                "field": {
+                  "id": "n10",
+                  "label": "Drehzahl für Ø 10 mm (Rechenweg + Ergebnis)",
+                  "unit": "1/min",
+                  "type": "text"
+                }
+              },
+              {
+                "field": {
+                  "id": "stufen",
+                  "label": "An der Maschine tatsächlich gewählte Drehzahlstufen",
+                  "type": "text"
+                }
+              },
+              {
+                "heading": "2 · Prüfung nach dem Bohren"
+              },
+              {
+                "field": {
+                  "id": "masse",
+                  "label": "Gemessene Durchmesser der vier Bohrungen (mit Messmittel angeben)",
+                  "type": "textarea",
+                  "rows": 2
+                }
+              },
+              {
+                "field": {
+                  "id": "entgratet",
+                  "label": "Alle Bohrungen entgratet? Wie geprüft?",
+                  "type": "text"
+                }
+              },
+              {
+                "heading": "3 · Reflexion"
+              },
+              {
+                "field": {
+                  "id": "reflexion",
+                  "label": "Was lief gut? Was machen Sie beim nächsten Bauteil anders?",
+                  "type": "textarea",
+                  "rows": 3
+                }
+              }
+            ],
+            "note": "Speichern Sie Ihre Antworten über „Als Textdatei speichern\" und laden Sie die Datei beim Praxisauftrag hoch."
+          }
         },
         {
           "type": "forum",
-          "name": "Werkstatt-Forum: Fragen zum Bohren",
-          "intro": "<p>Sie kommen nicht weiter? Stellen Sie hier Ihre Frage – und helfen Sie anderen. Fotos vom Zwischenstand sind willkommen.</p>",
+          "name": "Werkstatt-Forum: Fragen zum Bohrauftrag",
+          "intro": "<p>Sie kommen nicht weiter – bei der Rechnung, beim Einrichten oder an der Maschine? Stellen Sie hier Ihre Frage und helfen Sie anderen. Fotos vom Zwischenstand sind willkommen.</p>",
           "forumtype": "general"
         }
       ]
     },
     {
-      "name": "5 · Kurs-Recap",
+      "name": "6 · Kurs-Recap",
       "summary": "<p>Wiederholen Sie das Wichtigste und schätzen Sie sich selbst ein.</p>",
+      "image": "assets/cover_recap.png",
       "activities": [
         {
           "type": "page",
           "name": "Das Wichtigste in Kürze",
           "completion": 1,
           "intro": "<p>Ihr Merkzettel zum Modul.</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Das Wichtigste in Kürze</div><div style='padding:14px 16px;'><ul><li><b>Sicherheit:</b> Schutzbrille auf, keine Handschuhe, Haare sichern, Späne nie mit der Hand, Not-Aus kennen.</li><li><b>Einrichten:</b> Werkstück fest spannen, Bohrstelle ankörnen.</li><li><b>Bohrer/Drehzahl:</b> kleiner Bohrer = schnell, großer = langsam; 8 mm Stahl ≈ 600 min⁻¹; Futterschlüssel abziehen.</li><li><b>Bohren:</b> gleichmäßiger Vorschub, bei Stahl kühlen.</li><li><b>Abschluss:</b> ausschalten, Stillstand abwarten, entgraten, prüfen.</li></ul></div></div>"
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#1d6e56;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Das Wichtigste in Kürze</div><div style='padding:14px 16px;'><ul><li><b>Sicherheit:</b> Schutzbrille auf, keine Handschuhe, Haare sichern, Späne nie mit der Hand, Futterschlüssel abziehen, Not-Aus kennen.</li><li><b>Einrichten:</b> anreißen, ankörnen, im Maschinenschraubstock spannen.</li><li><b>Drehzahl:</b> n = v<sub>c</sub> / (π · d) – großer Bohrer, niedrige Drehzahl. Ø 8 mm in S235: rund 600 1/min.</li><li><b>Bohren:</b> gleichmäßiger Vorschub, bei Stahl kühlen, vor dem Durchbruch Druck zurücknehmen.</li><li><b>Abschluss:</b> Stillstand abwarten, entgraten, messen, Protokoll ausfüllen.</li></ul></div></div>"
         },
         {
-          "type": "label",
+          "type": "resource",
           "name": "Videozusammenfassung",
-          "intro": "<p>🎬 <b>Hinweis:</b> Hier finden Sie eine kurze <b>Videozusammenfassung</b> (ca. 2 Minuten) der wichtigsten Punkte. Nutzen Sie sie zur Wiederholung.</p><div style='border:2px dashed #888;padding:16px;background:#f5f5f5;text-align:center;color:#555;'><b>🎥 Video-Platzhalter</b><br><small>Erstellung über NotebookLM aus den Modul-Materialien. Danach hier als Dateiablage/Link einfügen.</small></div>"
+          "intro": "<p>🎬 Kurze Videozusammenfassung der wichtigsten Punkte (NotebookLM).</p>",
+          "file": "assets/recap_video.mp4",
+          "completion": 1
         },
         {
           "type": "quiz",
           "name": "Selbsteinschätzung: Habe ich die Ziele erreicht?",
           "completion": 1,
-          "intro": "<p>Dieser kurze Test orientiert sich an den Lernzielen. Mehrere Versuche möglich.</p>",
+          "intro": "<p>Dieser kurze Test orientiert sich an den Lernzielen des Moduls. Mehrere Versuche möglich.</p>",
           "grade": 100,
           "overallfeedback": [
             {
               "min": 0,
-              "text": "<p>Wiederholen Sie die Infoblätter und versuchen Sie es erneut.</p>"
+              "text": "<p>Wiederholen Sie die Infoblätter – besonders Sicherheit und Drehzahl – und versuchen Sie es erneut.</p>"
             },
             {
               "min": 60,
-              "text": "<p>Gut! Schauen Sie die unsicheren Punkte an.</p>"
+              "text": "<p>Gut! Schauen Sie sich die unsicheren Punkte gezielt an.</p>"
             },
             {
               "min": 85,
-              "text": "<p>Sehr gut – Sie beherrschen die sichere Bedienung der Standbohrmaschine!</p>"
+              "text": "<p>Sehr gut – Sie sind bereit für den Bohrauftrag am Musterstück!</p>"
             }
           ],
           "questions": [
             {
               "type": "multichoice",
               "name": "Schutz",
-              "questiontext": "<p>Welche Schutzmaßnahme ist beim Bohren Pflicht?</p>",
-              "generalfeedback": "<p>Schutzbrille immer tragen.</p>",
+              "questiontext": "<p>Welche Aussage zur Schutzausrüstung beim Bohren ist richtig?</p>",
+              "generalfeedback": "<p>Schutzbrille ist Pflicht; Handschuhe sind an rotierenden Maschinen verboten.</p>",
               "answers": [
                 {
-                  "text": "Schutzbrille tragen",
+                  "text": "Schutzbrille ist Pflicht, Handschuhe sind verboten",
                   "correct": true,
                   "feedback": "<p>Richtig.</p>"
                 },
                 {
-                  "text": "Arbeitshandschuhe tragen",
+                  "text": "Handschuhe sind Pflicht, Schutzbrille ist freiwillig",
                   "correct": false,
-                  "feedback": "<p>Verboten.</p>"
+                  "feedback": "<p>Genau umgekehrt.</p>"
                 },
                 {
-                  "text": "Gehörschutz reicht",
+                  "text": "Beides ist freiwillig",
                   "correct": false,
-                  "feedback": "<p>Ersetzt nicht den Augenschutz.</p>"
+                  "feedback": "<p>Nein – die Schutzbrille ist immer Pflicht.</p>"
+                }
+              ]
+            },
+            {
+              "type": "multichoice",
+              "name": "Drehzahl 10 mm",
+              "questiontext": "<p>Für die Ø-10-mm-Bohrung in S235 (15 m/min) berechnen Sie die Drehzahl. Welcher Wert ist richtig?</p>",
+              "generalfeedback": "<p>n = 15 m/min / (π · 0,010 m) ≈ 477 1/min – also rund 480 1/min.</p>",
+              "answers": [
+                {
+                  "text": "ca. 480 1/min",
+                  "correct": true,
+                  "feedback": "<p>Richtig gerechnet.</p>"
+                },
+                {
+                  "text": "ca. 950 1/min",
+                  "correct": false,
+                  "feedback": "<p>Das ist der Wert für Ø 5 mm – der doppelte Durchmesser braucht die halbe Drehzahl.</p>"
+                },
+                {
+                  "text": "ca. 1500 1/min",
+                  "correct": false,
+                  "feedback": "<p>Viel zu schnell für 10 mm in Stahl – der Bohrer würde überhitzen.</p>"
                 }
               ]
             },
             {
               "type": "truefalse",
-              "name": "Spannen2",
-              "questiontext": "<p>Das Werkstück muss vor dem Bohren sicher eingespannt werden.</p>",
+              "name": "Spannen",
+              "questiontext": "<p>Das Werkstück wird vor dem Bohren im Maschinenschraubstock gespannt und die Bohrstelle angekörnt.</p>",
               "correct": true,
-              "generalfeedback": "<p>Immer einspannen.</p>",
+              "generalfeedback": "<p>Beides zusammen macht die Bohrung sicher und maßhaltig.</p>",
               "feedbackcorrect": "<p>Richtig.</p>",
-              "feedbackwrong": "<p>Doch.</p>"
-            },
-            {
-              "type": "multichoice",
-              "name": "Drehzahl2",
-              "questiontext": "<p>Großer Bohrer in Stahl – welche Drehzahl?</p>",
-              "generalfeedback": "<p>Großer Bohrer → niedrige Drehzahl.</p>",
-              "answers": [
-                {
-                  "text": "Niedrige Drehzahl",
-                  "correct": true,
-                  "feedback": "<p>Richtig.</p>"
-                },
-                {
-                  "text": "Hohe Drehzahl",
-                  "correct": false,
-                  "feedback": "<p>Überhitzt den Bohrer.</p>"
-                },
-                {
-                  "text": "Höchste Stufe",
-                  "correct": false,
-                  "feedback": "<p>Nein.</p>"
-                }
-              ]
+              "feedbackwrong": "<p>Doch – spannen und ankörnen sind Pflicht vor jedem Bohren.</p>"
             },
             {
               "type": "multichoice",
               "name": "Abschluss",
-              "questiontext": "<p>Sie sind fertig. Was tun Sie zuerst?</p>",
-              "generalfeedback": "<p>Erst ausschalten und Stillstand abwarten.</p>",
+              "questiontext": "<p>Sie haben die letzte Bohrung gefertigt. Was tun Sie zuerst?</p>",
+              "generalfeedback": "<p>Erst ausschalten und den Stillstand abwarten – dann Werkstück entnehmen, Späne entfernen, entgraten und messen.</p>",
               "answers": [
                 {
                   "text": "Maschine ausschalten und Stillstand abwarten",
                   "correct": true,
-                  "feedback": "<p>Richtig.</p>"
+                  "feedback": "<p>Richtig – nie in die laufende Maschine greifen.</p>"
                 },
                 {
-                  "text": "Späne wegwischen",
+                  "text": "Sofort das Werkstück ausspannen",
                   "correct": false,
-                  "feedback": "<p>Gefährlich.</p>"
+                  "feedback": "<p>Erst muss die Maschine vollständig stehen.</p>"
                 },
                 {
-                  "text": "Werkstück sofort herausnehmen",
+                  "text": "Die Späne mit der Hand wegwischen",
                   "correct": false,
-                  "feedback": "<p>Erst muss die Maschine stehen.</p>"
+                  "feedback": "<p>Niemals – Späne sind scharf und heiß; Handfeger benutzen.</p>"
                 }
               ]
             }
           ]
+        },
+        {
+          "type": "label",
+          "name": "Hinweis zur Entstehung",
+          "intro": "<p><em>Dieser Kurs ist mit Hilfe von künstlicher Intelligenz erstellt, in Kooperation mit dem Labor Didaktik der Technik der Hochschule Osnabrück.</em></p>"
         }
       ]
     },
     {
       "name": "Glossar",
       "summary": "<p>Fachbegriffe zum Nachschlagen.</p>",
+      "image": "assets/cover_glossar.png",
       "activities": [
         {
           "type": "glossary",
           "name": "Fachbegriffe Bohren",
           "completion": 1,
-          "intro": "<p>Die wichtigsten Begriffe rund um die Standbohrmaschine. Ergänzen Sie gern eigene Einträge.</p>",
+          "intro": "<p>Die wichtigsten Begriffe rund um das Bohren an der Standbohrmaschine. Ergänzen Sie gern eigene Einträge.</p>",
           "entries": [
             {
               "concept": "Standbohrmaschine",
-              "definition": "<p>Stationäre Bohrmaschine (Säulen- oder Tischbohrmaschine), bei der das Werkstück fest steht und der Bohrer von oben geführt wird.</p>"
+              "definition": "<p>Stationäre Bohrmaschine (Säulen- oder Tischbohrmaschine), bei der das Werkstück fest steht und die Spindel den Bohrer senkrecht führt.</p>"
             },
             {
               "concept": "Bohrfutter",
-              "definition": "<p>Spannvorrichtung an der Spindel, die den Bohrer festhält. Mit dem Futterschlüssel spannen – Schlüssel danach immer abziehen.</p>"
+              "definition": "<p>Spannvorrichtung an der Spindel, die den Bohrerschaft zentrisch festhält; wird mit dem Futterschlüssel gespannt.</p>"
+            },
+            {
+              "concept": "Futterschlüssel",
+              "definition": "<p>Schlüssel zum Spannen des Bohrfutters. Nach dem Spannen sofort abziehen – ein steckender Schlüssel wird beim Anlauf weggeschleudert.</p>"
             },
             {
               "concept": "Spindel",
-              "definition": "<p>Drehbares Bauteil, das die Drehbewegung des Motors auf den Bohrer überträgt.</p>"
-            },
-            {
-              "concept": "Drehzahl",
-              "definition": "<p>Umdrehungen pro Minute (min⁻¹). Faustregel: kleiner Bohrer = hohe Drehzahl, großer Bohrer = niedrige Drehzahl.</p>"
+              "definition": "<p>Drehbares Bauteil im Bohrkopf, das die Drehbewegung des Antriebs auf Bohrfutter und Bohrer überträgt.</p>"
             },
             {
               "concept": "Vorschub",
-              "definition": "<p>Die Bewegung des Bohrers ins Werkstück, mit dem Vorschubhebel gleichmäßig ausgeführt.</p>"
+              "definition": "<p>Die Bewegung des Bohrers in das Werkstück hinein; an der Standbohrmaschine über den Vorschubhebel gleichmäßig von Hand ausgeführt.</p>"
+            },
+            {
+              "concept": "Drehzahl",
+              "definition": "<p>Anzahl der Umdrehungen pro Minute (Einheit 1/min). Wird aus Schnittgeschwindigkeit und Bohrerdurchmesser berechnet: n = vc / (π · d).</p>"
+            },
+            {
+              "concept": "Schnittgeschwindigkeit",
+              "definition": "<p>Geschwindigkeit der Schneide am Umfang des Bohrers (Einheit m/min). Richtwert für S235 mit HSS-Bohrer: rund 15 m/min.</p>"
             },
             {
               "concept": "Ankörnen",
-              "definition": "<p>Eine kleine Vertiefung mit dem Körner an der Bohrstelle, damit der Bohrer nicht verläuft.</p>"
+              "definition": "<p>Einschlagen einer kleinen Vertiefung mit dem Körner genau auf der Bohrungsmitte, damit die Bohrerspitze geführt wird und nicht verläuft.</p>"
             },
             {
               "concept": "Maschinenschraubstock",
-              "definition": "<p>Spannwerkzeug auf dem Bohrtisch, das das Werkstück sicher festhält.</p>"
+              "definition": "<p>Spannwerkzeug auf dem Bohrtisch, das das Werkstück sicher festhält – Grundregel: nie mit der Hand halten.</p>"
             },
             {
               "concept": "Spiralbohrer",
-              "definition": "<p>Üblicher Bohrer aus HSS mit Spiralnuten; besteht aus Schaft, Spiralnut, Hauptschneide und Spitze.</p>"
+              "definition": "<p>Übliches Bohrwerkzeug aus HSS mit Schaft, Spiralnuten und Hauptschneiden; Spitzenwinkel für Stahl 118°.</p>"
             },
             {
               "concept": "Entgraten",
-              "definition": "<p>Entfernen des scharfen Grats am Lochrand nach dem Bohren, z. B. mit einem Senker.</p>"
+              "definition": "<p>Entfernen des scharfen Grats am Bohrungsrand nach dem Bohren, z. B. mit einem Kegelsenker.</p>"
             },
             {
               "concept": "Kühlschmierstoff",
-              "definition": "<p>Flüssigkeit, die beim Bohren von Stahl kühlt und schmiert; schont den Bohrer.</p>"
-            },
-            {
-              "concept": "Span",
-              "definition": "<p>Das beim Bohren abgetrennte Material. Späne sind scharf und heiß – nie mit der Hand entfernen.</p>"
-            },
-            {
-              "concept": "Not-Aus",
-              "definition": "<p>Schalter, der die Maschine im Notfall sofort stoppt. Lage vor Arbeitsbeginn merken.</p>"
+              "definition": "<p>Flüssigkeit, die beim Bohren von Stahl kühlt und schmiert – der Bohrer bleibt länger scharf, die Bohrung wird sauberer.</p>"
             }
           ]
         }
@@ -761,19 +883,19 @@
     },
     {
       "name": "Material für Lehrkräfte",
-      "summary": "<p>Nur für Lehrkräfte – Hinweise, Lösungen und Druckmaterial.</p>",
+      "summary": "<p>Nur für Lehrkräfte – Hinweise, Erwartungshorizont und Druckmaterial.</p>",
       "visible": 0,
       "activities": [
         {
           "type": "label",
           "name": "Hinweis",
-          "intro": "<p>🔒 <b>Dieser Abschnitt ist für Lehrkräfte.</b> Vor der Nutzung mit Lernenden bitte ausgeblendet lassen (Abschnitt ist standardmäßig verborgen).</p>"
+          "intro": "<p>🔒 <b>Dieser Abschnitt ist für Lehrkräfte.</b> Er ist für Lernende verborgen und enthält Leitfaden, Erwartungshorizont und die Druckmaterialien.</p>"
         },
         {
           "type": "page",
           "name": "Didaktischer Leitfaden zum Modul",
-          "intro": "<p>Überblick, Lösungen und Einsatzhinweise.</p>",
-          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#5f6368;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Didaktischer Leitfaden</div><div style='padding:14px 16px;'><h3 style='margin-top:0;'>Moduleinführung (Kurzform)</h3><ul><li><b>Lernfeld/Kontext:</b> Metalltechnik, Fertigungsverfahren Bohren; Zielgruppe Ausbildungsvorbereitung/BFS, heterogen.</li><li><b>Handlungssituation:</b> erstes selbstständiges Bohren an der Standbohrmaschine im Praktikum.</li><li><b>Handlungsprodukt:</b> gebohrte Flachstahl-Lasche (4 × 8 mm) + Prüfprotokoll.</li><li><b>Umfang:</b> ca. 2 Unterrichtsstunden (Selbstlernen + betreute Praxis).</li></ul><h3>Erwartungshorizont (Kernpunkte)</h3><ul><li><b>Sicherheit:</b> Schutzbrille Pflicht; keine Handschuhe/Schmuck; Haare sichern; Späne nie mit der Hand; Futterschlüssel abziehen; Not-Aus kennen.</li><li><b>Drehzahl 8 mm Stahl:</b> ca. 600 min⁻¹; großer Bohrer = niedrige Drehzahl.</li><li><b>Ablauf:</b> spannen → ankörnen → Bohrer/Drehzahl → bohren/kühlen → ausschalten → entgraten/prüfen.</li></ul><h3>Hinweise zum Einsatz</h3><ul><li><b>Analog/Digital:</b> Praxis an der realen Maschine mit Aufsicht; Moodle zur Vor-/Nachbereitung (Flipped Classroom möglich).</li><li><b>Differenzierung:</b> Stärkere ergänzen die Drehzahltabelle für weitere Durchmesser; Schwächere nutzen die Schritt-für-Schritt-Checkliste.</li><li><b>Druckmaterial:</b> Alle Infoblätter liegen als PDF im Ordner unten.</li><li><b>Video:</b> Kurs-Recap-Video per NotebookLM aus den Materialien erzeugen.</li></ul></div></div>"
+          "intro": "<p>Überblick, Erwartungshorizont und Einsatzhinweise.</p>",
+          "content": "<div style='border:1px solid #c9ccd1;border-radius:6px;overflow:hidden;font-family:Arial,sans-serif;'><div style='background:#5f6368;color:#fff;padding:10px 14px;font-size:18px;font-weight:bold;'>Didaktischer Leitfaden</div><div style='padding:14px 16px;'><h3 style='margin-top:0;'>Moduleinordnung</h3><ul><li><b>Zielgruppe:</b> duale Ausbildung Metalltechnik, 1. Lehrjahr; Fertigungsverfahren Bohren.</li><li><b>Didaktisches Konzept:</b> rode (5-Ebenen-Modell) – Handlungssituation am Anfang, Video-Recap am Ende.</li><li><b>Handlungssituation:</b> Musterstück einer Grundplatte nach Zeichnung fertigen (zwei Bohrungen Ø 5 mm, eine Ø 8 mm, eine Ø 10 mm, S235).</li><li><b>Handlungsprodukt:</b> gebohrte Grundplatte + ausgefülltes Berechnungs- und Prüfprotokoll.</li><li><b>Umfang:</b> ca. 3–4 Unterrichtsstunden (Selbstlernen + betreute Praxis).</li></ul><h3>Erwartungshorizont Drehzahlen (Schnittgeschwindigkeit 15 m/min, S235/HSS)</h3><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;'><tr style='background:#e1f5ee;'><th align='left'>Durchmesser</th><th align='left'>Rechnung</th><th align='left'>Ergebnis</th></tr><tr><td>Ø 5 mm</td><td>15 m/min geteilt durch (π · 0,005 m)</td><td>ca. 955 1/min, Stufe ca. 900–1000 1/min</td></tr><tr><td>Ø 8 mm</td><td>15 m/min geteilt durch (π · 0,008 m)</td><td>ca. 597 1/min, Stufe ca. 560–630 1/min</td></tr><tr><td>Ø 10 mm</td><td>15 m/min geteilt durch (π · 0,010 m)</td><td>ca. 477 1/min, Stufe ca. 450–500 1/min</td></tr></table><h3>Hinweise zum Einsatz</h3><ul><li><b>Ablauf:</b> Kacheln 1–4 als Vorbereitung (Flipped Classroom möglich), Kachel 5 als betreute Praxis, Kachel 6 zur Nachbereitung.</li><li><b>Simulation:</b> eignet sich für den Einstieg in die Drehzahl-Berechnung am Beamer oder als Einzelarbeit; die Challenge in der Simulation entspricht der 8-mm-Bohrung des Auftrags.</li><li><b>Differenzierung:</b> Stärkere berechnen zusätzlich die Drehzahl für einen 6,8-mm-Kernlochbohrer (Gewinde M8); Schwächere nutzen die Kennlinie zum Ablesen statt zu rechnen.</li><li><b>Protokoll:</b> Das ausfüllbare Formular speichert lokal im Browser; die Lernenden geben es als Textdatei beim Praxisauftrag ab.</li><li><b>Druckmaterial:</b> Alle Infoblätter liegen als PDF und PPTX in den Ordnern unten.</li></ul></div></div>"
         }
       ]
     }
