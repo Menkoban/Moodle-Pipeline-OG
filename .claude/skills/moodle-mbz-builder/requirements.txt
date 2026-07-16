@@ -11,4 +11,5 @@ svglib
 reportlab
 pymupdf
 python-pptx
+python-docx
 pillow

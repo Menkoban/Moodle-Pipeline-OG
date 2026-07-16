@@ -33,10 +33,10 @@ GREEN_HEX = "#1d6e56"
 
 def _need():
     try:
-        import svglib.svglib, reportlab, fitz, pptx, PIL  # noqa
+        import svglib.svglib, reportlab, fitz, pptx, docx, PIL  # noqa
     except Exception as e:
         sys.exit(f"Missing dependency: {e}\nInstall: python -m pip install "
-                 f"svglib reportlab pymupdf python-pptx pillow")
+                 f"svglib reportlab pymupdf python-pptx python-docx pillow")
 
 
 def _enable_font_cache():
@@ -485,6 +485,123 @@ def make_glossary_import_xml(gl, out_path):
         fh.write(xml)
 
 
+def make_docx(page, base, out, workdir):
+    """Editierbare Word-Version des Infoblatts: Titel, Prosa, Listen, Tabellen,
+    Merke-/Info-Boxen (schattierte Zelle) und Diagramme (SVG->PNG). Word kann
+    Unicode/Emoji darstellen, daher KEIN Glyph-Stripping wie im PDF."""
+    import html as _html
+    from docx import Document
+    from docx.shared import Inches
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.oxml.ns import qn
+    from docx.oxml import OxmlElement
+    _enable_font_cache()
+
+    imgs = {}
+    for p in page.get("images", []):
+        pth = p if os.path.isabs(p) else os.path.join(base, p)
+        imgs[os.path.basename(p)] = pth
+
+    def _plain(node):
+        return _html.unescape(re.sub(r"<[^>]+>", "", _inline(node))).strip()
+
+    def _shade(cell, hexbg):
+        hexbg = (hexbg or "").lstrip("#") or "FFFFFF"
+        shd = OxmlElement("w:shd")
+        shd.set(qn("w:val"), "clear")
+        shd.set(qn("w:fill"), hexbg)
+        cell._tc.get_or_add_tcPr().append(shd)
+
+    doc = Document()
+    doc.add_heading(title_of(page), level=1)
+
+    def _box(text, hexbg):
+        tbl = doc.add_table(rows=1, cols=1)
+        tbl.style = "Table Grid"
+        tbl.cell(0, 0).text = text
+        _shade(tbl.cell(0, 0), hexbg)
+
+    def _table(node):
+        rows = []
+        for tr in _find(node, "tr"):
+            cells = [c for c in tr.children if c.tag in ("td", "th")]
+            rows.append([(_plain(c), c.tag == "th") for c in cells])
+        rows = [r for r in rows if r]
+        if not rows:
+            return
+        ncol = max(len(r) for r in rows)
+        t = doc.add_table(rows=len(rows), cols=ncol)
+        t.style = "Table Grid"
+        for ri, r in enumerate(rows):
+            for ci in range(ncol):
+                txt, is_th = r[ci] if ci < len(r) else ("", False)
+                cell = t.cell(ri, ci)
+                cell.text = txt
+                if is_th:
+                    _shade(cell, "e1f5ee")
+                    for par in cell.paragraphs:
+                        for run in par.runs:
+                            run.bold = True
+
+    def _img(fn):
+        pth = imgs.get(fn)
+        if not (pth and os.path.exists(pth)):
+            return
+        png = os.path.join(workdir, slugify(fn) + ".docx.png")
+        try:
+            svg_to_png(pth, png)
+            doc.add_picture(png, width=Inches(6.0))
+            doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        except Exception:  # noqa: BLE001
+            pass
+
+    def render(node):
+        for c in node.children:
+            tag = c.tag
+            if tag == "#text":
+                if c.text and c.text.strip():
+                    doc.add_paragraph(c.text.strip())
+            elif tag == "div":
+                bgcol = _bg(_style(c))
+                if _has_block(c):
+                    render(c)
+                elif bgcol:
+                    txt = _plain(c)
+                    if txt:
+                        _box(txt, bgcol)
+                else:
+                    txt = _plain(c)
+                    if txt:
+                        doc.add_paragraph(txt)
+            elif tag == "p":
+                bgcol = _bg(_style(c))
+                txt = _plain(c)
+                if not txt:
+                    continue
+                if bgcol:
+                    _box(txt, bgcol)
+                else:
+                    doc.add_paragraph(txt)
+            elif tag in ("h2", "h3", "h4"):
+                doc.add_heading(_plain(c), level={"h2": 2, "h3": 3, "h4": 4}[tag])
+            elif tag in ("ul", "ol"):
+                items = [ci for ci in c.children if ci.tag == "li"]
+                sty = "List Bullet" if tag == "ul" else "List Number"
+                for li in items:
+                    t = _plain(li)
+                    if t:
+                        doc.add_paragraph(t, style=sty)
+            elif tag == "table":
+                _table(c)
+            elif tag == "img":
+                _img((c.attrs.get("src", "") or "").split("/")[-1])
+            elif c.children:
+                render(c)
+
+    render(_parse_html(to_slash(page.get("content", ""))))
+    doc.save(out)
+
+
 def ensure_teacher_section(spec):
     for s in spec["sections"]:
         if s.get("visible") == 0:
@@ -518,7 +635,7 @@ def main():
     except Exception as e:  # noqa: BLE001
         print(f"NOTE: SVG diagram check skipped ({e}).", file=sys.stderr)
 
-    pdfs, pptxs = [], []
+    pdfs, pptxs, docxs = [], [], []
     for sec in spec["sections"]:
         new_acts = []
         for act in sec["activities"]:
@@ -530,6 +647,7 @@ def main():
                 bullets = extract_bullets(act)
                 pdfp = os.path.join(matdir, slug + ".pdf")
                 pptxp = os.path.join(matdir, slug + ".pptx")
+                docxp = os.path.join(matdir, slug + ".docx")
                 # Attributions-Fuß auch im Druck-PDF (idempotent angehängt)
                 pdf_act = act
                 try:
@@ -541,7 +659,8 @@ def main():
                     pass
                 make_pdf(pdf_act, base, pdfp)
                 make_pptx(title, svg, bullets, pptxp, matdir)
-                pdfs.append(pdfp); pptxs.append(pptxp)
+                make_docx(pdf_act, base, docxp, matdir)
+                pdfs.append(pdfp); pptxs.append(pptxp); docxs.append(docxp)
                 # The PDF is NOT inserted after the page: the Infoblatt stays
                 # alone at its spot in the course; all PDFs are collected in the
                 # hidden teacher section below.
@@ -555,6 +674,9 @@ def main():
         teacher["activities"].append({"type": "folder",
             "name": "Alle Infoblätter als PowerPoint (bearbeitbar)",
             "intro": "<p>Editierbare PPTX-Versionen zum Anpassen.</p>", "files": pptxs})
+        teacher["activities"].append({"type": "folder",
+            "name": "Alle Infoblätter als Word (bearbeitbar)",
+            "intro": "<p>Editierbare Word-Versionen (.docx) zum Anpassen.</p>", "files": docxs})
 
     # Glossar-Fallback: Einträge sind im Moodle-Backup NUTZERDATEN. Wird beim
     # Wiederherstellen "Nutzerdaten einschließen" abgewählt (oder fehlt das
