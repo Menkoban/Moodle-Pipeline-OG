@@ -94,6 +94,100 @@ def _calc_unit_warnings(text: str) -> list[str]:
     return out[:5]
 
 
+# --- Merke-Satz-Heuristik: Merksatz vs. Stichwort-/Fragment-Kette (beratend) - #
+# Typische finite Verbformen (Hilfs-, Modal- und häufige Vollverben). Enthält ein
+# "?"-Segment ein solches Token, gilt es als vollständige Frage (kein Fragment) —
+# die Liste ist bewusst großzügig, damit gute Merksätze NICHT fälschlich als
+# Fragment-Kette geflaggt werden (Verben verringern die Trefferzahl).
+_FINITE_VERBS = {
+    "ist", "sind", "war", "waren", "bin", "bist", "seid", "sei", "wird",
+    "werden", "wirst", "werde", "wurde", "wurden", "hat", "haben", "habe",
+    "hast", "habt", "hatte", "hatten", "kann", "kannst", "können", "konnte",
+    "konnten", "muss", "musst", "müssen", "musste", "soll", "sollst", "sollen",
+    "sollte", "darf", "darfst", "dürfen", "mag", "mögen", "will", "wollen",
+    "willst", "möchte", "möchten", "gibt", "geht", "gehen", "kommt", "kommen",
+    "macht", "machen", "nimmt", "nehmen", "dreht", "drehen", "läuft", "laufen",
+    "liegt", "liegen", "steht", "stehen", "sitzt", "sitzen", "bleibt", "bleiben",
+    "braucht", "brauchen", "sorgt", "sorgen", "führt", "führen", "bedeutet",
+    "bedeuten", "passiert", "passieren", "entsteht", "entstehen", "erzeugt",
+    "erzeugen", "erkennt", "erkennen", "achtet", "achten", "prüft", "prüfen",
+    "funktioniert", "wählt", "wählen", "stellt", "stellen", "misst", "messen",
+    "steigt", "steigen", "sinkt", "sinken", "schont", "schonen", "gilt",
+    "gelten", "heißt", "zeigt", "zeigen", "hilft", "helfen", "tut", "tun",
+    "bohrt", "bohren", "spannt", "spannen", "verwendet", "verwenden", "benutzt",
+    "benutzen", "setzt", "setzen", "berechnet", "berechnen", "hält", "halten",
+    "kühlt", "kühlen", "passt", "passen", "brauchst", "beträgt", "ergibt",
+}
+_WORD_RX = re.compile(r"[A-Za-zÄÖÜäöüß]+")
+# Anker: 💡-Emoji ODER das eigenständige Wort „Merke".
+_MERKE_ANCHOR_RX = re.compile("\U0001F4A1" + r"|\bMerke\b")
+
+
+def _merke_fragment_warnings(text: str) -> list[str]:
+    """Beratend: In „Merke"-/💡-Kästen soll der Merksatz ein VOLLSTÄNDIGER Satz
+    sein, keine Stichwort-/Fragment-Kette. Anker: 💡-Emoji ODER das Wort „Merke".
+    Nach dem ersten „:" wird nur die unmittelbar folgende Klausel (bis zum ersten
+    „." / „!") betrachtet; besteht sie aus ≥2 kurzen (< 5 Wörter), verblosen
+    „…?"-Segmenten (z. B. „Schneiden scharf? Schaft sauber?"), gilt sie als
+    Fragment-Kette. Konservativ: lieber eine echte Kette verpassen als gute
+    Merksätze fälschlich flaggen. Nie fatal."""
+    out: list[str] = []
+    seen: set[str] = set()
+    for am in _MERKE_ANCHOR_RX.finditer(text):
+        window = text[am.start():am.start() + 200]
+        ci = window.find(":")
+        if ci < 0:
+            continue                       # kein „…:"-Merke-Lead -> nichts prüfen
+        # Nur die unmittelbar folgende Klausel bis zum ersten Satzende ansehen —
+        # so leckt späterer Kurstext (z. B. eine FAQ) keine Fragezeichen ein.
+        head = re.split(r"[.!]", window[ci + 1:], 1)[0]
+        segs = [s.strip(" ?\t\n") for s in re.findall(r"[^?]*\?", head)]
+        segs = [s for s in segs if s]
+        if len(segs) < 2:                  # keine „a? b?"-Kette
+            continue
+        words = [_WORD_RX.findall(s) for s in segs]
+        if sum(len(w) for w in words) / len(words) >= 5:
+            continue                       # Segmente im Schnitt zu lang -> Fragen
+        if any(w.lower() in _FINITE_VERBS for ws in words for w in ws):
+            continue                       # ein finites Verb -> vollständige Frage
+        snip = re.sub(r"\s+", " ", head).strip()
+        if snip and snip not in seen:
+            seen.add(snip)
+            out.append(snip)
+    return out[:3]
+
+
+# --- Rechenbeispiel-Schritt-Heuristik: Einsetzen -> Ergebnis (beratend) ------ #
+# Rechenoperator-Zeichen einer echten Zwischenrechnung.
+_CALC_OP_RX = re.compile(r"[·×÷/=≈*]")
+
+
+def _rechenbeispiel_step_warnings(text: str) -> list[str]:
+    """Beratend: Enthält ein Rechenbeispiel sowohl „Einsetzen" als auch
+    „Ergebnis", soll dazwischen mindestens eine Zwischenrechen-Zeile stehen
+    (Ziffern UND ein Rechenoperator ·×÷/=≈). Springt „Einsetzen:" ohne solche
+    Zeile direkt zum „Ergebnis", WARN. Konservativ — es wird nur gemeldet, wenn
+      * „Einsetzen" als Schritt ausgeschrieben ist (Doppelpunkt vor dem
+        „Ergebnis") UND
+      * nach „Ergebnis" wirklich ein Zahlenergebnis folgt,
+    damit reine Schema-Aufzählungen („… – Einsetzen – Ergebnis") und Fließtext
+    nichts auslösen. Nie fatal."""
+    for em in re.finditer(r"Einsetzen", text):
+        gm = re.search(r"Ergebnis", text[em.end():])
+        if not gm:
+            continue
+        between = text[em.end():em.end() + gm.start()]
+        after = text[em.end() + gm.end():em.end() + gm.end() + 40]
+        if ":" not in between:
+            continue                       # „Einsetzen" nicht als Schritt (kein „:")
+        if not re.search(r"\d", after):
+            continue                       # kein Zahlenergebnis -> keine echte Rechnung
+        if re.search(r"\d", between) and _CALC_OP_RX.search(between):
+            continue                       # Zwischenrechnung vorhanden -> ok
+        return [re.sub(r"\s+", " ", "Einsetzen" + between + "Ergebnis").strip()[:140]]
+    return []
+
+
 def main(path: str) -> int:
     problems: list[str] = []
     info: list[str] = []
@@ -438,6 +532,28 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                     f"EINHEIT: mögliche Rechnung(en) ohne Einheit in "
                     f"{path.split('/')[1]}: " + ", ".join(f"'{s}'" for s in snips)
                     + " (Einheit ergänzen?)")
+
+    # ---- 14. Merke-Satz-Qualität & Rechenbeispiel-Schritte (beratend) ---- #
+    # Inhaltliche Tiefen-Checks auf Infoblättern: ein „Merke"/💡-Kasten soll ein
+    # vollständiger Satz sein (keine Stichwort-/Fragment-Kette), und ein
+    # Rechenbeispiel soll von „Einsetzen" nicht ohne Zwischenrechnung direkt zum
+    # „Ergebnis" springen. Beides nur WARN (siehe Helfer oben) — nie fatal.
+    for path, data in contents.items():
+        km = re.match(r"activities/(page|book)_\d+/\w+\.xml$", path)
+        if not km:
+            continue
+        tag = path.split("/")[1]
+        for block in re.findall(r"<content>(.*?)</content>", data, re.S):
+            txt = _readable_text(block)
+            for snip in _merke_fragment_warnings(txt):
+                warns.append(
+                    f"MERKE: Merksatz wirkt wie Stichwort-/Fragment-Kette statt "
+                    f"vollständiger Satz in {tag}: '{snip}'")
+            if km.group(1) == "page":      # Rechenbeispiel-Check nur auf Seiten
+                for snip in _rechenbeispiel_step_warnings(txt):
+                    warns.append(
+                        f"RECHENBEISPIEL: Einsetzen springt direkt zum Ergebnis — "
+                        f"Zwischenschritt fehlt in {tag}: '{snip}'")
 
 
 def _report(info: list[str], warns: list[str], problems: list[str]) -> None:

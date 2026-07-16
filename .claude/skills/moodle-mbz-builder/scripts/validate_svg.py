@@ -21,6 +21,9 @@ Checks per SVG:
   * SKALA  (warn)    — such a chart has fewer than 2 numeric scale values on an axis.
   * FIGUR  (warn)    — an open path/polyline outline whose start and end nearly
     meet (2-12px gap on a 2D figure) — likely an unclosed figure; close with Z.
+  * BEMASSUNG (warn) — a drawing marked data-diagram-type="zeichnung" carries
+    fewer than 3 plain dimension numbers (Maßzahlen) — likely an unbemaßte
+    Fertigungszeichnung; add position/size dimensions.
 
 Inputs may be .svg files, directories (scanned recursively), or a course JSON
 (every activity/page `images` entry is checked).
@@ -144,6 +147,12 @@ ALIGN_TOL = 4.0        # "fast bündig": gestapelte Texte, um 1–4 px versetzt
 # rein numerisches Label (Skalenwert): "0", "-5", "3,14", "10.5"
 _NUMERIC_RX = re.compile(r"^-?\d+(?:[.,]\d+)?$")
 
+# reine Maßzahl einer Fertigungszeichnung: "20", "55", "100", "8 mm", "12,5"
+# — Ziffernfolge mit optionaler Dezimalstelle und optionaler Einheit (mm/°).
+# Ein beschreibendes Label wie "Ø 5 mm (2 Bohrungen)" ist KEINE reine Maßzahl.
+_MASSZAHL_RX = re.compile(r"^\s*\d+([.,]\d+)?\s*(mm|°)?\s*$")
+MIN_MASSZAHLEN = 3     # eine bemaßte Zeichnung hat Lage- UND Größenmaße
+
 
 def _typo_issues(label):
     """Konventions-Verstöße in einem Text-Label (deutsche Fachdiagramme)."""
@@ -243,6 +252,7 @@ def lint_file(path):
         return ([f"parse error: {e}"], [])
 
     is_chart = (root.get("data-diagram-type") == "chart")
+    is_zeichnung = (root.get("data-diagram-type") == "zeichnung")
     vx, vy, vw, vh = G.get_viewbox(root)
     vx1, vy1 = vx + vw, vy + vh
     boxes = G.collect_boxes(root)
@@ -457,6 +467,10 @@ def lint_file(path):
     # 12) V4a: geschlossene Figuren (alle Diagramme)
     warns += _figure_closure_warnings(boxes)
 
+    # 13) V5: Bemaßung technischer Zeichnungen (nur markierte Zeichnungen)
+    if is_zeichnung:
+        warns += _bemassung_warnings(boxes)
+
     return errors, warns
 
 
@@ -556,6 +570,22 @@ def _figure_closure_warnings(boxes):
             continue
         warns.append(f"FIGUR nicht geschlossen (Luecke ~{gap:.0f}px) - Pfad "
                      f"mit Z schliessen oder Endpunkte treffen lassen")
+    return warns
+
+
+def _bemassung_warnings(boxes):
+    """V5 — only called for a drawing marked data-diagram-type="zeichnung". A
+    Fertigungszeichnung has to dimension the position AND the size of its
+    features, so it carries several plain dimension numbers (Maßzahlen). Count
+    the <text> labels that are a pure Maßzahl (``_MASSZAHL_RX`` — "20", "8 mm",
+    …); a describing label like "Ø 5 mm (2 Bohrungen)" does not count. Fewer
+    than ``MIN_MASSZAHLEN`` -> the drawing is likely unbemaßt."""
+    warns = []
+    n = sum(1 for b in boxes
+            if b.tag == "text" and _MASSZAHL_RX.match(b.label or ""))
+    if n < MIN_MASSZAHLEN:
+        warns.append("BEMASSUNG: technische Zeichnung ohne erkennbare "
+                     "Maßzahlen (Lage/Größe bemaßen)")
     return warns
 
 
