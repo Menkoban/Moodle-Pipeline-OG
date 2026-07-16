@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="680" height="340" fill="#ffffff"/>
+  <text x="339" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a1a1a">Bohren Schritt für Schritt</text>
+
+  <!-- Reihe 1 -->
+  <rect x="15" y="60" width="195" height="105" rx="10" fill="#eef3f7" stroke="#185fa5" stroke-width="2"/>
+  <circle cx="40" cy="85" r="13" fill="#185fa5"/>
+  <text x="40" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">1</text>
+  <text x="112" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">PSA anlegen,</text>
+  <text x="112" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Werkstück spannen,</text>
+  <text x="112" y="144" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Bohrstelle ankörnen</text>
+
+  <rect x="242" y="60" width="195" height="105" rx="10" fill="#f1faf5" stroke="#1d7a3f" stroke-width="2"/>
+  <circle cx="267" cy="85" r="13" fill="#1d7a3f"/>
+  <text x="267" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">2</text>
+  <text x="339" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Bohrer einspannen,</text>
+  <text x="339" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Futterschlüssel</text>
+  <text x="339" y="144" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">abziehen</text>
+
+  <rect x="469" y="60" width="195" height="105" rx="10" fill="#eef3f7" stroke="#185fa5" stroke-width="2"/>
+  <circle cx="494" cy="85" r="13" fill="#185fa5"/>
+  <text x="494" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">3</text>
+  <text x="566" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Drehzahl berechnen</text>
+  <text x="566" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">und einstellen</text>
+
+  <!-- Reihe 2 -->
+  <rect x="15" y="205" width="195" height="105" rx="10" fill="#f1faf5" stroke="#1d7a3f" stroke-width="2"/>
+  <circle cx="40" cy="230" r="13" fill="#1d7a3f"/>
+  <text x="40" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">4</text>
+  <text x="112" y="257" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Bohren: gleichmäßiger</text>
+  <text x="112" y="273" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Vorschub, bei Stahl</text>
+  <text x="112" y="289" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">kühlen</text>
+
+  <rect x="242" y="205" width="195" height="105" rx="10" fill="#eef3f7" stroke="#185fa5" stroke-width="2"/>
+  <circle cx="267" cy="230" r="13" fill="#185fa5"/>
+  <text x="267" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">5</text>
+  <text x="339" y="257" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Ausschalten,</text>
+  <text x="339" y="273" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Stillstand abwarten</text>
+
+  <rect x="469" y="205" width="195" height="105" rx="10" fill="#f1faf5" stroke="#1d7a3f" stroke-width="2"/>
+  <circle cx="494" cy="230" r="13" fill="#1d7a3f"/>
+  <text x="494" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">6</text>
+  <text x="566" y="257" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Entgraten, messen,</text>
+  <text x="566" y="273" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">Protokoll ausfüllen</text>
+
+  <!-- Pfeile (in den Lücken, kreuzen keinen Text) -->
+  <line x1="212" y1="112" x2="238" y2="112" stroke="#5f6368" stroke-width="3"/>
+  <polygon points="242,112 232,107 232,117" fill="#5f6368"/>
+  <line x1="439" y1="112" x2="465" y2="112" stroke="#5f6368" stroke-width="3"/>
+  <polygon points="469,112 459,107 459,117" fill="#5f6368"/>
+  <path d="M 566 167 L 566 185 L 112 185 L 112 201" fill="none" stroke="#5f6368" stroke-width="3"/>
+  <polygon points="112,205 107,195 117,195" fill="#5f6368"/>
+  <line x1="212" y1="257" x2="238" y2="257" stroke="#5f6368" stroke-width="3"/>
+  <polygon points="242,257 232,252 232,262" fill="#5f6368"/>
+  <line x1="439" y1="257" x2="465" y2="257" stroke="#5f6368" stroke-width="3"/>
+  <polygon points="469,257 459,252 459,262" fill="#5f6368"/>
+</svg>

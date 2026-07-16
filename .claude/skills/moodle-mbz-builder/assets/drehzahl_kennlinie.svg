@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 480 342" data-diagram-type="chart" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="-2" width="480" height="342" fill="#ffffff"/>
+  <text x="255" y="20" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">Drehzahl-Kennlinie für Stahl (HSS)</text>
+  <text x="74" y="34" font-size="12" fill="#1a1a1a">Drehzahl n in 1/min</text>
+
+  <!-- Achsen -->
+  <path d="M 70 40 L 70 270 L 440 270" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+
+  <!-- y-Skala -->
+  <g stroke="#1a1a1a" stroke-width="1">
+    <line x1="64" y1="270" x2="70" y2="270"/>
+    <line x1="64" y1="224" x2="70" y2="224"/>
+    <line x1="64" y1="178" x2="70" y2="178"/>
+    <line x1="64" y1="132" x2="70" y2="132"/>
+    <line x1="64" y1="86" x2="70" y2="86"/>
+    <line x1="64" y1="40" x2="70" y2="40"/>
+  </g>
+  <text x="60" y="274" text-anchor="end" font-size="11" fill="#1a1a1a">0</text>
+  <text x="60" y="228" text-anchor="end" font-size="11" fill="#1a1a1a">500</text>
+  <text x="60" y="182" text-anchor="end" font-size="11" fill="#1a1a1a">1000</text>
+  <text x="60" y="136" text-anchor="end" font-size="11" fill="#1a1a1a">1500</text>
+  <text x="60" y="90" text-anchor="end" font-size="11" fill="#1a1a1a">2000</text>
+  <text x="60" y="44" text-anchor="end" font-size="11" fill="#1a1a1a">2500</text>
+
+  <!-- x-Skala -->
+  <g stroke="#1a1a1a" stroke-width="1">
+    <line x1="70" y1="270" x2="70" y2="276"/>
+    <line x1="130" y1="270" x2="130" y2="276"/>
+    <line x1="190" y1="270" x2="190" y2="276"/>
+    <line x1="250" y1="270" x2="250" y2="276"/>
+    <line x1="310" y1="270" x2="310" y2="276"/>
+    <line x1="370" y1="270" x2="370" y2="276"/>
+    <line x1="430" y1="270" x2="430" y2="276"/>
+  </g>
+  <text x="70" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">0</text>
+  <text x="130" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">2</text>
+  <text x="190" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">4</text>
+  <text x="250" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">6</text>
+  <text x="310" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">8</text>
+  <text x="370" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">10</text>
+  <text x="430" y="290" text-anchor="middle" font-size="11" fill="#1a1a1a">12</text>
+
+  <!-- Achsentitel -->
+  <text x="255" y="316" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">Bohrerdurchmesser d in mm</text>
+
+  <!-- Kennlinie (Schnittgeschwindigkeit 15 m/min) -->
+  <path d="M 130 50 L 160 124 L 190 160 L 220 182 L 250 197 L 310 215 L 370 226 L 430 233" fill="none" stroke="#185fa5" stroke-width="2.5"/>
+  <text x="440" y="70" text-anchor="end" font-size="12" font-weight="bold" fill="#185fa5">Stahl (HSS): 15 m/min</text>
+
+  <!-- Ablesebeispiel -->
+  <circle cx="310" cy="215" r="5" fill="#1d7a3f"/>
+  <line x1="312" y1="210" x2="328" y2="188" stroke="#1d7a3f" stroke-width="1.5"/>
+  <text x="330" y="186" font-size="12" font-weight="bold" fill="#1d7a3f">Ø 8 mm: ca. 600 1/min</text>
+</svg>
