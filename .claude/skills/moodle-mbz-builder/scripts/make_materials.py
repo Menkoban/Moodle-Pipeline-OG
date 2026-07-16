@@ -602,6 +602,24 @@ def make_docx(page, base, out, workdir):
     doc.save(out)
 
 
+def make_combined_pdf(pdf_paths, out):
+    """Fasst die einzelnen Infoblatt-PDFs zu EINEM Kurs-Materialdossier
+    zusammen — eine diagramm-reiche Quelle zum Hochladen in NotebookLM (nicht
+    nur Text). Leere/fehlende Liste -> keine Datei."""
+    paths = [p for p in pdf_paths if p and os.path.exists(p)]
+    if not paths:
+        return
+    import fitz
+    doc = fitz.open()
+    try:
+        for p in paths:
+            with fitz.open(p) as src:
+                doc.insert_pdf(src)
+        doc.save(out)
+    finally:
+        doc.close()
+
+
 def ensure_teacher_section(spec):
     for s in spec["sections"]:
         if s.get("visible") == 0:
@@ -677,6 +695,14 @@ def main():
         teacher["activities"].append({"type": "folder",
             "name": "Alle Infoblätter als Word (bearbeitbar)",
             "intro": "<p>Editierbare Word-Versionen (.docx) zum Anpassen.</p>", "files": docxs})
+        # Kombiniertes Materialdossier (alle Infoblätter + Diagramme in EINER
+        # PDF) — als echte Bild-Quelle zum Hochladen in NotebookLM, nicht nur
+        # Text. Liegt als loses Artefakt in materials/ (nicht im Kurs).
+        dossier = os.path.join(matdir, "Kurs-Materialdossier.pdf")
+        make_combined_pdf(pdfs, dossier)
+        if os.path.exists(dossier):
+            print("NotebookLM-Quelle (Infoblätter + Diagramme, hochladbar): "
+                  + dossier, file=sys.stderr)
 
     # Glossar-Fallback: Einträge sind im Moodle-Backup NUTZERDATEN. Wird beim
     # Wiederherstellen "Nutzerdaten einschließen" abgewählt (oder fehlt das
