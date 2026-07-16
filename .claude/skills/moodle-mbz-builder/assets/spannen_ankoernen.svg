@@ -29,11 +29,11 @@
   <!-- Werkstück lose mit Hand -->
   <rect x="430" y="182" width="122" height="28" fill="#f0c674" stroke="#854f0b" stroke-width="2" transform="rotate(-8 491 196)"/>
   <path d="M 545 196 L 545 176 L 552 171 L 552 163 L 559 160 L 564 165 L 564 158 L 571 155 L 576 161 L 582 161 L 585 169 L 585 190 L 576 200 Z" fill="#e8b98a" stroke="#854f0b" stroke-width="2"/>
-  <!-- Drehpfeile (Kurven um das Werkstück, klar oberhalb des Warntextes) -->
-  <path d="M 428 150 Q 490 122 552 150" fill="none" stroke="#d8312c" stroke-width="3"/>
-  <polygon points="552,150 538,144 542,158" fill="#d8312c"/>
-  <path d="M 552 214 Q 490 246 428 214" fill="none" stroke="#d8312c" stroke-width="3"/>
-  <polygon points="428,214 442,208 442,220" fill="#d8312c"/>
+  <!-- Drehpfeile: tiefe Bögen ums Werkstück, tangentiale Spitzen (klare Rotation, über dem Warntext) -->
+  <path d="M 418 168 Q 490 128 562 168" fill="none" stroke="#d8312c" stroke-width="3.5"/>
+  <polygon points="562,168 545.5,166.8 552.3,154.6" fill="#d8312c"/>
+  <path d="M 556 214 Q 490 236 424 214" fill="none" stroke="#d8312c" stroke-width="3.5"/>
+  <polygon points="424,214 440.4,212.1 436,225.3" fill="#d8312c"/>
   <text x="505" y="254" text-anchor="middle" font-size="12" font-weight="bold" fill="#a3322f">Der Bohrer reißt das Werkstück mit —</text>
   <text x="505" y="270" text-anchor="middle" font-size="12" font-weight="bold" fill="#a3322f">Verletzungsgefahr!</text>
 
