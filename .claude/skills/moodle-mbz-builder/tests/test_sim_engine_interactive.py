@@ -78,10 +78,25 @@ def test_animate_renders_play_pause_control():
     assert 'id="anim_reset"' in h          # Reset (t=0)
 
 
-def test_animate_renders_speed_control_025_to_4():
+def test_animate_renders_speed_control_slowmo_to_4():
+    # Verlangsamung bis 0,1x (Zeitlupe) + Zeitraffer bis 4x, damit schnelle
+    # Animationen (z.B. Bohrer-Drehung bei realistischer Drehzahl) lesbar werden.
     h = render(_animate_spec())
     assert 'id="anim_speed"' in h
-    assert 'min="0.25"' in h and 'max="4"' in h
+    assert 'min="0.1"' in h and 'max="4"' in h
+
+
+def test_animate_exposes_readable_rotation_helper():
+    # visDeg(rpm,t): bildet eine reale Drehzahl auf ein ruhiges Sicht-Tempo ab,
+    # damit die animate-Bodies rohe U/min NICHT 1:1 als Rotationsspeed nutzen.
+    h = render(_animate_spec())
+    assert "function visDeg(" in h
+
+
+def test_legacy_spec_has_no_rotation_helper():
+    # Helfer nur bei animate -> Legacy-Form bleibt byte-gleich.
+    h = render(_legacy_spec())
+    assert "function visDeg(" not in h
 
 
 def test_animate_uses_requestanimationframe_loop():

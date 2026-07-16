@@ -170,7 +170,19 @@ _ENGINE_BASE = """
   SPEC.inputs.forEach(function(i){var elm=el(i.id);elm.addEventListener('input',update);elm.addEventListener('change',update);});
 """
 
-# OPTIONAL — time animation (Play/Pause + speed 0.25x-4x + Reset). Emitted only
+# OPTIONAL — readable-rotation helper. Emitted only with `animate`, at <script>
+# scope (NOT inside the IIFE), so a SPEC.animate body may call it. Maps a real
+# rotational speed (U/min) onto a calm, legible view-speed (max ~2 rev/s), so an
+# author never wires raw rpm 1:1 into rotation (n≈600/min = 10 rev/s = a blur).
+# The exact figure stays a KPI beside it; the spin only illustrates. t in s.
+_ENGINE_HELPERS = """
+  function visDeg(rpm, t){
+    var rps = Math.min(2, Math.max(0.15, (rpm||0)/300));
+    return (t||0) * rps * 360;
+  }
+"""
+
+# OPTIONAL — time animation (Play/Pause + speed 0.1x-4x + Reset). Emitted only
 # when the spec carries `animate`. Runs inside the same IIFE as BASE, so it reads
 # animT/animSpeed/state/update/SPEC from the enclosing scope.
 _ENGINE_ANIM = """
@@ -181,7 +193,7 @@ _ENGINE_ANIM = """
       '<button type="button" id="anim_play" class="abtn" aria-pressed="false">\\u25B6 Start</button>'+
       '<button type="button" id="anim_reset" class="abtn">\\u21BB Reset</button>'+
       '<label class="aspeed">Tempo <span id="anim_spdval">1,0\\u00D7</span>'+
-      '<input type="range" id="anim_speed" min="0.25" max="4" step="0.25" value="1" aria-label="Geschwindigkeit"></label>'+
+      '<input type="range" id="anim_speed" min="0.1" max="4" step="0.05" value="1" aria-label="Geschwindigkeit (0,1x Zeitlupe bis 4x Zeitraffer)"></label>'+
       '<span class="atime">t = <span id="anim_t">0,00</span> s</span>';
     var vis=el('visual');vis.parentNode.insertBefore(bar,vis.nextSibling);
     var play=el('anim_play');
@@ -298,6 +310,9 @@ def render(spec):
     if spec.get("challenge"):
         engine += _ENGINE_CHALLENGE
     engine += _ENGINE_TAIL
+    if spec.get("animate"):
+        # visDeg at <script> scope (before the IIFE) so a SPEC.animate body can call it
+        engine = _ENGINE_HELPERS + engine
     html = _HTML
     repl = {
         "__TITLE__": spec.get("title", "Simulation"),
