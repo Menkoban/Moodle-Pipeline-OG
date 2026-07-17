@@ -76,3 +76,14 @@ def test_filled_path_covering_text_is_flagged(tmp_path):
                '<path d="M 80 86 L 140 86 L 140 110 L 80 110 Z" fill="#e8b98a"/>')
     errors, warns = lint_file(p)
     assert any("SHAPE" in w and "H1" in w for w in warns), warns
+
+
+def test_label_inside_large_filled_container_is_exempt(tmp_path):
+    # Behaelter-Fall (Tank-Symbol im Hydraulik-Kreislauf): ein grosser
+    # gefuellter Pfad ENTHAELT sein Label vollstaendig - das ist gewollt
+    # (wie Text auf einem Panel-Rect), kein Verdecken durch einen Marker.
+    p = _write(tmp_path,
+               '<path d="M 40 52 L 40 130 L 160 130 L 160 52" fill="#7fb3d5"/>'
+               '<text x="100" y="100" font-size="15" text-anchor="middle">T</text>')
+    errors, warns = lint_file(p)
+    assert not any("SHAPE" in w for w in warns), warns

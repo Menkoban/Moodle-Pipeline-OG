@@ -361,6 +361,16 @@ def lint_file(path):
                 continue
             ow, oh = sh.overlaps(t)
             if ow > OVERLAP_EPS and oh > OVERLAP_EPS:
+                # Grosse gefuellte Flaechen sind Behaelter/Panels (wie rects):
+                # ein Label VOLL im Innern ist gewollt (z.B. "T" im
+                # Tank-Symbol). Nur kompakte Marker (Pfeilspitzen, Blobs)
+                # verdecken Text wirklich.
+                sh_area = (sh.x1 - sh.x0) * (sh.y1 - sh.y0)
+                t_area = max((t.x1 - t.x0) * (t.y1 - t.y0), 1.0)
+                inside = (sh.x0 <= t.x0 and t.x1 <= sh.x1
+                          and sh.y0 <= t.y0 and t.y1 <= sh.y1)
+                if inside and sh_area >= 15.0 * t_area:
+                    continue
                 warns.append(f"SHAPE <{sh.tag}> covers text '{t.label}' "
                              f"(~{ow:.0f}x{oh:.0f}px)")
 
