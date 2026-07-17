@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 430" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="660" height="430" fill="#ffffff"/>
+  <text x="330" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a1a1a">Aufbau der Standbohrmaschine</text>
+
+  <!-- Maschine -->
+  <rect x="230" y="370" width="200" height="26" rx="4" fill="#c9ccd1" stroke="#1a1a1a" stroke-width="1.5"/>
+  <rect x="312" y="118" width="20" height="252" fill="#9aa0a6" stroke="#1a1a1a" stroke-width="1.5"/>
+  <rect x="252" y="60" width="180" height="66" rx="8" fill="#dfe3e8" stroke="#1a1a1a" stroke-width="1.5"/>
+  <circle cx="278" cy="93" r="9" fill="#d8312c" stroke="#1a1a1a" stroke-width="1.5"/>
+  <circle cx="452" cy="86" r="10" fill="#dfe3e8" stroke="#1a1a1a" stroke-width="1.5"/>
+  <g stroke="#1a1a1a" stroke-width="2.5">
+    <line x1="452" y1="86" x2="482" y2="62"/>
+    <line x1="452" y1="86" x2="488" y2="94"/>
+    <line x1="452" y1="86" x2="468" y2="116"/>
+  </g>
+  <rect x="292" y="126" width="14" height="18" fill="#9aa0a6" stroke="#1a1a1a" stroke-width="1.2"/>
+  <rect x="288" y="144" width="22" height="22" fill="#5f6368" stroke="#1a1a1a" stroke-width="1.5"/>
+  <line x1="299" y1="166" x2="299" y2="212" stroke="#1a1a1a" stroke-width="3"/>
+  <rect x="240" y="288" width="130" height="14" fill="#b7bcc2" stroke="#1a1a1a" stroke-width="1.5"/>
+  <rect x="256" y="262" width="86" height="26" fill="#dfe3e8" stroke="#1a1a1a" stroke-width="1.5"/>
+  <rect x="262" y="268" width="12" height="14" fill="#5f6368"/>
+  <rect x="324" y="268" width="12" height="14" fill="#5f6368"/>
+  <rect x="276" y="252" width="46" height="12" fill="#f0c674" stroke="#1a1a1a" stroke-width="1.2"/>
+
+  <!-- Beschriftungen links (Hinweislinien enden am Text) -->
+  <text x="20" y="70" font-size="13" font-weight="bold" fill="#1a1a1a">Bohrkopf mit Antrieb</text>
+  <line x1="252" y1="76" x2="150" y2="66" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="20" y="100" font-size="13" font-weight="bold" fill="#a3322f">Not-Aus-Schalter</text>
+  <line x1="268" y1="94" x2="132" y2="96" stroke="#a3322f" stroke-width="1.2"/>
+  <text x="20" y="152" font-size="13" font-weight="bold" fill="#1a1a1a">Bohrfutter</text>
+  <line x1="288" y1="154" x2="92" y2="148" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="20" y="200" font-size="13" font-weight="bold" fill="#1a1a1a">Spiralbohrer</text>
+  <line x1="296" y1="196" x2="104" y2="196" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="20" y="262" font-size="13" font-weight="bold" fill="#1a1a1a">Werkstück</text>
+  <line x1="276" y1="258" x2="96" y2="258" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="20" y="300" font-size="13" font-weight="bold" fill="#1a1a1a">Maschinenschraubstock</text>
+  <line x1="256" y1="278" x2="182" y2="294" stroke="#5f6368" stroke-width="1.2"/>
+
+  <!-- Beschriftungen rechts -->
+  <text x="500" y="60" font-size="13" font-weight="bold" fill="#1a1a1a">Vorschubhebel</text>
+  <line x1="484" y1="70" x2="496" y2="58" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="500" y="140" font-size="13" font-weight="bold" fill="#1a1a1a">Spindel</text>
+  <line x1="306" y1="132" x2="496" y2="136" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="500" y="230" font-size="13" font-weight="bold" fill="#1a1a1a">Säule</text>
+  <line x1="332" y1="226" x2="496" y2="226" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="500" y="298" font-size="13" font-weight="bold" fill="#1a1a1a">Bohrtisch</text>
+  <line x1="370" y1="295" x2="496" y2="294" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="500" y="386" font-size="13" font-weight="bold" fill="#1a1a1a">Fußplatte</text>
+  <line x1="430" y1="382" x2="496" y2="382" stroke="#5f6368" stroke-width="1.2"/>
+</svg>

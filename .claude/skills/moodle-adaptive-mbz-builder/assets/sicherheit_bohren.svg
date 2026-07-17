@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 271" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="680" height="271" fill="#ffffff"/>
+  <text x="340" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a1a1a">Sicherheitsregeln an der Standbohrmaschine</text>
+
+  <!-- Gebot: Schutzbrille -->
+  <rect x="20" y="50" width="150" height="190" rx="10" fill="#eef3f7" stroke="#c9ccd1" stroke-width="1.5"/>
+  <circle cx="95" cy="115" r="42" fill="#185fa5" stroke="#0d3c66" stroke-width="2"/>
+  <circle cx="80" cy="115" r="12" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <circle cx="110" cy="115" r="12" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <line x1="92" y1="115" x2="98" y2="115" stroke="#ffffff" stroke-width="3"/>
+  <line x1="68" y1="110" x2="58" y2="106" stroke="#ffffff" stroke-width="3"/>
+  <line x1="122" y1="110" x2="132" y2="106" stroke="#ffffff" stroke-width="3"/>
+  <text x="95" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d3c66">Schutzbrille</text>
+  <text x="95" y="206" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d3c66">tragen (Pflicht)</text>
+
+  <!-- Verbot: Handschuhe -->
+  <rect x="190" y="50" width="150" height="190" rx="10" fill="#fdf0ef" stroke="#c9ccd1" stroke-width="1.5"/>
+  <path d="M 248 138 L 248 106 L 258 98 L 258 88 L 266 84 L 272 90 L 272 82 L 280 78 L 286 84 L 286 78 L 294 76 L 298 84 L 298 130 L 288 142 Z" fill="#f0c674" stroke="#854f0b" stroke-width="2"/>
+  <circle cx="265" cy="112" r="44" fill="none" stroke="#d8312c" stroke-width="6"/>
+  <line x1="234" y1="81" x2="296" y2="143" stroke="#d8312c" stroke-width="6"/>
+  <text x="265" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#a3322f">Keine Handschuhe</text>
+  <text x="265" y="206" text-anchor="middle" font-size="13" font-weight="bold" fill="#a3322f">und kein Schmuck</text>
+
+  <!-- Gebot: Haare sichern -->
+  <rect x="360" y="50" width="150" height="190" rx="10" fill="#eef3f7" stroke="#c9ccd1" stroke-width="1.5"/>
+  <circle cx="435" cy="112" r="42" fill="#185fa5" stroke="#0d3c66" stroke-width="2"/>
+  <circle cx="435" cy="118" r="18" fill="#ffffff"/>
+  <path d="M 415 106 A 22 20 0 0 1 455 106 L 452 96 A 24 22 0 0 0 418 96 Z" fill="#ffffff" stroke="#185fa5" stroke-width="1"/>
+  <g stroke="#185fa5" stroke-width="1.5" fill="none">
+    <line x1="420" y1="94" x2="450" y2="94"/>
+    <line x1="424" y1="88" x2="446" y2="88"/>
+  </g>
+  <text x="435" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d3c66">Lange Haare</text>
+  <text x="435" y="206" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d3c66">sichern (Haarnetz)</text>
+
+  <!-- Verbot: Späne mit der Hand -->
+  <rect x="530" y="50" width="130" height="190" rx="10" fill="#fdf0ef" stroke="#c9ccd1" stroke-width="1.5"/>
+  <path d="M 566 128 L 566 104 L 574 98 L 574 90 L 581 87 L 586 92 L 586 85 L 593 82 L 598 88 L 604 88 L 607 96 L 607 122 L 598 132 Z" fill="#f0c674" stroke="#854f0b" stroke-width="2"/>
+  <path d="M 588 142 Q 596 134 590 128 Q 584 122 592 116" fill="none" stroke="#5f6368" stroke-width="2.5"/>
+  <circle cx="588" cy="110" r="40" fill="none" stroke="#d8312c" stroke-width="6"/>
+  <line x1="560" y1="82" x2="616" y2="138" stroke="#d8312c" stroke-width="6"/>
+  <text x="595" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#a3322f">Späne nie mit</text>
+  <text x="595" y="206" text-anchor="middle" font-size="13" font-weight="bold" fill="#a3322f">der Hand</text>
+
+  <text x="340" y="258" text-anchor="middle" font-size="13" fill="#1a1a1a">Zusätzlich gilt: Futterschlüssel abziehen · Not-Aus kennen · erst bei Stillstand ins Arbeitsfeld greifen</text>
+</svg>

@@ -17,7 +17,7 @@ Prüft im Ordner:
   2. genau eine .mbz, und validate_mbz.py läuft grün
   3. *_vorschau.html vorhanden
   4. editor.html vorhanden (Editor-Widget wurde gebaut)
-  5. materials/ mit PDF+PPTX, wenn material:true-Seiten existieren
+  5. materials/ mit PDF+PPTX+DOCX, wenn material:true-Seiten existieren
   6. referenzierte relative Assets existieren
   7. Video-Recap eingebaut (kein 'Videozusammenfassung'-label-Platzhalter)
   8. adaptiv (auto-erkannt an *.pathmap.json): simulate_pathways.py grün
@@ -190,12 +190,15 @@ def main() -> int:
     if n_material:
         pdfs = glob.glob(os.path.join(d, "materials", "*.pdf"))
         pptx = glob.glob(os.path.join(d, "materials", "*.pptx"))
-        if len(pdfs) >= n_material and len(pptx) >= n_material:
-            ok.append(f"Materialien: {len(pdfs)} PDF + {len(pptx)} PPTX "
-                      f"fuer {n_material} Infoblaetter")
+        docx = glob.glob(os.path.join(d, "materials", "*.docx"))
+        if (len(pdfs) >= n_material and len(pptx) >= n_material
+                and len(docx) >= n_material):
+            ok.append(f"Materialien: {len(pdfs)} PDF + {len(pptx)} PPTX + "
+                      f"{len(docx)} DOCX fuer {n_material} Infoblaetter")
         else:
             fehler.append(f"materials/ unvollstaendig: {len(pdfs)} PDF/"
-                          f"{len(pptx)} PPTX fuer {n_material} material:true-Seiten")
+                          f"{len(pptx)} PPTX/{len(docx)} DOCX fuer "
+                          f"{n_material} material:true-Seiten")
     else:
         warn.append("keine material:true-Seiten — bei einem echten Kurs unueblich")
 
