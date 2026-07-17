@@ -28,11 +28,163 @@ Exit code 0 = all checks passed (warnings allowed), 1 = problems found.
 
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
 import tarfile
 import xml.etree.ElementTree as ET
+
+
+_NUM = r"[-+]?\d+(?:[  ]\d{3})*(?:[.,]\d+)?"
+# Einheiten-Token: "1/min"-Formen, Symbole, ausgeschriebene Einheiten
+# (längere Alternativen zuerst, damit "kV" vor "V" greift).
+_UNIT = (r"(?:1/min|1/s|1/h|kV|mV|µV|V|mA|µA|kA|A|kΩ|MΩ|Ω|kW|MW|VA|var|W|kN|Nm|N|"
+         r"hPa|kPa|MPa|Pa|mbar|bar|mm|cm|dm|km|µm|nm|m|ms|µs|ns|min|h|s|°C|K|°|"
+         r"kg|mg|µg|g|t|kHz|MHz|GHz|Hz|mF|µF|nF|pF|F|mH|µH|H|kWh|Wh|kJ|MJ|J|ml|l|%|"
+         r"Ohm|Volt|Ampere|Watt|Newton|Pascal|Hertz|Joule|Sekunden|Sekunde|"
+         r"Minuten|Minute|Stunden|Stunde|Meter|Grad|Prozent)")
+_UNIT_TOKEN_RX = re.compile(r"(?<![A-Za-zµ°])" + _UNIT + r"(?![A-Za-zµ])")
+_RESULT_RX = re.compile(r"=\s*(" + _NUM + r")")
+_RESULT_UNIT_RX = re.compile(r"=\s*" + _NUM + r"\s*" + _UNIT + r"(?![A-Za-zµ])")
+# Zahl gefolgt von Operator/Hochzahl -> Formel-Term, kein Ergebnis (z. B.
+# "n = 60 · f / p", "= 6²").
+_RESULT_OP_RX = re.compile(r"=\s*" + _NUM + r"\s*[/·*×^²³+\-−]")
+# Nur klar einheitenbehaftete Größen melden (hohe Präzision statt Vollständigkeit).
+# Mehrdeutige/dimensionslose Symbole (A=Ampere/Fläche, p=Druck/Polpaar,
+# n=Drehzahl/Anzahl, i/z=Übersetzung/Zähl, η=Wirkungsgrad, NN-Gewichte) bewusst
+# NICHT enthalten -> keine Fehlalarme auf dimensionslosen Größen.
+_QUANTITY = {"U", "I", "R", "P", "F", "M", "Q", "W", "E", "s", "v", "d", "l"}
+_LHS_SYM_RX = re.compile(r"([A-Za-z])[ _]?\d*\s*$")
+
+
+def _readable_text(raw: str) -> str:
+    """XML-escapetes (ggf. doppelt, z. B. &amp;#183;) HTML -> lesbarer Klartext:
+    entschärfen, Tags strippen, Leerraum zusammenfassen."""
+    txt = raw
+    for _ in range(3):                     # doppelte Escapes auflösen
+        new = html.unescape(txt)
+        if new == txt:
+            break
+        txt = new
+    txt = re.sub(r"<[^>]+>", " ", txt)     # HTML-Tags entfernen
+    return re.sub(r"\s+", " ", txt).strip()
+
+
+def _calc_unit_warnings(text: str) -> list[str]:
+    """Beratend: in einem Rechenkontext (Text mit '=' UND einem Einheiten-Token)
+    ein Ergebnis '<Größe> = <Zahl>' melden, dem KEINE Einheit folgt — aber nur,
+    wenn die linke Größe klar einheitenbehaftet ist (U, I, R, P, F …). Nie fatal."""
+    if "=" not in text or not _UNIT_TOKEN_RX.search(text):
+        return []
+    out, seen = [], set()
+    for m in _RESULT_RX.finditer(text):
+        if _RESULT_UNIT_RX.match(text, m.start()):
+            continue  # Einheit folgt -> ok
+        if _RESULT_OP_RX.match(text, m.start()):
+            continue  # Formel-Term (Operator/Hochzahl folgt) -> kein Ergebnis
+        sym = _LHS_SYM_RX.search(text[max(0, m.start() - 14):m.start()])
+        if not sym or sym.group(1) not in _QUANTITY:
+            continue  # keine klar einheitenbehaftete Größe -> nicht melden
+        snip = re.sub(r"\s+", " ", m.group(0)).strip()
+        if snip not in seen:
+            seen.add(snip)
+            out.append(snip)
+    return out[:5]
+
+
+# --- Merke-Satz-Heuristik: Merksatz vs. Stichwort-/Fragment-Kette (beratend) - #
+# Typische finite Verbformen (Hilfs-, Modal- und häufige Vollverben). Enthält ein
+# "?"-Segment ein solches Token, gilt es als vollständige Frage (kein Fragment) —
+# die Liste ist bewusst großzügig, damit gute Merksätze NICHT fälschlich als
+# Fragment-Kette geflaggt werden (Verben verringern die Trefferzahl).
+_FINITE_VERBS = {
+    "ist", "sind", "war", "waren", "bin", "bist", "seid", "sei", "wird",
+    "werden", "wirst", "werde", "wurde", "wurden", "hat", "haben", "habe",
+    "hast", "habt", "hatte", "hatten", "kann", "kannst", "können", "konnte",
+    "konnten", "muss", "musst", "müssen", "musste", "soll", "sollst", "sollen",
+    "sollte", "darf", "darfst", "dürfen", "mag", "mögen", "will", "wollen",
+    "willst", "möchte", "möchten", "gibt", "geht", "gehen", "kommt", "kommen",
+    "macht", "machen", "nimmt", "nehmen", "dreht", "drehen", "läuft", "laufen",
+    "liegt", "liegen", "steht", "stehen", "sitzt", "sitzen", "bleibt", "bleiben",
+    "braucht", "brauchen", "sorgt", "sorgen", "führt", "führen", "bedeutet",
+    "bedeuten", "passiert", "passieren", "entsteht", "entstehen", "erzeugt",
+    "erzeugen", "erkennt", "erkennen", "achtet", "achten", "prüft", "prüfen",
+    "funktioniert", "wählt", "wählen", "stellt", "stellen", "misst", "messen",
+    "steigt", "steigen", "sinkt", "sinken", "schont", "schonen", "gilt",
+    "gelten", "heißt", "zeigt", "zeigen", "hilft", "helfen", "tut", "tun",
+    "bohrt", "bohren", "spannt", "spannen", "verwendet", "verwenden", "benutzt",
+    "benutzen", "setzt", "setzen", "berechnet", "berechnen", "hält", "halten",
+    "kühlt", "kühlen", "passt", "passen", "brauchst", "beträgt", "ergibt",
+}
+_WORD_RX = re.compile(r"[A-Za-zÄÖÜäöüß]+")
+# Anker: 💡-Emoji ODER das eigenständige Wort „Merke".
+_MERKE_ANCHOR_RX = re.compile("\U0001F4A1" + r"|\bMerke\b")
+
+
+def _merke_fragment_warnings(text: str) -> list[str]:
+    """Beratend: In „Merke"-/💡-Kästen soll der Merksatz ein VOLLSTÄNDIGER Satz
+    sein, keine Stichwort-/Fragment-Kette. Anker: 💡-Emoji ODER das Wort „Merke".
+    Nach dem ersten „:" wird nur die unmittelbar folgende Klausel (bis zum ersten
+    „." / „!") betrachtet; besteht sie aus ≥2 kurzen (< 5 Wörter), verblosen
+    „…?"-Segmenten (z. B. „Schneiden scharf? Schaft sauber?"), gilt sie als
+    Fragment-Kette. Konservativ: lieber eine echte Kette verpassen als gute
+    Merksätze fälschlich flaggen. Nie fatal."""
+    out: list[str] = []
+    seen: set[str] = set()
+    for am in _MERKE_ANCHOR_RX.finditer(text):
+        window = text[am.start():am.start() + 200]
+        ci = window.find(":")
+        if ci < 0:
+            continue                       # kein „…:"-Merke-Lead -> nichts prüfen
+        # Nur die unmittelbar folgende Klausel bis zum ersten Satzende ansehen —
+        # so leckt späterer Kurstext (z. B. eine FAQ) keine Fragezeichen ein.
+        head = re.split(r"[.!]", window[ci + 1:], 1)[0]
+        segs = [s.strip(" ?\t\n") for s in re.findall(r"[^?]*\?", head)]
+        segs = [s for s in segs if s]
+        if len(segs) < 2:                  # keine „a? b?"-Kette
+            continue
+        words = [_WORD_RX.findall(s) for s in segs]
+        if sum(len(w) for w in words) / len(words) >= 5:
+            continue                       # Segmente im Schnitt zu lang -> Fragen
+        if any(w.lower() in _FINITE_VERBS for ws in words for w in ws):
+            continue                       # ein finites Verb -> vollständige Frage
+        snip = re.sub(r"\s+", " ", head).strip()
+        if snip and snip not in seen:
+            seen.add(snip)
+            out.append(snip)
+    return out[:3]
+
+
+# --- Rechenbeispiel-Schritt-Heuristik: Einsetzen -> Ergebnis (beratend) ------ #
+# Rechenoperator-Zeichen einer echten Zwischenrechnung.
+_CALC_OP_RX = re.compile(r"[·×÷/=≈*]")
+
+
+def _rechenbeispiel_step_warnings(text: str) -> list[str]:
+    """Beratend: Enthält ein Rechenbeispiel sowohl „Einsetzen" als auch
+    „Ergebnis", soll dazwischen mindestens eine Zwischenrechen-Zeile stehen
+    (Ziffern UND ein Rechenoperator ·×÷/=≈). Springt „Einsetzen:" ohne solche
+    Zeile direkt zum „Ergebnis", WARN. Konservativ — es wird nur gemeldet, wenn
+      * „Einsetzen" als Schritt ausgeschrieben ist (Doppelpunkt vor dem
+        „Ergebnis") UND
+      * nach „Ergebnis" wirklich ein Zahlenergebnis folgt,
+    damit reine Schema-Aufzählungen („… – Einsetzen – Ergebnis") und Fließtext
+    nichts auslösen. Nie fatal."""
+    for em in re.finditer(r"Einsetzen", text):
+        gm = re.search(r"Ergebnis", text[em.end():])
+        if not gm:
+            continue
+        between = text[em.end():em.end() + gm.start()]
+        after = text[em.end() + gm.end():em.end() + gm.end() + 40]
+        if ":" not in between:
+            continue                       # „Einsetzen" nicht als Schritt (kein „:")
+        if not re.search(r"\d", after):
+            continue                       # kein Zahlenergebnis -> keine echte Rechnung
+        if re.search(r"\d", between) and _CALC_OP_RX.search(between):
+            continue                       # Zwischenrechnung vorhanden -> ok
+        return [re.sub(r"\s+", " ", "Einsetzen" + between + "Ergebnis").strip()[:140]]
+    return []
 
 
 def main(path: str) -> int:
@@ -145,6 +297,24 @@ def main(path: str) -> int:
     info.append(f"sections: {sum(1 for _ in contents_el.iter('section'))}")
 
     warns: list[str] = []
+
+    # 9. archive/media size — big embedded media (e.g. an MP4 video) makes the
+    #    SYNCHRONOUS restore on shared hosting exceed execution/gateway limits.
+    #    The restore then dies mid-way (everything before is committed, the tail
+    #    activities are missing) and the broken page flow surfaces as
+    #    "A required parameter (contextid) was missing". Real school-Moodle
+    #    backups are typically a few MB. Warn early instead of failing late.
+    total = sum(m.size for m in tar.getmembers())
+    big = [(m.name, m.size) for m in tar.getmembers() if m.size > 10 * 1024 * 1024]
+    if big or total > 20 * 1024 * 1024:
+        detail = ", ".join(f"{n} ({s // (1024*1024)} MB)" for n, s in big) or "-"
+        warns.append(
+            f"GROESSE: Archiv {total // (1024*1024)} MB, grosse Datei(en): {detail} — "
+            f"Restore-Timeout-Risiko auf shared Hosting (Abbruch mittendrin, "
+            f"'required parameter contextid missing' als Folgefehler). Grosse Videos "
+            f"besser verlinken (set_recap_video.py --url) oder separat hochladen."
+        )
+
     _deep_checks(tar, set(members), contents, problems, warns, info)
 
     _report(info, warns, problems)
@@ -443,6 +613,40 @@ def _deep_checks(tar, members, contents, problems, warns, info):
     if n_av or gi_ids:
         info.append(f"adaptiv: {n_av} availability-Bäume, "
                     f"{len(gi_ids)} grade_items geprüft")
+
+    # ---- 14. Rechnungen ohne Einheit (beratend) -------------------------- #
+    for path, data in contents.items():
+        if not re.match(r"activities/(page|book)_\d+/\w+\.xml$", path):
+            continue
+        for block in re.findall(r"<content>(.*?)</content>", data, re.S):
+            snips = _calc_unit_warnings(_readable_text(block))
+            if snips:
+                warns.append(
+                    f"EINHEIT: mögliche Rechnung(en) ohne Einheit in "
+                    f"{path.split('/')[1]}: " + ", ".join(f"'{s}'" for s in snips)
+                    + " (Einheit ergänzen?)")
+
+    # ---- 15. Merke-Satz-Qualität & Rechenbeispiel-Schritte (beratend) ---- #
+    # Inhaltliche Tiefen-Checks auf Infoblättern: ein „Merke"/💡-Kasten soll ein
+    # vollständiger Satz sein (keine Stichwort-/Fragment-Kette), und ein
+    # Rechenbeispiel soll von „Einsetzen" nicht ohne Zwischenrechnung direkt zum
+    # „Ergebnis" springen. Beides nur WARN (siehe Helfer oben) — nie fatal.
+    for path, data in contents.items():
+        km = re.match(r"activities/(page|book)_\d+/\w+\.xml$", path)
+        if not km:
+            continue
+        tag = path.split("/")[1]
+        for block in re.findall(r"<content>(.*?)</content>", data, re.S):
+            txt = _readable_text(block)
+            for snip in _merke_fragment_warnings(txt):
+                warns.append(
+                    f"MERKE: Merksatz wirkt wie Stichwort-/Fragment-Kette statt "
+                    f"vollständiger Satz in {tag}: '{snip}'")
+            if km.group(1) == "page":      # Rechenbeispiel-Check nur auf Seiten
+                for snip in _rechenbeispiel_step_warnings(txt):
+                    warns.append(
+                        f"RECHENBEISPIEL: Einsetzen springt direkt zum Ergebnis — "
+                        f"Zwischenschritt fehlt in {tag}: '{snip}'")
 
 
 def _report(info: list[str], warns: list[str], problems: list[str]) -> None:
