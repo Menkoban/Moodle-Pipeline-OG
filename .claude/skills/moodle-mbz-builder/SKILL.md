@@ -625,7 +625,7 @@ renders exactly as before:
 
 - **`animate`** — a JS body `(root, s, o, t)` (`t` = seconds since Play, already
   speed-scaled). If present, the engine adds a **Play/Pause** button, a **speed**
-  control (0.25×–4×) and a `requestAnimationFrame` loop that calls `animate`
+  control (0.1×–4× — 0,1× ist Zeitlupe) and a `requestAnimationFrame` loop that calls `animate`
   every frame (playback starts **paused**; **Reset** sets `t=0`). Use it for
   anything that runs over time — a sine wave, a moving piston, a charging
   capacitor.

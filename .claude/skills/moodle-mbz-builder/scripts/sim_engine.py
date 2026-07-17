@@ -33,7 +33,7 @@ them renders exactly as it always has (no Play button, no challenge card):
 
   * `animate`  — a JS body with the signature `(root, s, o, t)`, where `t` is the
     number of seconds since Play (already scaled by the speed control). When
-    present, the engine adds a Play/Pause button, a speed control (0.25x-4x) and
+    present, the engine adds a Play/Pause button, a speed control (0.1x-4x) and
     a Reset (t=0), and drives a `requestAnimationFrame` loop that advances
     `t += dt*speed` per frame and calls the body. Playback starts PAUSED. Slider
     changes still call `update()` (which also calls `animate` with the frozen t,
