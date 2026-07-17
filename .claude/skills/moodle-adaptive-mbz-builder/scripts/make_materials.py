@@ -33,10 +33,51 @@ GREEN_HEX = "#1d6e56"
 
 def _need():
     try:
-        import svglib.svglib, reportlab, fitz, pptx, PIL  # noqa
+        import svglib.svglib, reportlab, fitz, pptx, docx, PIL  # noqa
     except Exception as e:
         sys.exit(f"Missing dependency: {e}\nInstall: python -m pip install "
-                 f"svglib reportlab pymupdf python-pptx pillow")
+                 f"svglib reportlab pymupdf python-pptx python-docx pillow")
+
+
+def _enable_font_cache():
+    """Make svglib parse each TrueType font file at most ONCE per process.
+
+    svglib's ``FontMap.find_font`` drops the weight/style when it falls through
+    to ``register_font`` (it calls ``register_font(family, guessed_file)`` with
+    the default normal/normal), so a bold/italic lookup is stored under the base
+    family name and the weighted key never hits the family cache. Every
+    ``svg2rlg`` render therefore re-runs reportlab's ``TTFont`` extraction on the
+    same Arial/… files — ~5 s of the material step for a course with several
+    diagrams (each SVG is rendered twice: vector into the PDF, rasterised for the
+    PPTX).
+
+    Fix: memoise ``register_font`` per process. A repeat call with identical
+    arguments returns the first result without re-registering. reportlab keeps
+    the TTFont from the first registration — fonts are designed to be registered
+    once and reused across documents — so the rendered PDF/PPTX bytes are
+    IDENTICAL; only the redundant font-file parse is skipped. Verified against a
+    frozen-clock byte manifest of the built .mbz (output unchanged).
+    """
+    try:
+        from svglib import fonts as _sf
+    except Exception:  # noqa: BLE001 - optional dependency
+        return
+    if getattr(_sf.FontMap, "_o2_font_cache", False):
+        return
+    _orig = _sf.FontMap.register_font
+
+    def _cached(self, font_family, font_path=None, weight="normal",
+                style="normal", rlgFontName=None):
+        cache = self.__dict__.setdefault("_o2_regcache", {})
+        key = (font_family, font_path, weight, style, rlgFontName)
+        if key in cache:
+            return cache[key]
+        res = _orig(self, font_family, font_path, weight, style, rlgFontName)
+        cache[key] = res
+        return res
+
+    _sf.FontMap.register_font = _cached
+    _sf.FontMap._o2_font_cache = True
 
 
 def slugify(name):
@@ -76,6 +117,7 @@ def title_of(page):
 def svg_to_pdf(svgpath, pdfpath):
     from svglib.svglib import svg2rlg
     from reportlab.graphics import renderPDF
+    _enable_font_cache()
     renderPDF.drawToFile(svg2rlg(svgpath), pdfpath)
 
 
@@ -83,6 +125,7 @@ def svg_to_png(svgpath, pngpath):
     from svglib.svglib import svg2rlg
     from reportlab.graphics import renderPDF
     import fitz
+    _enable_font_cache()
     tmp = pngpath + ".tmp.pdf"
     renderPDF.drawToFile(svg2rlg(svgpath), tmp)
     doc = fitz.open(tmp)
@@ -95,6 +138,8 @@ def svg_to_png(svgpath, pngpath):
 # tables/lists and the Merke box — not just a title + bullets.
 
 from html.parser import HTMLParser as _HTMLParser
+
+from fraction_render import to_slash
 
 _BLOCK = {"p", "div", "table", "ul", "ol", "img", "h1", "h2", "h3", "h4", "h5"}
 # Glyphs the built-in PDF font (Helvetica/WinAnsi) cannot draw -> strip them so
@@ -215,6 +260,7 @@ def make_pdf(page, base, out):
                                     TableStyle, ListFlowable, ListItem)
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from svglib.svglib import svg2rlg
+    _enable_font_cache()
 
     imgs = {}
     for p in page.get("images", []):
@@ -356,7 +402,7 @@ def make_pdf(page, base, out):
             elif c.children:
                 render(c)
 
-    render(_parse_html(page.get("content", "")))
+    render(_parse_html(to_slash(page.get("content", ""))))
     if not story:
         story = [Paragraph(_esc(title_of(page)), st["h3"])]
     doc = SimpleDocTemplate(out, pagesize=A4, topMargin=16 * mm, bottomMargin=16 * mm,
@@ -439,6 +485,141 @@ def make_glossary_import_xml(gl, out_path):
         fh.write(xml)
 
 
+def make_docx(page, base, out, workdir):
+    """Editierbare Word-Version des Infoblatts: Titel, Prosa, Listen, Tabellen,
+    Merke-/Info-Boxen (schattierte Zelle) und Diagramme (SVG->PNG). Word kann
+    Unicode/Emoji darstellen, daher KEIN Glyph-Stripping wie im PDF."""
+    import html as _html
+    from docx import Document
+    from docx.shared import Inches
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.oxml.ns import qn
+    from docx.oxml import OxmlElement
+    _enable_font_cache()
+
+    imgs = {}
+    for p in page.get("images", []):
+        pth = p if os.path.isabs(p) else os.path.join(base, p)
+        imgs[os.path.basename(p)] = pth
+
+    def _plain(node):
+        return _html.unescape(re.sub(r"<[^>]+>", "", _inline(node))).strip()
+
+    def _shade(cell, hexbg):
+        hexbg = (hexbg or "").lstrip("#") or "FFFFFF"
+        shd = OxmlElement("w:shd")
+        shd.set(qn("w:val"), "clear")
+        shd.set(qn("w:fill"), hexbg)
+        cell._tc.get_or_add_tcPr().append(shd)
+
+    doc = Document()
+    doc.add_heading(title_of(page), level=1)
+
+    def _box(text, hexbg):
+        tbl = doc.add_table(rows=1, cols=1)
+        tbl.style = "Table Grid"
+        tbl.cell(0, 0).text = text
+        _shade(tbl.cell(0, 0), hexbg)
+
+    def _table(node):
+        rows = []
+        for tr in _find(node, "tr"):
+            cells = [c for c in tr.children if c.tag in ("td", "th")]
+            rows.append([(_plain(c), c.tag == "th") for c in cells])
+        rows = [r for r in rows if r]
+        if not rows:
+            return
+        ncol = max(len(r) for r in rows)
+        t = doc.add_table(rows=len(rows), cols=ncol)
+        t.style = "Table Grid"
+        for ri, r in enumerate(rows):
+            for ci in range(ncol):
+                txt, is_th = r[ci] if ci < len(r) else ("", False)
+                cell = t.cell(ri, ci)
+                cell.text = txt
+                if is_th:
+                    _shade(cell, "e1f5ee")
+                    for par in cell.paragraphs:
+                        for run in par.runs:
+                            run.bold = True
+
+    def _img(fn):
+        pth = imgs.get(fn)
+        if not (pth and os.path.exists(pth)):
+            return
+        png = os.path.join(workdir, slugify(fn) + ".docx.png")
+        try:
+            svg_to_png(pth, png)
+            doc.add_picture(png, width=Inches(6.0))
+            doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        except Exception:  # noqa: BLE001
+            pass
+
+    def render(node):
+        for c in node.children:
+            tag = c.tag
+            if tag == "#text":
+                if c.text and c.text.strip():
+                    doc.add_paragraph(c.text.strip())
+            elif tag == "div":
+                bgcol = _bg(_style(c))
+                if _has_block(c):
+                    render(c)
+                elif bgcol:
+                    txt = _plain(c)
+                    if txt:
+                        _box(txt, bgcol)
+                else:
+                    txt = _plain(c)
+                    if txt:
+                        doc.add_paragraph(txt)
+            elif tag == "p":
+                bgcol = _bg(_style(c))
+                txt = _plain(c)
+                if not txt:
+                    continue
+                if bgcol:
+                    _box(txt, bgcol)
+                else:
+                    doc.add_paragraph(txt)
+            elif tag in ("h2", "h3", "h4"):
+                doc.add_heading(_plain(c), level={"h2": 2, "h3": 3, "h4": 4}[tag])
+            elif tag in ("ul", "ol"):
+                items = [ci for ci in c.children if ci.tag == "li"]
+                sty = "List Bullet" if tag == "ul" else "List Number"
+                for li in items:
+                    t = _plain(li)
+                    if t:
+                        doc.add_paragraph(t, style=sty)
+            elif tag == "table":
+                _table(c)
+            elif tag == "img":
+                _img((c.attrs.get("src", "") or "").split("/")[-1])
+            elif c.children:
+                render(c)
+
+    render(_parse_html(to_slash(page.get("content", ""))))
+    doc.save(out)
+
+
+def make_combined_pdf(pdf_paths, out):
+    """Fasst die einzelnen Infoblatt-PDFs zu EINEM Kurs-Materialdossier
+    zusammen — eine diagramm-reiche Quelle zum Hochladen in NotebookLM (nicht
+    nur Text). Leere/fehlende Liste -> keine Datei."""
+    paths = [p for p in pdf_paths if p and os.path.exists(p)]
+    if not paths:
+        return
+    import fitz
+    doc = fitz.open()
+    try:
+        for p in paths:
+            with fitz.open(p) as src:
+                doc.insert_pdf(src)
+        doc.save(out)
+    finally:
+        doc.close()
+
+
 def ensure_teacher_section(spec):
     for s in spec["sections"]:
         if s.get("visible") == 0:
@@ -472,7 +653,7 @@ def main():
     except Exception as e:  # noqa: BLE001
         print(f"NOTE: SVG diagram check skipped ({e}).", file=sys.stderr)
 
-    pdfs, pptxs = [], []
+    pdfs, pptxs, docxs = [], [], []
     for sec in spec["sections"]:
         new_acts = []
         for act in sec["activities"]:
@@ -484,6 +665,7 @@ def main():
                 bullets = extract_bullets(act)
                 pdfp = os.path.join(matdir, slug + ".pdf")
                 pptxp = os.path.join(matdir, slug + ".pptx")
+                docxp = os.path.join(matdir, slug + ".docx")
                 # Attributions-Fuß auch im Druck-PDF (idempotent angehängt)
                 pdf_act = act
                 try:
@@ -495,7 +677,8 @@ def main():
                     pass
                 make_pdf(pdf_act, base, pdfp)
                 make_pptx(title, svg, bullets, pptxp, matdir)
-                pdfs.append(pdfp); pptxs.append(pptxp)
+                make_docx(pdf_act, base, docxp, matdir)
+                pdfs.append(pdfp); pptxs.append(pptxp); docxs.append(docxp)
                 # The PDF is NOT inserted after the page: the Infoblatt stays
                 # alone at its spot in the course; all PDFs are collected in the
                 # hidden teacher section below.
@@ -509,6 +692,17 @@ def main():
         teacher["activities"].append({"type": "folder",
             "name": "Alle Infoblätter als PowerPoint (bearbeitbar)",
             "intro": "<p>Editierbare PPTX-Versionen zum Anpassen.</p>", "files": pptxs})
+        teacher["activities"].append({"type": "folder",
+            "name": "Alle Infoblätter als Word (bearbeitbar)",
+            "intro": "<p>Editierbare Word-Versionen (.docx) zum Anpassen.</p>", "files": docxs})
+        # Kombiniertes Materialdossier (alle Infoblätter + Diagramme in EINER
+        # PDF) — als echte Bild-Quelle zum Hochladen in NotebookLM, nicht nur
+        # Text. Liegt als loses Artefakt in materials/ (nicht im Kurs).
+        dossier = os.path.join(matdir, "Kurs-Materialdossier.pdf")
+        make_combined_pdf(pdfs, dossier)
+        if os.path.exists(dossier):
+            print("NotebookLM-Quelle (Infoblätter + Diagramme, hochladbar): "
+                  + dossier, file=sys.stderr)
 
     # Glossar-Fallback: Einträge sind im Moodle-Backup NUTZERDATEN. Wird beim
     # Wiederherstellen "Nutzerdaten einschließen" abgewählt (oder fehlt das
