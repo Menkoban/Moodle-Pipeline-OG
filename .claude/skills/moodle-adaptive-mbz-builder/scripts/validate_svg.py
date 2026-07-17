@@ -16,6 +16,14 @@ Checks per SVG:
   * TSPAN  (error)   — a styled inline <tspan> without its own x; svglib renders
     it on top of the following text (the "eibfaidhe genau EIN Weg" trap). Use
     separate <text> elements instead.
+  * ACHSE  (warn)    — a diagram marked data-diagram-type="chart" is missing an
+    axis line, or an axis title (a non-numeric label) on the x or y axis.
+  * SKALA  (warn)    — such a chart has fewer than 2 numeric scale values on an axis.
+  * FIGUR  (warn)    — an open path/polyline outline whose start and end nearly
+    meet (2-12px gap on a 2D figure) — likely an unclosed figure; close with Z.
+  * BEMASSUNG (warn) — a drawing marked data-diagram-type="zeichnung" carries
+    fewer than 3 plain dimension numbers (Maßzahlen) — likely an unbemaßte
+    Fertigungszeichnung; add position/size dimensions.
 
 Inputs may be .svg files, directories (scanned recursively), or a course JSON
 (every activity/page `images` entry is checked).
@@ -33,6 +41,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import math
 import os
 import sys
 
@@ -40,10 +49,19 @@ import svg_geometry as G
 
 EPS = 1.0            # viewBox tolerance in user units
 OVERLAP_EPS = 2.5    # min overlap (both axes) to count as hiding content
+LEADER_TAIL = 18.0   # a hit within this distance of a text-endpoint is the
+                     # leader tail (exempt); farther = the stroke body crossing
 
 
 def _pt_in_box(px, py, b, pad):
     return b.x0 - pad <= px <= b.x1 + pad and b.y0 - pad <= py <= b.y1 + pad
+
+
+def _seg_endpoint_dist(seg, pt):
+    """Distance from the nearer of the segment's own two endpoints to pt."""
+    x1, y1, x2, y2 = seg
+    return min(math.hypot(x1 - pt[0], y1 - pt[1]),
+               math.hypot(x2 - pt[0], y2 - pt[1]))
 
 
 def _seg_hits_box(seg, b, pad=1.0):
@@ -125,6 +143,15 @@ _RE_SS = re.compile(r"\b(gross\w*|weiss|heisst|schliess\w*|massnahme\w*|strasse\
 MIN_FONT_SIZE = 10.0   # kleinere Beschriftungen sind gedruckt kaum lesbar
 CENTER_TOL = 10.0      # "fast zentriert": mittig verankert, aber daneben
 ALIGN_TOL = 4.0        # "fast bündig": gestapelte Texte, um 1–4 px versetzt
+
+# rein numerisches Label (Skalenwert): "0", "-5", "3,14", "10.5"
+_NUMERIC_RX = re.compile(r"^-?\d+(?:[.,]\d+)?$")
+
+# reine Maßzahl einer Fertigungszeichnung: "20", "55", "100", "8 mm", "12,5"
+# — Ziffernfolge mit optionaler Dezimalstelle und optionaler Einheit (mm/°).
+# Ein beschreibendes Label wie "Ø 5 mm (2 Bohrungen)" ist KEINE reine Maßzahl.
+_MASSZAHL_RX = re.compile(r"^\s*\d+([.,]\d+)?\s*(mm|°)?\s*$")
+MIN_MASSZAHLEN = 3     # eine bemaßte Zeichnung hat Lage- UND Größenmaße
 
 
 def _typo_issues(label):
@@ -224,6 +251,8 @@ def lint_file(path):
     except Exception as e:  # noqa: BLE001
         return ([f"parse error: {e}"], [])
 
+    is_chart = (root.get("data-diagram-type") == "chart")
+    is_zeichnung = (root.get("data-diagram-type") == "zeichnung")
     vx, vy, vw, vh = G.get_viewbox(root)
     vx1, vy1 = vx + vw, vy + vh
     boxes = G.collect_boxes(root)
@@ -296,23 +325,52 @@ def lint_file(path):
         for t in texts:
             if not t.label:
                 continue
-            ends_here = (_pt_in_box(first[0], first[1], t, 6)
-                         or _pt_in_box(last[0], last[1], t, 6))
-            if ends_here:
+            hits = [s for s in segs if _seg_hits_box(s, t, pad=0.5)]
+            if not hits:
                 continue
-            if any(_seg_hits_box(s, t, pad=0.5) for s in segs):
-                warns.append(f"{kind} crosses text '{t.label}'")
+            # A leader line/arrow may legitimately END at the label, but only
+            # the tail near that endpoint is exempt. A hit far from every
+            # endpoint sitting in the label is the stroke body sweeping across
+            # it (e.g. a rotation arrow whose head merely lands beside the
+            # caption). Flag when such a far hit exists.
+            inside = [pt for pt in (first, last)
+                      if _pt_in_box(pt[0], pt[1], t, 6)]
+            if inside:
+                far = [s for s in hits
+                       if all(_seg_endpoint_dist(s, e) > LEADER_TAIL
+                              for e in inside)]
+                if not far:
+                    continue
+            warns.append(f"{kind} crosses text '{t.label}'")
 
-    # 4b) filled shapes (polygons — arrowheads, markers) covering a text label.
-    #     No leader exemption: a filled shape on top of text always hides it.
+    # 4b) filled shapes (polygons — arrowheads, markers — and filled <path>,
+    #     e.g. a hand/blob) covering a text label. No leader exemption: a
+    #     filled shape on top of text always hides it. Unfilled stroke paths
+    #     are handled by the crossing check above, so skip fill:none paths.
     for sh in boxes:
-        if sh.tag not in ("polygon", "polyline"):
+        if sh.tag in ("polygon", "polyline"):
+            pass
+        elif sh.tag == "path":
+            fill = (sh.extra.get("fill") or "").strip().lower()
+            if fill in ("", "none"):
+                continue
+        else:
             continue
         for t in texts:
             if not t.label:
                 continue
             ow, oh = sh.overlaps(t)
             if ow > OVERLAP_EPS and oh > OVERLAP_EPS:
+                # Grosse gefuellte Flaechen sind Behaelter/Panels (wie rects):
+                # ein Label VOLL im Innern ist gewollt (z.B. "T" im
+                # Tank-Symbol). Nur kompakte Marker (Pfeilspitzen, Blobs)
+                # verdecken Text wirklich.
+                sh_area = (sh.x1 - sh.x0) * (sh.y1 - sh.y0)
+                t_area = max((t.x1 - t.x0) * (t.y1 - t.y0), 1.0)
+                inside = (sh.x0 <= t.x0 and t.x1 <= sh.x1
+                          and sh.y0 <= t.y0 and t.y1 <= sh.y1)
+                if inside and sh_area >= 15.0 * t_area:
+                    continue
                 warns.append(f"SHAPE <{sh.tag}> covers text '{t.label}' "
                              f"(~{ow:.0f}x{oh:.0f}px)")
 
@@ -412,7 +470,133 @@ def lint_file(path):
             warns.append(f"KONTRAST text '{t.label}' hebt sich kaum vom "
                          f"Kasten ab (Kontrast {ratio:.1f}:1, < 2.5:1)")
 
+    # 11) V1/V3: Chart-Achsen + Skala (nur markierte Charts)
+    if is_chart:
+        warns += _chart_axis_warnings(boxes, vx, vy, vw, vh)
+
+    # 12) V4a: geschlossene Figuren (alle Diagramme)
+    warns += _figure_closure_warnings(boxes)
+
+    # 13) V5: Bemaßung technischer Zeichnungen (nur markierte Zeichnungen)
+    if is_zeichnung:
+        warns += _bemassung_warnings(boxes)
+
     return errors, warns
+
+
+def _segments(boxes):
+    """All straight segments (x1,y1,x2,y2) from line/polyline/polygon/path boxes."""
+    segs = []
+    for b in boxes:
+        if b.tag == "line":
+            seg = b.extra.get("seg")
+            if seg:
+                segs.append(seg)
+        elif b.tag in ("path", "polyline", "polygon"):
+            pts = b.extra.get("pts") or []
+            for k in range(len(pts) - 1):
+                segs.append((pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1]))
+    return segs
+
+
+def _find_axes(boxes, vx, vy, vw, vh):
+    """Longest near-horizontal segment in the lower half = x-axis; longest
+    near-vertical segment in the left part = y-axis. Returns (x_axis, y_axis),
+    each (x1,y1,x2,y2) or None."""
+    x_axis = y_axis = None
+    x_best = y_best = 0.0
+    for (x1, y1, x2, y2) in _segments(boxes):
+        dx, dy = x2 - x1, y2 - y1
+        length = math.hypot(dx, dy)
+        if abs(dy) <= 2 and min(y1, y2) >= vy + 0.5 * vh and length >= 0.4 * vw:
+            if length > x_best:
+                x_best, x_axis = length, (x1, y1, x2, y2)
+        if abs(dx) <= 2 and min(x1, x2) <= vx + 0.4 * vw and length >= 0.4 * vh:
+            if length > y_best:
+                y_best, y_axis = length, (x1, y1, x2, y2)
+    return x_axis, y_axis
+
+
+def _chart_axis_warnings(boxes, vx, vy, vw, vh):
+    """V1 (axis titles) — only called for diagrams marked
+    data-diagram-type="chart". V3 (scale) is added in a later task."""
+    warns = []
+    texts = [b for b in boxes if b.tag == "text" and b.label]
+    x_axis, y_axis = _find_axes(boxes, vx, vy, vw, vh)
+
+    def is_num(t):
+        return bool(_NUMERIC_RX.match(t.label.strip()))
+
+    def cx(t):
+        return (t.x0 + t.x1) / 2.0
+
+    def cy(t):
+        return (t.y0 + t.y1) / 2.0
+
+    if x_axis is None:
+        warns.append("ACHSE keine x-Achsenlinie erkennbar (Chart markiert)")
+    else:
+        ax_y = (x_axis[1] + x_axis[3]) / 2.0
+        if not any((not is_num(t)) and cy(t) > ax_y for t in texts):
+            warns.append("ACHSE x-Achse ohne Beschriftung (Achsentitel fehlt)")
+        if sum(1 for t in texts if is_num(t) and cy(t) > ax_y) < 2:
+            warns.append("SKALA x-Achse ohne Skalierung (< 2 numerische Werte)")
+
+    if y_axis is None:
+        warns.append("ACHSE keine y-Achsenlinie erkennbar (Chart markiert)")
+    else:
+        ax_x = (y_axis[0] + y_axis[2]) / 2.0
+        # lenient: y-titles are often rotated (position unreliable) -> any
+        # non-numeric text in the left third counts as a title.
+        if not any((not is_num(t)) and cx(t) < vx + vw / 3.0 for t in texts):
+            warns.append("ACHSE y-Achse ohne Beschriftung (Achsentitel fehlt)")
+        if sum(1 for t in texts if is_num(t) and cx(t) < ax_x) < 2:
+            warns.append("SKALA y-Achse ohne Skalierung (< 2 numerische Werte)")
+
+    return warns
+
+
+def _figure_closure_warnings(boxes):
+    """V4a — an open path/polyline outline whose start and end nearly meet is
+    likely an unclosed figure. Conservative: only 2-12px gaps on a 2D figure
+    whose endpoints nearly return to the start (so open curves/leaders, whose
+    endpoints are far apart, are never flagged). polygons are inherently closed
+    and carry path_closed=True."""
+    warns = []
+    for b in boxes:
+        if b.tag not in ("path", "polyline"):
+            continue
+        if b.extra.get("path_closed"):
+            continue
+        pts = b.extra.get("pts") or []
+        if len(pts) < 3:
+            continue
+        gap = math.hypot(pts[0][0] - pts[-1][0], pts[0][1] - pts[-1][1])
+        if not (2.0 < gap <= 12.0):
+            continue
+        if b.w <= 10 or b.h <= 10:            # a flat line, not a figure
+            continue
+        if gap >= 0.15 * math.hypot(b.w, b.h):  # endpoints don't return to start
+            continue
+        warns.append(f"FIGUR nicht geschlossen (Luecke ~{gap:.0f}px) - Pfad "
+                     f"mit Z schliessen oder Endpunkte treffen lassen")
+    return warns
+
+
+def _bemassung_warnings(boxes):
+    """V5 — only called for a drawing marked data-diagram-type="zeichnung". A
+    Fertigungszeichnung has to dimension the position AND the size of its
+    features, so it carries several plain dimension numbers (Maßzahlen). Count
+    the <text> labels that are a pure Maßzahl (``_MASSZAHL_RX`` — "20", "8 mm",
+    …); a describing label like "Ø 5 mm (2 Bohrungen)" does not count. Fewer
+    than ``MIN_MASSZAHLEN`` -> the drawing is likely unbemaßt."""
+    warns = []
+    n = sum(1 for b in boxes
+            if b.tag == "text" and _MASSZAHL_RX.match(b.label or ""))
+    if n < MIN_MASSZAHLEN:
+        warns.append("BEMASSUNG: technische Zeichnung ohne erkennbare "
+                     "Maßzahlen (Lage/Größe bemaßen)")
+    return warns
 
 
 def check_course_svgs(spec, base_dir=".", strict=False, out=None):

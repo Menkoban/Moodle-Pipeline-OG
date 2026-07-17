@@ -55,3 +55,35 @@ def test_clear_path_not_flagged(tmp_path):
                '<path d="M 100 150 Q 200 120 300 150" fill="none" stroke="#000"/>')
     errors, warns = lint_file(p)
     assert not any("PATH" in w or "SHAPE" in w for w in warns), warns
+
+
+def test_curved_arrow_endpoint_near_text_but_belly_crosses_is_flagged(tmp_path):
+    # Drehpfeil-Fall (spannen_ankoernen): EIN Endpunkt landet zufaellig am
+    # Label, der Bogen schwingt aber quer durch die Schrift. Die fruehere
+    # Leader-Ausnahme stellte den GANZEN Pfad frei -> Fehltreffer durchgerutscht.
+    p = _write(tmp_path,
+               '<text x="150" y="100" font-size="13" text-anchor="middle">Verletzungsgefahr</text>'
+               '<path d="M 210 78 Q 150 112 92 88" fill="none" stroke="#d00"/>')
+    errors, warns = lint_file(p)
+    assert any("PATH" in w and "Verletzungsgefahr" in w for w in warns), warns
+
+
+def test_filled_path_covering_text_is_flagged(tmp_path):
+    # gefuellter <path> (z.B. eine Hand/Blob) liegt ueber der Schrift -
+    # der SHAPE-Check pruefte bisher nur polygon/polyline.
+    p = _write(tmp_path,
+               '<text x="100" y="100" font-size="13">H1</text>'
+               '<path d="M 80 86 L 140 86 L 140 110 L 80 110 Z" fill="#e8b98a"/>')
+    errors, warns = lint_file(p)
+    assert any("SHAPE" in w and "H1" in w for w in warns), warns
+
+
+def test_label_inside_large_filled_container_is_exempt(tmp_path):
+    # Behaelter-Fall (Tank-Symbol im Hydraulik-Kreislauf): ein grosser
+    # gefuellter Pfad ENTHAELT sein Label vollstaendig - das ist gewollt
+    # (wie Text auf einem Panel-Rect), kein Verdecken durch einen Marker.
+    p = _write(tmp_path,
+               '<path d="M 40 52 L 40 130 L 160 130 L 160 52" fill="#7fb3d5"/>'
+               '<text x="100" y="100" font-size="15" text-anchor="middle">T</text>')
+    errors, warns = lint_file(p)
+    assert not any("SHAPE" in w for w in warns), warns

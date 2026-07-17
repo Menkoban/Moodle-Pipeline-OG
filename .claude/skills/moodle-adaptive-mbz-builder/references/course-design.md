@@ -75,6 +75,14 @@ Verbindliches Vokabular. Es bildet sich **eins zu eins** auf die Skill-Architekt
 
 ## 3. Pflicht-Sequenz der Lernabschnitte (mit Zeitbudgets)
 
+> **Profil-parametrisch:** Die Abschnitts-Sequenz kommt aus dem im Briefing
+> gewählten **didaktischen Profil** (`course.didaktik_profil`, Default `rode` —
+> siehe `scripts/didactic_profiles.py` / `get_profile(key)["section_sequence"]`).
+> Die Tabelle unten IST die Sequenz des Default-Profils `rode` (unverändert).
+> Ein anderes Profil bringt seine eigene Sequenz + Pflicht-Abschnitte mit; dann
+> gilt dessen `section_sequence` statt dieser Tabelle. Die restlichen Regeln
+> dieses Kapitels (Infoblatt-Bauplan, Feedback, Zeitbudget) sind konzept-neutral.
+
 Die Sektionen eines Moduls folgen dieser Reihenfolge. Index 0 ist ein kurzer
 „Über dieses Modul"-Abschnitt (Begrüßung + Ablauf), danach die nummerierten
 Lernabschnitte:
@@ -183,7 +191,9 @@ diesem Aufbau (siehe Few-Shot):
    den Text nicht; es ergänzt ihn.
 4. **Eingebettetes Diagramm** – `<img src='@@PLUGINFILE@@/…svg'>` (Abschnitt 6).
 5. **Stichpunkte oder Tabelle** – die Kernfakten kompakt.
-6. **Merke-Box** – ein hervorgehobener Sicherheits-/Kernhinweis.
+6. **Merke-Box** – ein hervorgehobener Sicherheits-/Kernhinweis in
+   **vollständigen Sätzen** (kein Stichwort-Telegramm à „Schneiden scharf? Schaft
+   sauber?"). `validate_mbz.py` warnt beratend (`MERKE:`) bei Fragment-Ketten.
 
 HTML-Muster (Attribute mit **einfachen** Anführungszeichen, damit die JSON-Strings
 ohne Escaping bleiben):
@@ -256,6 +266,32 @@ prüfe sie danach automatisch (nicht nur per Augenschein):
   sie stattdessen (z. B. Negationsstrich als `<line>` über dem Signal), oder lass
   das Symbol weg. Pfeile (→ ↑) und der Malpunkt · rendern dagegen. `validate_svg.py`
   warnt vor riskanten Glyphen.
+
+### Koordinaten-Diagramme (Charts) — Achsen, Skala, geschlossene Figuren
+
+- **Chart markieren:** Ein Diagramm mit Koordinatenachsen (Kennlinie,
+  Messkurve, Balken über einer Werteachse) bekommt am Wurzel-`<svg>` das
+  Attribut `data-diagram-type="chart"`. Nur so prüft `validate_svg.py` die
+  Achsen — Schaltpläne, Anatomiebilder und Piktogramme bleiben unberührt.
+- **Achsentitel (Pflicht bei Charts):** jede Achse braucht einen beschrifteten
+  Titel mit Größe/Einheit (z. B. „t in s", „U / V", „Kraft F") — nicht nur
+  Zahlen. Fehlt er → Warnung `ACHSE`.
+- **Skalierung (Pflicht bei Charts):** jede Achse braucht mindestens zwei
+  numerische Skalenwerte entlang der Achse (Teilstriche zusätzlich empfohlen).
+  Weniger als zwei → Warnung `SKALA`.
+- **Figuren schließen (alle Diagramme):** geschlossene Formen als `polygon`
+  oder als `path` mit abschließendem `Z` zeichnen, nicht als offene Linienkette
+  mit einer kleinen Lücke. Eine Restlücke von 2–12 px → Warnung `FIGUR`.
+- **Technische Zeichnungen — Bemaßung (Pflicht):** eine Fertigungs-/Bauteil-
+  zeichnung bekommt am Wurzel-`<svg>` das Attribut `data-diagram-type="zeichnung"`
+  und muss **Lage UND Größe** bemaßen — echte Maßlinien mit Begrenzungspfeilen und
+  **Maßzahlen** (z. B. „20", „55", „100"; nicht nur „Ø 5 mm"). Die Lage jeder
+  Bohrung ab einer Bezugskante bemaßen (parallele/gestaffelte Maße, Hilfslinien pro
+  Maß). `validate_svg.py` warnt (`BEMASSUNG:`), wenn eine so markierte Zeichnung
+  weniger als 3 reine Maßzahlen trägt.
+
+Alle diese Checks sind warn-Level und blocken damit das
+`validate_svg.py --strict`-Gate.
 
 ### Typografie-Konventionen in SVG-Text (Pflicht — der Validator prüft sie)
 
@@ -338,6 +374,64 @@ Quiz braucht `overallfeedback` (Prozentbänder mit Feed-Forward). Nie nur „ric
 
 **Reflexion & Transfer** (Recap): Rückblick aufs eigene Lernen + Transferauftrag,
 an eine konkrete eigene Handlung im Betrieb gebunden.
+
+### Rechenbeispiele & Aufgaben (Pflicht — geg/ges, Einheiten, echte Situation)
+
+**Rechenbeispiel-Bauplan (kopierbares Muster).** Jede vorgerechnete Aufgabe folgt
+Schritt für Schritt diesem Muster — nur ReportLab-sicheres HTML (`<b>`, `<sub>`,
+`<sup>`), damit es in Moodle-Seite, Vorschau UND PDF ankommt:
+
+```html
+<div class="rechenbeispiel">
+  <h4>Rechenbeispiel (Musterlösung): <Titel></h4>
+  <p><b>Situation:</b> <realer betrieblicher Kontext + konkrete Frage></p>
+  <p><b>Gegeben:</b> <Größe = Wert Einheit; …></p>
+  <p><b>Gesucht:</b> <Größe in Einheit></p>
+  <p><b>Formel:</b> <symbolisch; Bruch als \(\frac{}{}\)></p>
+  <p><b>Schritt 1 – Einheiten angleichen:</b> <z.B. mm→m, mit Begründung></p>
+  <p><b>Schritt 2 – Zwischenwert:</b> <Teilterm/Nenner ausrechnen, MIT Einheit></p>
+  <p><b>Schritt 3 – Einsetzen und rechnen:</b> <Division/Mult., Zwischenergebnis></p>
+  <p><b>Schritt 4 – Einheiten prüfen:</b> <Kürzung als Bruch sichtbar machen></p>
+  <p><b>Ergebnis:</b> <Wert Einheit, sinnvoll gerundet></p>
+  <p><b>Schritt 5 – In die Praxis:</b> <nächste Norm-/Maschinenstufe wählen></p>
+  <p><b>Plausibilität:</b> <Gegencheck, z.B. an einer Kennlinie></p>
+</div>
+```
+
+- **V5 — Musterlösung, nicht Kurzform:** Gegeben/Gesucht → Formel → **mindestens
+  eine Zwischenrechen-Zeile** → Ergebnis. NIE direkt von „Einsetzen" zu „Ergebnis"
+  springen — Einheiten-Umrechnung, Teilterme (z. B. Nenner) und das Runden auf die
+  praktische Stufe werden ausgeschrieben. Die Schrittzahl skaliert mit der
+  Komplexität (ein simples Verhältnis braucht weniger). `validate_mbz.py` warnt
+  beratend (`RECHENBEISPIEL:`), wenn „Einsetzen" ohne Zwischenschritt aufs
+  „Ergebnis" springt.
+- **V7 — Einheiten in JEDER Zeile:** jede physikalische Größe trägt ihre Einheit
+  (gegeben, eingesetzt, Zwischenwert, Ergebnis). Keine nackten Zahlen. Konventionen
+  wie bei SVG-Text (echte ²/³, Malpunkt ·, `1/min`).
+- **V6 — echte Aufgaben aus der Handlungssituation:** jede Aufgabe/Rechnung ist
+  in den realen betrieblichen Kontext des Kurses eingebettet (Bedarf, Zweck:
+  „In der Steuerung …, damit …") — NIE ein nacktes „Berechne R".
+- **Brüche in Rechnungen — echt setzen:** Brüche als MathJax schreiben:
+  `\(\frac{Zähler}{Nenner}\)` — Moodle rendert daraus einen echten Bruch
+  (`\(\frac{3}{4}\)` erscheint als echtes ¾), die Vorschau zeigt ihn gestapelt,
+  das PDF fällt auf `Zähler/Nenner` zurück. Nur der Bruch selbst ist MathJax; die
+  umgebende Gleichung (`R = \(\frac{U}{I}\) = 6 Ω`) bleibt normaler Text.
+- **Einheiten NICHT als Bruch (Regel):** m/s, km/h und besonders lange/
+  zusammengesetzte Einheiten (z. B. die der Gravitationskonstante) bleiben im
+  Fließtext normaler Text/Slash — nie in `\frac` zwingen.
+- **Ausnahme — Einheiten-Kürzung sichtbar machen:** Zeigt ein Rechenschritt, WIE
+  sich Einheiten kürzen, darf genau dieser Schritt als Bruch stehen — das macht das
+  Wegkürzen augenfällig. Muster (Drehzahl):
+  `\(\frac{m/min}{m}\) = \(\frac{m}{min · m}\) = \(\frac{1}{min}\)` → das „m" steht
+  oben und unten und kürzt sich weg, übrig bleibt 1/min. Nur für den
+  Kürzungs-Schritt, nicht als generelle Schreibweise der Einheit.
+  Voraussetzung fürs echte Bruch-Rendering: der **MathJax-Filter** ist im
+  Ziel-Moodle aktiv (4.x-Standard); sonst zeigt Moodle den LaTeX-Quelltext.
+  Wichtig: **keine verschachtelten** `\frac` (Zähler/Nenner ohne `{}` darin) — der
+  Renderer wandelt nur nicht-verschachtelte Brüche um.
+
+`validate_mbz.py` meldet beratend (nicht-fatal) eine Ergebniszeile ohne Einheit
+im Rechenkontext (`EINHEIT:`).
 
 ---
 
@@ -433,9 +527,12 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 9. `material:true` auf allen Infoblättern → PDF/PPTX automatisch; Lehrkräfte-Sektion verborgen.
 10. Mengen tragen die Zeit (Abschnitt 9).
 11. Pipeline durchlaufen: make_materials → build → **validate (grün)** → preview.
-12. `course.format` = `topics` (für Kachel-Optik nach dem Restore in der UI auf „tiles" umstellen).
+12. `course.format` = `tiles` mit echten **Kachel-Cover-PNGs** je sichtbarem Abschnitt (`"image"`, text-freies Motiv). Der Generator verdrahtet sie nativ als format_tiles-Fotos, `validate_mbz` prüft die Kette, `check_delivery` restauriert testweise. (Alternativ `topics` mit Banner-SVGs — dann gibt es KEINE Kachel-Titelbilder; das Ziel-Moodle braucht für Foto-Kacheln zudem `allowphototiles`.)
 13. **Pflicht-Attribution** in `course.summary` **und** als „Hinweis zur Entstehung"-`label` im Kurs-Recap (KI + Labor Didaktik der Technik, HS Osnabrück – siehe Abschnitt 3).
-14. **Kachel-Bild** auf jedem sichtbaren Abschnitt (`"image"`, Banner-SVG, Abschnitt 3).
+14. **Kachel-Bild** auf jedem sichtbaren Abschnitt: bei `tiles` ein text-freies **Cover-PNG** (Motiv-SVG → fitz-Raster ~1280×880, Titel legt Moodle drüber), bei `topics` ein Banner-SVG.
 15. **Typografie-Validator warnungsfrei** (echte Umlaute, ²/³, Malpunkt ·, Dezimalkomma, Bündigkeit, Kontrast — Abschnitt 6).
 16. **Ergebnisfelder als `formular`** (ausfüllbar + speicherbar), keine `__`-Lücken in Seiten.
-17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox).
+17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox). **Animation/Manipulation sind Standard**, wo das Thema etwas Bewegtes hergibt — Spec-Felder `animate` (Zeit-Loop mit Play/Pause/Speed) und `inputs[].type: select/toggle` (Schalter/Szenario statt nur Regler). **Challenge-Modus** (`challenge`) nur auf ausdrücklichen Wunsch einbauen — als ankreuzbare Option im Briefing nennen, nicht automatisch ergänzen. **Reale Drehzahlen/Frequenzen NICHT 1:1 als Sicht-Rotation** in `animate` — Helfer `visDeg(rpm, t)` nutzen (ruhige, lesbare Drehung; exakte Zahl bleibt KPI). Tempo-Regler reicht bis 0,1× (Zeitlupe).
+18. **Rechenbeispiele als Musterlösung** (Abschnitt 7): geg/ges → Formel → **mindestens ein Zwischenschritt** → Ergebnis → Praxisstufe; Einheiten in jeder Zeile; Einheiten-Kürzung als Bruch sichtbar. `validate_mbz` warnt (`RECHENBEISPIEL:`) bei direktem Sprung Einsetzen→Ergebnis.
+19. **Merke-Boxen in vollständigen Sätzen** (kein Stichwort-Telegramm); `validate_mbz` warnt (`MERKE:`).
+20. **Technische Zeichnungen bemaßt** (`data-diagram-type="zeichnung"`, Lage UND Größe mit Maßzahlen); `validate_svg` warnt (`BEMASSUNG:`).

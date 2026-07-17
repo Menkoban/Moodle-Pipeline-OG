@@ -26,6 +26,12 @@ except Exception:  # noqa: BLE001 - preview bleibt auch ohne build_mbz nutzbar
     def _with_attribution(content, spec):
         return content or ""
 
+try:
+    from fraction_render import to_css as _to_css
+except Exception:  # noqa: BLE001 - preview bleibt auch ohne fraction_render nutzbar
+    def _to_css(text):
+        return text
+
 _SPEC = {}  # aktuelles Kurs-Spec (für den Attributions-Fuß der Seiten)
 
 ICON = {"label": "ti-tag", "page": "ti-file-text", "quiz": "ti-help-circle",
@@ -191,7 +197,8 @@ def build_html(spec):
                     f"<div class='sec-b'>{section_banner(s)}{acts}</div></div>")
     meta = (f"{len(spec.get('sections', []))} Abschnitte · {n_act} Aktivitäten · "
             f"Format: {course.get('format','topics')}")
-    return TEMPLATE.format(title=title, meta=html.escape(meta), sections="".join(secs))
+    return _to_css(TEMPLATE.format(title=title, meta=html.escape(meta),
+                                   sections="".join(secs)))
 
 
 TEMPLATE = """<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">

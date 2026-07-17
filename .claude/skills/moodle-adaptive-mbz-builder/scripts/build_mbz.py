@@ -1731,7 +1731,11 @@ def _feedback_item(ctx, it, pos):
     t = it.get("type", "label")
     required = it.get("required", 0)
     if t == "label":
-        name, label, pres, hasvalue = None, f"info{pos}", it.get("text", ""), 0
+        # name MUST be the empty string, never NULL: mdl_feedback_item.name is
+        # NOT NULL DEFAULT '' — a $@NULL@$ here aborts the whole restore with
+        # dmlwriteexception "Column 'name' cannot be null" (real bug 2026-07-15,
+        # reproduced in the local Moodle 4.5 lab).
+        name, label, pres, hasvalue = "", f"info{pos}", it.get("text", ""), 0
     elif t == "multichoice":
         # 'r' = radio (single choice); '>>>>>' separates subtype from options,
         # '|' separates options. el() will escape the '>' as &gt;.
@@ -1760,7 +1764,7 @@ def _feedback_item(ctx, it, pos):
         f"        {el('position', pos)}\n"
         f"        {el('required', 1 if required else 0)}\n"
         f"        {el('dependitem', 0)}\n"
-        f"        <dependvalue>{NULL}</dependvalue>\n"
+        f"        <dependvalue></dependvalue>\n"
         f"        <options></options>\n"
         f"      </item>"
     )
