@@ -281,6 +281,9 @@ class MbzBuilder:
         # Gradebook: idnumber -> grade_item id (für availability-refs und
         # ##gi##-Formeln), globale sortorder, Sammel-Liste je Aktivität
         self.grade_ref: dict[str, int] = {}
+        # Aktivitäts-idnumber -> cmid (für completion-Bedingungen mit
+        # symbolischem cmref, z. B. Pfad-Lock der adaptiven Kurse)
+        self.cm_ref: dict[str, int] = {}
         self.grade_meta: dict[str, dict] = {}  # ref -> {id, grademax}
         self.grade_sortorder = 1  # 1 = course item
         self.n_quiz_grade_items = 0
@@ -372,61 +375,94 @@ class MbzBuilder:
         return self._pack()
 
     def _preassign_grade_items(self) -> None:
-        """Vergibt VOR dem Bauen jedem Quiz seine grade_item-ID und füllt die
-        idnumber->ID-Map. Nötig, weil availability-Bedingungen (Sections wie
-        Module) per symbolischem ref auf Tests zeigen dürfen, die im Spec erst
-        SPÄTER stehen (Vorwärtsreferenzen der adaptiven Verzweigung)."""
+        """Vergibt VOR dem Bauen jedem Quiz seine grade_item-ID und jeder
+        Aktivität ihre cmid und füllt die idnumber->ID-Maps. Nötig, weil
+        availability-Bedingungen (Sections wie Module) per symbolischem
+        ref/cmref auf Aktivitäten zeigen dürfen, die im Spec erst SPÄTER
+        stehen (Vorwärtsreferenzen der adaptiven Verzweigung)."""
         for sec in self.spec.get("sections", []):
             for act in sec.get("activities", []):
+                act["_cmid"] = self.ids.cmid()
+                idnum = act.get("idnumber")
+                if idnum:
+                    if idnum in self.cm_ref:
+                        raise ValueError(
+                            f"Doppelte Aktivitäts-idnumber '{idnum}' — "
+                            f"cmrefs wären mehrdeutig")
+                    self.cm_ref[idnum] = act["_cmid"]
                 if act.get("type") != "quiz":
                     continue
                 gid = self.ids.gradeitem()
                 act["_gradeitem_id"] = gid
-                idnum = act.get("idnumber")
                 if idnum:
-                    if idnum in self.grade_ref:
-                        raise ValueError(
-                            f"Doppelte Quiz-idnumber '{idnum}' — grade-refs "
-                            f"wären mehrdeutig")
                     self.grade_ref[idnum] = gid
 
     def resolve_availability(self, av) -> str | None:
         """Symbolische availability-Spec -> finaler Moodle-JSON-String.
-        grade-Bedingungen dürfen 'ref' (Quiz-idnumber) statt 'id' tragen.
-        Erzwingt die Restore-Invarianten aus dem Moodle-4.1-Quellcode:
-        op '&'/'!|' braucht showc (Länge == c), op '|'/'!&' braucht show;
-        grade-id muss JSON-Integer sein und im Backup existieren."""
+        grade-Bedingungen dürfen 'ref' (Quiz-idnumber) statt 'id' tragen,
+        completion-Bedingungen 'cmref' (Aktivitäts-idnumber) statt 'cm'.
+        Verschachtelte op-Knoten sind erlaubt (Pfad-Lock der adaptiven
+        Kurse). Erzwingt die Restore-Invarianten aus dem Moodle-Quellcode:
+        show/showc NUR an der Wurzel — op '&'/'!|' braucht showc (Länge ==
+        c), op '|'/'!&' braucht show; grade-id/completion-cm müssen
+        JSON-Integer sein und im Backup existieren; completion-e nur 0..3."""
         if not av:
             return None
         import copy as _copy
         av = _copy.deepcopy(av)
-        op = av.get("op", "&")
-        out_c = []
-        for c in av.get("c", []):
-            if c.get("type") == "grade":
-                if "ref" in c:
-                    ref = c.pop("ref")
-                    gid = self.grade_ref.get(ref)
-                    if gid is None:
+
+        def resolve_node(node: dict, root: bool = False) -> dict:
+            op = node.get("op", "&")
+            out_c = []
+            for c in node.get("c", []):
+                if "op" in c:
+                    out_c.append(resolve_node(c))
+                    continue
+                if c.get("type") == "grade":
+                    if "ref" in c:
+                        ref = c.pop("ref")
+                        gid = self.grade_ref.get(ref)
+                        if gid is None:
+                            raise ValueError(
+                                f"availability-ref '{ref}' unbekannt — kein "
+                                f"Quiz mit dieser idnumber im Kurs")
+                        c["id"] = gid
+                    if "id" not in c:
+                        raise ValueError("grade-Bedingung ohne id/ref")
+                    c["id"] = int(c["id"])
+                    for k in ("min", "max"):
+                        if k in c and c[k] is None:
+                            del c[k]
+                elif c.get("type") == "completion":
+                    if "cmref" in c:
+                        ref = c.pop("cmref")
+                        cmid = self.cm_ref.get(ref)
+                        if cmid is None:
+                            raise ValueError(
+                                f"availability-cmref '{ref}' unbekannt — "
+                                f"keine Aktivität mit dieser idnumber im Kurs")
+                        c["cm"] = cmid
+                    if "cm" not in c:
+                        raise ValueError("completion-Bedingung ohne cm/cmref")
+                    c["cm"] = int(c["cm"])
+                    if int(c.get("e", -1)) not in (0, 1, 2, 3):
                         raise ValueError(
-                            f"availability-ref '{ref}' unbekannt — kein Quiz "
-                            f"mit dieser idnumber im Kurs")
-                    c["id"] = gid
-                if "id" not in c:
-                    raise ValueError("grade-Bedingung ohne id/ref")
-                c["id"] = int(c["id"])
-                for k in ("min", "max"):
-                    if k in c and c[k] is None:
-                        del c[k]
-            out_c.append(c)
-        tree: dict = {"op": op, "c": out_c}
-        if op in ("|", "!&"):
-            tree["show"] = bool(av.get("show", False))
-        else:
-            showc = av.get("showc")
-            if not isinstance(showc, list) or len(showc) != len(out_c):
-                showc = [False] * len(out_c)
-            tree["showc"] = [bool(x) for x in showc]
+                            f"completion-Bedingung: e={c.get('e')!r} ungültig "
+                            f"(erlaubt 0..3)")
+                    c["e"] = int(c["e"])
+                out_c.append(c)
+            tree: dict = {"op": op, "c": out_c}
+            if root:
+                if op in ("|", "!&"):
+                    tree["show"] = bool(node.get("show", False))
+                else:
+                    showc = node.get("showc")
+                    if not isinstance(showc, list) or len(showc) != len(out_c):
+                        showc = [False] * len(out_c)
+                    tree["showc"] = [bool(x) for x in showc]
+            return tree
+
+        tree = resolve_node(av, root=True)
         return json.dumps(tree, separators=(",", ":"), ensure_ascii=False)
 
     # ----- sections + activities ---------------------------------------- #
@@ -587,7 +623,7 @@ class MbzBuilder:
                 f"Unsupported activity type {mod!r}. "
                 f"Supported: {', '.join(sorted(ACTIVITY_BUILDERS))}"
             )
-        cmid = self.ids.cmid()
+        cmid = act.get("_cmid") or self.ids.cmid()
         instance = self.ids.instance()
         modctx = self.ids.modctx()
         directory = f"activities/{mod}_{cmid}"
@@ -661,13 +697,14 @@ class MbzBuilder:
         directory: str,
     ) -> None:
         completion = act.get("completion", 0)
-        # Abschluss über Bestehensgrenze (completionpassgrade) und
-        # Sichtbarkeits-Bedingungen (availability) — Serialisierung exakt nach
-        # backup_module_structure_step (Moodle 4.1).
+        # Abschluss über Bestehensgrenze (completionpassgrade), Note erhalten
+        # (completionusegrade) und Sichtbarkeits-Bedingungen (availability) —
+        # Serialisierung exakt nach backup_module_structure_step (Moodle 4.1).
         cpg = 1 if act.get("completionpassgrade") else 0
-        if cpg and completion < 2:
-            completion = 2  # Bestehensgrenze erfordert automatischen Abschluss
-        cgin = "0" if cpg else NULL
+        usegrade = 1 if (cpg or act.get("completionusegrade")) else 0
+        if usegrade and completion < 2:
+            completion = 2  # notenbasierter Abschluss = automatischer Abschluss
+        cgin = "0" if usegrade else NULL
         av_json = self.resolve_availability(act.get("availability"))
         av_val = xesc(av_json) if av_json else NULL
         body = (

@@ -22,6 +22,23 @@ Verzweigungsmatrix (Fenster sind harte Kanten: erfüllt wenn min <= note < max):
 
 Einstieg "mittel": Stufe 1 besteht nur aus der Mittel-Kachel + Mittel-Test.
 
+Pfad-Lock (Null-Item-Invariante, seit 2026-07-17): Der erste Versuch im
+Stufentest wählt den Pfad der Stufe verbindlich. Jede Niveau-Kachel ist
+sichtbar wenn (Fenster UND alle Geschwister-Tests der Stufe unberührt)
+ODER der eigene Test schon angefasst wurde; die Geschwister-Tests selbst
+tragen zusätzlich einen Modul-Lock. Ohne diesen Lock kann ein Vortest-
+Retake (bester Versuch!) nachträglich einen zweiten Pfad öffnen — zwei
+Tests derselben Stufe würden gefüllt und der Gesamtscore doppelt zählen.
+„Unberührt" heißt exakt Zustand 0: die Moodle-completion-Bedingung e=0
+matcht auch „durchgefallen" (Zustand 3), daher !|-Knoten über e=1 + e=3
+(availability_completion::is_available, Moodle 4.5, verbatim verifiziert).
+Voraussetzung: Tests haben completion=2 + completionusegrade (Zustand wird
+mit der ersten Note automatisch pass/fail, niemals manuell abhakbar).
+
+grademax des kumulativen Doku-Items = Σ je Stufe (max. Gewicht der dort
+emittierten Pfade × 100) — das real erreichbare Maximum des besten Wegs,
+damit die Prozentanzeige lesbar ist (statt Summe ALLER Null-Items).
+
 Usage:
     python build_adaptive.py adaptive.json -o course.json
     # schreibt zusätzlich <output>.pathmap.json für simulate_pathways.py
@@ -76,6 +93,24 @@ def _availability(conds: list[dict]) -> dict:
 
 def _test_ref(s: int, niveau: str) -> str:
     return f"test-s{s}-{niveau}"
+
+
+def _touched(ref: str) -> dict:
+    """Test angefasst (Zustand 1/2/3): e=1 matcht {1,2}, e=3 matcht {3}."""
+    return {"op": "|", "c": [{"type": "completion", "cmref": ref, "e": 1},
+                             {"type": "completion", "cmref": ref, "e": 3}]}
+
+
+def _untouched(ref: str) -> dict:
+    """Test unberührt (exakt Zustand 0). NICHT e=0 verwenden — das matcht
+    in Moodle auch „durchgefallen" (Zustand 3)."""
+    return {"op": "!|", "c": [{"type": "completion", "cmref": ref, "e": 1},
+                              {"type": "completion", "cmref": ref, "e": 3}]}
+
+
+def _window_node(conds: list[dict]) -> dict:
+    """Ein oder mehrere Fenster -> einzelne Bedingung oder OR-Knoten."""
+    return conds[0] if len(conds) == 1 else {"op": "|", "c": conds}
 
 
 def expand(spec: dict) -> tuple[dict, dict]:
@@ -139,9 +174,11 @@ def expand(spec: dict) -> tuple[dict, dict]:
             f"<p>🧭 <b>Dieser Kurs passt sich dir an.</b> Jede Stufe gibt es "
             f"in {k} Varianten ({pfade_txt}). Nach jedem Test öffnet sich "
             "automatisch die Kachel, die zu deiner aktuellen Leistung passt — "
-            "du kannst jederzeit auf- und absteigen. Deine Gesamtbewertung "
-            "zählt Tests auf anspruchsvolleren Pfaden stärker; sie "
-            "dokumentiert deinen Weg, steuert ihn aber nicht.</p>"),
+            "du kannst jederzeit auf- und absteigen. Wichtig: Der erste "
+            "Versuch in einem Stufentest legt deinen Pfad für diese Stufe "
+            "verbindlich fest. Deine Gesamtbewertung zählt Tests auf "
+            "anspruchsvolleren Pfaden stärker; sie dokumentiert deinen Weg, "
+            "steuert ihn aber nicht.</p>"),
     })
     sections.append(intro)
 
@@ -173,7 +210,9 @@ def expand(spec: dict) -> tuple[dict, dict]:
         return conds
 
     # ---- Stufen ----------------------------------------------------------- #
-    def niveau_section(s: int, stufe: dict, nkey: str, conds: list[dict] | None) -> dict:
+    def niveau_section(s: int, stufe: dict, nkey: str,
+                       conds: list[dict] | None,
+                       sibs: list[str] | None = None) -> dict:
         nv = stufe["niveaus"][nkey]
         ref = _test_ref(s, nkey)
         test = copy.deepcopy(nv["test"])
@@ -182,7 +221,10 @@ def expand(spec: dict) -> tuple[dict, dict]:
         test["grade"] = 100            # Prozent-Semantik für die Fenster
         test["attempts"] = max_versuche
         test["gradepass"] = halt if nkey == top else ab
-        test.setdefault("completion", 1)
+        # Automatischer Abschluss bei Notenerhalt — Pflicht für den Pfad-
+        # Lock (manueller Abschluss wäre von Lernenden abhakbar/umgehbar).
+        test["completion"] = 2
+        test["completionusegrade"] = True
         sec = {
             "name": f"S{s} · {stufe['name']} — {nv.get('titel', labels[nkey])}",
             "summary": nv.get("summary", ""),
@@ -190,7 +232,22 @@ def expand(spec: dict) -> tuple[dict, dict]:
         }
         if nv.get("image"):
             sec["image"] = nv["image"]
-        if conds:
+        if sibs:
+            # Pfad-Lock: (Fenster UND Geschwister unberührt) ODER eigener
+            # Test angefasst — der erste Testversuch wählt den Pfad, die
+            # eigene Kachel bleibt danach dauerhaft offen (Fenster des
+            # Vortests kann sich per Retake noch ändern).
+            gate = ([_window_node(conds)] if conds else []) \
+                + [_untouched(r) for r in sibs]
+            sec["availability"] = {
+                "op": "|", "show": False,
+                "c": [{"op": "&", "c": gate}, _touched(ref)],
+            }
+            # Modul-Lock auf dem Test selbst — tragende Sperre gegen das
+            # Füllen eines zweiten Null-Items derselben Stufe.
+            test["availability"] = {"op": "&",
+                                    "c": [_untouched(r) for r in sibs]}
+        elif conds:
             sec["availability"] = _availability(conds)
         weights_by_ref[ref] = float(gewichte[nkey])
         return sec
@@ -221,8 +278,10 @@ def expand(spec: dict) -> tuple[dict, dict]:
                 if conds:
                     niveaus_hier.append((key, conds))
 
+        emitted = [key for key, _ in niveaus_hier]
         for nkey, conds in niveaus_hier:
-            sec = niveau_section(idx, stufe, nkey, conds)
+            sibs = [_test_ref(idx, k) for k in emitted if k != nkey]
+            sec = niveau_section(idx, stufe, nkey, conds, sibs)
             sections.append(sec)
             entry["sections"][nkey] = sec["name"]
             cur_tests[nkey] = _test_ref(idx, nkey)
@@ -282,11 +341,19 @@ def expand(spec: dict) -> tuple[dict, dict]:
     sections.append(abschluss)
 
     # ---- Gradebook: kumulatives Doku-Item (Null-Item-Trick) ---------------- #
+    # grademax = real erreichbares Maximum des besten Wegs (je Stufe füllt
+    # ein Lernender genau EIN Item) — nicht die Summe aller Null-Items,
+    # sonst zeigt selbst der perfekte Top-Pfad nur ~50 % an.
+    real_max = sum(max(float(gewichte[nk]) for nk in e["tests"])
+                   for e in pathmap["stufen"]) * 100.0
+    pathmap["grademax"] = real_max
+    pathmap["pfad_lock"] = "erster-testversuch-waehlt-pfad"
     out["gradebook"] = {
         "calculated": [{
             "itemname": "Gesamtscore (gewichtet, Dokumentation)",
             "idnumber": "gesamtscore",
             "weights": weights_by_ref,
+            "grademax": real_max,
         }]
     }
     out["sections"] = sections

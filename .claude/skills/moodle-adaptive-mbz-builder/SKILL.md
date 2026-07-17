@@ -55,6 +55,24 @@ Niveau (availability-Fenster, harte Kanten `min ≤ Note < max`); der gewichtete
 kumulative Gesamtscore (Calculated-Item) dokumentiert den Lernweg fürs
 Zeugnis und steuert NICHTS.
 
+**Pfad-Lock (Null-Item-Invariante, seit 2026-07-17): Der erste Versuch im
+Stufentest wählt den Pfad verbindlich.** Ohne Lock kann ein Vortest-Retake
+(bester Versuch!) nachträglich einen Geschwister-Pfad öffnen — zwei
+Null-Items derselben Stufe würden gefüllt, der Gesamtscore zählte doppelt
+und zwei Folgekacheln stünden offen. Deshalb trägt jede Niveau-Kachel
+`(Fenster UND alle Geschwister-Tests unberührt) ODER eigener Test
+angefasst`, und die Tests selbst einen Modul-Lock. „Unberührt" = exakt
+completion-Zustand 0 als `!|`-Knoten über e=1+e=3 — NICHT e=0, das matcht
+in Moodle auch „durchgefallen" (Zustand 3). Tests bekommen dafür
+`completion: 2` + `completionusegrade` (automatisch, nicht abhakbar).
+Der Förder-Retake im eigenen Pfad bleibt voll erhalten (gleicher Test).
+
+**grademax des kumulativen Items** = real erreichbares Maximum des besten
+Wegs (Σ je Stufe max. Gewicht der emittierten Pfade × 100) — sonst zeigt
+selbst der perfekte Top-Pfad-Lauf nur ~50 %. Ein perfekter Lauf auf einem
+mittleren Pfad zeigt designbedingt unter 100 % (höherer Pfad zählt mehr) —
+das gehört in die Autoren-Aufklärung, es ist kein Fehler.
+
 ```
 build_adaptive.py    adaptiv.json -o course.json      # Stufen -> verzweigte Sections
                                                       #  + <course>.pathmap.json
@@ -69,7 +87,9 @@ preview_mbz.py       course.materialized.json -o vorschau.html
 `simulate_pathways.py` ist der Abnahme-Test jedes adaptiven Kurses: Abdeckung
 (jede Note 0–100 öffnet GENAU eine Folgekachel), Ratschen-Szenarien (starker
 Anfänger steigt auf, schwacher Fortgeschrittener ab), Förder-Fenster,
-Versuchs-Deckel, Kumulativ-Gewichte, Entkopplung. Erst bei Exit 0 ausliefern;
+Versuchs-Deckel, Kumulativ-Gewichte, Entkopplung, Retake-/Pfad-Lock
+(Vortest-Retake darf keinen Geschwister-Pfad einer begonnenen Stufe öffnen)
+und grademax (= bestmöglicher Weg). Erst bei Exit 0 ausliefern;
 der echte Restore-Klicktest auf einer Moodle-Instanz bleibt Pflicht-QA des
 Autors (Testuser je Pfad).
 

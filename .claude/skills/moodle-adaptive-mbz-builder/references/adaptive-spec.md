@@ -93,10 +93,29 @@ simulate_pathways`). Didaktik/Herleitung: `adaptive-lernpfade.md`.
   Abstiegsschwelle in den Fenstern (asymmetrischer Puffer). Das gleitende
   2-Test-Mittel aus §4.3 der Referenz ist bewusst noch NICHT umgesetzt
   (dokumentierte Option).
+- **Pfad-Lock (Null-Item-Invariante)**: Der erste Versuch im Stufentest
+  wählt den Pfad der Stufe verbindlich. Kachel-Bedingung: `(Fenster UND
+  alle Geschwister-Tests unberührt) ODER eigener Test angefasst`;
+  zusätzlich Modul-Lock auf jedem Test. „Unberührt" = `!|`-Knoten über
+  completion e=1 + e=3 (exakt Zustand 0 — e=0 allein matcht in Moodle auch
+  „durchgefallen"). Tests werden auf `completion: 2` +
+  `completionusegrade` gestellt. Schützt vor Doppel-Füllung zweier
+  Null-Items derselben Stufe durch Vortest-Retakes (bester Versuch) und
+  gilt auch für `einstieg: "frei"` in Stufe 1. Prüft
+  `simulate_pathways.py` (RETAKE-Check).
+- **grademax des kumulativen Items** = Σ je Stufe (max. Gewicht der dort
+  emittierten Pfade × 100) — das real erreichbare Maximum des besten Wegs,
+  damit die Prozentanzeige lesbar ist. Moodle klemmt Calculated-Ergebnisse
+  auf grademax (`grade_item::bounded_grade`). Prüfen beide:
+  `simulate_pathways.py` (GRADEMAX-Check).
 
-## Symbolische Grade-Referenzen
+## Symbolische Grade-/CM-Referenzen
 
 Der Expander schreibt in availability-Bedingungen niemals numerische IDs,
-sondern `{"type":"grade","ref":"test-s1-mittel","min":…,"max":…}`.
-`build_mbz.py` löst `ref` beim Bauen gegen die ID-Map der erzeugten
-grade_items auf und serialisiert das finale Moodle-JSON.
+sondern `{"type":"grade","ref":"test-s1-mittel","min":…,"max":…}` bzw.
+`{"type":"completion","cmref":"test-s2-anfaenger","e":1}`.
+`build_mbz.py` löst `ref` gegen die grade_item-ID-Map und `cmref` gegen
+die cmid-Map auf (beide im Pre-Pass gefüllt, Vorwärtsreferenzen erlaubt)
+und serialisiert das finale Moodle-JSON. Verschachtelte op-Knoten sind
+erlaubt; show/showc setzt der Resolver nur an der Wurzel (Moodle-
+Restore-Invariante).

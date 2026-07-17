@@ -354,6 +354,15 @@ def _deep_checks(tar, members, contents, problems, warns, info):
     if dup_ids:
         problems.append(f"gradebook: doppelte grade_item-ids {sorted(dup_ids)}")
 
+    # cmid -> completion-Modus (für completion-Bedingungen: Pfad-Lock)
+    cm_completion: dict[int, int] = {}
+    for path, data in contents.items():
+        if path.endswith("/module.xml"):
+            mm = re.search(r'<module id="(\d+)"', data)
+            cc = re.search(r"<completion>(\d+)</completion>", data)
+            if mm:
+                cm_completion[int(mm.group(1))] = int(cc.group(1)) if cc else 0
+
     def _check_av_tree(src, raw):
         try:
             tree = json.loads(raw)
@@ -375,6 +384,25 @@ def _deep_checks(tar, members, contents, problems, warns, info):
             for cond in c:
                 if "op" in cond:
                     walk(cond)
+                    continue
+                if cond.get("type") == "completion":
+                    cm, e = cond.get("cm"), cond.get("e")
+                    if not isinstance(cm, int):
+                        problems.append(f"{src}: completion-cm {cm!r} ist "
+                                        f"kein JSON-Integer")
+                    elif cm not in cm_completion:
+                        problems.append(f"{src}: completion-cm {cm} existiert "
+                                        f"in keinem module.xml — Restore "
+                                        f"degradiert die Bedingung (Warnung)")
+                    elif cm_completion[cm] != 2:
+                        problems.append(f"{src}: completion-Bedingung auf cm "
+                                        f"{cm}, aber completion="
+                                        f"{cm_completion[cm]} statt 2 "
+                                        f"(automatisch) — Lock tot (0) oder "
+                                        f"von Lernenden abhakbar (1)")
+                    if e not in (0, 1, 2, 3):
+                        problems.append(f"{src}: completion-e {e!r} ungültig "
+                                        f"(erlaubt 0..3)")
                     continue
                 if cond.get("type") != "grade":
                     continue

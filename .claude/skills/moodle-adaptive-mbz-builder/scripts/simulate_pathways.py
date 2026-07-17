@@ -16,6 +16,19 @@ Checks:
                    konfigurierten Niveau-Gewichten (Null-Item-Trick) …
   6. ENTKOPPLUNG — … und KEINE availability-Bedingung referenziert das
                    kumulative Item (Ratschen-Verbot, §3 der Referenz).
+  7. RETAKE      — die Null-Item-Invariante überlebt Wiederholungen: Wer den
+                   Stufentest eines Pfads angefasst hat, kann nach einem
+                   verbesserten Retake des VORTESTS keinen Geschwister-Test
+                   derselben Stufe mehr füllen (Pfad-Lock via completion-
+                   Bedingungen); die eigene Kachel bleibt trotzdem offen.
+  8. GRADEMAX    — grademax des kumulativen Items = real erreichbares Maximum
+                   des besten Wegs (Σ je Stufe max. Gewicht × 100), damit die
+                   Prozentanzeige des Doku-Scores lesbar ist.
+
+Completion-Semantik (Moodle 4.5, availability/condition/completion,
+is_available — verbatim verifiziert): e=1 matcht Zustand {1,2} („complete
+also allows pass"), e=0 matcht {0,3} („incomplete also allows fail"),
+e=2/e=3 exakt. Zustände: 0=unberührt, 1=complete, 2=pass, 3=fail.
 
 Usage:  python simulate_pathways.py kurs.mbz kurs.pathmap.json
 Exit 0 = alle Checks bestanden, 1 = Verstöße.
@@ -69,6 +82,7 @@ def calculated_items(xml: dict) -> list[dict]:
                 "id": int(gi.get("id")),
                 "idnumber": (gi.findtext("idnumber") or "").strip(),
                 "calculation": calc,
+                "grademax": float(gi.findtext("grademax") or 0),
             })
     return out
 
@@ -106,18 +120,54 @@ def quiz_attempts(xml: dict) -> dict[str, int]:
     return out
 
 
+def modules(xml: dict) -> dict[str, dict]:
+    """Aktivitäts-idnumber -> {cmid, completion, availability-Baum, gradepass}.
+    gradepass kommt aus dem Quiz-grade_item (Prozent, da grademax=100)."""
+    out = {}
+    for path, data in xml.items():
+        m = re.match(r"activities/([a-z]+)_(\d+)/module\.xml$", path)
+        if not m:
+            continue
+        root = ET.fromstring(data)
+        idnum = (root.findtext("idnumber") or "").strip()
+        if not idnum:
+            continue
+        av_raw = root.findtext("availability") or ""
+        tree = None
+        if av_raw and av_raw != "$@NULL@$":
+            parsed = json.loads(av_raw)
+            if parsed.get("c"):
+                tree = parsed
+        gradepass = 0.0
+        grades = xml.get(f"activities/{m.group(1)}_{m.group(2)}/grades.xml")
+        if grades:
+            gp = ET.fromstring(grades).findtext(".//grade_item/gradepass")
+            if gp and gp != "$@NULL@$":
+                gradepass = float(gp)
+        out[idnum] = {
+            "cmid": int(root.get("id")),
+            "completion": int(root.findtext("completion") or 0),
+            "availability": tree,
+            "gradepass": gradepass,
+        }
+    return out
+
+
 # --------------------------------------------------------------------------- #
-# availability-Auswertung (Moodle-Semantik: erfüllt wenn min <= note < max;
-# leere Note (Test nicht gemacht) erfüllt eine grade-Bedingung NIE)
+# availability-Auswertung (Moodle-Semantik: grade erfüllt wenn min <= note
+# < max, leere Note NIE; completion e=1 matcht Zustand {1,2}, e=0 matcht
+# {0,3}, e=2/e=3 exakt — Quelle: availability_completion::is_available)
 # --------------------------------------------------------------------------- #
-def eval_tree(tree, scores: dict[int, float]) -> bool:
+def eval_tree(tree, scores: dict[int, float],
+              states: dict[int, int] | None = None) -> bool:
     if tree is None:
         return True
+    states = states or {}
     op = tree.get("op", "&")
     results = []
     for c in tree.get("c", []):
         if "op" in c:
-            results.append(eval_tree(c, scores))
+            results.append(eval_tree(c, scores, states))
         elif c.get("type") == "grade":
             g = scores.get(int(c["id"]))
             ok = g is not None
@@ -126,6 +176,15 @@ def eval_tree(tree, scores: dict[int, float]) -> bool:
             if ok and "max" in c:
                 ok = g < float(c["max"])
             results.append(ok)
+        elif c.get("type") == "completion":
+            st = states.get(int(c["cm"]), 0)   # unbekannt = unberührt
+            e = int(c["e"])
+            if e == 1:
+                results.append(st in (1, 2))
+            elif e == 0:
+                results.append(st in (0, 3))
+            else:
+                results.append(st == e)
         else:
             results.append(False)  # unbekannte Bedingung: konservativ
     if op == "&":
@@ -168,12 +227,24 @@ def main(mbz_path: str, pathmap_path: str) -> int:
     secs = sections(xml)
     calcs = calculated_items(xml)
     attempts = quiz_attempts(xml)
+    mods = modules(xml)
 
     sw = pm["schwellen"]
     auf, ab, halt = sw["aufstieg"], sw["abstieg"], sw["fortgeschritten_halten"]
     order = list(pm.get("niveaus") or NIVEAUS)   # geordnet niedrig -> hoch
     top = order[-1]
     errors, infos = [], []
+
+    def mk_states(touched: dict[str, float]) -> dict[int, int]:
+        """Angefasste Tests (ref -> Note) -> completion-Zustände (cmid ->
+        2=pass/3=fail via gradepass). Nicht gelistete Tests = 0 (unberührt)."""
+        st = {}
+        for ref, g in touched.items():
+            m = mods.get(ref)
+            if m is None:
+                continue
+            st[m["cmid"]] = 2 if g >= m["gradepass"] else 3
+        return st
 
     def expected_next(pkey: str, score: float) -> str:
         """Soll-Zielpfad nach der Verzweigungsmatrix (Referenz-Logik,
@@ -205,8 +276,9 @@ def main(mbz_path: str, pathmap_path: str) -> int:
                 errors.append(f"Test-Item '{pref}' fehlt im Gradebook")
                 continue
             for g in frange(0, 100, 0.5):
+                st = mk_states({pref: g})
                 visible = [nk for nk, tree in cur_secs.items()
-                           if eval_tree(tree, {pid: g})]
+                           if eval_tree(tree, {pid: g}, st)]
                 if len(visible) != 1:
                     errors.append(
                         f"ABDECKUNG S{cur['s']}: Vortest {pref}={g} -> "
@@ -219,8 +291,9 @@ def main(mbz_path: str, pathmap_path: str) -> int:
     def next_niveau(stage_idx: int, prev_ref: str, score: float):
         cur = stufen[stage_idx]
         pid = by_ref[prev_ref]
+        st = mk_states({prev_ref: score})
         vis = [nk for nk, nm in cur["sections"].items()
-               if eval_tree(sec_tree(nm), {pid: score})]
+               if eval_tree(sec_tree(nm), {pid: score}, st)]
         return vis[0] if len(vis) == 1 else None
 
     def check_transition(stage_idx: int, pkey: str, score: float, szenario: str):
@@ -262,10 +335,10 @@ def main(mbz_path: str, pathmap_path: str) -> int:
             thr = halt if nk == top else ab
             if pid is None:
                 continue
-            if not eval_tree(f_tree, {pid: thr - 5}):
+            if not eval_tree(f_tree, {pid: thr - 5}, mk_states({ref: thr - 5})):
                 errors.append(f"FÖRDER S{st['s']}: {ref}={thr-5} öffnet die "
                               f"Förder-Kachel nicht")
-            if eval_tree(f_tree, {pid: thr + 5}):
+            if eval_tree(f_tree, {pid: thr + 5}, mk_states({ref: thr + 5})):
                 errors.append(f"FÖRDER S{st['s']}: {ref}={thr+5} öffnet die "
                               f"Förder-Kachel fälschlich")
     for st in stufen:
@@ -275,6 +348,68 @@ def main(mbz_path: str, pathmap_path: str) -> int:
                 errors.append(f"DECKEL: {ref} hat attempts={got}, erwartet "
                               f"{pm['max_versuche']}")
     infos.append("Förder-Fenster + Versuchs-Deckel geprüft")
+
+    # ---- 7) RETAKE: Pfad-Lock gegen die Null-Item-Invariante --------------- #
+    # Szenario (Befund vom 2026-07-17): Vortest verhauen -> unteren Pfad
+    # begonnen (Stufentest angefasst) -> Vortest-Retake auf Aufstiegsniveau.
+    # Ohne Lock öffnet das den Geschwister-Pfad derselben Stufe: zwei Kacheln
+    # sichtbar, zwei Tests füllbar, Doppel-Zählung im Gesamtscore.
+    def visible_tiles(stage_idx: int, grades: dict[str, float]) -> set:
+        cur = stufen[stage_idx]
+        scores = {by_ref[r]: g for r, g in grades.items() if r in by_ref}
+        st = mk_states(grades)
+        return {nk for nk, nm in cur["sections"].items()
+                if eval_tree(sec_tree(nm), scores, st)}
+
+    def quiz_available(ref: str, grades: dict[str, float]) -> bool:
+        m = mods.get(ref)
+        if m is None:
+            return True   # kein Modul-Lock vorhanden
+        scores = {by_ref[r]: g for r, g in grades.items() if r in by_ref}
+        return eval_tree(m["availability"], scores, mk_states(grades))
+
+    for i in range(1, len(stufen)):
+        prev, cur = stufen[i - 1], stufen[i]
+        if len(cur["tests"]) < 2:
+            continue
+        pkey = (pm.get("einstieg") if pm.get("einstieg") in prev["tests"]
+                else list(prev["tests"])[0])
+        pref = prev["tests"][pkey]
+        low = expected_next(pkey, ab - 5)
+        high = expected_next(pkey, auf + 5)
+        if low == high or low not in cur["tests"] or high not in cur["tests"]:
+            continue
+        grades = {pref: ab - 5}
+        v1 = visible_tiles(i, grades)
+        if v1 != {low}:
+            errors.append(f"RETAKE S{cur['s']}: nach Vortest={ab-5} sichtbar "
+                          f"{sorted(v1)}, erwartet nur '{low}'")
+        grades[cur["tests"][low]] = (ab + auf) / 2   # eigenen Stufentest angefasst
+        grades[pref] = auf + 5                       # Vortest-Retake (bester Versuch)
+        v2 = visible_tiles(i, grades)
+        if high in v2:
+            errors.append(f"RETAKE S{cur['s']}: Vortest-Retake auf {auf+5} "
+                          f"öffnet Geschwister-Kachel '{high}' trotz begonnenem "
+                          f"Pfad '{low}' — Null-Item-Invariante verletzt")
+        if low not in v2:
+            errors.append(f"RETAKE S{cur['s']}: eigene Kachel '{low}' "
+                          f"verschwindet nach Vortest-Retake, obwohl ihr Test "
+                          f"schon gemacht wurde")
+        if quiz_available(cur["tests"][high], grades):
+            errors.append(f"RETAKE S{cur['s']}: Geschwister-Test "
+                          f"'{cur['tests'][high]}' bleibt nach Retake füllbar "
+                          f"— Doppel-Zählung im Gesamtscore möglich")
+    if len(stufen[0]["tests"]) > 1:    # Einstieg "frei": 1. Versuch wählt Pfad
+        keys = list(stufen[0]["tests"])
+        a, b = keys[0], keys[1]
+        grades = {stufen[0]["tests"][a]: 70.0}
+        if quiz_available(stufen[0]["tests"][b], grades):
+            errors.append(f"RETAKE S1 (frei): Test '{b}' bleibt füllbar, "
+                          f"obwohl Pfad '{a}' schon angefasst wurde")
+        if a not in visible_tiles(0, grades):
+            errors.append(f"RETAKE S1 (frei): eigene Kachel '{a}' nach "
+                          f"Testabgabe nicht mehr sichtbar")
+    infos.append("Retake-/Pfad-Lock geprüft (erster Testversuch wählt den Pfad)")
 
     # ---- 5) KUMULATIV: Gewichte exakt ------------------------------------- #
     kum = [c for c in calcs if c["idnumber"] == pm["kumulativ_idnumber"]]
@@ -300,6 +435,21 @@ def main(mbz_path: str, pathmap_path: str) -> int:
         extra = set(got_weights) - {r for st in stufen for r in st["tests"].values()}
         if extra:
             errors.append(f"KUMULATIV: Formel enthält fremde Items: {extra}")
+        # ---- 8) GRADEMAX: Prozentanzeige muss lesbar sein ----------------- #
+        # Pro Stufe füllt ein Lernender genau EIN Item; das real erreichbare
+        # Maximum ist Σ je Stufe (max. Gewicht der emittierten Pfade × 100) —
+        # nicht die Summe ALLER Items. Moodle klemmt Calculated-Ergebnisse
+        # auf grademax (grade_item::bounded_grade).
+        real_max = sum(max(float(pm["gewichte"][nk]) for nk in st["tests"])
+                       for st in stufen) * 100.0
+        if abs(kum[0]["grademax"] - real_max) > 1e-6:
+            errors.append(f"GRADEMAX: kumulatives Item hat grademax="
+                          f"{kum[0]['grademax']:g}, real erreichbar sind "
+                          f"{real_max:g} — Prozentanzeige irreführend "
+                          f"(bester Weg käme nur auf "
+                          f"{100*real_max/max(kum[0]['grademax'],1e-9):.0f} %)")
+        else:
+            infos.append(f"grademax={real_max:g} = bestmöglicher Weg (100 %)")
         # Beispielrechnung: ein konkreter Lernweg
         sample = []
         for st in stufen:
