@@ -292,6 +292,34 @@ def main(path: str) -> int:
                     f"{ctxid}; Moodle allows only one 'top' per context"
                 )
 
+    # 8. quiz-owned question categories must live at the quiz MODULE context
+    #    (contextlevel 70), with contextid == that quiz's question_reference
+    #    usingcontextid. Lumping every quiz's questions into the shared COURSE
+    #    context (all categories at the course contextid) makes Moodle's 4.x
+    #    question-bank restore abort with "A required parameter (contextid) was
+    #    missing" — the qbank machinery expects module-owned questions at the
+    #    module context. This guards against that regression.
+    if "questions.xml" in contents:
+        module_ctx_ids = {
+            (cat.findtext("contextid") or "").strip()
+            for cat in ET.fromstring(contents["questions.xml"]).iter("question_category")
+            if (cat.findtext("contextlevel") or "").strip() == "70"
+        }
+        for m, data in contents.items():
+            if re.match(r"activities/quiz_\d+/quiz\.xml$", m):
+                for uc in ET.fromstring(data).iter("usingcontextid"):
+                    ucid = (uc.text or "").strip()
+                    if ucid and ucid not in module_ctx_ids:
+                        problems.append(
+                            f"{m}: question_reference usingcontextid {ucid} has no "
+                            f"matching module-context (contextlevel=70) question_category "
+                            f"in questions.xml — quiz questions must live at the quiz "
+                            f"module context; a shared course-context bank makes restore "
+                            f"fail with 'required parameter (contextid) was missing'"
+                        )
+                        break
+
+
     info.append(f"activities: {sum(1 for _ in contents_el.iter('activity'))}")
     info.append(f"users: {len(user_ids)}, userrefs: {n_userref}")
     info.append(f"sections: {sum(1 for _ in contents_el.iter('section'))}")
