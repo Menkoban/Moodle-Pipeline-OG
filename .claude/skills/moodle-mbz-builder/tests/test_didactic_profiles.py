@@ -34,19 +34,19 @@ def test_registry_loads():
 
 
 def test_default_is_rode():
-    assert DEFAULT_PROFILE_KEY == "rode"
-    assert get_profile()["key"] == "rode"
-    assert get_profile(None)["key"] == "rode"
+    assert DEFAULT_PROFILE_KEY == "zdq"
+    assert get_profile()["key"] == "zdq"
+    assert get_profile(None)["key"] == "zdq"
 
 
 def test_rode_sequence_matches_pflichtsequenz():
-    assert section_titles("rode") == RODE_PFLICHT_SEQUENZ
+    assert section_titles("zdq") == RODE_PFLICHT_SEQUENZ
     # Pflicht-Abschnitte laut Doku sind eine Teilmenge der Sequenz
-    rode = get_profile("rode")
-    for name in rode["rules"]["pflicht_abschnitte"]:
+    zdq = get_profile("zdq")
+    for name in zdq["rules"]["pflicht_abschnitte"]:
         assert name in RODE_PFLICHT_SEQUENZ
     # verborgene Lehrkräfte-Sektion bleibt visible=0
-    lehrkraefte = rode["section_sequence"][-1]
+    lehrkraefte = zdq["section_sequence"][-1]
     assert lehrkraefte["title"] == "Material für Lehrkräfte"
     assert lehrkraefte["visible"] == 0
 
@@ -54,10 +54,10 @@ def test_rode_sequence_matches_pflichtsequenz():
 def test_second_profile_exists_and_differs():
     keys = [k for k, _ in list_profiles()]
     assert len(keys) >= 2
-    other = [k for k in keys if k != "rode"][0]
+    other = [k for k in keys if k != "zdq"][0]
     assert other in PROFILES
     # klar unterscheidbare Sequenz
-    assert section_titles(other) != section_titles("rode")
+    assert section_titles(other) != section_titles("zdq")
 
 
 def test_get_profile_unknown_key_raises():
@@ -71,9 +71,9 @@ def test_get_profile_unknown_key_raises():
 
 def test_get_profile_returns_copy():
     # Mutation der Rückgabe darf die Registry nicht verändern.
-    p = get_profile("rode")
+    p = get_profile("zdq")
     p["section_sequence"].append({"title": "Hack"})
-    assert section_titles("rode") == RODE_PFLICHT_SEQUENZ
+    assert section_titles("zdq") == RODE_PFLICHT_SEQUENZ
 
 
 def test_every_profile_has_guidance_ref():
@@ -85,7 +85,7 @@ def test_every_profile_has_guidance_ref():
 
 def test_list_profiles_default_first_for_briefing():
     # Das Briefing bietet IMMER eine Auswahl an (auch bei nur einem Profil),
-    # Default (rode) zuerst.
+    # Default (zdq) zuerst.
     listed = list_profiles()
     assert listed and listed[0][0] == DEFAULT_PROFILE_KEY
     assert all(isinstance(name, str) and name for _, name in listed)

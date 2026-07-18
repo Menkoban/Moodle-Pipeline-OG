@@ -2,7 +2,7 @@
 """Didaktik-Profile: auswählbare didaktische Konzepte für den Kursbau.
 
 Bisher ist das didaktische Konzept des Skills fest verdrahtet auf das
-Rode/ZDQ-5-Ebenen-Modell mit der Pflicht-Sequenz
+ZDQ-5-Ebenen-Modell mit der Pflicht-Sequenz
 Einführung → Grundlagen → Vertiefung → Anwendung → Kurs-Recap → Glossar →
 Material für Lehrkräfte (siehe `references/course-design.md` §2–3 und
 `SKILL.md` Schritt 3). Diese Sequenz + Regeln sind heute reine Autoren-Guidance
@@ -12,15 +12,15 @@ Sektionen so, wie sie in der Kurs-JSON stehen.
 
 Diese Datei macht das didaktische Konzept zu einem **auswählbaren Profil**: eine
 Registry benannter Profile, jedes mit eigener Abschnitts-Sequenz und
-Regel-Zusammenfassung. `DEFAULT_PROFILE_KEY = "rode"` bildet exakt das heutige
+Regel-Zusammenfassung. `DEFAULT_PROFILE_KEY = "zdq"` bildet exakt das heutige
 Verhalten ab.
 
 VERDRAHTUNG (Prompt-Ebene): Das gewählte Profil wird im **Briefing** immer
 abgefragt (auch bei nur einem Profil) und in `course.didaktik_profil`
-(Default `"rode"`) persistiert; SKILL.md („Follow the section sequence…",
+(Default `"zdq"`) persistiert; SKILL.md („Follow the section sequence…",
 `quality_check` (b)) und `references/course-design.md` §3 folgen der
 `section_sequence` / den `pflicht_abschnitte` des aktiven Profils. Die
-Bau-Skripte bleiben sequenz-agnostisch → Default `rode` = byte-identische
+Bau-Skripte bleiben sequenz-agnostisch → Default `zdq` = byte-identische
 Ausgabe wie zuvor.
 
 SPLIT-BEREITSCHAFT (Zukunft, NICHT umgesetzt): Jedes Profil ist ein
@@ -33,17 +33,17 @@ während der kombinierte Skill die Auswahl über ALLE Profile behält. Details:
 import copy
 import sys
 
-DEFAULT_PROFILE_KEY = "rode"
+DEFAULT_PROFILE_KEY = "zdq"
 
 
-# --- Profil 1: Rode/ZDQ – 5-Ebenen-Modell (DEFAULT, heutiges Verhalten) ------
+# --- Profil 1: ZDQ – 5-Ebenen-Modell (DEFAULT, heutiges Verhalten) ------
 # Sektions-Reihenfolge exakt nach references/course-design.md §3
 # („Pflicht-Sequenz der Lernabschnitte") und SKILL.md Schritt 3.
-_RODE = {
-    "key": "rode",
-    "name": "Rode/ZDQ – 5-Ebenen-Modell",
+_ZDQ = {
+    "key": "zdq",
+    "name": "ZDQ – 5-Ebenen-Modell",
     "beschreibung": (
-        "Handlungsorientiertes 5-Ebenen-Strukturmodell nach Henning Rode "
+        "Handlungsorientiertes 5-Ebenen-Strukturmodell des ZDQ (vom Autor erweitert) "
         "(Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → "
         "Lernkurs) für die berufliche Bildung. Default-Konzept des Skills."
     ),
@@ -104,7 +104,7 @@ _RODE = {
 
 # --- Profil 2: Vollständige Handlung / AVIVA (Beispiel-Stub) ------------------
 # Beispiel für ein alternatives Konzept: die Phasen der vollständigen Handlung
-# werden nicht nur Rationale (wie bei Rode), sondern selbst zur Abschnitts-
+# werden nicht nur Rationale (wie beim ZDQ-Modell), sondern selbst zur Abschnitts-
 # Sequenz. STUB – zur Demonstration der Austauschbarkeit, noch nicht ausgebaut.
 _VOLLSTAENDIGE_HANDLUNG = {
     "key": "vollstaendige-handlung",
@@ -159,7 +159,7 @@ _VOLLSTAENDIGE_HANDLUNG = {
 
 
 PROFILES = {
-    _RODE["key"]: _RODE,
+    _ZDQ["key"]: _ZDQ,
     _VOLLSTAENDIGE_HANDLUNG["key"]: _VOLLSTAENDIGE_HANDLUNG,
 }
 
@@ -172,7 +172,7 @@ def list_profiles():
 
 
 def get_profile(key=DEFAULT_PROFILE_KEY):
-    """Profil zu `key` (Default: 'rode') als tiefe Kopie – die Registry bleibt
+    """Profil zu `key` (Default: 'zdq') als tiefe Kopie – die Registry bleibt
     unveränderlich. Unbekannter Key -> ValueError mit verfügbaren Keys."""
     if key is None:
         key = DEFAULT_PROFILE_KEY
