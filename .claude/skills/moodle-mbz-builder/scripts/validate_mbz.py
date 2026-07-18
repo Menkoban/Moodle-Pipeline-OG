@@ -370,8 +370,27 @@ def main(path: str) -> int:
 ATTRIBUTION_MARKER = "Labor Didaktik der Technik"
 
 
+def _check_null_in_attributes(contents, problems):
+    # ---- 7b. $@NULL@$ niemals in XML-ATTRIBUTEN --------------------------- #
+    # Moodle dekodiert den NULL-Platzhalter nur in Element-Texten. In einem
+    # Attribut (z. B. <grade_setting id="$@NULL@$">) kommt der literale String
+    # an, wird als itemid in backup_ids_temp (int) geschrieben und bricht den
+    # Restore mit dmlwriteexception ab ("Incorrect integer value").
+    for path, data in contents.items():
+        if not path.endswith(".xml"):
+            continue
+        for m in re.finditer(r'<(\w+)[^>]*?\s(\w+)="\$@NULL@\$"', data):
+            problems.append(
+                f"{path}: Attribut {m.group(2)} von <{m.group(1)}> ist "
+                f"'$@NULL@$' — Platzhalter gilt nur für Element-Texte; "
+                f"leeres Attribut (\"\") verwenden"
+            )
+
+
 def _deep_checks(tar, members, contents, problems, warns, info):
     mb = contents.get("moodle_backup.xml", "")
+
+    _check_null_in_attributes(contents, problems)
 
     def setting(name):
         m = re.search(rf"<name>{re.escape(name)}</name>\s*<value>(\d+)</value>", mb)
