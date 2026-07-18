@@ -215,9 +215,12 @@ def main() -> int:
         fehler.append("'Videozusammenfassung' ist noch Platzhalter — NotebookLM-Flow "
                       "fahren oder mit --allow-video-placeholder begruenden")
 
-    # 8. adaptiv: Ratschen-Gate
+    # 8. adaptiv: Abnahme-Gate je Modell — Stufen (*.pathmap.json ->
+    # simulate_pathways) ODER Diagnose (*.modmap.json -> simulate_modular).
     pathmaps = glob.glob(os.path.join(d, "*.pathmap.json"))
+    modmaps = glob.glob(os.path.join(d, "*.modmap.json"))
     sim = os.path.join(HERE, "simulate_pathways.py")
+    sim_mod = os.path.join(HERE, "simulate_modular.py")
     if pathmaps and os.path.exists(sim):
         if len(mbzs) == 1:
             r = subprocess.run([sys.executable, sim, mbzs[0], pathmaps[0]],
@@ -227,9 +230,19 @@ def main() -> int:
             else:
                 fehler.append(f"simulate_pathways FAIL:\n"
                               f"{(r.stdout + r.stderr).strip()[-800:]}")
+    elif modmaps and os.path.exists(sim_mod):
+        if len(mbzs) == 1:
+            r = subprocess.run([sys.executable, sim_mod, mbzs[0], modmaps[0]],
+                               capture_output=True, text=True)
+            if r.returncode == 0:
+                ok.append("simulate_modular: Diagnose-Modell B.7 gruen")
+            else:
+                fehler.append(f"simulate_modular FAIL:\n"
+                              f"{(r.stdout + r.stderr).strip()[-800:]}")
     elif os.path.exists(sim):
-        fehler.append("adaptiver Skill, aber keine *.pathmap.json im Ordner "
-                      "(build_adaptive.py nicht gelaufen?)")
+        fehler.append("adaptiver Skill, aber weder *.pathmap.json noch "
+                      "*.modmap.json im Ordner (build_adaptive.py / "
+                      "build_modular.py nicht gelaufen?)")
 
     # 9. Live-Restore (optional, nur wenn Skill moodle-testinstanz vorhanden)
     if len(mbzs) == 1:

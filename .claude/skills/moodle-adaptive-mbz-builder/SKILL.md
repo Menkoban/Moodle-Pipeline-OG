@@ -99,6 +99,39 @@ Generator-Bausteine dahinter (für Debugging): Quiz-grade_items in
 availability-Bedingungen mit symbolischen `ref`-Verweisen, die beim Build
 gegen die ID-Map aufgelöst werden — Sections (Kacheln) wie Module.
 
+## Zweites Modell: Diagnose-Module mit Schichten-Overlays (seit 2026-07-18)
+
+Neben dem Stufen-Modell beherrscht der Skill das **Diagnose-Modul-Modell**
+(`adaptive.modell: "diagnose"`, Spec: `references/modular-spec.md` —
+PFLICHTLEKTÜRE für diesen Modus). Kernunterschiede:
+
+- **Einstufung je Modul frisch**: Kurzer Diagnosetest (Kategorie
+  „Einstufung", **Gewicht 0** — beeinflusst die Note NIE), dann drei
+  Niveaupfade (basic/standard/advanced) im selben Modul.
+- **Konvergenz statt Null-Item-Trick**: Alle Pfade münden in EINEN
+  bewerteten Sicherungstest (Kategorie „Leistung"); Folgemodul öffnet ab
+  Bestehensgrenze, darunter erscheint der Remediationsblock.
+- **Schichtenmodell**: Nur Niveau erzeugt Pfade (multiplikativ); alles
+  Weitere sind additive Overlays über Gruppen-/date-/grade-Bedingungen —
+  Kern: Sprachhilfe + Praxiserfahrung (tri-state mit Negation), optional:
+  Prüfungsnähe, Wiederholer, Anschlussorientierung, Verkürzer, Umschüler
+  (Layer-Registry in `build_modular.py`). Gruppen kommen ohne Mitglieder
+  aus dem Backup; eine generierte Selbsteinschätzungs-Abstimmung +
+  Lehrkraft-Hinweis regeln die Zuweisung.
+
+```
+build_modular.py     modular.json -o course.json     # + <course>.modmap.json
+build_mbz.py / validate_mbz.py                       # wie gehabt
+simulate_modular.py  kurs.mbz kurs.modmap.json       # PFLICHT: B.7-Abnahme
+```
+
+`check_delivery.py` erkennt das Modell automatisch (`*.modmap.json` →
+simulate_modular statt simulate_pathways). Wann welches Modell? **Stufen**,
+wenn Durchlässigkeit über einen Kurs-Spannungsbogen (Auf-/Abstieg zwischen
+Stufen, gewichteter Doku-Score) gewünscht ist; **Diagnose**, wenn jedes
+Modul eigenständig einstufen soll und Overlays (Sprache/Praxis/…) gebraucht
+werden — im Zweifel Diagnose anbieten, Modellwahl gehört ins Briefing.
+
 ## Pflicht-Ablauf mit Gates — Step-by-Step, nichts überspringen
 
 Jeder adaptive Kursauftrag läuft in DIESER Reihenfolge. **Lege beim Start
@@ -143,6 +176,20 @@ Auswahl-Fragen (AskUserQuestion, 2–4 Optionen, beste mit „(empfohlen)",
 Batch von 2–4 Fragen). Es ERGÄNZT den Kurs-Steckbrief des linearen
 Skills (Thema, Zielgruppe, Lernziele … — siehe unten) um die adaptiven
 Grundsatzentscheidungen:
+
+0. **Modellwahl zuerst:** Stufen-Modell (Durchlässigkeit über den
+   Kurs-Spannungsbogen, gewichteter Doku-Score) ODER Diagnose-Modul-Modell
+   (Einstufung je Modul, gemeinsame Sicherung, Schichten-Overlays). Bei
+   „Diagnose": zusätzlich die Overlay-Auswahl briefen — Kern (Sprachhilfe,
+   Praxiserfahrung) bestätigen/abwählen, dann die optionalen Kandidaten
+   (Prüfungsnähe · Wiederholer · Anschlussorientierung · Verkürzer ·
+   Umschüler) je mit einem Satz zu Anwendungsfall und Aussehen anbieten
+   (max. 2–3 aktivieren, multiSelect); je gewähltem Overlay die
+   Datenquelle klären (Gruppe manuell / Selbstwahl / Stichtag /
+   leistungsbasiert). Nachteilsausgleich separat ansprechen: läuft über
+   Nutzerüberschreibungen, nicht über Sichtbarkeit. Die Fragen 1–4 unten
+   gelten für das Stufen-Modell; im Diagnose-Modell entfallen sie
+   (Niveaus fest basic/standard/advanced, Schwellen 50/80 als Vorschlag).
 
 1. **Wonach differenzieren?** (multiSelect — Kombinationen sind erlaubt)
    - Niveau/Komplexität (empfohlen) — anspruchsvollere Aufgaben je Pfad

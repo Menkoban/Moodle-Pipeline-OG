@@ -552,14 +552,32 @@ def _deep_checks(tar, members, contents, problems, warns, info):
     if dup_ids:
         problems.append(f"gradebook: doppelte grade_item-ids {sorted(dup_ids)}")
 
-    # cmid -> completion-Modus (für completion-Bedingungen: Pfad-Lock)
-    cm_completion: dict[int, int] = {}
+    # cmid -> (completion-Modus, hat-Kriterium) für completion-Bedingungen.
+    # Kriterium = Ansehen (completionview=1) ODER Note (cgin=0): completion=2
+    # OHNE Kriterium bleibt der Zustand ewig 0 — jede darauf zeigende
+    # Bedingung wäre ein totes Gate (Lab-E2E-Fund 2026-07-18: hartkodiertes
+    # completionview=0 ließ das Konvergenz-Gate im echten Moodle zu).
+    cm_completion: dict[int, tuple[int, bool]] = {}
     for path, data in contents.items():
         if path.endswith("/module.xml"):
             mm = re.search(r'<module id="(\d+)"', data)
             cc = re.search(r"<completion>(\d+)</completion>", data)
+            cv = re.search(r"<completionview>(\d+)</completionview>", data)
+            cg = re.search(r"<completiongradeitemnumber>(\d+)"
+                           r"</completiongradeitemnumber>", data)
             if mm:
-                cm_completion[int(mm.group(1))] = int(cc.group(1)) if cc else 0
+                rule = bool((cv and cv.group(1) == "1") or cg)
+                cm_completion[int(mm.group(1))] = (
+                    int(cc.group(1)) if cc else 0, rule)
+
+    # Gruppen-IDs aus groups.xml (für group-Bedingungen: Schichten-Overlays)
+    group_ids: set[int] = set()
+    if "groups.xml" in contents:
+        for m in re.finditer(r'<group id="(\d+)">', contents["groups.xml"]):
+            gid = int(m.group(1))
+            if gid in group_ids:
+                problems.append(f"groups.xml: doppelte Gruppen-id {gid}")
+            group_ids.add(gid)
 
     def _check_av_tree(src, raw):
         try:
@@ -592,15 +610,40 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                         problems.append(f"{src}: completion-cm {cm} existiert "
                                         f"in keinem module.xml — Restore "
                                         f"degradiert die Bedingung (Warnung)")
-                    elif cm_completion[cm] != 2:
+                    elif cm_completion[cm][0] != 2:
                         problems.append(f"{src}: completion-Bedingung auf cm "
                                         f"{cm}, aber completion="
-                                        f"{cm_completion[cm]} statt 2 "
+                                        f"{cm_completion[cm][0]} statt 2 "
                                         f"(automatisch) — Lock tot (0) oder "
                                         f"von Lernenden abhakbar (1)")
+                    elif not cm_completion[cm][1]:
+                        problems.append(f"{src}: completion-Bedingung auf cm "
+                                        f"{cm} mit completion=2, aber OHNE "
+                                        f"Kriterium (weder completionview=1 "
+                                        f"noch completiongradeitemnumber) — "
+                                        f"Zustand bleibt ewig 0, Gate tot")
                     if e not in (0, 1, 2, 3):
                         problems.append(f"{src}: completion-e {e!r} ungültig "
                                         f"(erlaubt 0..3)")
+                    continue
+                if cond.get("type") == "group":
+                    g = cond.get("id")
+                    if not isinstance(g, int):
+                        problems.append(f"{src}: group-id {g!r} ist kein "
+                                        f"JSON-Integer")
+                    elif g not in group_ids:
+                        problems.append(f"{src}: group-id {g} existiert nicht "
+                                        f"in groups.xml — Restore degradiert "
+                                        f"die Bedingung (Element bliebe "
+                                        f"dauerhaft gesperrt)")
+                    continue
+                if cond.get("type") == "date":
+                    if cond.get("d") not in (">=", "<"):
+                        problems.append(f"{src}: date-d {cond.get('d')!r} "
+                                        f"ungültig (erlaubt '>=' / '<')")
+                    if not isinstance(cond.get("t"), int) or cond["t"] <= 0:
+                        problems.append(f"{src}: date-t {cond.get('t')!r} "
+                                        f"ist keine gültige Unix-Zeit")
                     continue
                 if cond.get("type") != "grade":
                     continue
