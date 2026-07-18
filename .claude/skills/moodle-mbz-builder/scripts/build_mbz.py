@@ -1704,7 +1704,7 @@ def b_quiz(ctx):
         f"    {el('timeopen', 0)}\n    {el('timeclose', 0)}\n    {el('timelimit', 0)}\n"
         f"    {el('overduehandling', 'autosubmit')}\n    {el('graceperiod', 0)}\n"
         f"    {el('canredoquestions', 0)}\n    {el('preferredbehaviour', 'deferredfeedback')}\n"
-        f"    {el('attempts_number', 0)}\n    {el('attemptonlast', 0)}\n"
+        f"    {el('attempts_number', int(a.get('attempts', 0)))}\n    {el('attemptonlast', 0)}\n"
         f"    {el('grademethod', 1)}\n    {el('decimalpoints', 2)}\n    {el('questiondecimalpoints', -1)}\n"
         f"    {el('reviewattempt', 69888)}\n    {el('reviewcorrectness', 4352)}\n"
         f"    {el('reviewmarks', 4352)}\n    {el('reviewspecificfeedback', 4352)}\n"
