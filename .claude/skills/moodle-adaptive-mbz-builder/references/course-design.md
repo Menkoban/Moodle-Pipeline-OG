@@ -1,4 +1,4 @@
-# Didaktik-Leitfaden: Moodle-Kurse nach dem 5-Ebenen-Modell (Rode)
+# Didaktik-Leitfaden: Moodle-Kurse nach dem 5-Ebenen-Modell (ZDQ)
 
 Diese Datei ist das **didaktische Gehirn** des Skills. Sie liefert das Strukturmodell,
 die Pflicht-Sequenz und die Bau-Konventionen, nach denen ein hochwertiger,
@@ -11,7 +11,7 @@ vollständig ausgearbeiteter Kurs für die **berufliche Bildung** entsteht – u
 > steht in `SKILL.md`, Schritt 1 „Intake first"). Erst mit diesen Antworten sitzt
 > die Handlungssituation, das Niveau und der Schwerpunkt wirklich passgenau.
 
-**Leitmodell:** das 5-Ebenen-Strukturmodell für Moodlekurse nach Henning Rode
+**Leitmodell:** das 5-Ebenen-Strukturmodell für Moodlekurse des ZDQ (vom Autor erweitert)
 (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → Lernkurs).
 Gold-Standard-Beispiel, das jeden Punkt unten umsetzt: `assets/fewshot_bohrmaschine.json`
 (mit eingebetteten SVG-Diagrammen und `material`-Flags). Nutze es als Few-Shot-Vorlage.
@@ -76,9 +76,9 @@ Verbindliches Vokabular. Es bildet sich **eins zu eins** auf die Skill-Architekt
 ## 3. Pflicht-Sequenz der Lernabschnitte (mit Zeitbudgets)
 
 > **Profil-parametrisch:** Die Abschnitts-Sequenz kommt aus dem im Briefing
-> gewählten **didaktischen Profil** (`course.didaktik_profil`, Default `rode` —
+> gewählten **didaktischen Profil** (`course.didaktik_profil`, Default `zdq` —
 > siehe `scripts/didactic_profiles.py` / `get_profile(key)["section_sequence"]`).
-> Die Tabelle unten IST die Sequenz des Default-Profils `rode` (unverändert).
+> Die Tabelle unten IST die Sequenz des Default-Profils `zdq` (unverändert).
 > Ein anderes Profil bringt seine eigene Sequenz + Pflicht-Abschnitte mit; dann
 > gilt dessen `section_sequence` statt dieser Tabelle. Die restlichen Regeln
 > dieses Kapitels (Infoblatt-Bauplan, Feedback, Zeitbudget) sind konzept-neutral.

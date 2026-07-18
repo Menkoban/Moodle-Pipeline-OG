@@ -308,7 +308,7 @@ def expand(spec: dict) -> tuple[dict, dict]:
         pathmap["stufen"].append(entry)
         prev_tests = cur_tests
 
-    # ---- Abschluss-Abschnitt: Kurs-Recap nach Rode-Pflicht-Sequenz -------- #
+    # ---- Abschluss-Abschnitt: Kurs-Recap nach ZDQ-Pflicht-Sequenz -------- #
     # Der Lernkurs endet wie im linearen Skill mit einem Kurs-Recap:
     # Videozusammenfassung-Platzhalter (NotebookLM, via set_recap_video.py
     # befüllbar) + „Hinweis zur Entstehung" (Pflicht-Attribution). Beides wird

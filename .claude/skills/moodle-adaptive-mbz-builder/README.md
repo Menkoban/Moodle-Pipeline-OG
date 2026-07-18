@@ -30,7 +30,7 @@ die Diagramme und durchläuft die Bau-Pipeline. Man kann die Skripte aber auch
 | `sims/` | Interaktive HTML-Simulationen (Schieberegler → Werte live) |
 | `assets/` | Die selbstgezeichneten SVG-Diagramme |
 
-Didaktisch folgt jeder Kurs dem **5-Ebenen-Modell nach Henning Rode**
+Didaktisch folgt jeder Kurs dem **5-Ebenen-Modell des ZDQ (vom Autor erweitert)**
 (Lernelement → Lernbaustein → Lernabschnitt → Modul → Lernkurs) mit fester
 Abschnitts-Sequenz: *Einführung → Grundlagen → Vertiefung → Anwendung →
 Kurs-Recap → Glossar → Material für Lehrkräfte*.

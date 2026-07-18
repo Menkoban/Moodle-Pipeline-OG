@@ -3,17 +3,17 @@
 
 Angepasste Fassung der Registry aus dem linearen Schwester-Skill
 (moodle-mbz-builder/scripts/didactic_profiles.py). Der adaptive Skill folgt
-demselben Rode/ZDQ-5-Ebenen-Modell — aber VERZWEIGT: die flache lineare
+demselben ZDQ-5-Ebenen-Modell — aber VERZWEIGT: die flache lineare
 Pflicht-Sequenz (Einführung → Grundlagen → Vertiefung → Anwendung → Recap)
 mappt hier auf Stufen und Niveau-Kacheln (SKILL.md, Abschnitt
-„Rode-Strukturmodell im adaptiven Kurs — VERBINDLICH"):
+„ZDQ-Strukturmodell im adaptiven Kurs — VERBINDLICH"):
 
     Lerneinheit/Modul = Stufe (Themen-Etappe mit Testpunkt)
     Lernabschnitt     = Niveau-Kachel (+ Förder-Kachel als Vertiefung)
     Grundlagen/Vertiefung/Anwendung = Dreischritt IN jeder Niveau-Kachel
                         (Infoblatt → Übung → Niveau-Test)
 
-Deshalb hat dieses Profil einen eigenen Key `rode-adaptiv` (Default) — die
+Deshalb hat dieses Profil einen eigenen Key `zdq-adaptiv` (Default) — die
 Abschnitts-Sequenz ist PARAMETRISCH über die Stufenzahl (der Eintrag mit
 `parametrisch: True` wiederholt sich je Stufe). Die Bau-Skripte bleiben
 sequenz-agnostisch: `build_adaptive.py` erzeugt die Struktur aus der
@@ -30,24 +30,24 @@ Konzept-Skill herauslösen.
 import copy
 import sys
 
-DEFAULT_PROFILE_KEY = "rode-adaptiv"
+DEFAULT_PROFILE_KEY = "zdq-adaptiv"
 
 
-# --- Profil 1: Rode/ZDQ – 5-Ebenen-Modell, VERZWEIGT (DEFAULT) ---------------
-# Zuordnung + Pflicht-Sequenz exakt nach SKILL.md „Rode-Strukturmodell im
+# --- Profil 1: ZDQ – 5-Ebenen-Modell, VERZWEIGT (DEFAULT) ---------------
+# Zuordnung + Pflicht-Sequenz exakt nach SKILL.md „ZDQ-Strukturmodell im
 # adaptiven Kurs — VERBINDLICH" und references/course-design.md §2–3.
-_RODE_ADAPTIV = {
-    "key": "rode-adaptiv",
-    "name": "Rode/ZDQ – 5-Ebenen-Modell, verzweigt (adaptiv)",
+_ZDQ_ADAPTIV = {
+    "key": "zdq-adaptiv",
+    "name": "ZDQ – 5-Ebenen-Modell, verzweigt (adaptiv)",
     "beschreibung": (
-        "Das handlungsorientierte 5-Ebenen-Strukturmodell nach Henning Rode — "
+        "Das handlungsorientierte 5-Ebenen-Strukturmodell des ZDQ (vom Autor erweitert) — "
         "verzweigt für adaptive Lernpfade: Stufe = Lerneinheit mit Testpunkt, "
         "Niveau-Kachel = Lernabschnitt (Grundlagen/Vertiefung/Anwendung als "
         "Dreischritt IN der Kachel), Förder-Kachel = Vertiefung 'anders "
         "erklärt'. Default-Konzept des adaptiven Skills."
     ),
     "guidance_ref": (
-        "SKILL.md 'Rode-Strukturmodell im adaptiven Kurs — VERBINDLICH'; "
+        "SKILL.md 'ZDQ-Strukturmodell im adaptiven Kurs — VERBINDLICH'; "
         "references/course-design.md (Kap. 1–7); references/adaptive-lernpfade.md"
     ),
     "intro_section": {
@@ -99,14 +99,14 @@ _RODE_ADAPTIV = {
             "Kurs-Recap (Abschluss-Kachel)",
         ],
         "wortbudget": "~25 Wörter Lerninhalt pro Lernminute (je Kachel)",
-        "quelle": ("SKILL.md 'Rode-Strukturmodell im adaptiven Kurs'; "
+        "quelle": ("SKILL.md 'ZDQ-Strukturmodell im adaptiven Kurs'; "
                    "references/adaptive-lernpfade.md §4"),
     },
 }
 
 
 PROFILES = {
-    _RODE_ADAPTIV["key"]: _RODE_ADAPTIV,
+    _ZDQ_ADAPTIV["key"]: _ZDQ_ADAPTIV,
 }
 
 
@@ -118,7 +118,7 @@ def list_profiles():
 
 
 def get_profile(key=DEFAULT_PROFILE_KEY):
-    """Profil zu `key` (Default: 'rode-adaptiv') als tiefe Kopie – die Registry
+    """Profil zu `key` (Default: 'zdq-adaptiv') als tiefe Kopie – die Registry
     bleibt unveränderlich. Unbekannter Key -> ValueError mit verfügbaren Keys."""
     if key is None:
         key = DEFAULT_PROFILE_KEY

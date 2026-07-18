@@ -1,4 +1,4 @@
-"""Didaktik-Profil-Registry des adaptiven Skills: rode-adaptiv als Default,
+"""Didaktik-Profil-Registry des adaptiven Skills: zdq-adaptiv als Default,
 API-kompatibel zum linearen Schwester-Skill (get_profile/list_profiles/
 section_titles), Registry unveränderlich."""
 import os
@@ -8,9 +8,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 import didactic_profiles as dp  # noqa: E402
 
 
-def test_default_is_rode_adaptiv():
-    assert dp.DEFAULT_PROFILE_KEY == "rode-adaptiv"
-    assert dp.list_profiles()[0][0] == "rode-adaptiv"
+def test_default_is_zdq_adaptiv():
+    assert dp.DEFAULT_PROFILE_KEY == "zdq-adaptiv"
+    assert dp.list_profiles()[0][0] == "zdq-adaptiv"
 
 
 def test_profile_has_adaptive_mapping():
@@ -32,7 +32,7 @@ def test_unknown_key_raises():
     try:
         dp.get_profile("gibt-es-nicht")
     except ValueError as e:
-        assert "rode-adaptiv" in str(e)
+        assert "zdq-adaptiv" in str(e)
     else:
         raise AssertionError("ValueError erwartet")
 

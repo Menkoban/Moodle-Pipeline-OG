@@ -161,12 +161,12 @@ Grundsatzentscheidungen:
    untersten Pfad / freie Wahl in Stufe 1 (`einstieg: "frei"`).
 5. **Didaktisches Konzept (IMMER fragen — auch bei nur EINEM Profil):**
    welchem Konzept der Kurs folgt. Verfügbare Profile listet
-   `python <skill-dir>/scripts/didactic_profiles.py` (Default `rode-adaptiv`
-   = das Rode-5-Ebenen-Modell, verzweigt: Stufe = Lerneinheit,
+   `python <skill-dir>/scripts/didactic_profiles.py` (Default `zdq-adaptiv`
+   = das ZDQ-5-Ebenen-Modell, verzweigt: Stufe = Lerneinheit,
    Niveau-Kachel = Lernabschnitt mit Dreischritt Infoblatt → Übung → Test).
    Immer als Auswahlfrage anbieten, selbst wenn die Registry nur ein Profil
    hat; das gewählte Konzept in `course.didaktik_profil` persistieren
-   (Default `"rode-adaptiv"`).
+   (Default `"zdq-adaptiv"`).
 
 **Danach einen konkreten Vorschlags-Steckbrief vorlegen** (das ist der
 Teil, den der Autor bestätigt, bevor Content produziert wird): benannte
@@ -183,13 +183,13 @@ Förder-Fenster generalisiert `build_adaptive.py` automatisch auf die
 Pfadanzahl; unerreichbare Kacheln (z. B. der unterste Pfad direkt nach
 einem hohen Einstieg) werden bewusst NICHT emittiert.
 
-## Rode-Strukturmodell im adaptiven Kurs — VERBINDLICH
+## ZDQ-Strukturmodell im adaptiven Kurs — VERBINDLICH
 
 Das adaptive System ist KEINE eigene Didaktik, sondern das 5-Ebenen-Modell
 (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → Lernkurs)
 aus `references/course-design.md` — nur verzweigt. Zuordnung:
 
-| Rode-Ebene            | Adaptiv                                             |
+| ZDQ-Ebene            | Adaptiv                                             |
 |-----------------------|-----------------------------------------------------|
 | Lernkurs              | der adaptive Kurs                                   |
 | Lerneinheit/Modul     | **Stufe** (Themen-Etappe mit Testpunkt)             |
