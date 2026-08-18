@@ -1,0 +1,155 @@
+{
+  "titel": "Wendeschützschaltung: Drehrichtungsumkehr von Drehstrommotoren",
+  "shortname": "wendeschuetz-drehstrom",
+  "didaktik_profil": "zdq",
+  "elearning_format": "blended_learning",
+  "didaktische_methoden": [
+    "leittextmethode",
+    "stoerungsanalyse_diagnose",
+    "gestufte_hilfen"
+  ],
+  "tonalitaet": "du",
+  "curriculum": {
+    "beruf": "Elektroniker für Betriebstechnik",
+    "ausbildungsjahr": 2,
+    "lernfeld": "Steuerungen für Anlagen programmieren und realisieren",
+    "lernfeld_nr": 3,
+    "zielgruppe_niveau": "Duale Berufsausbildung (Fachstufe)",
+    "vorwissen": "Grundstromkreis, Schütze und Relais, 3-Phasen-Drehstromnetz (L1, L2, L3, N, PE)",
+    "daz_foerderung": true
+  },
+  "handlungssituation": {
+    "betrieb": "Elektro- & Fördertechnik Meyer GmbH",
+    "kontext": "Kundenauftrag bei einem Logistikzentrum (Förderbandanlage)",
+    "problem": "Ein Förderband soll Pakete in beide Richtungen transportieren können. Die bestehende Schützsteuerung unterstützt bisher nur Rechtslauf.",
+    "leitfrage": "Wie planen, verdrahten und prüfen Sie eine normgerechte Wendeschützschaltung mit sicherer Verriegelung?",
+    "handlungsprodukt": "Vollständige Werkstattdokumentation: Stromlaufplan (Haupt- und Steuerstromkreis), ausgefülltes Prüf- und Messprotokoll sowie Gefährdungsbeurteilung"
+  },
+  "fachlichkeit": {
+    "begriffe": [
+      "Hauptstromkreis",
+      "Steuerstromkreis",
+      "Phasentausch (L1-L3)",
+      "Selbsthaltung (13-14)",
+      "Elektrische Verriegelung (21-22)",
+      "Thermisches Überlastrelais (95-96)",
+      "Motorschutzschalter",
+      "Drehfeld"
+    ],
+    "formeln": [
+      "I_N = P / (sqrt(3) * U * eta * cos(phi))",
+      "P_el = sqrt(3) * U * I * cos(phi)"
+    ],
+    "normen": [
+      "DIN EN 60617 (Graphische Symbole für Schaltpläne)",
+      "DIN EN 81346 (Betriebsmittelkennzeichnung)",
+      "DIN VDE 0100-600 (Prüfungen vor Inbetriebnahme)",
+      "5 Sicherheitsregeln der Elektrotechnik"
+    ],
+    "sicherheitsregeln": [
+      "Freischalten",
+      "Gegen Wiedereinschalten sichern",
+      "Spannungsfreiheit allpolig feststellen",
+      "Erden und kurzschließen",
+      "Benachbarte, unter Spannung stehende Teile abdecken"
+    ],
+    "rechenbeispiel": {
+      "titel": "Einstellung des Motorschutzrelais F1 für einen 4,0-kW-Drehstrommotor",
+      "gegeben": "P = 4,0 kW, U = 400 V, eta = 0,86, cos(phi) = 0,82",
+      "gesucht": "Bemessungsstrom I_N",
+      "ergebnis": "8,19 A (Einstellwert Relais F1 = 8,2 A)"
+    }
+  },
+  "aufgaben_kaskade": {
+    "grundlagen_erkundung": "Klemmen- und Bauteilzuordnung am Schaltplan (Identifikation von Hauptschaltern, Schützen und Verriegelungskontakten)",
+    "vertiefung_formular": {
+      "titel": "Berechnungs- und Dimensionierungsprotokoll Wendeschützsteuerung",
+      "felder": [
+        "Typenschilddaten des Motors erfassen",
+        "Elektrischen Bemessungsstrom I_N berechnen",
+        "Einstellwert für Thermorelais F1 begründen",
+        "Verriegelungsmatrix für K1 und K2 dokumentieren",
+        "Sicherheitsabfrage zur Kurzschlussvermeidung beantworten"
+      ]
+    },
+    "anwendung_praxisauftrag": {
+      "titel": "Werkstattauftrag: Umbau und Inbetriebnahme der Wendeschützsteuerung",
+      "phasen": [
+        "1. Informieren: Kundensituation und Schaltplan analysieren",
+        "2. Planen: Materialliste und Arbeitsablauf erstellen",
+        "3. Entscheiden: Verriegelungskonzept und Prüfschritte festlegen",
+        "4. Ausführen: Verdrahtung nach DIN EN 60617 durchführen",
+        "5. Kontrollieren: Messungen und 5 Sicherheitsregeln anwenden",
+        "6. Bewerten: Prüfprotokoll und Funktionsnachweis abgeben"
+      ],
+      "rubrik_kriterien": [
+        "Fachliche Richtigkeit des Schalt- und Verdrahtungsplans",
+        "Exaktheit der Berechnung und Dimensionierung von F1",
+        "Einhaltung der Sicherheitsvorschriften und Verriegelungslogik",
+        "Qualität und Vollständigkeit der Dokumentation"
+      ]
+    }
+  },
+  "medien_simulation": {
+    "hat_simulation": true,
+    "simulation": {
+      "titel": "Interaktive Wendeschützsteuerung mit Schaltschrank-Simulation",
+      "variablen": [
+        "Lastmoment M_L (0 bis 30 Nm)"
+      ],
+      "schalter": [
+        "Aus-Taster S0 (Öffner)",
+        "Ein-Taster S1 Rechts (Schließer)",
+        "Ein-Taster S2 Links (Schließer)"
+      ],
+      "kpis": [
+        "Betriebszustand (Aus / Rechtslauf / Linkslauf)",
+        "Motorstrom I in A",
+        "Motordrehzahl n in 1/min",
+        "Verriegelungsstatus K1/K2"
+      ],
+      "hat_animation": true,
+      "challenge_text": "Schalte den Motor in den Linkslauf und versuche, bei laufendem Betrieb direkt auf Rechtslauf umzuschalten. Beobachte, wie die elektrische Verriegelung den Kurzschluss verhindert!"
+    },
+    "schaltplaene": [
+      "wendeschuetz_haupt.svg",
+      "wendeschuetz_steuer.svg"
+    ]
+  },
+  "kachelstruktur": {
+    "format": "tiles",
+    "kachelanzahl": 5,
+    "kacheln": [
+      {
+        "titel": "Einführung",
+        "inhalt": "Handlungssituation bei der Meyer GmbH, Lernziele und Vorwissens-Check zur Schütztechnik.",
+        "kachelfoto_motiv": "Logistikzentrum Förderbandanlage mit Schaltschrank",
+        "aktivitaeten": ["Handlungssituation", "Lernziele", "Vorwissens-Abstimmung"]
+      },
+      {
+        "titel": "Grundlagen der Wendeschützschaltung",
+        "inhalt": "Funktionsprinzip der Drehfeldumkehr durch Phasentausch L1-L3 und Aufbau des Hauptstromkreises.",
+        "kachelfoto_motiv": "Drehstrommotor Klemmenbrett mit Außenleitern",
+        "aktivitaeten": ["Infoblatt Hauptstromkreis (mit SVG)", "Erkundungsaufgabe Klemmen", "Formativer Selbsttest"]
+      },
+      {
+        "titel": "Steuerstromkreis & Verriegelungstechnik",
+        "inhalt": "Selbsthaltung, Taster- und Schützverriegelung zur sicheren Kurzschlussvermeidung.",
+        "kachelfoto_motiv": "Schützkombination im Schaltschrank mit Hilfskontaktblöcken",
+        "aktivitaeten": ["Infoblatt Steuerstromkreis (mit SVG)", "Interaktive Schaltschrank-Simulation", "Formular-Berechnungsprotokoll", "Formativer Selbsttest"]
+      },
+      {
+        "titel": "Praxisauftrag & Montage",
+        "inhalt": "Vollständiger Werkstattauftrag zur Planung, Verdrahtung und Prüfung der Förderband-Steuerung.",
+        "kachelfoto_motiv": "Auszubildender bei der Verdrahtung einer Schützschaltung am Montagegitter",
+        "aktivitaeten": ["Praxisauftrag mit 6 Handlungsphasen & Rubrik", "Begleitendes Werkstatt-Forum"]
+      },
+      {
+        "titel": "Kurs-Recap & Reflexion",
+        "inhalt": "Zusammenfassung der Kernregeln, Fehlersuche-Checkliste und Selbsteinschätzungstest.",
+        "kachelfoto_motiv": "Digitales Multimeter mit Prüfspitzen und Messprotokoll",
+        "aktivitaeten": ["Das Wichtigste in Kürze", "Abschluss-Selbsttest", "Reflexion & Transfer", "Glossar", "Material für Lehrkräfte"]
+      }
+    ]
+  }
+}

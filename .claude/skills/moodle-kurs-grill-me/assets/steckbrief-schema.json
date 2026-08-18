@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "kurs_titel": { "type": "string" },
+    "tonalitaet": { "type": "string", "enum": ["Du", "Sie"] },
+    "cluster_1_profil": {
+      "type": "object",
+      "properties": {
+        "zielgruppe": { "type": "string" },
+        "lernfeld": { "type": "string" },
+        "daz_scaffolding": { "type": "boolean" }
+      },
+      "required": ["zielgruppe", "lernfeld"]
+    },
+    "cluster_2_situation": {
+      "type": "object",
+      "properties": {
+        "szenario": { "type": "string" },
+        "auftraggeber": { "type": "string" },
+        "handlungsprodukt": { "type": "string" }
+      },
+      "required": ["szenario", "handlungsprodukt"]
+    },
+    "cluster_3_fachinhalte": {
+      "type": "object",
+      "properties": {
+        "normen": { "type": "array", "items": { "type": "string" } },
+        "berechnungen": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "cluster_4_aufgaben": {
+      "type": "object",
+      "properties": {
+        "formular_protokoll": { "type": "boolean" },
+        "summative_aufgabe": { "type": "string" }
+      }
+    },
+    "cluster_5_medien": {
+      "type": "object",
+      "properties": {
+        "simulationen": { "type": "array", "items": { "type": "string" } },
+        "schaltplaene": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "cluster_6_struktur": {
+      "type": "object",
+      "properties": {
+        "kacheln": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titel": { "type": "string" },
+              "motiv": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "kurs_titel",
+    "cluster_1_profil",
+    "cluster_2_situation",
+    "cluster_3_fachinhalte",
+    "cluster_4_aufgaben",
+    "cluster_5_medien",
+    "cluster_6_struktur"
+  ]
+}

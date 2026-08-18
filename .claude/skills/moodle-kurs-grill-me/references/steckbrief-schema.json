@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MoodleKursSteckbrief",
+  "type": "object",
+  "required": [
+    "titel",
+    "shortname",
+    "curriculum",
+    "handlungssituation",
+    "fachlichkeit",
+    "aufgaben_kaskade",
+    "medien_simulation",
+    "kachelstruktur"
+  ],
+  "properties": {
+    "titel": { "type": "string" },
+    "shortname": { "type": "string" },
+    "didaktik_profil": { "type": "string", "default": "zdq" },
+    "elearning_format": {
+      "type": "string",
+      "enum": [
+        "blended_learning",
+        "flipped_classroom",
+        "microlearning",
+        "scenario_based_pbl",
+        "leittext_digital",
+        "lerntheke_stationen",
+        "mastery_learning"
+      ],
+      "default": "blended_learning"
+    },
+    "didaktische_methoden": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["leittextmethode", "fallstudie"]
+    },
+    "tonalitaet": { "type": "string", "enum": ["du", "sie"], "default": "du" },
+    "curriculum": {
+      "type": "object",
+      "required": ["beruf", "ausbildungsjahr", "lernfeld"],
+      "properties": {
+        "beruf": { "type": "string" },
+        "ausbildungsjahr": { "type": "integer" },
+        "lernfeld": { "type": "string" },
+        "lernfeld_nr": { "type": "integer" },
+        "zielgruppe_niveau": { "type": "string" },
+        "vorwissen": { "type": "string" },
+        "daz_foerderung": { "type": "boolean", "default": true }
+      }
+    },
+    "handlungssituation": {
+      "type": "object",
+      "required": ["betrieb", "kontext", "problem", "leitfrage", "handlungsprodukt"],
+      "properties": {
+        "betrieb": { "type": "string" },
+        "kontext": { "type": "string" },
+        "problem": { "type": "string" },
+        "leitfrage": { "type": "string" },
+        "handlungsprodukt": { "type": "string" }
+      }
+    },
+    "fachlichkeit": {
+      "type": "object",
+      "required": ["begriffe", "formeln", "normen", "sicherheitsregeln"],
+      "properties": {
+        "begriffe": { "type": "array", "items": { "type": "string" } },
+        "formeln": { "type": "array", "items": { "type": "string" } },
+        "normen": { "type": "array", "items": { "type": "string" } },
+        "sicherheitsregeln": { "type": "array", "items": { "type": "string" } },
+        "rechenbeispiel": {
+          "type": "object",
+          "properties": {
+            "titel": { "type": "string" },
+            "gegeben": { "type": "string" },
+            "gesucht": { "type": "string" },
+            "ergebnis": { "type": "string" }
+          }
+        }
+      }
+    },
+    "aufgaben_kaskade": {
+      "type": "object",
+      "required": ["grundlagen_erkundung", "vertiefung_formular", "anwendung_praxisauftrag"],
+      "properties": {
+        "grundlagen_erkundung": { "type": "string" },
+        "vertiefung_formular": {
+          "type": "object",
+          "properties": {
+            "titel": { "type": "string" },
+            "felder": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "anwendung_praxisauftrag": {
+          "type": "object",
+          "properties": {
+            "titel": { "type": "string" },
+            "phasen": { "type": "array", "items": { "type": "string" } },
+            "rubrik_kriterien": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "medien_simulation": {
+      "type": "object",
+      "properties": {
+        "hat_simulation": { "type": "boolean", "default": true },
+        "simulation": {
+          "type": "object",
+          "properties": {
+            "titel": { "type": "string" },
+            "variablen": { "type": "array", "items": { "type": "string" } },
+            "schalter": { "type": "array", "items": { "type": "string" } },
+            "kpis": { "type": "array", "items": { "type": "string" } },
+            "hat_animation": { "type": "boolean" },
+            "challenge_text": { "type": "string" }
+          }
+        },
+        "schaltplaene": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "kachelstruktur": {
+      "type": "object",
+      "required": ["format", "kachelanzahl", "kacheln"],
+      "properties": {
+        "format": { "type": "string", "enum": ["tiles", "topics"], "default": "tiles" },
+        "kachelanzahl": { "type": "integer", "default": 5 },
+        "kacheln": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["titel", "inhalt", "kachelfoto_motiv"],
+            "properties": {
+              "titel": { "type": "string" },
+              "inhalt": { "type": "string" },
+              "kachelfoto_motiv": { "type": "string" },
+              "aktivitaeten": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}
