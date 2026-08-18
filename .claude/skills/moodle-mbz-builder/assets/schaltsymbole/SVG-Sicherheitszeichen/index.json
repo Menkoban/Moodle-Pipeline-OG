@@ -1,0 +1,77 @@
+{
+  "hinweis": "Sicherheitszeichen nach ISO 7010, erzeugt aus etsig-neu.js. Zelle 120 x 120, keine Anschluesse, feste Farben nach ISO 3864-4. Diese Zeichen werden NICHT gedreht und ihre Farbe wird NICHT veraendert — beides ist Teil der Aussage.",
+  "nicht_enthalten": "Die bildhaften Piktogramme (Flamme, Totenkopf, Explosion, stuerzende Person, Flurfoerderzeug, Hand, Handschuh, Helm, Brille, Gehoerschutz, Atemschutz, Krankentrage, Notdusche, Aeskulapstab) sind bewusst NICHT gezeichnet. Ein ISO-7010-Piktogramm ist eine exakt festgelegte Grafik; eine Nachzeichnung aus einem Foto sieht amtlich aus und ist es nicht. Siehe BERICHT.md, Abschnitt 4.5.",
+  "anzahl": 10,
+  "zeichen": {
+    "verbotszeichen": {
+      "datei": "verbotszeichen.svg",
+      "art": "Rahmen",
+      "norm": "Roter Ring auf weissem Grund mit rotem Balken von links oben nach rechts unten; das Bild liegt darunter, der Balken darueber. Rot heisst Verbot.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "075"
+    },
+    "warnzeichen": {
+      "datei": "warnzeichen.svg",
+      "art": "Rahmen",
+      "norm": "Gelbes gleichseitiges Dreieck mit schwarzem Rand, Bild schwarz. Gelb heisst Warnung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "073"
+    },
+    "gebotszeichen": {
+      "datei": "gebotszeichen.svg",
+      "art": "Rahmen",
+      "norm": "Blaue Vollscheibe, Bild weiss. Blau heisst Gebot.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "170"
+    },
+    "rettungszeichen": {
+      "datei": "rettungszeichen.svg",
+      "art": "Rahmen",
+      "norm": "Gruenes Quadrat, Bild weiss. Gruen heisst Rettung und Gefahrlosigkeit.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "076"
+    },
+    "w8Gefahrenstelle": {
+      "datei": "w8Gefahrenstelle.svg",
+      "art": "Warnzeichen",
+      "norm": "Warndreieck mit einem Ausrufezeichen: Warnung vor einer Gefahrenstelle.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "073"
+    },
+    "w21Ex": {
+      "datei": "w21Ex.svg",
+      "art": "Warnzeichen",
+      "norm": "Warndreieck mit dem Schriftzug EX: Warnung vor explosionsfaehiger Atmosphaere.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "152"
+    },
+    "w26HeisseOberflaeche": {
+      "datei": "w26HeisseOberflaeche.svg",
+      "art": "Warnzeichen",
+      "norm": "Warndreieck mit drei Waermewellen ueber einer Linie: Warnung vor heisser Oberflaeche.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "267"
+    },
+    "m14Freischalten": {
+      "datei": "m14Freischalten.svg",
+      "art": "Gebotszeichen",
+      "norm": "Blaue Scheibe mit einem Pfeil auf einen geoeffneten Schalter: Vor Arbeiten freischalten. Das Zeichen zur ersten Sicherheitsregel.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "075"
+    },
+    "e13Richtungspfeil": {
+      "datei": "e13Richtungspfeil.svg",
+      "art": "Rettungszeichen",
+      "norm": "Gruenes Quadrat mit einem Pfeil: Richtungspfeil fuer Rettungswege.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "076"
+    },
+    "e6ErsteHilfe": {
+      "datei": "e6ErsteHilfe.svg",
+      "art": "Rettungszeichen",
+      "norm": "Gruenes Quadrat mit einem weissen Kreuz: Erste Hilfe.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Seite 'Gefahrensymbole' (ISO 7010 / ISO 3864-4)",
+      "gebraucht_ab_folge": "076"
+    }
+  }
+}

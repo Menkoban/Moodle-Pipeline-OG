@@ -24,6 +24,7 @@ import argparse, copy, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sim_engine  # noqa: E402
 import form_engine  # noqa: E402
+import hotspot_engine  # noqa: E402
 
 
 def slugify(name):
@@ -109,6 +110,27 @@ def main():
                     "type": "resource",
                     "name": title,
                     "intro": act.get("intro", "<p>Ausfüllbares Arbeitsblatt – deine Eingaben werden automatisch im Browser gespeichert; am Ende als Datei speichern oder drucken.</p>"),
+                    "file": path,
+                    "completion": act.get("completion", 1),
+                })
+                count += 1
+            elif act.get("type") in ("hotspot", "hotspot_graphic"):
+                # Interaktive Hotspot-Grafik (H5P-Stil) -> HTML-Datei-Ressource
+                hspec = act.get("spec") or {}
+                title = act.get("name") or hspec.get("title", "Interaktive Grafik")
+                hspec.setdefault("title", title)
+                if act.get("svg"):
+                    hspec["svg"] = act["svg"]
+                if act.get("hotspots"):
+                    hspec["hotspots"] = act["hotspots"]
+                slug = slugify(act.get("name") or hspec.get("title"))
+                os.makedirs(outdir, exist_ok=True)
+                path = os.path.join(outdir, slug + ".html")
+                open(path, "w", encoding="utf-8").write(hotspot_engine.generate_hotspot_html(hspec))
+                acts.append({
+                    "type": "resource",
+                    "name": title,
+                    "intro": act.get("intro", "<p>Interaktive Grafik – klicke auf die pulsierenden Markierungen, um Bauteile, Messwerte und Details zu erkunden.</p>"),
                     "file": path,
                     "completion": act.get("completion", 1),
                 })

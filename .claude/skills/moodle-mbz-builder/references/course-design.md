@@ -5,11 +5,13 @@ die Pflicht-Sequenz und die Bau-Konventionen, nach denen ein hochwertiger,
 vollständig ausgearbeiteter Kurs für die **berufliche Bildung** entsteht – und
 übersetzt sie in konkrete Felder der Kurs-JSON. Lies sie, bevor du einen Kurs baust.
 
-> **Vor dem Bauen zuerst fragen (Kurs-Steckbrief).** Kläre die relevanten
-> Steckbrief-Punkte mit dem Nutzer, *bevor* du den Kurs schreibst – gebündelt,
-> nur wo sinnvoll, mit Default-Vorschlag zum Bestätigen (die vollständige Frageliste
-> steht in `SKILL.md`, Schritt 1 „Intake first"). Erst mit diesen Antworten sitzt
-> die Handlungssituation, das Niveau und der Schwerpunkt wirklich passgenau.
+> **Vor dem Bauen zuerst fragen (Grill-Me Intake).** Führe das strukturierte
+> Grill-Me-Interview in 3 Blöcken (6 Clustern) mit dem Autor durch, *bevor*
+> du den Kurs schreibst – als interaktives Auswahlmenü mit konkreten Optionen und
+> `(empfohlen)`-Kennzeichnung (die vollständige Systematik steht in `SKILL.md`,
+> Schritt 1 „Grill-Me Intake"). Erst mit diesen Antworten und der Freigabe
+> des **Vorschlags-Steckbriefs** sitzt die Handlungssituation, das Niveau,
+> die 3-stufige Aufgaben-Kaskade (`formular` + `assign`) und die Simulation.
 
 **Leitmodell:** das 5-Ebenen-Strukturmodell für Moodlekurse des ZDQ (vom Autor erweitert)
 (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → Lernkurs).
@@ -32,9 +34,12 @@ Gold-Standard-Beispiel, das jeden Punkt unten umsetzt: `assets/fewshot_bohrmasch
 
 ## 1. Leitprinzipien
 
+- **Handlungskontinuität & Der Rote Faden (Continuous Narrative Architecture):** 
+  Wenn ein Kurs aus einer authentischen Handlungssituation startet (z. B. Fertigungsauftrag *Kommission Portalrahmen*, Kälteanlagen-Störung, Kfz-Diagnose), müssen **ALLE Kacheln** – auch wenn sie als 90-Minuten-Mikromodule oder Fachthemen vertieft werden – **zwingend aufeinander aufbauen**. Jede Kachel ist eine handlungsorientierte Etappe zur Lösung desselben Gesamtfalls (*Kachel 1 Fallanalyse &rarr; Kachel 2 Arbeitsplatzsicherheit für diesen Fall &rarr; Kachel 3 Brennerinstandsetzung/Rüsten &rarr; Kachel 4 Parameter für diese Werkstoffe &rarr; Kachel 5 WPS für diesen Auftrag &rarr; Kachel 6 Qualitätsprüfung der gefertigten Nähte &rarr; Kachel 7 Kundenabnahme/Reflexion*). Isolierte Theoriekapitel ohne Fallbezug sind unzulässig.
 - **Handlungsorientierung:** Jedes Modul ist um eine **Handlungssituation** (ein
   echter beruflicher Auftrag/Fall) herum gebaut und mündet in ein
   **Handlungsprodukt** (etwas, das die Lernenden erstellen).
+- **Interaktive Medien-Trias:** Theorie wird nicht nur gelesen, sondern in jedem Fachthema durch die Trias aus **Hotspot-Labor** (Erkundung), **Simulation** (Prozessparameter) und **ausfüllbarem Formular** (normgerechte Dokumentation/WPS) aktiv erfahrbar gemacht.
 - **Kompetenzorientierung:** Ziele beschreiben *beobachtbares Können*, nicht „kennen".
 - **Aktiv statt konsumierend + formatives Feedback:** jede Phase hat eine
   aktivierende Komponente (Frage, Selbsttest, Auftrag) mit sofortiger Rückmeldung.
@@ -42,8 +47,8 @@ Gold-Standard-Beispiel, das jeden Punkt unten umsetzt: `assets/fewshot_bohrmasch
 - **Niedrigschwelligkeit:** einfache Sprache, viel Visualisierung (besonders für
   AV/BFS-Gruppen) – Diagramme tragen den Inhalt mit, nicht nur Text.
 
-Die **vollständige Handlung** (Informieren → Planen → Entscheiden → Ausführen →
-Kontrollieren → Bewerten) und der **AVIVA-Bogen** sind weiter die *didaktische
+Die **vollständige Handlung** (Informieren &rarr; Planen &rarr; Entscheiden &rarr; Ausführen &rarr;
+Kontrollieren &rarr; Bewerten) und der **AVIVA-Bogen** sind weiter die *didaktische
 Begründung* – sie spielen sich vor allem im Lernabschnitt **Anwendung** ab
 (Abschnitt 3). Plane rückwärts (Constructive Alignment): erst Ziele, dann Prüfung
 (Praxisauftrag/Test), dann Input.
@@ -97,19 +102,24 @@ Lernabschnitte:
 | 6 | **Glossar** | — | Glossar-Baustein mit echten Fachbegriffen |
 | 7 | **Material für Lehrkräfte** | — | **verborgen** (`"visible": 0`): didaktischer Leitfaden + Druck-/Editiermaterial (auto-generiert) |
 
-Die Sequenz *Einstieg → Vorwissen → Input → Handlung → Üben/Feedback → Reflexion*
-muss erkennbar bleiben. Nicht jedes Modul braucht alle Abschnitte in voller Länge,
-aber Einführung, Vertiefung, Anwendung und Recap sind Pflicht.
+### 2-Ebenen-Modell: Übergeordnete Lernphasen & Flexible Kachel-Aufteilung
 
-**Kachel-Bilder (Pflicht für sichtbare Abschnitte):** Jeder sichtbare
-Lernabschnitt bekommt per `"image"` ein Bild. Bevorzugt mit
-`course.format: "tiles"` — dann wird das Bild das **echte Kachel-Foto** des
-Kachelformats (format_tiles): **textfreies Motiv-PNG ~800×450** (der
-Kacheltitel wird vom Plugin selbst über das Foto gelegt; Motiv als SVG
-zeichnen, dann rastern), eine Akzentfarbe pro Abschnitt, getönter Hintergrund.
-Bei `topics` stattdessen Banner-SVG (viewBox `0 0 1200 150`, mit
-Titel/Untertitel) oben im Summary. Verborgene Lehrkräfte-Sektion braucht kein
-Bild. Details: SKILL.md → „Kachel-Bilder".
+Das ZDQ-Modell unterscheidet strikt zwischen der **didaktischen Makro-Struktur (Lernphasen)** und der **modularen Kachel-Struktur (Moodle-Sections)**:
+
+1. **Die 5 übergeordneten Lernphasen (Didaktische Leitstruktur):**
+   - **Phase 1: Einführung** (Handlungssituation, 4–5 operatorbasierte Lernziele, Vorwissens-Check)
+   - **Phase 2: Grundlagen** (Phänomenologischer/physikalischer Einstieg, Baugruppen, formative Tests)
+   - **Phase 3: Vertiefung** (Mathematische Dimensionierung, Formeln, Schaltungsaufbau, Simulation, Messprotokoll)
+   - **Phase 4: Anwendung** (Praxisauftrag mit 6 Handlungsphasen, Bewertungsrubrik, Werkstattforum)
+   - **Phase 5: Kurs-Recap** (Zusammenfassung, Video-Recap, Selbsteinschätzung, Entstehungshinweis)
+   - *Begleitende Strukturabschnitte:* **Glossar** (dedizierter Abschnitt) und **Material für Lehrkräfte** (`visible: 0`).
+
+2. **Flexible Kachel-Multiplikatoren (Sub-Kacheln je nach Stofffülle):**
+   - Ist ein Thema fachlich sehr umfangreich, werden die Phasen **Grundlagen** oder **Vertiefung** modular auf **mehrere Kacheln** aufgeteilt:
+     - *Beispiel Grundlagen:* Kachel 2a: *Physikalisches Wirkprinzip* & Kachel 2b: *Sensoraufbau & Baugruppen*
+     - *Beispiel Vertiefung:* Kachel 3a: *Kennwerte & Dimensionierung* & Kachel 3b: *3-Leiter-SPS-Schaltung & Simulation*
+   - Der Kurs-Architekt (Grillmaster) analysiert im Briefing (Cluster 6) den Stoffumfang und unterbreitet dem Autor einen begründeten Kachelvorschlag (z. B. 6 bis 8 sichtbare thematische Kacheln).
+   - Jede sichtbare Kachel erhält ihr eigenes textfreies Kachelfoto (`cover_<slug>.svg`/`.png`) für das Moodle-Kachelformat (`format_tiles`).
 
 ### Pflicht-Attribution (jeder Kurs)
 
@@ -171,6 +181,20 @@ Glossar-Importdatei in die Lehrkräfte-Sektion (Glossar → Einträge importiere
 
 **Verb-Konsistenz:** Ein Ziel mit „aufbauen/durchführen" wird per **Aufgabe**
 geprüft, nicht per Multiple-Choice. Wissen/Verstehen per **Quiz**.
+
+### Die Interaktive Medien-Trias je Fachthema (Gold-Standard)
+
+Um Fachinhalte handlungsorientiert und nachhaltig zu verankern, erhält jedes vertiefte Fachthema/Modul die **Interaktive Medien-Trias**:
+
+1. **Hotspot-Labor (`type: "hotspot"`):** 
+   - *Zweck:* Visuelle Bauteil-, Werkzeug-, Schaltschrank- oder Fehlererkundung im H5P-Stil.
+   - *Features:* Pulsierende interaktive Pins, Highlight-Glow, aufklappbare Detail-Karten mit technischen Daten, Normbezügen und Prüfschritten.
+2. **Simulation (`type: "simulation"` via `sim_engine.py`):**
+   - *Zweck:* Erforschung dynamischer Prozessparameter, physikalischer/chemischer Kausalitäten und Kennlinien.
+   - *Features:* Schieberegler (`range`), Umschalter (`toggle`/`select`), dynamisch reagierende Vektorgrafiken (z. B. Einbrandtiefe, Stromfluss, Zeiger, Kurvenverlauf) und integrierte Challenge-Aufgaben mit sofortiger Erfolgsprüfung.
+3. **Ausfüllbares Formular (`type: "formular"` via `form_engine.py`):**
+   - *Zweck:* Normgerechte Dokumentation, Schweißanweisungen (WPS nach DIN EN ISO 15609-1), Prüfprotokolle, Fehlersuchpläne oder Gefährdungsbeurteilungen.
+   - *Features:* Volle Eingabebreite für Rechenwege, browserseitiges Autosave (übersteht Reloads), Textdatei-Export (`.txt`/`.json`) für die Abgabe im Praxisauftrag (`assign`) und Druckansicht. Keine statischen Lücken in Textseiten!
 
 ---
 
@@ -267,6 +291,20 @@ prüfe sie danach automatisch (nicht nur per Augenschein):
   das Symbol weg. Pfeile (→ ↑) und der Malpunkt · rendern dagegen. `validate_svg.py`
   warnt vor riskanten Glyphen.
 
+### Kachel-Cover Bildarchitektur für Moodle Tiles (`format_tiles`)
+
+Für das Moodle-Kachelformat (`format_tiles`) erzeugte Kachel-Cover (`cover_<slug>.svg` &rarr; rasterisiert zu `.png`) müssen zwingend dieser Bildarchitektur folgen:
+
+1. **Striktes Textverbot im Cover:**
+   - Cover-SVGs für Kacheln dürfen **KEINEN Text** enthalten.
+   - *Begründung:* Moodle Tiles rendert den Kacheltitel nativ als halbtransparentes Overlay über das Bild. Text im Bild führt zu unleserlicher Doppelbeschriftung und Darstellungsfehlern auf mobilen Geräten.
+2. **Safe-Zone-Architektur ($y = 15\%$ bis $60\%$):**
+   - **Obere Safe-Zone ($y = 15\dots60\%$):** Das symbolstarke, kontrastreiche Hauptmotiv (z. B. Schweißbrenner, Sensor, Getriebe, Schaltschrank, Messgerät) wird zwingend in der oberen Bildhälfte platziert.
+   - **Unteres Drittel ($y > 65\%$ frei halten):** Das untere Drittel des Covers muss frei von fokalen Motiven, feinen Details oder Symbolen bleiben, da Moodle hier den Kacheltitel und den abgedunkelten Verlauf einblendet.
+3. **Farbwelt & Format:**
+   - 16:9-Format (z. B. 1200×675 px oder 800×450 px).
+   - Ruhiger, dezenter Hintergrund mit technischer Tiefe; Hauptmotiv klar freigestellt und mit prägnanten Akzentfarben akzentuiert.
+
 ### Koordinaten-Diagramme (Charts) — Achsen, Skala, geschlossene Figuren
 
 - **Chart markieren:** Ein Diagramm mit Koordinatenachsen (Kennlinie,
@@ -325,6 +363,8 @@ rendern in Kurs, PDF und PPTX einwandfrei:
 - **Kontrast:** Text muss sich von seinem Kasten/Kreis abheben
   (Leuchtdichte-Kontrast ≥ 2,5:1); heller Text auf mittelblauer Füllung
   ist ein typischer Verstoß.
+- **Typografie- & Rendering-Garantie (Kein LaTeX-MathJax-Bruch):**
+  Pfeile in Fließtexten, Tabellen, HTML-Attributen und Beschriftungen IMMER als sauberes HTML `&rarr;` oder Unicode `→` setzen (niemals fragile LaTeX-Befehle wie `\to`, `\rightarrow` oder `$\rightarrow$`, die MathJax zerstören oder ungerendert als Quelltext stehen bleiben).
 
 `validate_svg.py` meldet Verstöße als Warnungen (unter `--strict` schlagen sie
 den Build fehl); die Prüfung läuft automatisch in `make_materials.py` und
@@ -364,11 +404,24 @@ startest – dann sind die Diagramme in Kurs, PDF und PPTX gleichermaßen korrek
 offene Leitfrage, mit Namen/Zahlen. *„Erste Woche im Praktikum bei Betrieb X.
 Ihr Anleiter legt … Leitfrage: Wie gehen Sie vor?"*
 
-**Praxisauftrag (`assign.intro`):** Ausgangssituation → Auftrag/Handlungsprodukt →
-Vorgehen (nummeriert) → Rahmen (Zeit/Material) → Abgabe → **Bewertungskriterien als
-HTML-Rubrik** (3–4 Kriterien × 3 Niveaus, abgeleitet aus den Ziel-Verben).
+**Die 3-stufige Aufgaben-Kaskade (Aktivierung über den gesamten Kurs):**
+1. **Kachel 2 (Grundlagen) — Formativer Erkundungsauftrag:**
+   Kurze Beobachtungs-, Mess- oder Zuordnungsaufgabe direkt im Anschluss an die
+   Einführung (z. B. Bauteile am Schaltplan identifizieren, Klemmenbezeichnungen
+   zuordnen, Messwerte an einer statischen Skala ablesen).
+2. **Kachel 3 (Vertiefung) — Ausfüllbares Formular-Protokoll (`type: "formular"`):**
+   Interaktives Formular mit Textfeldern, Rechenschritten, Formel-Eingaben und
+   Begründungsfeldern. Verfügt über lokales **Autosave** im Browser und einen
+   **Textdatei-Export** (.txt / .json), damit die Lernenden ihre Arbeit sichern
+   und weiterverarbeiten können.
+3. **Kachel 4 (Anwendung) — Vollständiger Praxisauftrag (`type: "assign"`):**
+   Der summative Hauptauftrag, strukturiert nach den **6 Phasen der vollständigen
+   Handlung**: *1. Informieren → 2. Planen → 3. Entscheiden → 4. Ausführen →
+   5. Kontrollieren → 6. Bewerten*. Die Lernenden laden ihre Ergebnisse
+   (z. B. den Text-Export aus dem Formular + Messprotokoll + Schaltplan) hoch.
+   Transparente **Bewertungskriterien als HTML-Rubrik** (3–4 Kriterien × 3–4 Notenstufen).
 
-**Quizfragen mit Feedback:** Jede Frage braucht `generalfeedback` (Regel für alle)
+**Quizfragen mit formativem Feedback:** Jede Frage braucht `generalfeedback` (Regel für alle)
 **und** Feedback je Antwort; Distraktoren bilden **typische Fehlvorstellungen** ab.
 Quiz braucht `overallfeedback` (Prozentbänder mit Feed-Forward). Nie nur „richtig/falsch".
 
@@ -517,22 +570,22 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 ## 10. Qualitäts-Checkliste (vor Auslieferung)
 
 1. 4–5 kompetenzorientierte Lernziele (Operator + Kriterium), sichtbar in der Einführung.
-2. Authentische Handlungssituation + klares Handlungsprodukt.
-3. Sequenz Einführung → Grundlagen → Vertiefung → Anwendung → Recap erkennbar.
+2. **Handlungskontinuität & Der Rote Faden (Continuous Narrative Architecture):** Alle Kacheln bauen zwingend aufeinander auf und lösen denselben Gesamtauftrag als handlungsorientierte Etappen.
+3. Sequenz Einführung &rarr; Grundlagen &rarr; Vertiefung &rarr; Anwendung &rarr; Recap erkennbar.
 4. Jedes Infoblatt nach Bauplan: Einleitung + **Erklär-Fließtext (≥120–200 Wörter, Was/Wie/Warum)** + Diagramm + Stichpunkte + Merke. Kein „Bild + ein Satz".
 5. Diagramme als eingebettete Bilddateien (kein inline-SVG); Stil passend zum Inhalt. **`autofit_svg.py` + `validate_svg.py --strict` grün** (kein Clipping, keine Überlappung, kein Styling-tspan).
-6. Praxisauftrag mit Vorgehen **und** transparenter Rubrik.
-7. Formative Tests: mehrere Versuche, Antwort-Feedback + allgemeines Feedback + Gesamtfeedback.
-8. Glossar mit echten Begriffen; Forum mit klarer Aufgabe.
-9. `material:true` auf allen Infoblättern → PDF/PPTX automatisch; Lehrkräfte-Sektion verborgen.
+6. Praxisauftrag mit 6 Handlungsphasen **und** transparenter Bewertungsrubrik.
+7. Formative Tests in JEDER Kachel: mehrere Versuche, Antwort-Feedback zu jeder Option + allgemeines Feedback + Gesamtfeedback.
+8. Glossar mit echten Begriffen; Forum mit klarer handlungsorientierter Aufgabe.
+9. `material:true` auf allen Infoblättern &rarr; PDF/PPTX automatisch; Lehrkräfte-Sektion verborgen.
 10. Mengen tragen die Zeit (Abschnitt 9).
-11. Pipeline durchlaufen: make_materials → build → **validate (grün)** → preview.
-12. `course.format` = `tiles` mit echten **Kachel-Cover-PNGs** je sichtbarem Abschnitt (`"image"`, text-freies Motiv). Der Generator verdrahtet sie nativ als format_tiles-Fotos, `validate_mbz` prüft die Kette, `check_delivery` restauriert testweise. (Alternativ `topics` mit Banner-SVGs — dann gibt es KEINE Kachel-Titelbilder; das Ziel-Moodle braucht für Foto-Kacheln zudem `allowphototiles`.)
+11. Pipeline durchlaufen: make_materials &rarr; build &rarr; **validate (grün)** &rarr; preview.
+12. **Kachel-Cover Bildarchitektur für `format_tiles`:** Jede sichtbare Kachel erhält ein **textfreies** Cover-PNG (`cover_<slug>.png`, gerastert aus SVG). **Safe-Zone eingehalten ($y = 15\dots60\%$ für Hauptmotiv)**, unteres Drittel frei für Moodles Titelbanner.
 13. **Pflicht-Attribution** in `course.summary` **und** als „Hinweis zur Entstehung"-`label` im Kurs-Recap (KI + Labor Didaktik der Technik, HS Osnabrück – siehe Abschnitt 3).
-14. **Kachel-Bild** auf jedem sichtbaren Abschnitt: bei `tiles` ein text-freies **Cover-PNG** (Motiv-SVG → fitz-Raster ~1280×880, Titel legt Moodle drüber), bei `topics` ein Banner-SVG.
-15. **Typografie-Validator warnungsfrei** (echte Umlaute, ²/³, Malpunkt ·, Dezimalkomma, Bündigkeit, Kontrast — Abschnitt 6).
-16. **Ergebnisfelder als `formular`** (ausfüllbar + speicherbar), keine `__`-Lücken in Seiten.
-17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox). **Animation/Manipulation sind Standard**, wo das Thema etwas Bewegtes hergibt — Spec-Felder `animate` (Zeit-Loop mit Play/Pause/Speed) und `inputs[].type: select/toggle` (Schalter/Szenario statt nur Regler). **Challenge-Modus** (`challenge`) nur auf ausdrücklichen Wunsch einbauen — als ankreuzbare Option im Briefing nennen, nicht automatisch ergänzen. **Reale Drehzahlen/Frequenzen NICHT 1:1 als Sicht-Rotation** in `animate` — Helfer `visDeg(rpm, t)` nutzen (ruhige, lesbare Drehung; exakte Zahl bleibt KPI). Tempo-Regler reicht bis 0,1× (Zeitlupe).
-18. **Rechenbeispiele als Musterlösung** (Abschnitt 7): geg/ges → Formel → **mindestens ein Zwischenschritt** → Ergebnis → Praxisstufe; Einheiten in jeder Zeile; Einheiten-Kürzung als Bruch sichtbar. `validate_mbz` warnt (`RECHENBEISPIEL:`) bei direktem Sprung Einsetzen→Ergebnis.
+14. **Interaktive Medien-Trias je Fachthema:** Hotspot-Labor (`hotspot`) für Erkundung + Simulation (`simulation`) für Prozessparameter + ausfüllbares Formular (`formular`) für Protokolle/WPS.
+15. **Typografie- & Rendering-Garantie:** Keine LaTeX-Pfeilbrüche (immer `&rarr;` oder `→`), echte Umlaute, ²/³, Malpunkt ·, Dezimalkomma, Bündigkeit, Kontrast warnungsfrei.
+16. **Ergebnisfelder als `formular`** (ausfüllbar + autosave + exportierbar), keine `__`-Lücken in Seiten.
+17. **Simulation passt ohne Scrollen auf einen Bildschirm** (kompaktes Engine-Layout; flaches `visual`-viewBox). **Animation/Manipulation sind Standard**, wo das Thema etwas Bewegtes hergibt — Spec-Felder `animate` (Zeit-Loop mit Play/Pause/Speed) und `inputs[].type: select/toggle` (Schalter/Szenario statt nur Regler). Tempo-Regler reicht bis 0,1× (Zeitlupe).
+18. **Rechenbeispiele als Musterlösung** (Abschnitt 7): geg/ges &rarr; Formel &rarr; **mindestens ein Zwischenschritt** &rarr; Ergebnis &rarr; Praxisstufe; Einheiten in jeder Zeile; Einheiten-Kürzung als Bruch sichtbar. `validate_mbz` warnt (`RECHENBEISPIEL:`) bei direktem Sprung Einsetzen&rarr;Ergebnis.
 19. **Merke-Boxen in vollständigen Sätzen** (kein Stichwort-Telegramm); `validate_mbz` warnt (`MERKE:`).
 20. **Technische Zeichnungen bemaßt** (`data-diagram-type="zeichnung"`, Lage UND Größe mit Maßzahlen); `validate_svg` warnt (`BEMASSUNG:`).

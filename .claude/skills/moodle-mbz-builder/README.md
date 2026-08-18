@@ -81,35 +81,52 @@ Diagramm-Prüfung ab.
 }
 ```
 
-**2. Pipeline durchlaufen** (Standard für jeden Kurs):
+## Schnellstart
+
+**1. Didaktisches Briefing ("Grill-Me Gate"):**
+Führe vor dem Bauen das strukturierte 6-Cluster-Interview mit dem Skill `moodle-kurs-grill-me` durch, um den `kurs-steckbrief.json` abzustimmen.
+
+**2. Kursdefinition schreiben** (`course.json`, minimal):
+
+```json
+{
+  "course": {"fullname": "Mein Kurs", "shortname": "MK-1", "format": "tiles", "didaktik_profil": "zdq"},
+  "sections": [
+    {"name": "Über dieses Modul", "summary": "<p>Worum es geht</p>", "activities": [
+      {"type": "label", "name": "Begrüßung", "intro": "<p>Zuerst lesen</p>"}
+    ]}
+  ]
+}
+```
+
+**3. Pipeline durchlaufen** (Standard für jeden Kurs):
 
 ```bash
 SK=<skill-dir>/scripts
 
 python $SK/autofit_svg.py       assets/                         # SVG-viewBox passgenau (kein Clipping)
 python $SK/validate_svg.py      course.json --strict            # Diagramme prüfen (Überlappung/Textüberlauf)
-python $SK/build_simulation.py  course.json -o course.sim.json  # nur falls Simulationen enthalten
-python $SK/make_materials.py    course.sim.json -o course.materialized.json   # PDF/PPTX erzeugen
-python $SK/build_mbz.py         course.materialized.json -o mein-kurs.mbz --wwwroot https://moodle.example.edu
-python $SK/validate_mbz.py      mein-kurs.mbz                   # Archiv + XML + Querverweise prüfen
-python $SK/preview_mbz.py       course.materialized.json -o mein-kurs_vorschau.html
+python $SK/build_simulation.py  course.json -o course.sim.json  # nur falls Simulationen/Formulare enthalten
+python $SK/make_materials.py    course.sim.json -o course.materialized.json   # PDF/PPTX/DOCX erzeugen
+python $SK/build_mbz.py         course.materialized.json -o mein-kurs.mbz
+python $SK/preview_mbz.py       course.json -o mein-kurs_vorschau.html
+python $SK/build_editor_widget.py course.json                   # WYSIWYG-Editor erzeugen
+python $SK/check_delivery.py    .                               # 9-Stufen QA Gate + Live-Restore Lab
 ```
 
 Ohne Simulationen entfällt `build_simulation.py` (dann direkt `make_materials.py course.json …`).
 Ohne Infoblätter (`material:true`) entfällt `make_materials.py`.
 
-**3. In Moodle importieren:** *Kursverwaltung → Wiederherstellen → `.mbz` hochladen →*
-als neuen Kurs wiederherstellen. Enthält der Kurs Glossar-Einträge, beim Restore
-„Nutzerdaten einbeziehen" aktiviert lassen.
+**4. In Moodle importieren oder in der Spielwiese testen:**
+- *Produktiv-Moodle:* Kursverwaltung → Wiederherstellen → `.mbz` hochladen (beim Restore „Nutzerdaten einbeziehen" aktiviert lassen).
+- *Lokale Spielwiese (`moodle-spielwiese`):* `python spielwiese.py import <kurs.mbz> --schueler` (spielt den Kurs auf Port 8090 ein und schreibt Testschüler ein).
 
 ---
 
 ## Unterstützte Bausteine
 
-**Arbeitsmaterialien:** `label`, `page`, `url`, `resource` (Datei-Download),
-`folder`, `book`.
-**Aktivitäten:** `assign` (Aufgabe mit Rubrik), `quiz` (Wahr/Falsch + Multiple-Choice,
-je mit formativem Feedback), `forum`, `glossary`, `choice`, `feedback`, `simulation`.
+**Arbeitsmaterialien:** `label`, `page` (Infoblatt mit `material:true`), `url`, `resource` (Datei-Download), `folder`, `book`.
+**Aktivitäten:** `assign` (Aufgabe mit Rubrik), `quiz` (Wahr/Falsch + Multiple-Choice mit formativem Feedback), `forum`, `glossary`, `choice`, `feedback`, `simulation` (Schieberegler-Simulationen), `hotspot` (interaktive Bilderkundung), `formular` (ausfüllbare Arbeitsblätter mit Autosave).
 
 Das vollständige Feld-Schema steht in
 [`references/course-spec.md`](references/course-spec.md).
@@ -121,24 +138,12 @@ Das vollständige Feld-Schema steht in
 - **Infoblatt-Bauplan.** Jede `page` mit `"material": true` wird zum Infoblatt
   (Kopfleiste + Erklär-Fließtext + Diagramm + Stichpunkte + Merke-Box) und
   automatisch als PDF + PPTX exportiert.
-- **Selbstgezeichnete Diagramme.** Beschriftete SVG-Fachdiagramme werden als
-  Bilddateien eingebettet; `autofit_svg.py`/`validate_svg.py` messen echte
-  Textbreiten und verhindern abgeschnittene Ränder, Überlappungen und
-  Pfeil-über-Label-Defekte.
-- **Interaktive Simulationen.** Wo ein Thema einen veränderlichen Zusammenhang
-  hat (Schieberegler → Werte/Bild aktualisieren live), liefert `build_simulation.py`
-  eine self-contained HTML-Datei (offline, CSP-sicher, Dark-Mode).
+- **Selbstgezeichnete Diagramme & Schaltungen.** Beschriftete SVG-Fachdiagramme und DIN EN 60617 Schaltungen (`circuit_builder.py`); `autofit_svg.py`/`validate_svg.py` messen echte Textbreiten und verhindern abgeschnittene Ränder, Überlappungen und Pfeil-über-Label-Defekte.
+- **Interaktive Hotspots & Simulationen.** `hotspot_engine.py` baut H5P-ähnliche Hotspot-Modelle; `build_simulation.py` liefert dynamische Schieberegler-Simulationen (offline, CSP-sicher, Dark-Mode).
 - **Formatives Feedback.** Quizze tragen Antwort-, Allgemein- und Gesamtfeedback.
-- **Bearbeitbare Vorschau (Editor-Widget).** `build_editor_widget.py` erzeugt eine
-  WYSIWYG-Ansicht, in der man Struktur und Inhalte direkt editiert und KI-gestützt
-  überarbeiten lässt.
-- **Video-Recap (Pflicht-Schritt).** Am Ende jedes Kurses wird die
-  „Videozusammenfassung" über NotebookLM erzeugt (`export_course_dossier.py` →
-  Video → `set_recap_video.py`). Details:
-  [`references/notebooklm-video-recap.md`](references/notebooklm-video-recap.md).
-- **Pflicht-Attribution.** Jeder Kurs trägt den Hinweis, dass er mit Hilfe von
-  künstlicher Intelligenz und in Kooperation mit dem *Labor Didaktik der Technik*
-  der *Hochschule Osnabrück* entstanden ist.
+- **Bearbeitbare Vorschau (Editor-Widget).** `build_editor_widget.py` erzeugt eine WYSIWYG-Ansicht (`editor.html`), in der man Struktur und Inhalte direkt editiert.
+- **Automatische 9-Stufen QA-Pipeline (`check_delivery.py`).** Prüft Vollständigkeit, XML-Integrität, relative Pfade, Materialien, Recap und führt einen automatischen Live-Restore in der lokalen Moodle 4.5 Testinstanz durch.
+- **Pflicht-Attribution.** Jeder Kurs trägt den Hinweis, dass er mit Hilfe von künstlicher Intelligenz und in Kooperation mit dem *Labor Didaktik der Technik* der *Hochschule Osnabrück* entstanden ist.
 
 ---
 
@@ -151,9 +156,13 @@ moodle-mbz-builder/
 ├── requirements.txt          # Python-Abhängigkeiten
 ├── scripts/                  # Die Bau-Pipeline
 │   ├── build_mbz.py          #   Kern-Generator (JSON → .mbz)
-│   ├── make_materials.py     #   PDF/PPTX pro Infoblatt
+│   ├── check_delivery.py     #   9-Stufen QA-Suite & Live-Restore Gate
+│   ├── make_materials.py     #   PDF/PPTX pro Infoblatt + Materialdossier
 │   ├── build_simulation.py   #   Simulations-Specs → HTML-Ressourcen
 │   ├── sim_engine.py         #   generische Simulations-Engine + Bibliothek
+│   ├── hotspot_engine.py     #   interaktive Hotspot-Modelle (H5P-Alternative)
+│   ├── circuit_builder.py    #   DIN EN 60617 Vektor-Schaltplan-Assembler
+│   ├── didactic_profiles.py  #   Profil-Definitionen (ZDQ, Tandem, etc.)
 │   ├── autofit_svg.py        #   viewBox passgenau wachsen lassen
 │   ├── validate_svg.py       #   Diagramm-Lint (Clipping/Überlappung/…)
 │   ├── svg_geometry.py       #   Textbreiten-Messung (Basis der SVG-Prüfung)
@@ -168,8 +177,9 @@ moodle-mbz-builder/
 │   ├── activity-types.md     #   Feld-Schemata je Aktivitätstyp
 │   ├── mbz-format.md         #   das .mbz-Format im Detail
 │   └── notebooklm-video-recap.md  # Video-Recap-Workflow
-├── assets/                   # Few-Shot-Kurs + Beispiel-Diagramme
+├── assets/                   # Few-Shot-Kurs + Schaltsymbole + Beispiel-Diagramme
 │   ├── fewshot_bohrmaschine.json  # didaktisches Gold-Standard-Beispiel
+│   ├── schaltsymbole/        # DIN EN 60617 Vektorsymbol-Bibliothek
 │   └── *.svg
 └── tests/                    # pytest-Suite
 ```

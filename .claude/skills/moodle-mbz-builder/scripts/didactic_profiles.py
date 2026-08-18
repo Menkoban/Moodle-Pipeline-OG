@@ -158,9 +158,67 @@ _VOLLSTAENDIGE_HANDLUNG = {
 }
 
 
+# --- Profil 3: Theorie-Praxis-Tandem (Micro-Handlungszyklen) ------------------
+_THEORIE_PRAXIS_TANDEM = {
+    "key": "theorie-praxis-tandem",
+    "name": "Theorie-Praxis-Tandem (Micro-Handlungszyklen)",
+    "beschreibung": (
+        "Didaktisches Rhythmisierungsmodell: Jede inhaltliche Kachel bildet ein "
+        "Theorie-Praxis-Tandem (Teil 1: Theoretischer Input mit Infoblatt & Diagramm/Hotspot, "
+        "Teil 2: Direkte formative Praxisaktion mit ausfüllbarem Protokoll, Berechnung oder Übung). "
+        "Mündet in einen summativen Haupt-Praxisauftrag und Reflexion."
+    ),
+    "guidance_ref": "references/course-design.md (§3, Tandem-Modell)",
+    "intro_section": {
+        "key": "ueber-modul",
+        "title": "Über dieses Modul",
+        "zeit": None,
+        "visible": 1,
+        "pflicht": False,
+    },
+    "section_sequence": [
+        {"key": "einfuehrung", "title": "Einführung & Situationsanalyse",
+         "zeit": "~5 min", "visible": 1, "pflicht": True},
+        {"key": "tandem-1", "title": "Baustein 1 (Theorie & Praxisübung)",
+         "zeit": "~35 min", "visible": 1, "pflicht": True},
+        {"key": "tandem-2", "title": "Baustein 2 (Vertiefung & Messprotokoll)",
+         "zeit": "~35 min", "visible": 1, "pflicht": True},
+        {"key": "praxisauftrag", "title": "Praxisauftrag / Handlungsprodukt",
+         "zeit": "~30 min", "visible": 1, "pflicht": True},
+        {"key": "recap", "title": "Kurs-Recap & Reflexion",
+         "zeit": "~10 min", "visible": 1, "pflicht": True},
+        {"key": "glossar", "title": "Glossar",
+         "zeit": None, "visible": 1, "pflicht": False},
+        {"key": "lehrkraefte", "title": "Material für Lehrkräfte",
+         "zeit": None, "visible": 0, "pflicht": False},
+    ],
+    "rules": {
+        "leitprinzipien": [
+            "Tandem-Prinzip: Kein isolierter Theorie-Block ohne unmittelbare Praxis-Aktion",
+            "Direkte Handlungserprobung über ausfüllbare Formulare oder Simulationen in JEDER Kachel",
+            "Vollständige Handlung im summativen Praxisauftrag als Synthese",
+        ],
+        "didaktische_begruendung": (
+            "Vermeidet kognitive Überlastung durch passiven Input. Schüler erproben jeden "
+            "Theoriebaustein direkt aktiv, bevor der nächste Baustein aufgeschlagen wird."
+        ),
+        "constructive_alignment": (
+            "Formative Teilleistungen in den Tandem-Kacheln bauen das Handlungsprodukt des Hauptauftrags vor."
+        ),
+        "pflicht_abschnitte": [
+            "Einführung & Situationsanalyse", "Baustein 1 (Theorie & Praxisübung)",
+            "Praxisauftrag / Handlungsprodukt", "Kurs-Recap & Reflexion",
+        ],
+        "wortbudget": "~25 Wörter Lerninhalt pro Lernminute",
+        "quelle": "references/course-design.md §3",
+    },
+}
+
+
 PROFILES = {
     _ZDQ["key"]: _ZDQ,
     _VOLLSTAENDIGE_HANDLUNG["key"]: _VOLLSTAENDIGE_HANDLUNG,
+    _THEORIE_PRAXIS_TANDEM["key"]: _THEORIE_PRAXIS_TANDEM,
 }
 
 

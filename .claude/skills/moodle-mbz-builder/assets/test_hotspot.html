@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interaktiver Schaltschrank: Bauteile erkunden</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --primary-light: #e0f2fe;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --pulse-color: rgba(2, 132, 199, 0.6);
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --primary: #38bdf8;
+    --primary-hover: #7dd3fc;
+    --primary-light: rgba(56, 189, 248, 0.15);
+    --pulse-color: rgba(56, 189, 248, 0.6);
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  }
+}
+
+body.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --primary-light: #e0f2fe;
+  --pulse-color: rgba(2, 132, 199, 0.6);
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-theme {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --primary: #38bdf8;
+  --primary-hover: #7dd3fc;
+  --primary-light: rgba(56, 189, 248, 0.15);
+  --pulse-color: rgba(56, 189, 248, 0.6);
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.6;
+  padding: 16px;
+}
+
+.hotspot-app {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.title-wrap h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-wrap p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-badge {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.theme-toggle-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+.theme-toggle-btn:hover { background: var(--border); }
+
+/* Main Interactive Canvas Area */
+.main-stage {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .main-stage { grid-template-columns: 1fr; }
+}
+
+.canvas-container {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.svg-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: inline-block;
+  line-height: 0;
+}
+
+.svg-wrapper svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
+/* Highlight Glow in SVG */
+.highlight-glow {
+  filter: drop-shadow(0 0 10px var(--accent));
+  transition: all 0.3s;
+  stroke: var(--accent) !important;
+  stroke-width: 3px !important;
+}
+
+/* Hotspot Pins */
+.hotspot-pin {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  background: var(--primary);
+  color: #ffffff;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+  z-index: 10;
+  outline: none;
+}
+
+.hotspot-pin:hover, .hotspot-pin:focus-visible {
+  transform: translate(-50%, -50%) scale(1.25);
+  background: var(--primary-hover);
+  z-index: 20;
+}
+
+.hotspot-pin.active {
+  background: var(--accent);
+  transform: translate(-50%, -50%) scale(1.3);
+  z-index: 25;
+}
+
+.hotspot-pin.visited::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border: 1.5px solid #ffffff;
+  border-radius: 50%;
+}
+
+.hotspot-pin .pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  animation: pulse-animation 2s infinite cubic-bezier(0.24, 0, 0.38, 1);
+  pointer-events: none;
+}
+
+@keyframes pulse-animation {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 var(--pulse-color); }
+  70% { transform: scale(1.8); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+  100% { transform: scale(2.2); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+/* Detail Card Panel */
+.detail-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 40px 10px;
+  font-size: 0.95rem;
+}
+
+.panel-category {
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.panel-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+.panel-desc {
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.panel-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+
+.panel-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-table td.key {
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 40%;
+}
+
+.panel-table td.val {
+  color: var(--text-main);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.callout-box {
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--accent);
+  padding: 10px 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+.callout-box b { color: var(--accent); }
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.btn-nav {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.btn-nav:hover:not(:disabled) { background: var(--border); }
+.btn-nav:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="hotspot-app">
+  <div class="app-header">
+    <div class="title-wrap">
+      <h1><span style="color:var(--primary);">◉</span> Interaktiver Schaltschrank: Bauteile erkunden</h1>
+      <p>Klicke auf die Komponenten...</p>
+    </div>
+    <div class="header-controls">
+      <div class="progress-badge" id="progress-badge">
+        <span id="visited-text">0 von 2 Bauteilen erkundet</span>
+      </div>
+      <button class="theme-toggle-btn" id="theme-btn" aria-label="Farbschema umschalten">🌓</button>
+    </div>
+  </div>
+
+  <div class="main-stage">
+    <!-- Interactive SVG Container -->
+    <div class="canvas-container">
+      <div class="svg-wrapper" id="svg-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="background:#ddd;">
+        <rect id="q1" x="120" y="150" width="40" height="40" fill="#999" />
+        <rect id="k1" x="180" y="230" width="40" height="40" fill="#777" />
+    </svg>
+        <!-- Hotspot Pins injected via JS -->
+      </div>
+    </div>
+
+    <!-- Detail Info Sidebar -->
+    <div class="detail-panel" id="detail-panel" aria-live="polite">
+      <div class="panel-empty" id="panel-empty">
+        <p>👆 Klicke auf eine pulsierende Markierung in der Grafik, um Details zu erkunden.</p>
+      </div>
+      <div id="panel-content" style="display:none;">
+        <span class="panel-category" id="card-cat">Kategorie</span>
+        <h2 class="panel-title" id="card-title">Titel</h2>
+        <div class="panel-desc" id="card-desc">Beschreibungstext</div>
+        
+        <table class="panel-table" id="card-table">
+          <tbody id="card-table-body"></tbody>
+        </table>
+
+        <div class="callout-box" id="card-callout" style="display:none;">
+          <b>Merke:</b> <span id="callout-text"></span>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn-nav" id="btn-prev" aria-label="Vorheriger Hotspot">◀ Zurück</button>
+          <button class="btn-nav" id="btn-next" aria-label="Nächster Hotspot">Weiter ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {"title": "Interaktiver Schaltschrank: Bauteile erkunden", "subtitle": "Klicke auf die Komponenten...", "hotspots": [{"id": "q1", "x": 35.0, "y": 42.5, "title": "Motorschutzschalter Q1", "category": "Schutzorgan", "content": "Schützt den Antrieb vor thermischer Überlastung. Formel: \\( I^2t \\)", "details": {"Norm": "DIN EN 60947-4-1", "Einstellbereich": "1,0 - 1,6 A"}}, {"id": "k1", "x": 50.0, "y": 62.5, "title": "Schütz K1", "category": "Schaltgerät", "content": "Schaltet den Hauptstromkreis.", "details": {"Norm": "DIN EN 60947-4-1"}}]};
+
+let activeIndex = -1;
+const visited = new Set();
+
+const svgWrapper = document.getElementById('svg-wrapper');
+const panelEmpty = document.getElementById('panel-empty');
+const panelContent = document.getElementById('panel-content');
+const cardCat = document.getElementById('card-cat');
+const cardTitle = document.getElementById('card-title');
+const cardDesc = document.getElementById('card-desc');
+const cardTableBody = document.getElementById('card-table-body');
+const cardCallout = document.getElementById('card-callout');
+const calloutText = document.getElementById('callout-text');
+const visitedText = document.getElementById('visited-text');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const themeBtn = document.getElementById('theme-btn');
+
+// Theme Switcher
+themeBtn.addEventListener('click', () => {
+  if (document.body.classList.contains('dark-theme')) {
+    document.body.classList.remove('dark-theme');
+    document.body.classList.add('light-theme');
+  } else {
+    document.body.classList.remove('light-theme');
+    document.body.classList.add('dark-theme');
+  }
+});
+
+// Render Hotspots onto SVG Wrapper
+DATA.hotspots.forEach((hs, idx) => {
+  const pin = document.createElement('button');
+  pin.className = 'hotspot-pin';
+  pin.id = 'pin-' + idx;
+  pin.setAttribute('aria-label', hs.title || ('Hotspot ' + (idx + 1)));
+  
+  // Percent-based or pixel-based positioning
+  if (typeof hs.x === 'number') {
+    pin.style.left = hs.x + (hs.x <= 100 ? '%' : 'px');
+  } else {
+    pin.style.left = hs.x;
+  }
+  
+  if (typeof hs.y === 'number') {
+    pin.style.top = hs.y + (hs.y <= 100 ? '%' : 'px');
+  } else {
+    pin.style.top = hs.y;
+  }
+  
+  pin.innerHTML = (hs.number || (idx + 1)) + '<span class="pulse"></span>';
+
+  pin.addEventListener('click', () => selectHotspot(idx));
+  pin.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      selectHotspot(idx);
+    }
+  });
+
+  svgWrapper.appendChild(pin);
+});
+
+function selectHotspot(idx) {
+  if (idx < 0 || idx >= DATA.hotspots.length) return;
+  activeIndex = idx;
+  const hs = DATA.hotspots[idx];
+  visited.add(idx);
+  visitedText.textContent = visited.size + " von " + DATA.hotspots.length + " Bauteilen erkundet";
+
+  // Update pin active states
+  DATA.hotspots.forEach((h, i) => {
+    const p = document.getElementById('pin-' + i);
+    if (!p) return;
+    p.classList.remove('active');
+    if (visited.has(i)) p.classList.add('visited');
+    if (i === idx) p.classList.add('active');
+    
+    // Manage SVG highlights
+    if (h.id) {
+      const svgEl = document.getElementById(h.id);
+      if (svgEl) {
+        if (i === idx) {
+          svgEl.classList.add('highlight-glow');
+        } else {
+          svgEl.classList.remove('highlight-glow');
+        }
+      }
+    }
+  });
+
+  // Populate Details
+  panelEmpty.style.display = 'none';
+  panelContent.style.display = 'flex';
+
+  cardCat.textContent = hs.category || 'Bauteil / Komponente';
+  cardTitle.textContent = hs.title;
+  cardDesc.innerHTML = hs.content;
+
+  // Key-Value Table
+  cardTableBody.innerHTML = '';
+  if (hs.details && Object.keys(hs.details).length > 0) {
+    for (const [k, v] of Object.entries(hs.details)) {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td class="key">${k}</td><td class="val">${v}</td>`;
+      cardTableBody.appendChild(row);
+    }
+  }
+
+  // Callout Box
+  if (hs.merksatz) {
+    cardCallout.style.display = 'block';
+    calloutText.innerHTML = hs.merksatz;
+  } else {
+    cardCallout.style.display = 'none';
+  }
+
+  // Nav buttons
+  btnPrev.disabled = (idx === 0);
+  btnNext.disabled = (idx === DATA.hotspots.length - 1);
+  
+  if (window.MathJax) {
+    MathJax.typesetPromise();
+  }
+}
+
+btnPrev.addEventListener('click', () => { if (activeIndex > 0) selectHotspot(activeIndex - 1); });
+btnNext.addEventListener('click', () => { if (activeIndex < DATA.hotspots.length - 1) selectHotspot(activeIndex + 1); });
+</script>
+</body>
+</html>

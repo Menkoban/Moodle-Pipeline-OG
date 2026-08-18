@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 34 820 266" width="820" height="266">
+<title>Grundstromkreis mit Messgeraeten</title>
+<style>
+
+:root {
+  --wid: #16232b;
+  --text: #16232b;
+  --text2: #5a6b75;
+  --strom: #e07a2f;
+  --spannung: #2f6fe0;
+  --magnet: #d94f9a;
+  --ok: #2e8b57;
+  --gefahr: #d0392b;
+  --leiter-l: #8a3b14;
+  --leiter-n: #2f6fe0;
+  --leiter-pe: #2e8b57;
+}
+svg { background: #ffffff; }
+text { font-family: "IBM Plex Mono", Consolas, "Liberation Mono", monospace; }
+text.bmk { font-size: 26px; font-weight: 700; fill: #16232b; }
+text.wert { font-size: 22px; font-weight: 500; fill: #5a6b75; }
+text.pin { font-size: 18px; font-weight: 600; fill: #5a6b75; }
+text.title { font-size: 28px; font-weight: 700; fill: #16232b; }
+text.leiter { font-size: 22px; font-weight: 700; fill: #16232b; }
+.wire { fill: none; stroke: #16232b; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-thick { fill: none; stroke: #16232b; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-pe { fill: none; stroke: #2e8b57; stroke-width: 5px; stroke-dasharray: 12 8; stroke-linecap: round; stroke-linejoin: round; }
+.wire-n { fill: none; stroke: #2f6fe0; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.knoten { fill: #16232b; stroke: none; }
+.klemme-dot { fill: #ffffff; stroke: #16232b; stroke-width: 3px; }
+
+</style>
+<rect x="60" y="34" width="820" height="266" fill="#ffffff"/>
+
+  <!-- Node: Q1 (quelleDC) -->
+  <g id="Q1" class="sym " transform="translate(100, 140)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H120"/><circle cx="60" cy="30" r="30"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">U_q</text><text class="wert" x="48" y="92" text-anchor="start">12 V</text>
+  </g>
+  <!-- Node: S1 (schalter) -->
+  <g id="S1" class="sym " transform="translate(260, 140)">
+    <g transform="rotate(0)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="60" y="-46" text-anchor="middle">S1</text>
+  </g>
+  <!-- Node: P1 (messer) -->
+  <g id="P1" class="sym " transform="translate(420, 140)">
+    <g transform="rotate(0)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><circle cx="60" cy="30" r="30"/><text x="60" y="42" text-anchor="middle" transform="rotate(0 60 42)" font-family="BarlowC" font-weight="700" font-size="34" stroke="none" fill="#16232b">V</text></g>
+    </g>
+    </g>
+    <text class="bmk" x="60" y="-46" text-anchor="middle">P1</text><text class="wert" x="60" y="58" text-anchor="middle">A</text>
+  </g>
+  <!-- Node: R1 (widerstand) -->
+  <g id="R1" class="sym " transform="translate(580, 140)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H20 M100 30 H120"/><rect x="20" y="14" width="80" height="32"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">R1</text><text class="wert" x="48" y="92" text-anchor="start">100 Ω</text>
+  </g>
+  <!-- Node: P2 (messer) -->
+  <g id="P2" class="sym " transform="translate(720, 140)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><circle cx="60" cy="30" r="30"/><text x="60" y="42" text-anchor="middle" transform="rotate(0 60 42)" font-family="BarlowC" font-weight="700" font-size="34" stroke="none" fill="#16232b">V</text></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">P2</text><text class="wert" x="48" y="92" text-anchor="start">V</text>
+  </g>  <path d="M 100 140 L 260 140" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 380 140 L 420 140" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 540 140 L 580 140" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 580 260 L 100 260" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 580 140 L 720 140" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 580 260 L 720 260" class="wire" stroke="#16232b" stroke-width="5"/>  <circle class="knoten" cx="580" cy="140" r="7" fill="#16232b"/>  <circle class="knoten" cx="580" cy="260" r="7" fill="#16232b"/>
+  <!-- Strompfeil: I -->
+  <g transform="translate(380,140) rotate(0)" stroke="#e07a2f" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-28 0 H26"/><path d="M14 -9 L26 0 L14 9"/>
+    <text x="0" y="-14" text-anchor="middle" font-size="22" font-weight="700" fill="#e07a2f" stroke="none" transform="rotate(0)">I</text>
+  </g>
+  <!-- Spannungspfeil: U_R -->
+  <g stroke="#2f6fe0" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M640 150 L640 250"/>
+    <path d="M632.0 234.0 L640 250 L648.0 234.0"/>
+    <path d="M648.0 150.0 L632.0 150.0"/>
+    <text x="616.0" y="200.0" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="700" fill="#2f6fe0" stroke="none">U_R</text>
+  </g>
+</svg>

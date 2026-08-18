@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -15 650 780" width="650" height="780">
+<title>Wendeschuetzschaltung — Steuerstromkreis (230 V AC)</title>
+<style>
+
+:root {
+  --wid: #16232b;
+  --text: #16232b;
+  --text2: #5a6b75;
+  --strom: #e07a2f;
+  --spannung: #2f6fe0;
+  --magnet: #d94f9a;
+  --ok: #2e8b57;
+  --gefahr: #d0392b;
+  --leiter-l: #8a3b14;
+  --leiter-n: #2f6fe0;
+  --leiter-pe: #2e8b57;
+}
+svg { background: #ffffff; }
+text { font-family: "IBM Plex Mono", Consolas, "Liberation Mono", monospace; }
+text.bmk { font-size: 26px; font-weight: 700; fill: #16232b; }
+text.wert { font-size: 22px; font-weight: 500; fill: #5a6b75; }
+text.pin { font-size: 18px; font-weight: 600; fill: #5a6b75; }
+text.title { font-size: 28px; font-weight: 700; fill: #16232b; }
+text.leiter { font-size: 22px; font-weight: 700; fill: #16232b; }
+.wire { fill: none; stroke: #16232b; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-thick { fill: none; stroke: #16232b; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-pe { fill: none; stroke: #2e8b57; stroke-width: 5px; stroke-dasharray: 12 8; stroke-linecap: round; stroke-linejoin: round; }
+.wire-n { fill: none; stroke: #2f6fe0; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.knoten { fill: #16232b; stroke: none; }
+.klemme-dot { fill: #ffffff; stroke: #16232b; stroke-width: 3px; }
+
+</style>
+<rect x="0" y="-15" width="650" height="780" fill="#ffffff"/>
+
+  <!-- Node: F0 (sicherung) -->
+  <g id="F0" class="sym " transform="translate(120, 50)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H20 M100 30 H120"/><rect x="20" y="14" width="80" height="32"/><path d="M20 30 H100"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">F_0</text><text class="wert" x="48" y="92" text-anchor="start">6 A</text>
+  </g>
+  <!-- Node: F1 (oeffner) -->
+  <g id="F1" class="sym " transform="translate(120, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M30 30 L90 8"/><path d="M90 8 V30"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">F_1 (95-96)</text>
+  </g>
+  <!-- Node: S0 (oeffner) -->
+  <g id="S0" class="sym " transform="translate(120, 270)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M30 30 L90 8"/><path d="M90 8 V30"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">S_0 (Aus)</text>
+  </g>
+  <!-- Node: S1 (schliesser) -->
+  <g id="S1" class="sym " transform="translate(240, 410)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">S_1 (Ein I)</text>
+  </g>
+  <!-- Node: K1_sh (schliesser) -->
+  <g id="K1_sh" class="sym " transform="translate(310, 410)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K_1 (13-14)</text>
+  </g>
+  <!-- Node: K2_v (oeffner) -->
+  <g id="K2_v" class="sym " transform="translate(240, 540)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M30 30 L90 8"/><path d="M90 8 V30"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K_2 (21-22)</text>
+  </g>
+  <!-- Node: K1_sp (schuetzspule) -->
+  <g id="K1_sp" class="sym " transform="translate(240, 635)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H46 M74 30 H120"/><rect x="46" y="6" width="28" height="48"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K_1 (A_1-A_2)</text>
+  </g>
+  <!-- Node: S2 (schliesser) -->
+  <g id="S2" class="sym " transform="translate(420, 410)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">S_2 (Ein II)</text>
+  </g>
+  <!-- Node: K2_sh (schliesser) -->
+  <g id="K2_sh" class="sym " transform="translate(490, 410)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K_2 (13-14)</text>
+  </g>
+  <!-- Node: K1_v (oeffner) -->
+  <g id="K1_v" class="sym " transform="translate(420, 540)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M30 30 L90 8"/><path d="M90 8 V30"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K_1 (21-22)</text>
+  </g>
+  <!-- Node: K2_sp (schuetzspule) -->
+  <g id="K2_sp" class="sym " transform="translate(420, 635)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H46 M74 30 H120"/><rect x="46" y="6" width="28" height="48"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K_2 (A_1-A_2)</text>
+  </g>  <path d="M 100 40 L 520 40" class="wire-thick" stroke="#16232b" stroke-width="5"/>  <path d="M 100 700 L 520 700" class="wire-n" stroke="#16232b" stroke-width="5"/>  <path d="M 120 40 L 120 50" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 120 150 L 120 160" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 120 260 L 120 270" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 120 370 L 120 390" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 120 390 L 420 390" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 240 390 L 240 410" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 240 400 L 310 400" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 310 400 L 310 410" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 240 510 L 240 530" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 310 510 L 310 530" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 310 530 L 240 530" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 240 530 L 240 540" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 240 625 L 240 635" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 240 695 L 240 700" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 390 L 420 410" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 400 L 490 400" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 490 400 L 490 410" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 510 L 420 530" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 490 510 L 490 530" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 490 530 L 420 530" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 530 L 420 540" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 625 L 420 635" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 695 L 420 700" class="wire" stroke="#16232b" stroke-width="5"/>  <circle class="knoten" cx="120" cy="40" r="7" fill="#16232b"/>  <circle class="knoten" cx="120" cy="390" r="7" fill="#16232b"/>  <circle class="knoten" cx="240" cy="390" r="7" fill="#16232b"/>  <circle class="knoten" cx="240" cy="400" r="7" fill="#16232b"/>  <circle class="knoten" cx="240" cy="530" r="7" fill="#16232b"/>  <circle class="knoten" cx="240" cy="700" r="7" fill="#16232b"/>  <circle class="knoten" cx="420" cy="390" r="7" fill="#16232b"/>  <circle class="knoten" cx="420" cy="400" r="7" fill="#16232b"/>  <circle class="knoten" cx="420" cy="530" r="7" fill="#16232b"/>  <circle class="knoten" cx="420" cy="700" r="7" fill="#16232b"/>  <text class="leiter" x="40" y="25" text-anchor="start" font-size="24px" font-weight="600">L1 (230 V)</text>  <text class="leiter" x="40" y="725" text-anchor="start" font-size="24px" font-weight="600">N</text>
+</svg>

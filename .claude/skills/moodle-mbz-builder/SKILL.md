@@ -40,32 +40,29 @@ Gate ein eigenes Todo an** (TaskCreate) und hake es erst ab, wenn das Gate
 GRÜN ist — „hab ich sinngemäß gemacht" zählt nicht. Ein Schritt, dessen
 Ergebnis-Datei fehlt, ist NICHT passiert.
 
-1. **Briefing** (Kurs-Steckbrief inkl. Kachelzahl-Frage, s. u.) →
-   Gate: Autor hat den **Vorschlags-Steckbrief bestätigt**.
-2. **course.json + SVGs schreiben** → Gate: `autofit_svg.py` gelaufen und
-   `validate_svg.py --strict` Exit 0.
-3. **Editor-Widget**: `build_editor_widget.py … -o editor.html` bauen UND
-   via `mcp__visualize__show_widget` **rendern** (vorher einmal still
-   `read_me`, modules `["interactive"]`). Die Datei zu bauen ohne zu
-   rendern erfüllt das Gate NICHT — der Autor muss den Kurs im Chat
-   bearbeiten können. Zusätzlich Lese-Vorschau bauen und als Datei senden.
-4. **NotebookLM-Video SOFORT starten** (Dossier exportieren → Browser-Flow)
-   — läuft parallel zu Schritt 5; Fallback-Regel siehe Video-Kapitel.
-5. **Pipeline**: `build_simulation` (falls Sims/Formulare) →
-   `make_materials` → `build_mbz` → Gate: `validate_mbz.py` Exit 0.
-6. **Video einbauen** (`set_recap_video.py`) → Rebuild → Re-Validate.
-7. **Sammelordner-Ablage** (relative Pfade, assets/ mitkopieren, s. u.).
-8. **SCHLUSS-GATE**: `python <skill-dir>/scripts/check_delivery.py
-   "<kursordner>"` — prüft maschinell: course.json relativ +
-   self-contained, .mbz + validate grün, Vorschau, editor.html,
-   materials/ vollständig, Video eingebaut. **Erst bei Exit 0
-   ausliefern.** Bewusste Ausnahmen (z. B. `--allow-video-placeholder`,
-   wenn kein Browser verbunden ist) IMMER im Chat begründen.
-   *Optionaler Live-Restore:* ist der Skill `moodle-testinstanz` installiert,
-   restauriert das Gate die `.mbz` automatisch ins lokale Moodle-Lab. Fehlt der
-   Skill oder ist das Lab nicht erreichbar → still übersprungen (Gate bleibt
-   grün); **rot nur bei echtem Restore-Fehler.** `--require-live-restore`
-   erzwingt den Test.
+1. **Gate 0 (Pipeline-Einstieg & Didaktik-Briefing):** 
+   Liegt noch **kein** freigegebener `kurs-steckbrief.json` vor, springe sofort in den Skill `moodle-kurs-grill-me`! Dort wird das strukturierte 6-Cluster-Interview mit interaktiven Auswahlmenüs durchgeführt und der standardisierte Kurs-Steckbrief erzeugt. Liegt der Steckbrief bereits vor, übernimmt dieser Skill nahtlos die technische Kurs-Erstellung.
+   → **Didaktische Kernvorgabe:** Sicherstellung der **Continuous Narrative Architecture** (alle Kacheln lösen denselben durchgehenden Fall als Etappen) und der **Interaktiven Medien-Trias** (Hotspot + Simulation + Formular).
+2. **Gate 1 (course.json & SVG-Diagramme schreiben):**
+   `course.json` nach ZDQ-Profil (oder gewähltem Profil) verfassen und alle referenzierten SVG-Diagramme (DIN EN 60617 / bemaßte Zeichnungen) sowie textfreie Kachel-Cover (Safe-Zone $y=15\dots60\%$) erstellen.
+   → Gate: `autofit_svg.py` gelaufen und `validate_svg.py --strict` liefert Exit 0 (0 Fehler, 0 Warnungen).
+3. **Gate 2 (Editor-Widget & Vorschau):**
+   `build_editor_widget.py course.json` erzeugt `editor.html`; `preview_mbz.py course.json` erzeugt `*_vorschau.html`.
+   → Gate: `editor.html` und `_vorschau.html` sind erzeugt und im Workspace/Desktop abgelegt.
+4. **Gate 3 (Medien-Trias: Simulationen, Hotspots & Formulare):**
+   Interaktive Medien erstellen: `hotspot_engine.py` für Hotspot-Labore (`type: hotspot`), `build_simulation.py` für Schieberegler-Simulationen (`type: simulation`) und ausfüllbare Protokolle/WPS (`type: formular`).
+5. **Gate 4 (Materialien-Pipeline):**
+   `make_materials.py` erzeugt aus den Infoblättern (`material: true`) druckbare PDFs, PPTX-Folien und das zusammenhängende `Kurs-Materialdossier.pdf`.
+6. **Gate 5 (MBZ-Generierung & Struktur-Validierung):**
+   `build_mbz.py` erzeugt die Kurssicherung (`.mbz`) mit allen Kachel-Icons, Medien-Embeds und XML-Referenzen.
+   → Gate: `validate_mbz.py <kurs>.mbz` liefert Exit 0.
+7. **Gate 6 (Video-Recap einbinden):**
+   Recap-Video über NotebookLM bereitstellen oder mit `set_recap_video.py` einbetten; anschließend Rebuild & Re-Validate.
+8. **Gate 7 (Schluss-Gate & Live-Restore):**
+   `python <skill-dir>/scripts/check_delivery.py "<kursordner>"` ausführen. Prüft alle 9 Qualitätsstufen maschinell (XML, relative Pfade, SHA1-Pool, Materialien, Recap) und führt den automatischen Live-Restore im lokalen Moodle-Lab (`moodle-testinstanz`) durch.
+   → Gate: **GATE GRÜN** vor jeder Auslieferung.
+9. **Gate 8 (Erprobung in der Spielwiese):**
+   Optional oder auf Nutzer-Wunsch: Einspielen in die persistente Moodle-Spielwiese (`python spielwiese.py import <kurs>.mbz --schueler`) für den interaktiven Klicktest als Testschüler.
 
 ## Where finished courses live — output folder & reference library (project convention)
 
@@ -115,59 +112,26 @@ gold-standard example. The course-design playbook is built on the **5-level
 structure model** (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul
 → Lernkurs) with a fixed section sequence. The short version of the method:
 
-1. **Intake first — ASK the user before building (Kurs-Steckbrief).** Before
-   writing any course JSON, run a short structured intake and *ask* the briefing
-   questions that make sense for this request. **Always as a selection menu:** each
-   point is a question with **2–4 concrete suggested options**, the best one marked
-   `(empfohlen)` — the user just clicks, and the built-in free-text option covers
-   any custom answer; use **multi-select** where several answers can apply (e.g.
-   activity types). Batch 2–4 questions at a time via the clarifying-questions UI,
-   **skip** anything already given or with a safe obvious default, and never
-   interrogate. Cover, where relevant:
-   - **Thema & Curriculum:** topic, trade/Fach + **Lernfeld**, position in the curriculum;
-   - **Zielgruppe & Vorwissen:** Bildungsgang, Ausbildungsjahr, prior knowledge, Sprachniveau;
-   - **Umfang & Einsatzform:** time budget (one module ≈ 2 Unterrichtsstunden), single module vs. Lernkurs, Präsenz / Flipped / Selbstlernen;
-   - **Schwerpunkt:** theory / calculation / measuring / assembly …;
-   - **Handlungssituation & Handlungsprodukt:** real operational context + what learners produce (offer to invent a realistic one);
-   - **Lernziele:** given by the user, or "please derive";
-   - **Verbindliche Fachdaten:** formulas, values, norms, safety facts, correct worked examples;
-   - **Vorhandenes Material:** own scripts/PDFs/images to embed (paths); which diagrams to draw; photos (placeholders only — cannot generate);
-   - **Aktivitäten & Prüfung:** activity types, formative vs. graded, rubric wishes;
-   - **Struktur & Kachelzahl (IMMER fragen):** wie viele inhaltliche
-     Kacheln/Lernabschnitte der Kurs bekommen soll — als Auswahlfrage mit
-     konkreten, aus Thema + Zeitbudget abgeleiteten Vorschlägen, z. B.
-     „5 Kacheln: Einstieg / Theorie / Praxis / Anwendung / Recap (empfohlen)"
-     vs. kompakter (3–4) vs. ausführlicher (6–7). Die Pflicht-Sequenz unten
-     bleibt das Gerüst; die Kachelzahl entscheidet, wie fein Grundlagen/
-     Vertiefung aufgeteilt werden. Glossar + Lehrkraft-Sektion zählen extra;
-   - **Didaktisches Konzept (IMMER fragen — auch bei nur EINEM Profil):** welchem
-     didaktischen Konzept der Kurs folgt. Verfügbare Profile listet
-     `python <skill-dir>/scripts/didactic_profiles.py` (Default `zdq` = das
-     bisherige 5-Ebenen-Modell: Handlungssituation am Anfang, Recap am Ende).
-     **Immer als Auswahlfrage anbieten**, selbst wenn die Registry nur ein Profil
-     hat. Das gewählte Konzept in `course.didaktik_profil` persistieren (Default
-     `"zdq"`); dessen `section_sequence` bestimmt die Lernabschnitts-Folge
-     (s. Schritt 3);
-   - **Stil & Metadaten:** Du/Sie, course name + **unique shortname**, category, format.
-   Then apply the playbook defaults below for everything the user leaves open —
-   ask to sharpen the fit, don't block on it.
-   **Vorschlags-Steckbrief (PFLICHT, vor der Content-Produktion):** Lege dem
-   Autor nach dem Intake einen konkreten Kursvorschlag zur Bestätigung vor —
-   benannte Kacheln mit je einem Satz Inhalt, geplante Aktivitäten je Kachel
-   (Infoblätter/Quiz/Auftrag/Simulation/Formular), **Kachelfoto-Motiv je
-   Kachel** (ein Motiv-Stichwort pro Kachel, siehe „Kachel-Bilder"),
-   Handlungssituation in 2 Sätzen und die Lernziele. Erst wenn der Autor
-   bestätigt (oder gezielt umbaut), wird Content geschrieben und gebaut.
+1. **Grill-Me Intake & Kurs-Steckbrief (PFLICHT-SCHRITT vor dem Bauen):** 
+   Vor dem Schreiben der `course.json` MUSS ein abgestimmter `kurs-steckbrief.json` vorliegen (erzeugt durch den Skill `moodle-kurs-grill-me` in 6 thematischen Clustern). Liegt noch kein Steckbrief vor, führt der Agent das strukturierte Interview durch und validiert den Steckbrief (`scripts/validate_steckbrief.py`):
+   - **Cluster 1:** Curriculares Profil & Lerngruppe (Schulform, Fachbereich, Lernfeld, Vorwissen, DaZ)
+   - **Cluster 2:** Authentische Handlungssituation & Continuous Narrative (Betrieblicher Fall z. B. Kommission Portalrahmen, Störung, Handlungsprodukt; **alle Kacheln bauen zwingend als Lösungsetappen aufeinander auf**)
+   - **Cluster 3:** Fachinhalte, Berechnungen & Normen (Musterrechnungen nach Bauplan, DIN EN ISO / DIN EN 60617, Sicherheitsregeln; **Typografie-Garantie: Pfeile immer `&rarr;` oder `→`, kein LaTeX-Bruch**)
+   - **Cluster 4:** Aufgaben-Architektur & Didaktische Methoden (3-stufige Kaskade: Erkundung &rarr; `formular` &rarr; `assign` mit Rubrik)
+   - **Cluster 5:** Interaktive Medien-Trias (`hotspot_engine.py` für Erkundung, `sim_engine.py` für Prozessparameter, `form_engine.py` für Protokolle/WPS)
+   - **Cluster 6:** Kachelstruktur, Phasen-Aufteilung & Cover-Architektur (2-Ebenen-Architektur: 5 didaktische Phasen mit flexiblen Sub-Kacheln für Grundlagen/Vertiefung &rarr; 6–8 sichtbare thematische Kacheln, **textfreie Cover-Motive in oberer Safe-Zone $y=15\dots60\%$**, Tonalität)
+   
+   Erst nach Bestätigung des Steckbriefs wird gebaut.
 2. **Define competence-based learning outcomes:** "Die Lernenden können
    [observable verb] [content] [context/criterion]" — never "kennen/verstehen".
 3. **Follow the section sequence of the CHOSEN didactic profile**
    (`course.didaktik_profil`, default `zdq`): read it via
    `didactic_profiles.get_profile(key)["section_sequence"]`. For the default
-   **`zdq`** that is the unchanged sequence Einführung → Grundlagen →
-   Vertiefung → Anwendung/Handlungsprodukt → Kurs-Recap → Glossar → Material für
+   **`zdq`** that is the unchanged sequence Einführung &rarr; Grundlagen &rarr;
+   Vertiefung &rarr; Anwendung/Handlungsprodukt &rarr; Kurs-Recap &rarr; Glossar &rarr; Material für
    Lehrkräfte (the complete-action model / AVIVA is the *rationale* behind the
-   Anwendung section). Other profiles define their own sequence — follow THAT
-   one. Anchor everything in one **Handlungssituation**.
+   Anwendung section). Anchor everything in one **Handlungssituation (Continuous Narrative Architecture)**:
+   Jede Kachel ist eine handlungsorientierte Etappe zur Lösung desselben Gesamtfalls.
 4. **Build each Infoblatt to the Bauplan:** intro + explanatory prose + an
    embedded self-drawn SVG diagram + key points + a Merke box; mark it
    `material: true` for auto PDF/PPTX.
@@ -273,6 +237,27 @@ PPTX, and collects all PDFs + PPTX into the hidden teacher section as two folder
 The PDF is **not** inserted after the page — the Infoblatt stays alone at its
 spot. Then build from the **materialized** JSON. (Skip this step only for a course
 with no Infoblätter to export.)
+
+## Elektrische Schaltpläne (DIN EN 60617) — automatisierter Bauplan
+
+Für elektrotechnische Kurse (Elektrotechnik, Steuerungstechnik, Elektronik)
+enthält der Skill eine vollständige Bibliothek von **180 geprüften Schaltsymbolen**
+nach DIN EN 60617 (`assets/schaltsymbole/`) und den Generator `scripts/circuit_builder.py`:
+
+- **Standard-Schaltungen via Presets:**
+  ```bash
+  python <skill-dir>/scripts/circuit_builder.py --preset grundstromkreis     -o assets/grundstromkreis.svg
+  python <skill-dir>/scripts/circuit_builder.py --preset graetz_bruecke        -o assets/graetz_gleichrichter.svg
+  python <skill-dir>/scripts/circuit_builder.py --preset wendeschuetz_haupt    -o assets/wendeschuetz_haupt.svg
+  python <skill-dir>/scripts/circuit_builder.py --preset wendeschuetz_steuer   -o assets/wendeschuetz_steuer.svg
+  python <skill-dir>/scripts/circuit_builder.py --preset sterndreieck_haupt    -o assets/sterndreieck_haupt.svg
+  ```
+- **Eigene Schaltungen via JSON-DSL:** Bauteile im 120×60-Raster platzieren,
+  automatische Anschlusspunkte, orthogonales Leitungsrouting, Knotenpunkte und
+  Zählpfeile ($I, U$). Siehe `references/schaltplaene.md`.
+- **Pipeline:** Generierte SVGs in `course.json` einbinden -> `autofit_svg.py` ->
+  `validate_svg.py` -> `make_materials.py` (erzeugt PDF & PPTX) -> `build_mbz.py`.
+
 
 3. Build the `.mbz` (from the materialized JSON if you ran step 2):
 
@@ -522,11 +507,12 @@ generations (union, mutually harmless):
 No banner is injected into the summary. Requirements: format_tiles installed
 on the target Moodle; the admin setting **"Foto-Kacheln erlauben"
 (allowphototiles)** enabled — without it Moodle hides photos even when they
-restored correctly. **Author tile photos as text-free motif PNGs (~800×450)**
-— the tile title is overlaid by the plugin itself, and the photo is cropped
-cover-style (draw an SVG motif, rasterise via svglib→fitz like
-`make_materials` does). `validate_mbz.py` enforces the full chain
-(option ↔ file ↔ blob ↔ new-style element; missing dummysection = warn).
+restored correctly.
+
+**Kachel-Cover Bildarchitektur für Moodle Tiles (`format_tiles`):**
+- **Textverbot:** Cover-SVGs für Kacheln dürfen **KEINEN Text** enthalten, da Moodle die Kacheltitel nativ darüberrendert (ein doppelter Text zerstört das Layout).
+- **Safe-Zone:** Das Hauptmotiv liegt zwingend in der **oberen Safe-Zone ($y = 15\%$ bis $60\%$)**. Das untere Drittel ($y > 65\%$) muss frei von fokalen Motiven bleiben, da Moodle hier das halbtransparente Titelbanner bzw. den Gradienten einblendet.
+- **Authoring:** Author tile photos as text-free motif PNGs (~800×450 oder 1200×675) (draw an SVG motif, rasterise via svglib→fitz like `make_materials` does). `validate_mbz.py` enforces the full chain (option ↔ file ↔ blob ↔ new-style element; missing dummysection = warn).
 
 ```json
 {"course": {"format": "tiles", …},
@@ -783,6 +769,10 @@ quiz's `<attempts_number>`, feedback's `<typ>`).
   Fehlerseiten des Ziel-Moodles sind ohne Admin-Rechte wertlos und
   irreführend; zwei reale Blocker wurden nur so gefunden. Auch als
   E2E-Gate nach größeren Generator-Änderungen.
+- `references/schaltplaene.md` — **Normgerechte Schaltpläne (DIN EN 60617)**:
+  Nutzung von `scripts/circuit_builder.py`, 120×60-Rastersystem, Port-Referenzen,
+  180 geprüfte Schaltsymbole (`assets/schaltsymbole/`), Presets für Wendeschütz,
+  Stern-Dreieck, Graetz-Brücke und Leitfaden für Haupt- und Steuerstromkreise.
 - `scripts/validate_svg.py` + `scripts/autofit_svg.py` — diagram QA: measure real
   text widths (`scripts/svg_geometry.py`) to catch clipped edges / overlapping
   labels / styling-`<tspan>` traps, and grow each `viewBox` to fit. Also lints

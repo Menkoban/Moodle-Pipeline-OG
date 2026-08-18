@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45 -80 215 363"
+     width="430" height="726"
+     data-sym="optokoppler" data-gruppe="Halbleiter"
+     data-prioritaet="2" data-folge="091"
+     data-norm="Ein Gehäuse, darin links eine Leuchtdiode und rechts ein Phototransistor, dazwischen zwei Pfeile als optische Kopplung; VIER Anschlüsse. Ohne die Pfeile wären es zwei Bauteile nebeneinander statt einer galvanischen Trennung." data-quelle="Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Optokoppler, Leuchtdiode und Phototransistor'"
+     data-lage="Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen.">
+<title>optokoppler — Schaltzeichen nach DIN EN 60617</title>
+<desc>Ein Gehäuse, darin links eine Leuchtdiode und rechts ein Phototransistor, dazwischen zwei Pfeile als optische Kopplung; VIER Anschlüsse. Ohne die Pfeile wären es zwei Bauteile nebeneinander statt einer galvanischen Trennung. | Quelle: Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Optokoppler, Leuchtdiode und Phototransistor' | Lage: Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen.</desc>
+<style>
+  :root{--wid:#16232b;--text:#16232b;--text2:#7a8a94;
+        --strom:#e07a2f;--spannung:#2f6fe0;--magnet:#d94f9a;--ok:#3a9d5d;--gefahr:#d0392b}
+  svg{background:#fff}
+  text[font-family="BarlowC"]{font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+  text[font-family="PlexMono"]{font-family:"IBM Plex Mono",Consolas,monospace}
+  .zelle{fill:none;stroke:#cfd9df;stroke-width:1.2;stroke-dasharray:6 5}
+  .pin{fill:#9fb0ba}
+  .nm{font-family:"IBM Plex Mono",Consolas,monospace;font-size:13px;font-weight:700;fill:#16232b}
+  .kop{font-family:"IBM Plex Mono",Consolas,monospace;font-size:7.5px;font-weight:700;fill:#8a99a3;letter-spacing:.4px}
+  .tx{font-family:system-ui,"Segoe UI",sans-serif;font-size:8.4px;fill:#3d4c56}
+  .tl{stroke:#e2e9ec;stroke-width:1}
+</style>
+<g class="raster">
+  <rect class="zelle" x="0" y="-30" width="120" height="60"/>
+  <circle class="pin" cx="0" cy="0" r="3"/><circle class="pin" cx="120" cy="0" r="3"/>
+</g>
+<g data-sym="optokoppler" class="sym" transform="translate(0,0)">
+    <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5"
+       stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><rect x="14" y="-14" width="92" height="88"/>
+     <path d="M0 -10 H14"/><path d="M0 70 H14"/><path d="M120 -10 H106"/><path d="M120 70 H106"/>
+     <path d="M14 -10 H32 V2"/><path d="M32 24 V70 H14"/>
+     <path d="M20 2 L44 2 L32 24 Z"/><path d="M20 24 H44"/>
+     <path d="M76 8 V52"/><path d="M76 20 L94 -10 H106"/><path d="M76 40 L94 70 H106"/><path d="M80.1 57.5 L91 65 L89.5 51.9"/><path d="M52 18 H62"/><path d="M54 23.5 L66 18 L54 12.5"/><path d="M52 40 H62"/><path d="M54 45.5 L66 40 L54 34.5"/></g>
+    </g></g>
+<text class="nm" x="-40" y="108">optokoppler</text><line class="tl" x1="-40" y1="113" x2="168" y2="113"/><text class="kop" x="-40" y="120">BEDEUTUNG</text><text class="tx" x="-40" y="130">Ein Gehäuse, darin links eine Leuchtdiode und</text><text class="tx" x="-40" y="140">rechts ein Phototransistor, dazwischen zwei</text><text class="tx" x="-40" y="150">Pfeile als optische Kopplung; VIER Anschlüsse.</text><text class="tx" x="-40" y="160">Ohne die Pfeile wären es zwei Bauteile</text><text class="tx" x="-40" y="170">nebeneinander statt einer galvanischen</text><text class="tx" x="-40" y="180">Trennung.</text><text class="kop" x="-40" y="189">QUELLE</text><text class="tx" x="-40" y="199">Westermann Tabellenbuch Elektrotechnik,</text><text class="tx" x="-40" y="209">Technische Dokumentation und Formeln, S. 446</text><text class="tx" x="-40" y="219">(DIN EN 60617-5), Spalte 'Sensoren', Zeile</text><text class="tx" x="-40" y="229">'Optokoppler, Leuchtdiode und Phototransistor'</text><text class="kop" x="-40" y="238">LAGE</text><text class="tx" x="-40" y="248">Vorlage bereits waagerecht gezeichnet</text><text class="tx" x="-40" y="258">(Anschluesse links und rechts); Lage</text><text class="tx" x="-40" y="268">unveraendert uebernommen.</text>
+</svg>

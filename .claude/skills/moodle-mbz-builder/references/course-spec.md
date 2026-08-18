@@ -17,7 +17,7 @@ The input to `build_mbz.py`. One JSON object with `course` and `sections`.
 | `fullname` | string | `"Course"` | Course full name. |
 | `shortname` | string | `"COURSE"` | Must be unique in the target Moodle on restore-as-new. |
 | `summary` | HTML string | `""` | Course description. Raw HTML; auto-escaped. |
-| `format` | string | `"topics"` | Use `topics` (default) or `weeks`. **Avoid third-party formats like `tiles`** in the backup: their format plugin runs a restore handler that needs plugin-specific data this generator does not produce, so the restore can fail with *"required parameter (contextid)"*. To get the tiles/kachel look, build with `topics` and switch the format in the course settings **after** restoring. |
+| `format` | string | `"tiles"` | Standard ist `"tiles"` (Kachelformat mit Kachel-Fotos) oder `"topics"`. Bei `"tiles"` erzeugt der Generator automatisch die `course_format_options.xml` und verdrahtet die Kachel-Bilder normgerecht für Moodle 4.1+. |
 | `startdate` | int (unix ts) | now | |
 | `enddate` | int (unix ts) | `0` | `0` = no end date. |
 | `visible` | 0/1 | `1` | |
@@ -33,7 +33,7 @@ want content under "Topic 1", put an (often empty-ish) section 0 first.
 |---|---|---|---|
 | `name` | string \| null | null | Section title. `null` → Moodle's default name ("Topic N"). |
 | `summary` | HTML string | `""` | Section description. |
-| `image` / `images` | path \| list | — | **Kachel-Bild(er)**. With `course.format: "tiles"`: becomes the REAL tile photo (format_tiles filearea + `tilephoto` section option + restore-plugin wiring; use text-free ~800×450 PNGs). Other formats: attached to the section filearea; reference in `summary` via `@@PLUGINFILE@@/<name>`, or leave the summary without `@@PLUGINFILE@@` and the first image is auto-embedded as a banner on top. |
+| `image` / `images` | path \| list | — | **Kachel-Bild(er)**. With `course.format: "tiles"`: becomes the REAL tile photo (format_tiles filearea + `tilephoto` section option + restore-plugin wiring; use text-free ~800×450 PNGs/SVGs). Other formats: attached to the section filearea; reference in `summary` via `@@PLUGINFILE@@/<name>`, or leave the summary without `@@PLUGINFILE@@` and the first image is auto-embedded as a banner on top. |
 | `visible` | 0/1 | `1` | |
 | `activities` | array | `[]` | Activity objects, in display order. |
 
@@ -65,13 +65,14 @@ Type-specific fields:
 | `resource` | `file` (disk path, single file download) |
 | `folder` | `files` (list of disk paths) |
 | `book` | `chapters`: list of `{title, content, subchapter?}` |
-| `assign` | `duedate` (unix ts), `grade` (int max points) |
+| `assign` | `duedate` (unix ts), `grade` (int max points), `rubric` (optional Bewertungsmatrix mit Kriterien & Stufen) |
 | `forum` | `forumtype` (`general`/`news`/`qanda`/`eachuser`/`single`) |
 | `glossary` | `entries`: list of `{concept, definition}` (user data — see below) |
 | `choice` | `options` (list of strings) |
 | `feedback` | `items`: list (see below) |
 | `quiz` | `grade` (max), `questions`: list (see below) |
 | `simulation` | *(preprocessed)* `use` (SIM_LIBRARY name) OR `spec` (inline sim spec) — `build_simulation.py` expands it into an interactive HTML `resource` (SKILL.md → "Interactive simulations"). |
+| `hotspot` | *(preprocessed)* `svg` (Vektorgrafik) + `hotspots` (Liste von Pins mit Titel, Beschreibung, Details) — `hotspot_engine.py` erzeugt eine interaktive Erkundungs-Grafik als autarke HTML-Ressource. |
 | `formular` | *(preprocessed)* `spec` `{title, subtitle?, storage_key?, blocks:[{heading}\|{html}\|{field:{id,label,type:text\|textarea\|number,unit?,rows?}}], note?}` — `build_simulation.py` renders a fillable worksheet (full-width fields, localStorage autosave, save-as-file, print) as an HTML `resource`. Fields are always EMPTY: no placeholders/example Rechenwege (a `placeholder` entry is ignored). See SKILL.md → "Ausfüllbare Arbeitsblätter". |
 
 ### Glossary entries (user data)
