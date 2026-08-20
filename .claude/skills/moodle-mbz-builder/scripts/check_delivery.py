@@ -135,7 +135,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Deliverable-Gate eines Kursordners.")
     ap.add_argument("folder")
     ap.add_argument("--allow-video-placeholder", action="store_true",
-                    help="Video-Recap fehlt bewusst (kein Browser/Login) — im Chat begründen!")
+                    help="Video-Recap ist noch ein Platzhalter — im Chat begründen!")
+    ap.add_argument("--allow-no-video", action="store_true",
+                    help="Video-Recap fehlt bewusst (kein Video & kein Platzhalter) — im Chat begründen!")
     ap.add_argument("--allow-no-widget", action="store_true",
                     help="Editor-Widget fehlt bewusst — im Chat begründen!")
     ap.add_argument("--require-live-restore", action="store_true",
@@ -197,6 +199,43 @@ def main() -> int:
         fehler.append("editor.html fehlt — build_editor_widget.py nicht gelaufen "
                       "(und Rendern via show_widget nicht vergessen!)")
 
+    # 4b. Mathematische Formel-Qualität (validate_math_formulas.py & validate_math_symbols.py)
+    val_math = os.path.join(HERE, "validate_math_formulas.py")
+    if os.path.exists(val_math) and os.path.exists(src_path):
+        r = subprocess.run([sys.executable, val_math, src_path], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if r.returncode == 0:
+            ok.append("validate_math_formulas: mathematische Typografie sauber (Brüche & Indizes)")
+        else:
+            warn.append(f"validate_math_formulas: {r.stdout.strip()[-300:]}")
+
+    val_sym = os.path.join(HERE, "validate_math_symbols.py")
+    svg_files = glob.glob(os.path.join(d, "assets", "*.svg"))
+    if os.path.exists(val_sym) and svg_files:
+        r = subprocess.run([sys.executable, val_sym] + svg_files, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if r.returncode == 0:
+            ok.append("validate_math_symbols: mathematische Symbole & Orientierungen fehlerfrei")
+        else:
+            fehler.append(f"validate_math_symbols FAIL:\n{r.stdout.strip()[-400:]}")
+
+    # 4c. Interaktive Medien (validate_interactive_media.py)
+    val_media = os.path.join(HERE, "validate_interactive_media.py")
+    if os.path.exists(val_media) and os.path.exists(src_path):
+        r = subprocess.run([sys.executable, val_media, src_path], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if r.returncode == 0:
+            ok.append("validate_interactive_media: Hotspots, Simulationen & Formulare vollständig")
+        else:
+            fehler.append(f"validate_interactive_media FAIL: {r.stdout.strip()[-300:]}")
+
+    # 4d. Material-Coverage (Inbox-Primat, validate_material_coverage.py)
+    val_cov = os.path.join(HERE, "validate_material_coverage.py")
+    ingested_files = glob.glob(os.path.join(d, "ingested_*.json"))
+    if os.path.exists(val_cov) and ingested_files and os.path.exists(src_path):
+        r = subprocess.run([sys.executable, val_cov, src_path, ingested_files[0]], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if r.returncode == 0:
+            ok.append("validate_material_coverage: Inbox-Primat erfüllt (Aufgaben & Daten verbaut)")
+        else:
+            warn.append(f"validate_material_coverage: {r.stdout.strip()[-300:]}")
+
     # 5. Materialien
     n_material = sum(1 for a in walk_activities(spec) if a.get("material"))
     if n_material:
@@ -214,18 +253,43 @@ def main() -> int:
     else:
         warn.append("keine material:true-Seiten — bei einem echten Kurs unueblich")
 
-    # 7. Video-Recap
+    # 7. Video-Recap (Härtung: echtes Video vs. Platzhalter vs. Fehlen)
+    real_video = [a for a in walk_activities(spec)
+                  if (a.get("type") in ("resource", "url") and "video" in (a.get("name") or "").lower())
+                  or (a.get("type") == "resource" and str(a.get("file", "")).lower().endswith((".mp4", ".webm", ".m4v")))
+                  or (a.get("type") == "url" and "notebooklm.google.com" in str(a.get("externalurl", "")))]
     placeholder = [a for a in walk_activities(spec)
-                   if a.get("type") == "label"
-                   and "video" in a.get("name", "").lower()]
-    if not placeholder:
-        ok.append("Video-Recap eingebaut (kein Platzhalter-Label mehr)")
-    elif args.allow_video_placeholder:
-        warn.append("Video-Platzhalter noch offen (per Flag erlaubt — "
-                    "Autor informiert? Video nachziehen!)")
+                   if a.get("type") in ("label", "page")
+                   and "video" in (a.get("name") or "").lower()]
+
+    if real_video:
+        vid = real_video[0]
+        ref = vid.get("file") or vid.get("externalurl") or vid.get("name")
+        if vid.get("type") == "resource" and vid.get("file"):
+            fpath = os.path.join(d, vid["file"]) if not ABS_RX.match(vid["file"]) else vid["file"]
+            if not os.path.exists(fpath):
+                fehler.append(f"Video-Ressource verlinkt Datei, die nicht existiert: {vid['file']}")
+            else:
+                sz_mb = os.path.getsize(fpath) / (1024 * 1024)
+                ok.append(f"Video-Recap eingebaut: {vid.get('name')} ({vid['file']}, {sz_mb:.2f} MB)")
+        else:
+            ok.append(f"Video-Recap eingebaut: {vid.get('name')} ({ref})")
+    elif placeholder:
+        if args.allow_video_placeholder or args.allow_no_video:
+            warn.append("Video-Platzhalter noch offen (per Flag erlaubt — "
+                        "Autor informiert? Video nachziehen!)")
+        else:
+            fehler.append("Video-Recap ist noch ein Platzhalter — Gate 6 (NotebookLM-Flow) "
+                          "fahren oder mit --allow-video-placeholder begründen")
     else:
-        fehler.append("'Videozusammenfassung' ist noch Platzhalter — NotebookLM-Flow "
-                      "fahren oder mit --allow-video-placeholder begruenden")
+        # Weder echtes Video noch Platzhalter vorhanden
+        if args.allow_video_placeholder or args.allow_no_video:
+            warn.append("Kein Video-Recap im Kurs vorhanden (per Flag erlaubt)")
+        else:
+            fehler.append("Kein Video-Recap und kein Platzhalter gefunden! "
+                          "Ein vollwertiger Kurs verlangt im Kurs-Recap ein Video-Recap. "
+                          "Gate 6 (NotebookLM Video-Recap mit ask_question) MUSS durchlaufen werden "
+                          "oder mit --allow-video-placeholder begründet werden.")
 
     # 8. adaptiv: Ratschen-Gate
     pathmaps = glob.glob(os.path.join(d, "*.pathmap.json"))

@@ -40,42 +40,53 @@ Gate ein eigenes Todo an** (TaskCreate) und hake es erst ab, wenn das Gate
 GRÜN ist — „hab ich sinngemäß gemacht" zählt nicht. Ein Schritt, dessen
 Ergebnis-Datei fehlt, ist NICHT passiert.
 
-1. **Gate 0 (Pipeline-Einstieg & Didaktik-Briefing via Grill-Me):** 
-   Liegt noch **kein** freigegebener `kurs-steckbrief.json` vor, MUSS der Agent **sofort anhalten** und in den Skill `moodle-kurs-grill-me` wechseln!
+1. **Gate 0 (Pipeline-Einstieg & Didaktik-Briefing via Grill-Me — GILT AUSNAHMSLOS AUCH BEI /goal):** 
+   Liegt noch **kein** freigegebener `kurs-steckbrief.json` vor, MUSS der Agent **sofort anhalten** und in den Skill `moodle-kurs-grill-me` wechseln — völlig unabhängig davon, ob die Anfrage als normaler Prompt, Slash-Command oder mit `/goal` gestartet wurde!
    - **Strikter Interview-Vertrag:** Das Interview wird **sequenziell (eine Frage zur Zeit)** über das interaktive Tool `ask_question` mit konkreten Klick-Optionen geführt.
    - **Verbot von One-Shot-Vorausfüllung:** Es ist **streng untersagt**, eine 6-Cluster-Tabelle unaufgefordert auf einmal vorab auszufüllen oder den Kurs ohne schrittweise Freigabe zu bauen!
    - **Material-Ingestion:** Liegen bestehende Unterrichtsmaterialien (PDF, DOCX, PNG, MP4, MP3) vor, rufe vorab `python scripts/ingest_material.py <dateien>` auf, um Inhalte, Tabellen und Medien automatisiert zu extrahieren.
    - Liegt der abgestimmte und via `validate_steckbrief.py` validierte Steckbrief vor, übernimmt dieser Skill nahtlos die technische Kurs-Erstellung.
    → **Didaktische Kernvorgabe:** Sicherstellung der **Continuous Narrative Architecture** (alle Kacheln lösen denselben durchgehenden Fall als Etappen) und der **Interaktiven Medien-Trias** (Hotspot + Simulation + Formular).
 2. **Gate 1 (course.json & SVG-Diagramme schreiben):**
-   `course.json` nach ZDQ-Profil (oder gewähltem Profil) verfassen und alle referenzierten SVG-Diagramme (DIN EN 60617 / bemaßte Zeichnungen) sowie textfreie Kachel-Cover (Hauptmotiv/Icon im unteren Bereich $y=45\dots85\%$) erstellen.
+   `course.json` nach ZDQ-Profil (oder gewähltem Profil) verfassen und alle referenzierten SVG-Diagramme (DIN EN 60617 / bemaßte Zeichnungen) sowie textfreie Kachel-Cover (Hauptmotiv/Icon zwingend in der Unten-Rechts-Safe-Zone $x=55\dots90\%, y=45\dots85\%$) erstellen.
    → Gate: `autofit_svg.py` gelaufen und `validate_svg.py --strict` liefert Exit 0 (0 Fehler, 0 Warnungen).
 3. **Gate 2 (Editor-Widget & Vorschau):**
    `build_editor_widget.py course.json` erzeugt `editor.html`; `preview_mbz.py course.json` erzeugt `*_vorschau.html`.
    → Gate: `editor.html` und `_vorschau.html` sind erzeugt und im Workspace/Desktop abgelegt.
 4. **Gate 3 (Medien-Trias: Simulationen, Hotspots & Formulare):**
-   Interaktive Medien erstellen: `hotspot_engine.py` für Hotspot-Labore (`type: hotspot`), `build_simulation.py` für Schieberegler-Simulationen (`type: simulation`) und ausfüllbare Protokolle/WPS (`type: formular`).
+   Interaktive Medien erstellen: `hotspot_engine.py` für Hotspot-Labore (`type: hotspot` mit Koordinaten- & DOM-QA), `sim_engine.py` / `build_simulation.py` für 60fps-Canvas-Simulationen nach dem Zylinder-Goldstandard (`type: simulation` mit Schieberegler, Einzelschritt & Live-KPIs) und ausfüllbare Protokolle/WPS (`type: formular`).
 5. **Gate 4 (Materialien-Pipeline):**
    `make_materials.py` erzeugt aus den Infoblättern (`material: true`) druckbare PDFs, PPTX-Folien und das zusammenhängende `Kurs-Materialdossier.pdf`.
 6. **Gate 5 (MBZ-Generierung & Struktur-Validierung):**
    `build_mbz.py` erzeugt die Kurssicherung (`.mbz`) mit allen Kachel-Icons, Medien-Embeds und XML-Referenzen.
    → Gate: `validate_mbz.py <kurs>.mbz` liefert Exit 0.
-7. **Gate 6 (Video-Recap via NotebookLM mit interaktiver `ask_question`-Abfrage):**
-   Vor dem Start von Gate 6 fragt der Agent den Nutzer zwingend über das interaktive Tool `ask_question`:
+7. **Gate 6 (Video-Recap via NotebookLM — ZWINGENDES ENTSCHEIDUNGS-GATE):**
+   Jeder Kurs enthält im Abschnitt Kurs-Recap (Kachel 8) standardmäßig eine Videozusammenfassung. Vor dem Durchlauf von Gate 7 **MUSS** der Agent den Nutzer zwingend über das interaktive Tool `ask_question` fragen:
    - *„Möchtest du für diesen Kurs jetzt automatisch ein Video-Recap via NotebookLM generieren lassen?“*
    - **Option 1 (Empfohlen):** `(Empfohlen) Ja, jetzt automatisch via Google Chrome und NotebookLM generieren`
    - **Option 2:** `Nein, Video-Platzhalter im Kurs belassen (wird später manuell nachgezogen)`
-   Bei Auswahl von Option 1:
+   - **Option 3:** `Nein, Kurs bewusst ohne Video-Recap fertigstellen`
+   
+   *Bei Option 1 (Automatischer NotebookLM-Flow):*
    - Export des Dossiers: `export_course_dossier.py course.json -o dossier.md`
-   - Browser via `chrome-devtools-mcp` öffnen, zu `https://notebooklm.google.com` navigieren, Dossier-Text & `materials/Kurs-Materialdossier.pdf` als Quelle hochladen.
+   - Browser via `chrome-devtools-mcp` öffnen, zu `https://notebooklm.google.com` navigieren, Dossier-Text & `materials/Kurs-Materialdossier.pdf` als Quellen hochladen.
    - Videoübersicht anfordern (Erklärvideo, Deutsch, Rückblick-Briefing laut `references/notebooklm-video-recap.md`).
    - MP4 herunterladen, nach `assets/recap.mp4` kopieren und mit `set_recap_video.py course.json --file assets/recap.mp4` einbinden.
-   - Kurzer Rebuild (`build_simulation` &rarr; `make_materials` &rarr; `build_mbz`) & Re-Validate (`validate_mbz.py`).
+   - Rebuild & Re-Validate (`make_materials` &rarr; `build_mbz` &rarr; `validate_mbz.py`).
+   
+   *Bei Option 2 (Platzhalter belassen):*
+   - Platzhalter-Label `{"type": "label", "name": "🎬 Videozusammenfassung (in Vorbereitung)", ...}` in `course.json` belassen.
+   - `check_delivery.py` wird mit `--allow-video-placeholder` ausgeführt.
+   
+   *Bei Option 3 (Ohne Video):*
+   - `check_delivery.py` wird mit `--allow-no-video` ausgeführt und die Entscheidung im Chat begründet.
+   
+   **Strikte Regel:** Ein stilles Weglassen ohne Abfrage oder ohne entsprechendes Flag führt in Gate 7 unweigerlich zu **GATE ROT**!
 8. **Gate 7 (Schluss-Gate & Live-Restore):**
-   `python <skill-dir>/scripts/check_delivery.py "<kursordner>"` ausführen. Prüft alle 9 Qualitätsstufen maschinell (XML, relative Pfade, SHA1-Pool, Materialien, Recap) und führt den automatischen Live-Restore im lokalen Moodle-Lab (`moodle-testinstanz`) durch.
+   `python <skill-dir>/scripts/check_delivery.py "<kursordner>"` ausführen. Prüft alle 9 Qualitätsstufen maschinell (XML, relative Pfade, SHA1-Pool, Materialien, Video-Recap-Status) und führt den automatischen Live-Restore im lokalen Moodle-Lab (`moodle-testinstanz`) durch.
    → Gate: **GATE GRÜN** vor jeder Auslieferung.
 9. **Gate 8 (Erprobung in der Spielwiese):**
-   Optional oder auf Nutzer-Wunsch: Einspielen in die persistente Moodle-Spielwiese (`python spielwiese.py import <kurs>.mbz --schueler`) für den interaktiven Klicktest als Testschüler.
+   Einspielen in die persistente Moodle-Spielwiese (`python spielwiese.py import <kurs>.mbz --schueler`) und Bereitstellung via `serve.py` für den interaktiven Klicktest als Testschüler.
 
 ## Where finished courses live — output folder & reference library (project convention)
 
@@ -269,6 +280,30 @@ nach DIN EN 60617 (`assets/schaltsymbole/`) und den Generator `scripts/circuit_b
   Zählpfeile ($I, U$). Siehe `references/schaltplaene.md`.
 - **Pipeline:** Generierte SVGs in `course.json` einbinden -> `autofit_svg.py` ->
   `validate_svg.py` -> `make_materials.py` (erzeugt PDF & PPTX) -> `build_mbz.py`.
+
+## Mathematik- und Naturwissenschaften-Goldstandard (Didaktik & Typografie)
+
+Für mathematische, statistische und naturwissenschaftliche Kurse gelten verbindlich folgende Qualitäts- und Architekturstandards:
+
+1. **Lernziel-Standard & Duplikation:**
+   - Die Lernziel-Aktivität heißt prägnant **`Lernziele`** (ohne Untertitel im Modulnamen).
+   - Formulierung zwingend nach der handlungsorientierten Standard-Kompetenzformel:
+     > *„Die Schülerinnen und Schüler sind in der Lage, [Gegenstand/Fachkompetenz] zu [operationalisiertes Handlungsverb nach Pahl/Bloom].“*
+   - Die Aktivität `Lernziele` wird standardmäßig zusätzlich in den Lehrerabschnitt (Kachel 6 bzw. *„Material für Lehrkräfte“*) dupliziert.
+2. **Aufgaben-Architektur & Moodle-Abgabeaktivitäten (`assign`):**
+   - Nach jedem Aufgabenblatt (`Aufgabenblatt 1`, `Aufgabenblatt 2`, etc.) wird zwingend eine zugehörige Moodle-Abgabeaktivität (`type: assign`) für Schülereinreichungen (Datei-Upload & Online-Texteingabe) platziert.
+3. **Mathematische Typografie & Formelzeichen:**
+   - Strikte Formatierung aller Indizes als HTML-Subskripte ($x_i \to x_{\text{sub}}$, $n_i \to n_{\text{sub}}$, $s^2$, $s$) oder standardisiertes MathJax.
+   - Makrons / Querstriche ($\bar{x}$) müssen exakt über dem Merkmalssymbol zentriert sein (keine verschobenen Querstriche über Multiplikations- oder Pluszeichen).
+   - Vektorielle Summenzeichen ($\Sigma$) müssen typografisch korrekt mit horizontalen Schenkeln und nach rechts geöffnetem Vertex gezeichnet werden (`validate_math_symbols.py`).
+4. **Interaktive Formel-Anatomie (Hotspot):**
+   - Pins werden im oberen Bereich oberhalb der Formelkarten platziert ($y \approx 13\dots15\,\%$), sodass Formelzeichen, Makrons und Überschriften vollständig frei und unbedeckt bleiben.
+   - Unterstützung für strukturierte Parameter-Details (`details`) und Merksatz-Boxen (`merksatz`).
+5. **Interaktive Simulationen (`sim_engine.py`):**
+   - Vollständiges Spezifikations-Objekt mit `compute` (JS-Berechnung), `visual` (responsives SVG-Canvas), `render` (DOM-Live-Aktualisierung bei Slider-Events) und `challenge` (Prüfaufgabe mit Feedback).
+6. **Validierungspflicht:**
+   - Vor jeder Auslieferung müssen `validate_math_formulas.py` und `validate_math_symbols.py` fehlerfrei durchlaufen (Gate 7 in `check_delivery.py`).
+
 
 
 3. Build the `.mbz` (from the materialized JSON if you ran step 2):

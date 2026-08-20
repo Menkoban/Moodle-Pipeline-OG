@@ -187,7 +187,8 @@ def build_html(spec):
     title = html.escape(course.get("fullname", "Kurs"))
     secs = []
     n_act = 0
-    for idx, s in enumerate(spec.get("sections", [])):
+    sections = spec.get("course", {}).get("sections") if "course" in spec else spec.get("sections", [])
+    for idx, s in enumerate(sections):
         acts = "".join(render_activity(a) for a in s.get("activities", []))
         n_act += len(s.get("activities", []))
         hidden = " · verborgen" if s.get("visible") == 0 else ""
@@ -195,7 +196,7 @@ def build_html(spec):
                     f"<span class='st'>{html.escape(s.get('name') or f'Abschnitt {idx}')}{hidden}</span>"
                     f"<span class='cnt'>{len(s.get('activities', []))} Akt.</span></div>"
                     f"<div class='sec-b'>{section_banner(s)}{acts}</div></div>")
-    meta = (f"{len(spec.get('sections', []))} Abschnitte · {n_act} Aktivitäten · "
+    meta = (f"{len(sections)} Abschnitte · {n_act} Aktivitäten · "
             f"Format: {course.get('format','topics')}")
     return _to_css(TEMPLATE.format(title=title, meta=html.escape(meta),
                                    sections="".join(secs)))
@@ -254,8 +255,9 @@ def main():
     spec = json.load(open(args.course_json, encoding="utf-8"))
     out = args.output or (os.path.splitext(args.course_json)[0] + "_vorschau.html")
     open(out, "w", encoding="utf-8").write(build_html(spec))
-    n = sum(len(s.get("activities", [])) for s in spec.get("sections", []))
-    print(f"Vorschau geschrieben: {out}  ({len(spec.get('sections', []))} Abschnitte, {n} Aktivitäten)")
+    sections = spec.get("course", {}).get("sections") if "course" in spec else spec.get("sections", [])
+    n = sum(len(s.get("activities", [])) for s in sections)
+    print(f"Vorschau geschrieben: {out}  ({len(sections)} Abschnitte, {n} Aktivitäten)")
 
 
 if __name__ == "__main__":

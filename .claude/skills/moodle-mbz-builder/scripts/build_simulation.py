@@ -78,7 +78,8 @@ def main():
     spec_course = json.load(open(args.course_json, encoding="utf-8"))
 
     count = 0
-    for sec in spec_course.get("sections", []):
+    sections = spec_course.get("course", {}).get("sections") if "course" in spec_course else spec_course.get("sections", [])
+    for sec in sections:
         acts = []
         for act in sec.get("activities", []):
             if act.get("type") == "simulation":

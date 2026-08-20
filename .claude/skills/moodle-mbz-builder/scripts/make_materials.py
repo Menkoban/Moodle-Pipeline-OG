@@ -621,14 +621,15 @@ def make_combined_pdf(pdf_paths, out):
 
 
 def ensure_teacher_section(spec):
-    for s in spec["sections"]:
+    secs = spec.get("course", {}).get("sections") if "course" in spec else spec.get("sections", [])
+    for s in secs:
         if s.get("visible") == 0:
             return s
     sec = {"name": "Material für Lehrkräfte", "visible": 0,
            "summary": "<p>Nur für Lehrkräfte – Druck- und Editiermaterial.</p>",
            "activities": [{"type": "label", "name": "Hinweis",
                            "intro": "<p>🔒 Dieser Abschnitt ist für Lehrkräfte (verborgen).</p>"}]}
-    spec["sections"].append(sec)
+    secs.append(sec)
     return sec
 
 
@@ -654,9 +655,10 @@ def main():
         print(f"NOTE: SVG diagram check skipped ({e}).", file=sys.stderr)
 
     pdfs, pptxs, docxs = [], [], []
-    for sec in spec["sections"]:
+    sections = spec.get("course", {}).get("sections") if "course" in spec else spec.get("sections", [])
+    for sec in sections:
         new_acts = []
-        for act in sec["activities"]:
+        for act in sec.get("activities", []):
             new_acts.append(act)
             if act.get("type") == "page" and act.get("material"):
                 title = title_of(act)
@@ -709,7 +711,7 @@ def main():
     # Recht dazu), kommt das Glossar leer an. Für diesen Fall liegt hier eine
     # Import-Datei bereit: Glossar öffnen -> (Zahnrad) Einträge importieren.
     gl_imports = []
-    for sec in spec["sections"]:
+    for sec in sections:
         for act in sec["activities"]:
             if act.get("type") == "glossary" and act.get("entries"):
                 slug = slugify(act.get("name", "glossar"))

@@ -73,6 +73,15 @@ def with_attribution(content: str, spec) -> str:
         return content or ""
     return (content or "") + attribution_footer(spec)
 
+
+def _get_sections(spec: dict) -> list[dict]:
+    if not isinstance(spec, dict):
+        return []
+    if "course" in spec and isinstance(spec["course"], dict) and "sections" in spec["course"]:
+        return spec["course"]["sections"]
+    return spec.get("sections", [])
+
+
 # Moodle 4.1 baseline. A backup created with these values restores into 4.1 and
 # is forward-compatible with 4.2–4.5 (Moodle only warns on newer-than-target,
 # it does not hard-reject a general restore).
@@ -307,7 +316,7 @@ class MbzBuilder:
 
     # ----- sections + activities ---------------------------------------- #
     def _build_sections_and_activities(self) -> None:
-        sections = self.spec.get("sections", [])
+        sections = _get_sections(self.spec)
         for number, sec in enumerate(sections):
             sec_id = self.ids.section()
             cmids: list[int] = []
@@ -561,7 +570,7 @@ class MbzBuilder:
         fmt = c.get("format", "topics")
         startdate = c.get("startdate") or self.now
         enddate = c.get("enddate", 0)
-        numsections = max(len(self.spec.get("sections", [])) - 1, 0)
+        numsections = max(len(_get_sections(self.spec)) - 1, 0)
 
         fmt_options = self._course_format_options(fmt, numsections)
         body = (
@@ -1271,7 +1280,7 @@ def _section_image_warnings(spec):
     warns = []
     fmt = spec.get("course", {}).get("format", "topics")
     has_photo = False
-    for i, sec in enumerate(spec.get("sections", [])):
+    for i, sec in enumerate(_get_sections(spec)):
         if _section_images(sec):
             has_photo = True
         if sec.get("tilephoto") and fmt != "tiles":
