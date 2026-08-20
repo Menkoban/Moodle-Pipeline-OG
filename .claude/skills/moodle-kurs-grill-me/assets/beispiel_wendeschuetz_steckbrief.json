@@ -2,6 +2,7 @@
   "titel": "Wendeschützschaltung: Drehrichtungsumkehr von Drehstrommotoren",
   "shortname": "wendeschuetz-drehstrom",
   "didaktik_profil": "zdq",
+  "blended_szenario": "werkstatt_labor",
   "elearning_format": "blended_learning",
   "didaktische_methoden": [
     "leittextmethode",
@@ -11,12 +12,54 @@
   "tonalitaet": "du",
   "curriculum": {
     "beruf": "Elektroniker für Betriebstechnik",
-    "ausbildungsjahr": 2,
-    "lernfeld": "Steuerungen für Anlagen programmieren und realisieren",
+    "fachrichtung": "Betriebstechnik",
+    "ausbildungsjahr": 1,
+    "lernfeld": "Steuerungen und Regelungen analysieren und realisieren",
     "lernfeld_nr": 3,
-    "zielgruppe_niveau": "Duale Berufsausbildung (Fachstufe)",
+    "zeitrichtwert_ustd": 80,
+    "quelle_url": "https://www.kmk.org/fileadmin/Dateien/pdf/Bildung/BeruflicheBildung/rlp/Elektroniker-20-12-18-mEL.pdf",
+    "stand": "2020",
+    "beschluss_vom": "18.12.2020",
+    "zielgruppe_niveau": "Duale Berufsausbildung (DQR-Niveau 4)",
     "vorwissen": "Grundstromkreis, Schütze und Relais, 3-Phasen-Drehstromnetz (L1, L2, L3, N, PE)",
-    "daz_foerderung": true
+    "daz_foerderung": true,
+    "zielformulierung_volltext": "Die Schülerinnen und Schüler verfügen über die Kompetenz, Steuerungen und Regelungen zu analysieren und zu realisieren. Sie analysieren Anlagen gemäß Kundenaufträgen und visualisieren deren strukturellen Aufbau sowie die funktionalen Zusammenhänge. Sie planen Steuerungen nach Kundenvorgaben, unterscheiden zwischen Steuerungs- und Regelungsprozessen, realisieren Steuerungen unter Beachtung geltender Normen und prüfen die Funktionsfähigkeit.",
+    "vollstaendige_handlung": {
+      "informieren": [
+        "Kundenauftrag und Schaltpläne für die Drehrichtungsumkehr analysieren",
+        "Dokumentationen und Hersteller-Datenblätter auswerten"
+      ],
+      "planen": [
+        "Wirkungskette und Schaltbelegung für Rechts- und Linkslauf konzipieren",
+        "Klemmenplan und Materialliste für Schütze K1/K2 erstellen"
+      ],
+      "entscheiden": [
+        "Verriegelungsart auswählen (Taster- vs. Schützverriegelung zur Kurzschlussvermeidung)",
+        "Thermisches Überlastrelais F1 passend zum Motor dimensionieren"
+      ],
+      "ausfuehren": [
+        "Haupt- und Steuerstromkreis nach DIN EN 60617 am Montagegitter verdrahten",
+        "5 Sicherheitsregeln der Elektrotechnik strikt anwenden"
+      ],
+      "kontrollieren": [
+        "Sicht- und Durchgangsprüfung der Verriegelungskontakte durchführen",
+        "Messwerte (Spannung, Strom, Drehfeld) im Prüfprotokoll erfassen"
+      ],
+      "bewerten": [
+        "Funktionsfähigkeit und Sicherheit bei der Inbetriebnahme beurteilen",
+        "Prüfprotokoll und Übergabedokumentation an den Kunden erstellen"
+      ]
+    },
+    "mindestinhalte": [
+      "Hauptstromkreis",
+      "Steuerstromkreis",
+      "Verriegelung",
+      "Drehfeld",
+      "Selbsthaltung",
+      "Motorschutz",
+      "DIN EN 60617",
+      "DIN VDE 0100-600"
+    ]
   },
   "handlungssituation": {
     "betrieb": "Elektro- & Fördertechnik Meyer GmbH",

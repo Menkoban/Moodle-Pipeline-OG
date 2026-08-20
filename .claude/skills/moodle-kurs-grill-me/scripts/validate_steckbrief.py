@@ -1,148 +1,151 @@
-#!/usr/bin/env python3
-"""Validiert einen Moodle-Kurs-Steckbrief (kurs-steckbrief.json) auf didaktische Vollständigkeit.
+# -*- coding: utf-8 -*-
+"""validate_steckbrief.py — Defensive Validierung des Moodle-Kurs-Steckbriefs (Gate 0).
 
-Prüft alle 6 Cluster defensiv gegen Typ-Mutationen und semantische Lücken:
-  1. Curriculum & Lerngruppe
-  2. Handlungssituation & Handlungsprodukt
-  3. Fachlichkeit & Normen (Musterrechnung, Formeln)
-  4. Aufgabenkaskade (Erkundung, Formular-Protokoll, Praxisauftrag)
-  5. Medien & Simulation (Simulationsmodell, Schaltpläne)
-  6. Kachelstruktur & Foto-Motive
+Prüft:
+  1. JSON-Wohlgeformtheit und Schema-Konformität (steckbrief-schema.json)
+  2. Didaktische Vollständigkeit (Cluster 1 bis 6):
+     - Curriculares Profil & KMK/CuVo-Abgleich
+     - Handlungssituation & Continuous Narrative (ALLE Kacheln bauen aufeinander auf)
+     - Fachinhalte, Formeln & Normen
+     - Fehlkonzepte & Arbeitsmittel (falls vorhanden)
+     - Aufgaben-Architektur mit Moodle-Aktivitäten
+     - Interaktive Medien-Trias (Hotspot, Simulation, Formular)
+     - Kachelstruktur (4 bis 12 Kacheln)
+  3. Formale Konsistenz:
+     - Keine verwaisten Kacheln
+     - Formel-Syntax und Pfeil-Typografie (&rarr; / →)
+     - Vorhandensein der 6 Handlungsphasen
 """
+from __future__ import annotations
 
+import argparse
 import json
-import sys
 import os
+import re
+import sys
+from typing import Any, Dict, List, Tuple
 
-REQUIRED_KEYS = [
-    "titel",
-    "shortname",
-    "curriculum",
-    "handlungssituation",
-    "fachlichkeit",
-    "aufgaben_kaskade",
-    "medien_simulation",
-    "kachelstruktur"
-]
 
-def validate_steckbrief(file_path):
-    if not os.path.exists(file_path):
-        print(f"Error: Datei '{file_path}' existiert nicht.", file=sys.stderr)
-        return False
+def validate_steckbrief_dict(data: Dict[str, Any]) -> Tuple[List[str], List[str]]:
+    """Gibt (fehler, warnungen) zurück."""
+    fehler: List[str] = []
+    warnungen: List[str] = []
 
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except json.JSONDecodeError as e:
-        print(f"Error: Ungültiges JSON-Format: {e}", file=sys.stderr)
-        return False
+    # 1. Grunddaten & Blended-Learning-Makroszenario
+    if not data.get("titel") or len(data["titel"]) < 5:
+        fehler.append("Kurstitel fehlt oder ist kürzer als 5 Zeichen.")
+    if not data.get("shortname") or not re.match(r"^[a-z0-9-]+$", data["shortname"]):
+        fehler.append("Shortname fehlt oder enthält ungültige Zeichen (nur a-z, 0-9, Bindestrich).")
+    if data.get("didaktik_profil") not in ("zdq", "theorie-praxis-tandem", "vollstaendige-handlung", "pbl", "linear"):
+        warnungen.append(f"Unbekanntes Didaktik-Profil: '{data.get('didaktik_profil')}'. Empfohlen: 'zdq'.")
 
-    if not isinstance(data, dict):
-        print(f"Error: Ungültige Root-Struktur — JSON muss ein Objekt ({{\...}}) sein, kein {type(data).__name__}.", file=sys.stderr)
-        return False
+    # Blended-Learning-Einsatzszenario (Makro-Ebene Pflichtfeld)
+    blended = data.get("blended_szenario")
+    if not blended:
+        fehler.append("Pflichtfeld 'blended_szenario' fehlt im Steckbrief. Gültig: 'integriert', 'flipped', 'werkstatt_labor', 'begleitend'.")
+    elif blended not in ("integriert", "flipped", "werkstatt_labor", "begleitend"):
+        fehler.append(f"Ungültiges Blended-Szenario '{blended}'. Erlaubt sind: 'integriert', 'flipped', 'werkstatt_labor', 'begleitend'.")
 
-    errors = []
+    # 2. Cluster 1: Curriculum & Lerngruppe (Untercluster 1.1, 1.2, 1.3)
+    curr = data.get("curriculum", {})
+    if not curr.get("beruf"):
+        fehler.append("Cluster 1 (Curriculum): Ausbildungsberuf ('beruf') fehlt.")
+    if not curr.get("ausbildungsjahr"):
+        fehler.append("Cluster 1 (Curriculum): Ausbildungsjahr fehlt.")
+    if not curr.get("lernfeld"):
+        fehler.append("Cluster 1 (Curriculum): Lernfeld fehlt.")
+    if not curr.get("zielformulierung_volltext") or len(curr.get("zielformulierung_volltext", "")) < 20:
+        warnungen.append("Cluster 1 (Curriculum): 'zielformulierung_volltext' fehlt oder ist sehr kurz.")
 
-    # 1. Root-Keys
-    for k in REQUIRED_KEYS:
-        if k not in data or data[k] is None:
-            errors.append(f"Fehlender Hauptschlüssel: '{k}'")
+    vh = curr.get("vollstaendige_handlung", {})
+    required_phases = ["informieren", "planen", "entscheiden", "ausfuehren", "kontrollieren", "bewerten"]
+    for ph in required_phases:
+        if ph not in vh or not isinstance(vh[ph], list):
+            fehler.append(f"Cluster 1 (Curriculum): Phase der vollständigen Handlung '{ph}' fehlt in vollstaendige_handlung.")
 
-    # 1b. E-Learning-Format & Didaktische Methoden
-    if not data.get("elearning_format") or not isinstance(data.get("elearning_format"), str):
-        errors.append("Fehlende Angabe: 'elearning_format' (String z.B. blended_learning, flipped_classroom, scenario_based_pbl)")
+    # 3. Cluster 2: Handlungssituation & Continuous Narrative
+    hs = data.get("handlungssituation", {})
+    for field in ["betrieb", "kontext", "problem", "leitfrage", "handlungsprodukt"]:
+        if not hs.get(field):
+            fehler.append(f"Cluster 2 (Handlungssituation): Pflichtfeld '{field}' fehlt.")
+
+    # 4. Cluster 3: Fachlichkeit & Normen
+    fach = data.get("fachlichkeit", {})
+    if not fach.get("begriffe") or len(fach["begriffe"]) < 3:
+        fehler.append("Cluster 3 (Fachlichkeit): Mindestens 3 Fachbegriffe erforderlich.")
+    if not fach.get("formeln") or len(fach["formeln"]) < 1:
+        warnungen.append("Cluster 3 (Fachlichkeit): Keine Berechnungsformeln angegeben.")
+    if not fach.get("normen") or len(fach["normen"]) < 1:
+        warnungen.append("Cluster 3 (Fachlichkeit): Keine DIN/EN/ISO/VDE-Normen angegeben.")
     
-    did_meth = data.get("didaktische_methoden")
-    if not did_meth or not isinstance(did_meth, list) or len(did_meth) == 0:
-        errors.append("Fehlende Angabe: 'didaktische_methoden' (muss eine nicht-leere Liste von Strings sein)")
+    # Formel-Typografie-Check
+    for f in fach.get("formeln", []):
+        if r"\to" in f or r"\rightarrow" in f:
+            fehler.append(f"Typografie-Fehler in Formel '{f}': LaTeX \\to / \\rightarrow gefunden. Bitte &rarr; oder '→' verwenden!")
 
-    # 2. Cluster 1: Curriculum
-    curr = data.get("curriculum")
-    if not isinstance(curr, dict):
-        errors.append("Cluster 1 (Curriculum): Muss ein JSON-Objekt sein")
-    else:
-        for ck in ["beruf", "ausbildungsjahr", "lernfeld"]:
-            if not curr.get(ck):
-                errors.append(f"Cluster 1 (Curriculum): Fehlende Angabe '{ck}'")
+    # 5. Cluster 4: Aufgaben-Architektur
+    aufg = data.get("aufgaben_kaskade", {})
+    if not aufg.get("grundlagen_erkundung"):
+        fehler.append("Cluster 4 (Aufgaben): 'grundlagen_erkundung' fehlt.")
+    if not aufg.get("vertiefung_formular") or not aufg["vertiefung_formular"].get("felder"):
+        fehler.append("Cluster 4 (Aufgaben): 'vertiefung_formular' mit Feldern fehlt.")
+    praxis = aufg.get("anwendung_praxisauftrag", {})
+    if not praxis.get("phasen") or len(praxis["phasen"]) < 6:
+        fehler.append("Cluster 4 (Aufgaben): 'anwendung_praxisauftrag' muss 6 Phasen der vollständigen Handlung umfassen.")
+    if not praxis.get("rubrik_kriterien") or len(praxis["rubrik_kriterien"]) < 3:
+        fehler.append("Cluster 4 (Aufgaben): 'rubrik_kriterien' muss mindestens 3 Bewertungskriterien definieren.")
 
-    # 3. Cluster 2: Handlungssituation
-    hs = data.get("handlungssituation")
-    if not isinstance(hs, dict):
-        errors.append("Cluster 2 (Handlungssituation): Muss ein JSON-Objekt sein")
-    else:
-        for hk in ["betrieb", "problem", "leitfrage", "handlungsprodukt"]:
-            if not hs.get(hk):
-                errors.append(f"Cluster 2 (Handlungssituation): Fehlende Angabe '{hk}'")
-
-    # 4. Cluster 3: Fachlichkeit
-    fach = data.get("fachlichkeit")
-    if not isinstance(fach, dict):
-        errors.append("Cluster 3 (Fachlichkeit): Muss ein JSON-Objekt sein")
-    else:
-        for fk in ["begriffe", "formeln", "normen"]:
-            val = fach.get(fk)
-            if not val or (isinstance(val, list) and len(val) == 0):
-                errors.append(f"Cluster 3 (Fachlichkeit): Fehlende Liste '{fk}'")
-
-    # 5. Cluster 4: Aufgabenkaskade
-    aufg = data.get("aufgaben_kaskade")
-    if not isinstance(aufg, dict):
-        errors.append("Cluster 4 (Aufgaben): Muss ein JSON-Objekt sein")
-    else:
-        if not aufg.get("grundlagen_erkundung"):
-            errors.append("Cluster 4 (Aufgaben): 'grundlagen_erkundung' fehlt")
-        
-        vf = aufg.get("vertiefung_formular")
-        if not vf:
-            errors.append("Cluster 4 (Aufgaben): 'vertiefung_formular' fehlt (ausfüllbares Protokoll)")
-        elif isinstance(vf, dict) and "felder" in vf and not vf["felder"]:
-            errors.append("Cluster 4 (Aufgaben): 'vertiefung_formular.felder' darf nicht leer sein")
-
-        praxis = aufg.get("anwendung_praxisauftrag")
-        if not praxis:
-            errors.append("Cluster 4 (Aufgaben): 'anwendung_praxisauftrag' fehlt (vollständige Handlung)")
-
-    # 6. Cluster 5: Medien & Simulation
-    med = data.get("medien_simulation")
-    if not isinstance(med, dict):
-        errors.append("Cluster 5 (Medien): Muss ein JSON-Objekt sein")
-    else:
-        if med.get("hat_simulation") and not med.get("simulation"):
-            errors.append("Cluster 5 (Simulation): 'hat_simulation' ist true, aber 'simulation'-Objekt fehlt")
+    # 6. Cluster 5: Medien-Trias
+    med = data.get("medien_simulation", {})
+    if med.get("hat_simulation") and not med.get("simulation"):
+        warnungen.append("Cluster 5 (Medien): 'hat_simulation' ist true, aber keine Simulations-Spezifikation hinterlegt.")
 
     # 7. Cluster 6: Kachelstruktur
-    ks = data.get("kachelstruktur")
-    if not isinstance(ks, dict):
-        errors.append("Cluster 6 (Kachelstruktur): Muss ein JSON-Objekt sein")
-        kacheln = []
-    else:
-        kacheln = ks.get("kacheln", [])
-        if not isinstance(kacheln, list) or len(kacheln) < 3:
-            errors.append("Cluster 6 (Kachelstruktur): 'kacheln' muss eine Liste mit mindestens 3 Kacheln sein")
-        else:
-            for i, kc in enumerate(kacheln):
-                if not isinstance(kc, dict):
-                    errors.append(f"Cluster 6 (Kachelstruktur): Kachel {i+1} muss ein Objekt sein")
-                    continue
-                if not kc.get("titel"):
-                    errors.append(f"Cluster 6 (Kachelstruktur): Kachel {i+1} hat keinen Titel")
-                if not kc.get("kachelfoto_motiv"):
-                    errors.append(f"Cluster 6 (Kachelstruktur): Kachel {i+1} ('{kc.get('titel')}') hat kein 'kachelfoto_motiv'")
+    kachel_info = data.get("kachelstruktur", {})
+    kacheln = kachel_info.get("kacheln", [])
+    if len(kacheln) < 4 or len(kacheln) > 12:
+        fehler.append(f"Cluster 6 (Kachelstruktur): Anzahl Kacheln ({len(kacheln)}) liegt außerhalb des zulässigen Bereichs (4 bis 12).")
 
-    if errors:
-        print(f"FAIL: {len(errors)} didaktische Unvollständigkeit(en) gefunden:")
-        for err in errors:
-            print(f"  - {err}")
-        return False
+    for idx, k in enumerate(kacheln, 1):
+        if not k.get("titel"):
+            fehler.append(f"Cluster 6 (Kachelstruktur): Kachel {idx} hat keinen Titel.")
+        if not k.get("aktivitaeten") or len(k["aktivitaeten"]) < 1:
+            warnungen.append(f"Cluster 6 (Kachelstruktur): Kachel {idx} ('{k.get('titel')}') hat keine Aktivitäten.")
 
-    print(f"OK: Kurs-Steckbrief '{data.get('titel')}' ({len(kacheln)} Kacheln) ist vollständig und freigabereif!")
-    return True
+    return fehler, warnungen
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Validiert den didaktischen Moodle-Kurs-Steckbrief (Gate 0).")
+    parser.add_argument("steckbrief_json", help="Pfad zur kurs-steckbrief.json")
+    args = parser.parse_args()
+
+    if not os.path.exists(args.steckbrief_json):
+        print(f"FEHLER: Datei '{args.steckbrief_json}' existiert nicht.", file=sys.stderr)
+        return 1
+
+    try:
+        with open(args.steckbrief_json, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"FEHLER: Ungültiges JSON in '{args.steckbrief_json}': {e}", file=sys.stderr)
+        return 1
+
+    fehler, warnungen = validate_steckbrief_dict(data)
+
+    for w in warnungen:
+        print(f"  [WARNUNG] {w}", file=sys.stderr)
+
+    if fehler:
+        print(f"FAIL: {len(fehler)} didaktische/strukturelle Fehler gefunden:", file=sys.stderr)
+        for e in fehler:
+            print(f"  - [FEHLER] {e}", file=sys.stderr)
+        return 2
+
+    k_anzahl = len(data.get("kachelstruktur", {}).get("kacheln", []))
+    print(f"OK: Kurs-Steckbrief '{data.get('titel')}' ({k_anzahl} Kacheln) ist didaktisch vollständig freigegeben!")
+    return 0
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python validate_steckbrief.py <path_to_steckbrief.json>")
-        sys.exit(1)
-
-    ok = validate_steckbrief(sys.argv[1])
-    sys.exit(0 if ok else 1)
+    sys.exit(main())

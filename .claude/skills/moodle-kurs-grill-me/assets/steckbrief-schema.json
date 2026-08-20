@@ -1,71 +1,183 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MoodleKursSteckbrief",
+  "description": "Erweiterter didaktischer und fachlicher Kurs-Steckbrief für Moodle-Kurse (Goldstandard)",
   "type": "object",
+  "required": [
+    "titel",
+    "shortname",
+    "didaktik_profil",
+    "curriculum",
+    "handlungssituation",
+    "fachlichkeit",
+    "aufgaben_kaskade",
+    "kachelstruktur"
+  ],
   "properties": {
-    "kurs_titel": { "type": "string" },
-    "tonalitaet": { "type": "string", "enum": ["Du", "Sie"] },
-    "cluster_1_profil": {
+    "titel": { "type": "string", "minLength": 5 },
+    "shortname": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "didaktik_profil": { "type": "string", "enum": ["zdq", "theorie-praxis-tandem", "vollstaendige-handlung"] },
+    "blended_szenario": {
+      "type": "string",
+      "enum": ["integriert", "flipped", "werkstatt_labor", "begleitend"],
+      "default": "integriert"
+    },
+    "elearning_format": { "type": "string" },
+    "didaktische_methoden": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "tonalitaet": { "type": "string", "enum": ["du", "sie", "Du", "Sie"] },
+    "zeitstruktur": {
       "type": "object",
       "properties": {
-        "zielgruppe": { "type": "string" },
+        "format": { "type": "string" },
+        "dauer_ustd": { "type": "integer" },
+        "rhythmisierung": { "type": "string" }
+      }
+    },
+    "arbeitsmittel": {
+      "type": "object",
+      "properties": {
+        "tabellenbuch": { "type": "string" },
+        "messgeraete": { "type": "array", "items": { "type": "string" } },
+        "software": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "fehlkonzepte": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fehlvorstellung", "korrektur_strategie"],
+        "properties": {
+          "fehlvorstellung": { "type": "string" },
+          "wissenschaftliche_korrektur": { "type": "string" },
+          "korrektur_strategie": { "type": "string" }
+        }
+      }
+    },
+    "curriculum": {
+      "type": "object",
+      "required": ["beruf", "ausbildungsjahr", "lernfeld", "zielformulierung_volltext", "vollstaendige_handlung", "mindestinhalte"],
+      "properties": {
+        "beruf": { "type": "string" },
+        "fachrichtung": { "type": "string" },
+        "ausbildungsjahr": { "type": "integer", "minimum": 1, "maximum": 4 },
         "lernfeld": { "type": "string" },
-        "daz_scaffolding": { "type": "boolean" }
-      },
-      "required": ["zielgruppe", "lernfeld"]
+        "lernfeld_nr": { "type": "integer" },
+        "zeitrichtwert_ustd": { "type": "integer" },
+        "quelle_url": { "type": "string" },
+        "stand": { "type": "string" },
+        "beschluss_vom": { "type": "string" },
+        "zielgruppe_niveau": { "type": "string" },
+        "vorwissen": { "type": "string" },
+        "daz_foerderung": { "type": "boolean" },
+        "scaffolding_modell": { "type": "string" },
+        "zielformulierung_volltext": { "type": "string", "minLength": 20 },
+        "vollstaendige_handlung": {
+          "type": "object",
+          "required": ["informieren", "planen", "entscheiden", "ausfuehren", "kontrollieren", "bewerten"],
+          "properties": {
+            "informieren": { "type": "array", "items": { "type": "string" } },
+            "planen": { "type": "array", "items": { "type": "string" } },
+            "entscheiden": { "type": "array", "items": { "type": "string" } },
+            "ausfuehren": { "type": "array", "items": { "type": "string" } },
+            "kontrollieren": { "type": "array", "items": { "type": "string" } },
+            "bewerten": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "mindestinhalte": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
     },
-    "cluster_2_situation": {
+    "handlungssituation": {
       "type": "object",
+      "required": ["betrieb", "kontext", "problem", "leitfrage", "handlungsprodukt"],
       "properties": {
-        "szenario": { "type": "string" },
-        "auftraggeber": { "type": "string" },
+        "betrieb": { "type": "string" },
+        "kontext": { "type": "string" },
+        "problem": { "type": "string" },
+        "leitfrage": { "type": "string" },
         "handlungsprodukt": { "type": "string" }
-      },
-      "required": ["szenario", "handlungsprodukt"]
+      }
     },
-    "cluster_3_fachinhalte": {
+    "fachlichkeit": {
       "type": "object",
+      "required": ["begriffe", "formeln", "normen", "sicherheitsregeln", "rechenbeispiel"],
       "properties": {
+        "begriffe": { "type": "array", "items": { "type": "string" } },
+        "formeln": { "type": "array", "items": { "type": "string" } },
         "normen": { "type": "array", "items": { "type": "string" } },
-        "berechnungen": { "type": "array", "items": { "type": "string" } }
+        "sicherheitsregeln": { "type": "array", "items": { "type": "string" } },
+        "rechenbeispiel": {
+          "type": "object",
+          "required": ["titel", "gegeben", "gesucht", "rechenschritte", "ergebnis"],
+          "properties": {
+            "titel": { "type": "string" },
+            "gegeben": { "type": "string" },
+            "gesucht": { "type": "string" },
+            "rechenschritte": { "type": "array", "items": { "type": "string" } },
+            "ergebnis": { "type": "string" }
+          }
+        }
       }
     },
-    "cluster_4_aufgaben": {
+    "aufgaben_kaskade": {
       "type": "object",
+      "required": ["didaktische_leitmethodik", "gestufte_hilfen", "grundlagen_erkundung", "vertiefung_formular", "anwendung_praxisauftrag"],
       "properties": {
-        "formular_protokoll": { "type": "boolean" },
-        "summative_aufgabe": { "type": "string" }
+        "didaktische_leitmethodik": { "type": "string" },
+        "gestufte_hilfen": { "type": "string" },
+        "grundlagen_erkundung": { "type": "string" },
+        "vertiefung_formular": {
+          "type": "object",
+          "required": ["titel", "felder"],
+          "properties": {
+            "titel": { "type": "string" },
+            "felder": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "anwendung_praxisauftrag": {
+          "type": "object",
+          "required": ["titel", "phasen", "rubrik_kriterien"],
+          "properties": {
+            "titel": { "type": "string" },
+            "phasen": { "type": "array", "items": { "type": "string" }, "minItems": 6 },
+            "rubrik_kriterien": { "type": "array", "items": { "type": "string" }, "minItems": 3 }
+          }
+        }
       }
     },
-    "cluster_5_medien": {
+    "medien_simulation": {
       "type": "object",
       "properties": {
-        "simulationen": { "type": "array", "items": { "type": "string" } },
+        "hat_simulation": { "type": "boolean" },
+        "simulation": { "type": "object" },
+        "hotspot_labor": { "type": "object" },
         "schaltplaene": { "type": "array", "items": { "type": "string" } }
       }
     },
-    "cluster_6_struktur": {
+    "kachelstruktur": {
       "type": "object",
+      "required": ["format", "kachelanzahl", "kacheln"],
       "properties": {
+        "format": { "type": "string", "enum": ["tiles", "topics"] },
+        "kachelanzahl": { "type": "integer", "minimum": 4, "maximum": 12 },
         "kacheln": {
           "type": "array",
           "items": {
             "type": "object",
+            "required": ["titel", "inhalt", "aktivitaeten"],
             "properties": {
               "titel": { "type": "string" },
-              "motiv": { "type": "string" }
+              "inhalt": { "type": "string" },
+              "kachelfoto_motiv": { "type": "string" },
+              "farbakzent": { "type": "string" },
+              "aktivitaeten": { "type": "array", "items": { "type": "string" } }
             }
           }
         }
       }
     }
-  },
-  "required": [
-    "kurs_titel",
-    "cluster_1_profil",
-    "cluster_2_situation",
-    "cluster_3_fachinhalte",
-    "cluster_4_aufgaben",
-    "cluster_5_medien",
-    "cluster_6_struktur"
-  ]
+  }
 }

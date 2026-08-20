@@ -16,6 +16,11 @@
     "titel": { "type": "string" },
     "shortname": { "type": "string" },
     "didaktik_profil": { "type": "string", "default": "zdq" },
+    "blended_szenario": {
+      "type": "string",
+      "enum": ["integriert", "flipped", "werkstatt_labor", "begleitend"],
+      "default": "integriert"
+    },
     "elearning_format": {
       "type": "string",
       "enum": [
