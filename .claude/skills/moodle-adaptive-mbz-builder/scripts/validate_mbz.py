@@ -29,13 +29,14 @@ Exit code 0 = all checks passed (warnings allowed), 1 = problems found.
 from __future__ import annotations
 
 import html
-import json
 import re
 import sys
 import tarfile
 import xml.etree.ElementTree as ET
 
 
+# --- Rechnungs-Heuristik: Ergebnis ohne Einheit (beratend, nie fatal) ------- #
+# Zahl inkl. Tausender-Leerzeichen ("14 400") und deutschem Dezimalkomma.
 _NUM = r"[-+]?\d+(?:[  ]\d{3})*(?:[.,]\d+)?"
 # Einheiten-Token: "1/min"-Formen, Symbole, ausgeschriebene Einheiten
 # (längere Alternativen zuerst, damit "kV" vor "V" greift).
@@ -319,10 +320,24 @@ def main(path: str) -> int:
                         )
                         break
 
-
     info.append(f"activities: {sum(1 for _ in contents_el.iter('activity'))}")
     info.append(f"users: {len(user_ids)}, userrefs: {n_userref}")
     info.append(f"sections: {sum(1 for _ in contents_el.iter('section'))}")
+
+    # 8b. feedback items: name/dependvalue/options are NOT NULL DEFAULT ''
+    #     columns in mdl_feedback_item — a $@NULL@$ there aborts the restore
+    #     with dmlwriteexception "Column 'name' cannot be null" and kills every
+    #     activity after the feedback (real bug 2026-07-15). Must be '' instead.
+    for m, data in contents.items():
+        if re.match(r"activities/feedback_\d+/feedback\.xml$", m):
+            for item in ET.fromstring(data).iter("item"):
+                for fieldname in ("name", "dependvalue", "options", "label"):
+                    if (item.findtext(fieldname) or "").strip() == "$@NULL@$":
+                        problems.append(
+                            f"{m}: feedback item <{fieldname}> ist $@NULL@$ — die Spalte "
+                            f"ist NOT NULL DEFAULT ''; Restore bricht mit dmlwriteexception "
+                            f"ab (leeren String emittieren)"
+                        )
 
     warns: list[str] = []
 
@@ -355,9 +370,7 @@ def main(path: str) -> int:
 ATTRIBUTION_MARKER = "Labor Didaktik der Technik"
 
 
-def _deep_checks(tar, members, contents, problems, warns, info):
-    mb = contents.get("moodle_backup.xml", "")
-
+def _check_null_in_attributes(contents, problems):
     # ---- 7b. $@NULL@$ niemals in XML-ATTRIBUTEN --------------------------- #
     # Moodle dekodiert den NULL-Platzhalter nur in Element-Texten. In einem
     # Attribut (z. B. <grade_setting id="$@NULL@$">) kommt der literale String
@@ -372,6 +385,12 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                 f"'$@NULL@$' — Platzhalter gilt nur für Element-Texte; "
                 f"leeres Attribut (\"\") verwenden"
             )
+
+
+def _deep_checks(tar, members, contents, problems, warns, info):
+    mb = contents.get("moodle_backup.xml", "")
+
+    _check_null_in_attributes(contents, problems)
 
     def setting(name):
         m = re.search(rf"<name>{re.escape(name)}</name>\s*<value>(\d+)</value>", mb)
@@ -490,18 +509,18 @@ def _deep_checks(tar, members, contents, problems, warns, info):
         blob_path = f"files/{h[:2]}/{h}"
         if blob_path not in members:
             continue
-        html = tar.extractfile(blob_path).read().decode("utf-8", "ignore")
-        if "data-field" in html:  # Formular (form_engine)
+        doc_html = tar.extractfile(blob_path).read().decode("utf-8", "ignore")
+        if "data-field" in doc_html:  # Formular (form_engine)
             n_form += 1
-            if "placeholder=" in html:
+            if "placeholder=" in doc_html:
                 problems.append("formular: Eingabefelder enthalten placeholder-Text "
                                 "(Felder müssen LEER sein — kein vorgezeichneter "
                                 "Lösungsweg)")
-            if "localStorage" not in html or "btn-save" not in html:
+            if "localStorage" not in doc_html or "btn-save" not in doc_html:
                 problems.append("formular: Autosave/Speichern-Button fehlt")
-        elif "var SPEC" in html:  # Simulation (sim_engine)
+        elif "var SPEC" in doc_html:  # Simulation (sim_engine)
             n_sim += 1
-            if "grid-template-columns:300px" not in html:
+            if "grid-template-columns:300px" not in doc_html:
                 warns.append("simulation: altes Layout ohne Kompakt-Grid — passt "
                              "eventuell nicht ohne Scrollen auf einen Bildschirm")
     if n_form or n_sim:
@@ -521,171 +540,7 @@ def _deep_checks(tar, members, contents, problems, warns, info):
         warns.append(f"INDEX: {len(hits)} Formelzeichen-Indizes nicht "
                      f"tiefgestellt (A<sub>1</sub>) — z. B. {ex}")
 
-    # ---- 13. Adaptive Verdrahtung (availability + Gradebook) -------------- #
-    # Die stillen Restore-Fallen aus dem Moodle-4.1-Quellcode:
-    # (a) op '&'/'!|' braucht showc (Länge == c), op '|'/'!&' braucht show —
-    #     sonst coding_exception SPÄT im Restore (restore_update_availability).
-    # (b) grade-id muss int sein und als grade_item-id im Backup existieren —
-    #     sonst wird sie still zu id:0 (Kachel dauerhaft gesperrt).
-    # (c) ##gi<id>##-Tokens in Formeln müssen auf existierende Items zeigen.
-    # (d) ROOT-gradebook.xml erlaubt nur manual|course|category.
-    # (e) grade_item-ids backup-weit eindeutig.
-    gi_ids: set[str] = set()
-    dup_ids: set[str] = set()
-    calc_item_ids: set[int] = set()
-    for path, data in contents.items():
-        if not (path == "gradebook.xml" or path.endswith("/grades.xml")):
-            continue
-        for m in re.finditer(r'<grade_item id="(\d+)">((?:(?!</grade_item>).)*)', data, re.S):
-            gid, body = m.group(1), m.group(2)
-            if gid in gi_ids:
-                dup_ids.add(gid)
-            gi_ids.add(gid)
-            it = re.search(r"<itemtype>(\w+)</itemtype>", body)
-            calc = re.search(r"<calculation>([^<]+)</calculation>", body)
-            if calc and calc.group(1) != "$@NULL@$":
-                calc_item_ids.add(int(gid))
-            if path == "gradebook.xml" and it and it.group(1) not in (
-                    "manual", "course", "category"):
-                problems.append(f"gradebook.xml: itemtype '{it.group(1)}' in "
-                                f"ROOT verboten (nur manual|course|category)")
-    if dup_ids:
-        problems.append(f"gradebook: doppelte grade_item-ids {sorted(dup_ids)}")
-
-    # cmid -> (completion-Modus, hat-Kriterium) für completion-Bedingungen.
-    # Kriterium = Ansehen (completionview=1) ODER Note (cgin=0): completion=2
-    # OHNE Kriterium bleibt der Zustand ewig 0 — jede darauf zeigende
-    # Bedingung wäre ein totes Gate (Lab-E2E-Fund 2026-07-18: hartkodiertes
-    # completionview=0 ließ das Konvergenz-Gate im echten Moodle zu).
-    cm_completion: dict[int, tuple[int, bool]] = {}
-    for path, data in contents.items():
-        if path.endswith("/module.xml"):
-            mm = re.search(r'<module id="(\d+)"', data)
-            cc = re.search(r"<completion>(\d+)</completion>", data)
-            cv = re.search(r"<completionview>(\d+)</completionview>", data)
-            cg = re.search(r"<completiongradeitemnumber>(\d+)"
-                           r"</completiongradeitemnumber>", data)
-            if mm:
-                rule = bool((cv and cv.group(1) == "1") or cg)
-                cm_completion[int(mm.group(1))] = (
-                    int(cc.group(1)) if cc else 0, rule)
-
-    # Gruppen-IDs aus groups.xml (für group-Bedingungen: Schichten-Overlays)
-    group_ids: set[int] = set()
-    if "groups.xml" in contents:
-        for m in re.finditer(r'<group id="(\d+)">', contents["groups.xml"]):
-            gid = int(m.group(1))
-            if gid in group_ids:
-                problems.append(f"groups.xml: doppelte Gruppen-id {gid}")
-            group_ids.add(gid)
-
-    def _check_av_tree(src, raw):
-        try:
-            tree = json.loads(raw)
-        except Exception:  # noqa: BLE001
-            problems.append(f"{src}: availability ist kein gültiges JSON")
-            return
-        def walk(t):
-            op = t.get("op")
-            c = t.get("c", [])
-            if op in ("&", "!|"):
-                if not isinstance(t.get("showc"), list) and t is tree:
-                    problems.append(f"{src}: op '{op}' ohne showc-Liste "
-                                    f"(coding_exception beim Restore)")
-                elif t is tree and len(t.get("showc", [])) != len(c):
-                    problems.append(f"{src}: showc-Länge != Anzahl Bedingungen")
-            elif op in ("|", "!&") and t is tree and "show" not in t:
-                problems.append(f"{src}: op '{op}' ohne show-Feld "
-                                f"(coding_exception beim Restore)")
-            for cond in c:
-                if "op" in cond:
-                    walk(cond)
-                    continue
-                if cond.get("type") == "completion":
-                    cm, e = cond.get("cm"), cond.get("e")
-                    if not isinstance(cm, int):
-                        problems.append(f"{src}: completion-cm {cm!r} ist "
-                                        f"kein JSON-Integer")
-                    elif cm not in cm_completion:
-                        problems.append(f"{src}: completion-cm {cm} existiert "
-                                        f"in keinem module.xml — Restore "
-                                        f"degradiert die Bedingung (Warnung)")
-                    elif cm_completion[cm][0] != 2:
-                        problems.append(f"{src}: completion-Bedingung auf cm "
-                                        f"{cm}, aber completion="
-                                        f"{cm_completion[cm][0]} statt 2 "
-                                        f"(automatisch) — Lock tot (0) oder "
-                                        f"von Lernenden abhakbar (1)")
-                    elif not cm_completion[cm][1]:
-                        problems.append(f"{src}: completion-Bedingung auf cm "
-                                        f"{cm} mit completion=2, aber OHNE "
-                                        f"Kriterium (weder completionview=1 "
-                                        f"noch completiongradeitemnumber) — "
-                                        f"Zustand bleibt ewig 0, Gate tot")
-                    if e not in (0, 1, 2, 3):
-                        problems.append(f"{src}: completion-e {e!r} ungültig "
-                                        f"(erlaubt 0..3)")
-                    continue
-                if cond.get("type") == "group":
-                    g = cond.get("id")
-                    if not isinstance(g, int):
-                        problems.append(f"{src}: group-id {g!r} ist kein "
-                                        f"JSON-Integer")
-                    elif g not in group_ids:
-                        problems.append(f"{src}: group-id {g} existiert nicht "
-                                        f"in groups.xml — Restore degradiert "
-                                        f"die Bedingung (Element bliebe "
-                                        f"dauerhaft gesperrt)")
-                    continue
-                if cond.get("type") == "date":
-                    if cond.get("d") not in (">=", "<"):
-                        problems.append(f"{src}: date-d {cond.get('d')!r} "
-                                        f"ungültig (erlaubt '>=' / '<')")
-                    if not isinstance(cond.get("t"), int) or cond["t"] <= 0:
-                        problems.append(f"{src}: date-t {cond.get('t')!r} "
-                                        f"ist keine gültige Unix-Zeit")
-                    continue
-                if cond.get("type") != "grade":
-                    continue
-                gid = cond.get("id")
-                if not isinstance(gid, int):
-                    problems.append(f"{src}: grade-id {gid!r} ist kein "
-                                    f"JSON-Integer")
-                elif str(gid) not in gi_ids:
-                    problems.append(f"{src}: grade-id {gid} existiert in "
-                                    f"keinem grade_item — wird beim Restore "
-                                    f"still zu id:0 (dauerhaft gesperrt)")
-                elif gid in calc_item_ids:
-                    problems.append(f"{src}: Einstufung referenziert das "
-                                    f"KUMULATIVE Calculated-Item {gid} — "
-                                    f"Ratschen-Effekt (Referenz §3)!")
-        walk(tree)
-
-    n_av = 0
-    for path, data in contents.items():
-        if re.match(r"sections/section_\d+/section\.xml$", path):
-            m = re.search(r"<availabilityjson>(.*?)</availabilityjson>", data, re.S)
-            if m and m.group(1) not in ("$@NULL@$", ""):
-                raw = ET.fromstring(data).findtext("availabilityjson") or ""
-                if '"c":[]' not in raw.replace(" ", ""):
-                    n_av += 1
-                    _check_av_tree(path, raw)
-        elif path.endswith("/module.xml"):
-            raw = ET.fromstring(data).findtext("availability") or ""
-            if raw and raw != "$@NULL@$":
-                n_av += 1
-                _check_av_tree(path, raw)
-    # (c) Formel-Tokens
-    gb = contents.get("gradebook.xml", "")
-    for tok in re.findall(r"##gi(\d+)##", gb):
-        if tok not in gi_ids:
-            problems.append(f"gradebook.xml: Formel-Token ##gi{tok}## zeigt "
-                            f"auf kein grade_item — bleibt beim Restore kaputt")
-    if n_av or gi_ids:
-        info.append(f"adaptiv: {n_av} availability-Bäume, "
-                    f"{len(gi_ids)} grade_items geprüft")
-
-    # ---- 14. Rechnungen ohne Einheit (beratend) -------------------------- #
+    # ---- 13. Rechnungen ohne Einheit (beratend) -------------------------- #
     for path, data in contents.items():
         if not re.match(r"activities/(page|book)_\d+/\w+\.xml$", path):
             continue
@@ -697,7 +552,7 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                     f"{path.split('/')[1]}: " + ", ".join(f"'{s}'" for s in snips)
                     + " (Einheit ergänzen?)")
 
-    # ---- 15. Merke-Satz-Qualität & Rechenbeispiel-Schritte (beratend) ---- #
+    # ---- 14. Merke-Satz-Qualität & Rechenbeispiel-Schritte (beratend) ---- #
     # Inhaltliche Tiefen-Checks auf Infoblättern: ein „Merke"/💡-Kasten soll ein
     # vollständiger Satz sein (keine Stichwort-/Fragment-Kette), und ein
     # Rechenbeispiel soll von „Einsetzen" nicht ohne Zwischenrechnung direkt zum
@@ -718,6 +573,42 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                     warns.append(
                         f"RECHENBEISPIEL: Einsetzen springt direkt zum Ergebnis — "
                         f"Zwischenschritt fehlt in {tag}: '{snip}'")
+
+    # ---- 15. Typografie- & LaTeX-Hygiene in HTML-Seiten ------------------- #
+    for path, data in contents.items():
+        if not re.match(r"activities/(page|book|label)_\d+/\w+\.xml$", path):
+            continue
+        tag = path.split("/")[1]
+        for block in re.findall(r"<(?:content|intro)>(.*?)</(?:content|intro)>", data, re.S):
+            # Check for raw unrendered LaTeX arrows
+            if re.search(r"\\(?:to|rightarrow|Rightarrow|leftarrow|Leftarrow)\b", block):
+                warns.append(
+                    f"TYPOGRAFIE: Roher LaTeX-Pfeil ('\\to' / '\\rightarrow') in {tag} — "
+                    f"in Moodle-HTML immer sauberes '&rarr;' verwenden!"
+                )
+            # Check for unescaped raw dollar math delimiter like $E=mc^2$ instead of \( \)
+            if re.search(r"(?<!\\)\$(?!\$)[^$\n]+(?<!\\)\$", block):
+                warns.append(
+                    f"TYPOGRAFIE: Veraltete Dollar-Math-Syntax ('$ ... $') in {tag} — "
+                    f"in Moodle immer saubere HTML-Tags (<sub>/<sup>) oder MathJax '\\( ... \\)' verwenden!"
+                )
+
+    # ---- 16. Infoblatt-Wortzahl-Sicherung (Goldstandard) ----------------- #
+    for path, data in contents.items():
+        if not re.match(r"activities/page_\d+/page\.xml$", path):
+            continue
+        tag = path.split("/")[1]
+        name = re.search(r"<name>(.*?)</name>", data)
+        name_txt = html.unescape(name.group(1)) if name else ""
+        if "Infoblatt" in name_txt or "infoblatt" in data.lower():
+            for block in re.findall(r"<content>(.*?)</content>", data, re.S):
+                words = _readable_text(block).split()
+                if len(words) < 80:
+                    warns.append(
+                        f"INHALT-DÜNN: Infoblatt '{name_txt}' ({tag}) enthält nur "
+                        f"{len(words)} Wörter — Goldstandard fordert mindestens 120-200 Wörter "
+                        f"Erklär-Fließtext (Was -> Wie -> Warum)!"
+                    )
 
 
 def _report(info: list[str], warns: list[str], problems: list[str]) -> None:

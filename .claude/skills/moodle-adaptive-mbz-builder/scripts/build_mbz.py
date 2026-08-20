@@ -48,7 +48,10 @@ ATTRIBUTION_SENTENCE = (
 def attribution_text(spec) -> str:
     c = (spec or {}).get("course", {})
     if "attribution" in c:
-        return c.get("attribution") or ""
+        val = c.get("attribution")
+        if isinstance(val, bool):
+            return ATTRIBUTION_SENTENCE if val else ""
+        return str(val) if val is not None else ""
     return ATTRIBUTION_SENTENCE
 
 
@@ -69,66 +72,6 @@ def with_attribution(content: str, spec) -> str:
     if not text or text in (content or ""):
         return content or ""
     return (content or "") + attribution_footer(spec)
-
-
-# --------------------------------------------------------------------------- #
-# Gradebook-Serialisierung (Feldreihenfolge exakt nach backup_stepslib.php,
-# backup_gradebook_structure_step / backup_activity_grades_structure_step)
-# --------------------------------------------------------------------------- #
-GRADE_CAT_ID = 990  # die eine Kurs-Kategorie (parent=$@NULL@$, path /GRADE_CAT_ID/)
-
-
-def grade_item_xml(gid: int, now: int, *, itemtype: str, indent: str = "    ",
-                   categoryid=None, itemname=None, itemmodule=None,
-                   iteminstance=None, itemnumber=None, idnumber=None,
-                   calculation=None, grademax=100.0, gradepass=0.0,
-                   sortorder=1, needsupdate=0,
-                   aggregationcoef2=0.0, weightoverride=0) -> str:
-    """Ein <grade_item> in der exakten 29-Feld-Reihenfolge des Moodle-4.1-
-    Backups. Gleiches Format für ROOT-gradebook.xml (manual/course/category)
-    und activities/<mod>_<id>/grades.xml (mod-Items)."""
-    def opt(name, val, fmt=None):
-        if val is None:
-            return f"{indent}  <{name}>{NULL}</{name}>"
-        if fmt == "f":
-            return f"{indent}  <{name}>{float(val):.5f}</{name}>"
-        return f"{indent}  {el(name, val)}"
-    rows = [
-        f'{indent}<grade_item id="{gid}">',
-        opt("categoryid", categoryid),
-        opt("itemname", itemname),
-        opt("itemtype", itemtype),
-        opt("itemmodule", itemmodule),
-        opt("iteminstance", iteminstance),
-        opt("itemnumber", itemnumber),
-        opt("iteminfo", None),
-        f"{indent}  <idnumber>{xesc(idnumber) if idnumber else ''}</idnumber>",
-        opt("calculation", calculation),
-        opt("gradetype", 1),
-        opt("grademax", grademax, "f"),
-        opt("grademin", 0, "f"),
-        opt("scaleid", None),
-        opt("outcomeid", None),
-        opt("gradepass", gradepass, "f"),
-        opt("multfactor", 1, "f"),
-        opt("plusfactor", 0, "f"),
-        opt("aggregationcoef", 0, "f"),
-        # Golden-Template (echtes 4.5-Backup): Kategorien-Gewichte leben als
-        # aggregationcoef2 + weightoverride=1 am Kategorie-Item.
-        opt("aggregationcoef2", aggregationcoef2, "f"),
-        opt("weightoverride", weightoverride),
-        opt("sortorder", sortorder),
-        opt("display", 0),
-        opt("decimals", None),
-        opt("hidden", 0),
-        opt("locked", 0),
-        opt("locktime", 0),
-        opt("needsupdate", needsupdate),
-        opt("timecreated", now),
-        opt("timemodified", now),
-        f"{indent}</grade_item>",
-    ]
-    return "\n".join(rows)
 
 # Moodle 4.1 baseline. A backup created with these values restores into 4.1 and
 # is forward-compatible with 4.2–4.5 (Moodle only warns on newer-than-target,
@@ -192,7 +135,6 @@ class Ids:
         self._question = 900
         self._answer = 950
         self._qinstance = 990
-        self._gradeitem = 400
 
     def section(self) -> int:
         self._section += 1
@@ -246,10 +188,6 @@ class Ids:
         self._qinstance += 1
         return self._qinstance
 
-    def gradeitem(self) -> int:
-        self._gradeitem += 1
-        return self._gradeitem
-
 
 # --------------------------------------------------------------------------- #
 # Backup builder
@@ -281,20 +219,6 @@ class MbzBuilder:
         self.has_userdata = False
         self.userinfo_sections: set[int] = set()
         self.userinfo_activities: set[str] = set()
-        # Gradebook: idnumber -> grade_item id (für availability-refs und
-        # ##gi##-Formeln), globale sortorder, Sammel-Liste je Aktivität
-        self.grade_ref: dict[str, int] = {}
-        # Aktivitäts-idnumber -> cmid (für completion-Bedingungen mit
-        # symbolischem cmref, z. B. Pfad-Lock der adaptiven Kurse)
-        self.cm_ref: dict[str, int] = {}
-        # Symbolische Gruppen-/Kategorie-IDs (Diagnose-Modul-Modell):
-        # spec['groups'][i]['id'] -> numerische Gruppen-ID (groups.xml),
-        # spec['gradebook']['categories'][i]['id'] -> grade_category-ID.
-        self.group_ref: dict[str, int] = {}
-        self.grade_cat_ref: dict[str, int] = {}
-        self.grade_meta: dict[str, dict] = {}  # ref -> {id, grademax}
-        self.grade_sortorder = 1  # 1 = course item
-        self.n_quiz_grade_items = 0
         # dedupe the per-filearea directory record (one "." entry per
         # contextid+component+filearea+itemid, even with several files)
         self._fileareadirs: set[tuple] = set()
@@ -375,136 +299,11 @@ class MbzBuilder:
     # Top-level orchestration
     # ===================================================================== #
     def build(self) -> bytes:
-        self._preassign_grade_items()
         self._build_sections_and_activities()
         self._build_course()
         self._build_top_level()
         self._build_moodle_backup_xml()
         return self._pack()
-
-    def _preassign_grade_items(self) -> None:
-        """Vergibt VOR dem Bauen jedem Quiz seine grade_item-ID und jeder
-        Aktivität ihre cmid und füllt die idnumber->ID-Maps. Nötig, weil
-        availability-Bedingungen (Sections wie Module) per symbolischem
-        ref/cmref auf Aktivitäten zeigen dürfen, die im Spec erst SPÄTER
-        stehen (Vorwärtsreferenzen der adaptiven Verzweigung)."""
-        for i, g in enumerate(self.spec.get("groups", []) or []):
-            key = g.get("id") or g.get("name")
-            if key in self.group_ref:
-                raise ValueError(f"Doppelte Gruppen-id '{key}'.")
-            self.group_ref[key] = 800 + i
-        for i, c in enumerate((self.spec.get("gradebook") or {})
-                              .get("categories", []) or []):
-            if c["id"] in self.grade_cat_ref:
-                raise ValueError(f"Doppelte gradebook-Kategorie '{c['id']}'.")
-            self.grade_cat_ref[c["id"]] = GRADE_CAT_ID + 1 + i
-        for sec in self.spec.get("sections", []):
-            for act in sec.get("activities", []):
-                act["_cmid"] = self.ids.cmid()
-                idnum = act.get("idnumber")
-                if idnum:
-                    if idnum in self.cm_ref:
-                        raise ValueError(
-                            f"Doppelte Aktivitäts-idnumber '{idnum}' — "
-                            f"cmrefs wären mehrdeutig")
-                    self.cm_ref[idnum] = act["_cmid"]
-                if act.get("type") != "quiz":
-                    continue
-                gid = self.ids.gradeitem()
-                act["_gradeitem_id"] = gid
-                if idnum:
-                    self.grade_ref[idnum] = gid
-
-    def resolve_availability(self, av) -> str | None:
-        """Symbolische availability-Spec -> finaler Moodle-JSON-String.
-        grade-Bedingungen dürfen 'ref' (Quiz-idnumber) statt 'id' tragen,
-        completion-Bedingungen 'cmref' (Aktivitäts-idnumber) statt 'cm'.
-        Verschachtelte op-Knoten sind erlaubt (Pfad-Lock der adaptiven
-        Kurse). Erzwingt die Restore-Invarianten aus dem Moodle-Quellcode:
-        show/showc NUR an der Wurzel — op '&'/'!|' braucht showc (Länge ==
-        c), op '|'/'!&' braucht show; grade-id/completion-cm müssen
-        JSON-Integer sein und im Backup existieren; completion-e nur 0..3."""
-        if not av:
-            return None
-        import copy as _copy
-        av = _copy.deepcopy(av)
-
-        def resolve_node(node: dict, root: bool = False) -> dict:
-            op = node.get("op", "&")
-            out_c = []
-            for c in node.get("c", []):
-                if "op" in c:
-                    out_c.append(resolve_node(c))
-                    continue
-                if c.get("type") == "grade":
-                    if "ref" in c:
-                        ref = c.pop("ref")
-                        gid = self.grade_ref.get(ref)
-                        if gid is None:
-                            raise ValueError(
-                                f"availability-ref '{ref}' unbekannt — kein "
-                                f"Quiz mit dieser idnumber im Kurs")
-                        c["id"] = gid
-                    if "id" not in c:
-                        raise ValueError("grade-Bedingung ohne id/ref")
-                    c["id"] = int(c["id"])
-                    for k in ("min", "max"):
-                        if k in c and c[k] is None:
-                            del c[k]
-                elif c.get("type") == "completion":
-                    if "cmref" in c:
-                        ref = c.pop("cmref")
-                        cmid = self.cm_ref.get(ref)
-                        if cmid is None:
-                            raise ValueError(
-                                f"availability-cmref '{ref}' unbekannt — "
-                                f"keine Aktivität mit dieser idnumber im Kurs")
-                        c["cm"] = cmid
-                    if "cm" not in c:
-                        raise ValueError("completion-Bedingung ohne cm/cmref")
-                    c["cm"] = int(c["cm"])
-                    if int(c.get("e", -1)) not in (0, 1, 2, 3):
-                        raise ValueError(
-                            f"completion-Bedingung: e={c.get('e')!r} ungültig "
-                            f"(erlaubt 0..3)")
-                    c["e"] = int(c["e"])
-                elif c.get("type") == "group":
-                    # Golden-Template: {"type":"group","id":N}; Restore
-                    # remappt N über das 'group'-Mapping aus groups.xml.
-                    if "groupref" in c:
-                        ref = c.pop("groupref")
-                        gid = self.group_ref.get(ref)
-                        if gid is None:
-                            raise ValueError(
-                                f"availability-groupref '{ref}' unbekannt — "
-                                f"keine Gruppe mit dieser id in spec.groups")
-                        c["id"] = gid
-                    if "id" not in c:
-                        raise ValueError("group-Bedingung ohne id/groupref")
-                    c["id"] = int(c["id"])
-                elif c.get("type") == "date":
-                    if c.get("d") not in (">=", "<"):
-                        raise ValueError(
-                            f"date-Bedingung: d={c.get('d')!r} ungültig "
-                            f"(erlaubt '>=' oder '<')")
-                    c["t"] = int(c.get("t", 0))
-                    if c["t"] <= 0:
-                        raise ValueError("date-Bedingung ohne gültiges t "
-                                         "(Unix-Zeit)")
-                out_c.append(c)
-            tree: dict = {"op": op, "c": out_c}
-            if root:
-                if op in ("|", "!&"):
-                    tree["show"] = bool(node.get("show", False))
-                else:
-                    showc = node.get("showc")
-                    if not isinstance(showc, list) or len(showc) != len(out_c):
-                        showc = [False] * len(out_c)
-                    tree["showc"] = [bool(x) for x in showc]
-            return tree
-
-        tree = resolve_node(av, root=True)
-        return json.dumps(tree, separators=(",", ":"), ensure_ascii=False)
 
     # ----- sections + activities ---------------------------------------- #
     def _build_sections_and_activities(self) -> None:
@@ -627,12 +426,6 @@ class MbzBuilder:
                 f"alt='' style='max-width:100%;height:auto;border-radius:8px;'>"
                 f"</div>" + summary
             )
-        # Kachel-Sichtbarkeit: adaptive Niveau-Kacheln tragen eine
-        # availability-Spec (grade-Bedingungen, ggf. mit symbolischen refs) —
-        # gleiche JSON-Syntax wie auf Modul-Ebene, Feld heißt availabilityjson.
-        sec_av_json = self.resolve_availability(sec.get("availability"))
-        sec_av = (xesc(sec_av_json) if sec_av_json
-                  else '{"op":"&amp;","c":[],"showc":[]}')
         body = (
             f'<section id="{sec_id}">\n'
             f"  {el('number', number)}\n"
@@ -641,7 +434,7 @@ class MbzBuilder:
             f"  {el('summaryformat', 1)}\n"
             f"  {el('sequence', ','.join(str(c) for c in cmids))}\n"
             f"  {el('visible', visible)}\n"
-            f"  <availabilityjson>{sec_av}</availabilityjson>\n"
+            f'  <availabilityjson>{{"op":"&amp;","c":[],"showc":[]}}</availabilityjson>\n'
             f"  {el('timemodified', self.now)}\n"
             f"{tiles_extra}"
             f"</section>"
@@ -664,7 +457,7 @@ class MbzBuilder:
                 f"Unsupported activity type {mod!r}. "
                 f"Supported: {', '.join(sorted(ACTIVITY_BUILDERS))}"
             )
-        cmid = act.get("_cmid") or self.ids.cmid()
+        cmid = self.ids.cmid()
         instance = self.ids.instance()
         modctx = self.ids.modctx()
         directory = f"activities/{mod}_{cmid}"
@@ -691,15 +484,9 @@ class MbzBuilder:
             "<roles>\n  <role_overrides>\n  </role_overrides>\n"
             "  <role_assignments>\n  </role_assignments>\n</roles>",
         )
-        # grades.xml: Quiz-Aktivitäten tragen ihr echtes grade_item (itemtype
-        # 'mod'), damit availability-Bedingungen und ##gi##-Formeln beim
-        # Restore auf die neue Item-ID gemappt werden können.
-        gi = getattr(ctx, "grade_item_xml", None)
         self.add_xml(
             f"{directory}/grades.xml",
-            "<activity_gradebook>\n  <grade_items>\n"
-            + (gi + "\n" if gi else "")
-            + "  </grade_items>\n"
+            "<activity_gradebook>\n  <grade_items>\n  </grade_items>\n"
             "  <grade_letters>\n  </grade_letters>\n</activity_gradebook>",
         )
         self.add_xml(
@@ -738,20 +525,6 @@ class MbzBuilder:
         directory: str,
     ) -> None:
         completion = act.get("completion", 0)
-        # Abschluss über Bestehensgrenze (completionpassgrade), Note erhalten
-        # (completionusegrade) und Sichtbarkeits-Bedingungen (availability) —
-        # Serialisierung exakt nach backup_module_structure_step (Moodle 4.1).
-        cpg = 1 if act.get("completionpassgrade") else 0
-        usegrade = 1 if (cpg or act.get("completionusegrade")) else 0
-        # Ansehen-Abschluss (Diagnose-Modell: Konvergenz-Gate hängt am
-        # completion-Zustand der Pfadelemente — ohne Kriterium bliebe der
-        # Zustand ewig 0 und das Gate tot; Lab-E2E-Fund 2026-07-18).
-        cview = 1 if act.get("completionview") else 0
-        if (usegrade or cview) and completion < 2:
-            completion = 2  # Kriterium vorhanden = automatischer Abschluss
-        cgin = "0" if usegrade else NULL
-        av_json = self.resolve_availability(act.get("availability"))
-        av_val = xesc(av_json) if av_json else NULL
         body = (
             f'<module id="{cmid}" version="{MODULE_VERSION}">\n'
             f"  {el('modulename', mod)}\n"
@@ -767,11 +540,11 @@ class MbzBuilder:
             f"  {el('groupmode', 0)}\n"
             f"  {el('groupingid', 0)}\n"
             f"  {el('completion', completion)}\n"
-            f"  <completiongradeitemnumber>{cgin}</completiongradeitemnumber>\n"
-            f"  {el('completionpassgrade', cpg)}\n"
-            f"  {el('completionview', cview)}\n"
+            f"  <completiongradeitemnumber>{NULL}</completiongradeitemnumber>\n"
+            f"  {el('completionpassgrade', 0)}\n"
+            f"  {el('completionview', 0)}\n"
             f"  {el('completionexpected', 0)}\n"
-            f"  <availability>{av_val}</availability>\n"
+            f"  <availability>{NULL}</availability>\n"
             f"  {el('showdescription', act.get('showdescription', 0))}\n"
             f"  {el('downloadcontent', 1)}\n"
             f"  <lang></lang>\n"
@@ -948,7 +721,7 @@ class MbzBuilder:
         # course/inforef.xml references the question categories + student role
         self.add_xml("course/inforef.xml", self._course_inforef_xml())
 
-        self.add_xml("groups.xml", self._groups_xml())
+        self.add_xml("groups.xml", "<groups>\n  <groupings>\n  </groupings>\n</groups>")
         self.add_xml("completion.xml", "<course_completion>\n</course_completion>")
         self.add_xml("scales.xml", "<scales_definition>\n</scales_definition>")
         self.add_xml("outcomes.xml", "<outcomes_definition>\n</outcomes_definition>")
@@ -967,142 +740,7 @@ class MbzBuilder:
         )
         if self.has_userdata:
             self.add_xml("users.xml", self._users_xml())
-        # gradebook.xml: sobald der Kurs Quiz-grade_items trägt (und damit
-        # availability/##gi##-Referenzen möglich sind). Kurse ohne Quiz
-        # bleiben wie bisher ohne Root-Gradebook (Moodle skippt still).
-        if self.n_quiz_grade_items or self.spec.get("gradebook"):
-            self.add_xml("gradebook.xml", self._gradebook_xml())
         self.add_file("moodle_backup.log", "")
-
-    def _groups_xml(self) -> str:
-        """groups.xml: Serialisierung 1:1 nach Golden-Template (echtes
-        Moodle-4.5-Backup, 2026-07-17): Gruppen OHNE Mitglieder (Zuweisung
-        macht die Lehrkraft auf der Zielinstanz); description/enrolmentkey
-        sind $@NULL@$ in Element-TEXTEN (dort erlaubt), inforef bleibt leer —
-        der Transport läuft allein über diese Datei + Root-Setting groups=1;
-        availability-group-ids remappt der Restore über das 'group'-Mapping."""
-        if not self.group_ref:
-            return "<groups>\n  <groupings>\n  </groupings>\n</groups>"
-        by_id = {v: g for g, v in self.group_ref.items()}
-        names = {g.get("id") or g.get("name"): g.get("name", "Gruppe")
-                 for g in self.spec.get("groups", [])}
-        parts = ["<groups>"]
-        for gid in sorted(by_id):
-            key = by_id[gid]
-            parts.append(
-                f'  <group id="{gid}">\n'
-                f"    {el('name', names.get(key, key))}\n"
-                f"    <idnumber>{xesc(str(key))}</idnumber>\n"
-                f"    <description>{NULL}</description>\n"
-                f"    {el('descriptionformat', 0)}\n"
-                f"    <enrolmentkey>{NULL}</enrolmentkey>\n"
-                f"    {el('picture', 0)}\n"
-                f"    {el('visibility', 0)}\n"
-                f"    {el('participation', 1)}\n"
-                f"    {el('timecreated', self.now)}\n"
-                f"    {el('timemodified', self.now)}\n"
-                f"    <group_members>\n    </group_members>\n"
-                f"  </group>")
-        parts.append("  <groupcustomfields>\n  </groupcustomfields>")
-        parts.append("  <groupings>\n    <groupingcustomfields>\n"
-                     "    </groupingcustomfields>\n  </groupings>")
-        parts.append("</groups>")
-        return "\n".join(parts)
-
-    def _gradebook_xml(self) -> str:
-        """ROOT-gradebook.xml: eine Kurs-Kategorie, das course-Item und die
-        Calculated-Items aus spec['gradebook']['calculated'] (Null-Item-Trick:
-        Formel = Σ Test-Item × Niveau-Gewicht; reine Doku-/Zeugnisgröße)."""
-        gb = self.spec.get("gradebook", {}) or {}
-        items = [grade_item_xml(
-            self.ids.gradeitem(), self.now, itemtype="course",
-            iteminstance=GRADE_CAT_ID, sortorder=1)]
-        # Kind-Kategorien (Diagnose-Modul-Modell): Gewicht als
-        # aggregationcoef2 + weightoverride=1 am Kategorie-Item —
-        # Serialisierung 1:1 nach Golden-Template (echtes 4.5-Backup).
-        child_cats = []
-        for c in gb.get("categories", []):
-            cid = self.grade_cat_ref[c["id"]]
-            child_cats.append(
-                f'    <grade_category id="{cid}">\n'
-                f"      {el('parent', GRADE_CAT_ID)}\n"
-                f"      {el('depth', 2)}\n"
-                f"      {el('path', f'/{GRADE_CAT_ID}/{cid}/')}\n"
-                f"      {el('fullname', c.get('name', c['id']))}\n"
-                f"      {el('aggregation', 13)}\n"
-                f"      {el('keephigh', 0)}\n"
-                f"      {el('droplow', 0)}\n"
-                f"      {el('aggregateonlygraded', 1)}\n"
-                f"      {el('aggregateoutcomes', 0)}\n"
-                f"      {el('timecreated', self.now)}\n"
-                f"      {el('timemodified', self.now)}\n"
-                f"      {el('hidden', 0)}\n"
-                f"    </grade_category>")
-            self.grade_sortorder += 1
-            items.append(grade_item_xml(
-                self.ids.gradeitem(), self.now, itemtype="category",
-                iteminstance=cid, sortorder=self.grade_sortorder,
-                aggregationcoef2=float(c.get("weight", 0.0)),
-                weightoverride=1, needsupdate=1))
-        for calc in gb.get("calculated", []):
-            weights = calc.get("weights", {})
-            terms, gmax = [], 0.0
-            for ref, w in weights.items():
-                meta = self.grade_meta.get(ref)
-                if meta is None:
-                    raise ValueError(
-                        f"gradebook.calculated: ref '{ref}' unbekannt — kein "
-                        f"Quiz mit dieser idnumber im Kurs")
-                terms.append(f"##gi{meta['id']}##*{float(w):g}")
-                gmax += meta["grademax"] * float(w)
-            formula = "=" + " + ".join(terms) if terms else None
-            self.grade_sortorder += 1
-            items.append(grade_item_xml(
-                self.ids.gradeitem(), self.now, itemtype="manual",
-                categoryid=GRADE_CAT_ID,
-                itemname=calc.get("itemname", "Gesamtscore (gewichtet)"),
-                idnumber=calc.get("idnumber"),
-                calculation=formula,
-                grademax=calc.get("grademax", gmax or 100.0),
-                gradepass=float(calc.get("gradepass", 0.0)),
-                sortorder=self.grade_sortorder, needsupdate=1))
-        cat = (
-            f'    <grade_category id="{GRADE_CAT_ID}">\n'
-            f"      <parent>{NULL}</parent>\n"
-            f"      {el('depth', 1)}\n"
-            f"      {el('path', f'/{GRADE_CAT_ID}/')}\n"
-            f"      {el('fullname', '?')}\n"
-            f"      {el('aggregation', 13)}\n"
-            f"      {el('keephigh', 0)}\n"
-            f"      {el('droplow', 0)}\n"
-            f"      {el('aggregateonlygraded', 1)}\n"
-            f"      {el('aggregateoutcomes', 0)}\n"
-            f"      {el('timecreated', self.now)}\n"
-            f"      {el('timemodified', self.now)}\n"
-            f"      {el('hidden', 0)}\n"
-            f"    </grade_category>"
-        )
-        return (
-            "<gradebook>\n"
-            "  <attributes>\n"
-            f"    <calculations_freeze>{NULL}</calculations_freeze>\n"
-            "  </attributes>\n"
-            "  <grade_categories>\n" + "\n".join([cat] + child_cats)
-            + "\n  </grade_categories>\n"
-            "  <grade_items>\n" + "\n".join(items) + "\n  </grade_items>\n"
-            "  <grade_letters>\n  </grade_letters>\n"
-            "  <grade_settings>\n"
-            # id LEER lassen, nie $@NULL@$: Moodle dekodiert den NULL-
-            # Platzhalter nur in Element-Texten, nicht in Attributen — der
-            # literale String landet sonst in backup_ids_temp.itemid (int)
-            # und bricht den Restore mit dmlwriteexception ab.
-            '    <grade_setting id="">\n'
-            "      <name>minmaxtouse</name>\n"
-            "      <value>1</value>\n"
-            "    </grade_setting>\n"
-            "  </grade_settings>\n"
-            "</gradebook>"
-        )
 
     def _users_xml(self) -> str:
         parts = ["<users>"]
@@ -1947,7 +1585,7 @@ def _feedback_item(ctx, it, pos):
         # name MUST be the empty string, never NULL: mdl_feedback_item.name is
         # NOT NULL DEFAULT '' — a $@NULL@$ here aborts the whole restore with
         # dmlwriteexception "Column 'name' cannot be null" (real bug 2026-07-15,
-        # reproduced in the local Moodle 4.5 lab).
+        # killed everything after the feedback activity).
         name, label, pres, hasvalue = "", f"info{pos}", it.get("text", ""), 0
     elif t == "multichoice":
         # 'r' = radio (single choice); '>>>>>' separates subtype from options,
@@ -2062,27 +1700,6 @@ def b_quiz(ctx):
         feedbacks_xml = (
             f"    <feedbacks>\n" + "\n".join(rows_fb) + "\n    </feedbacks>\n"
         )
-    # Grade-Item des Quiz (activities/quiz_X/grades.xml): Basis für
-    # availability-refs (Einstufung) und ##gi##-Formeln (kumulative Doku).
-    gid = a.get("_gradeitem_id") or ctx.b.ids.gradeitem()
-    ctx.b.grade_sortorder += 1
-    ctx.b.n_quiz_grade_items += 1
-    if a.get("idnumber"):
-        ctx.b.grade_meta[a["idnumber"]] = {"id": gid, "grademax": float(grade)}
-    gradepass_pct = float(a.get("gradepass", 0))  # in Prozent von grademax
-    # Diagnose-Modul-Modell: Quiz einer benannten Kategorie zuordnen
-    # (einstufung Gewicht 0 / leistung) — Default bleibt die Kurs-Kategorie.
-    cat_key = a.get("grade_category")
-    if cat_key is not None and cat_key not in ctx.b.grade_cat_ref:
-        raise ValueError(f"Quiz {a.get('name')!r}: grade_category "
-                         f"'{cat_key}' fehlt in gradebook.categories")
-    quiz_catid = ctx.b.grade_cat_ref.get(cat_key, GRADE_CAT_ID)
-    ctx.grade_item_xml = grade_item_xml(
-        gid, ctx.b.now, itemtype="mod", itemmodule="quiz",
-        iteminstance=ctx.instance, itemnumber=0, categoryid=quiz_catid,
-        itemname=a.get("name", "Quiz"), idnumber=a.get("idnumber"),
-        grademax=float(grade), gradepass=float(grade) * gradepass_pct / 100.0,
-        sortorder=ctx.b.grade_sortorder)
     return (
         f'  <quiz id="{ctx.instance}">\n'
         f"    {el('name', a.get('name', 'Quiz'))}\n"
