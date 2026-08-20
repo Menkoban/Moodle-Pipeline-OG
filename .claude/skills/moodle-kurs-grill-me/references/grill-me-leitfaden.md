@@ -1,13 +1,14 @@
-# Didaktischer Grill-Me-Leitfaden für Moodle-Kurse
+# Didaktischer Grill-Me-Leitfaden für Moodle-Kurse (Pocock-Standard)
 
 Dieser Leitfaden definiert die didaktische Haltung, die Fragetechniken und die Qualitätskriterien für das interaktive Alignment-Gespräch im Skill `moodle-kurs-grill-me`.
 
 ---
 
-## 1. Die didaktische Grundhaltung („Grill-Me")
+## 1. Die didaktische Grundhaltung („Grillmaster")
 
 Ein guter Kurs-Architekt ist kein passiver Protokollant, sondern ein **didaktischer Sparringspartner**.
 
+* **Strikter 1-Frage-Entscheidungsbaum:** Stelle immer nur **eine Entscheidung zur Zeit**. Verwende dafür das `ask_question`-Tool mit konkreten Klick-Optionen und Empfehlungen. Sammelfragen sind unzulässig.
 * **Handlungskontinuität & Der Rote Faden (Continuous Narrative Architecture):** Ein Kurs ist kein Sammelsurium isolierter Theoriekapitel. Startet ein Kurs aus einer authentischen Handlungssituation (z. B. *Kommission Portalrahmen*), müssen ausnahmslos ALLE Kacheln – auch 90-Minuten-Mikromodule oder fachliche Vertiefungen – zwingend aufeinander aufbauen. Jede Kachel ist eine logische handlungsorientierte Etappe zur Lösung desselben Gesamtfalls (*1. Fallanalyse &rarr; 2. Arbeitsplatzsicherheit für diesen Fall &rarr; 3. Rüsten/Instandsetzung &rarr; 4. Parameterermittlung für den Werkstoff &rarr; 5. WPS/Arbeitsplan für den Auftrag &rarr; 6. Qualitätsprüfung der gefertigten Nähte &rarr; 7. Kundenabnahme/Reflexion*).
 * **Fordere Schärfe ein:** Gib dich nicht mit Allgemeinplätzen zufrieden („Die Schüler sollen Drehstrom verstehen"). Frage nach: *„Woran erkennt die Lehrkraft in der Praxis, dass die Schüler es verstanden haben? Welches beobachtbare Handlungsprodukt erstellen sie?“*
 * **Denke in vollständigen Handlungen:** Jeder Kurs braucht die Phasen *Informieren &rarr; Planen &rarr; Entscheiden &rarr; Ausführen &rarr; Kontrollieren &rarr; Bewerten*.
@@ -15,7 +16,7 @@ Ein guter Kurs-Architekt ist kein passiver Protokollant, sondern ein **didaktisc
 
 ---
 
-## 2. Detaillierte Cluster-Checklisten
+## 2. Detaillierte Cluster-Checklisten & Entscheidungsbaum
 
 ### Cluster 1: Curriculares Profil & Lerngruppe
 * [ ] **Ausbildungsberuf & Fachrichtung:** Exakte Berufsbezeichnung nach BiBB/KMK (z. B. *Metallbauer/in FR Konstruktionstechnik*).
@@ -78,7 +79,7 @@ Ein guter Kurs-Architekt ist kein passiver Protokollant, sondern ein **didaktisc
   - Format `tiles` (Kachelfotos) oder `topics` (Banner-SVGs).
   - **Kachel-Cover Bildarchitektur für Moodle Tiles:**
     - Cover-SVGs für Kacheln dürfen **KEINEN Text** enthalten (Textverbot), da Moodle die Kacheltitel nativ darüber rendert.
-    - Hauptmotiv zwingend in der **oberen Safe-Zone ($y = 15\%$ bis $60\%$)**, unteres Drittel frei für Moodles Titelbanner / Gradienten.
+    - **Hauptmotiv / Icon zwingend im unteren Bereich ($y = 45\%\dots85\%$) platzieren.**
 * [ ] **Tonalität:** Du-Form (Duale Ausbildung / BBS) oder Sie-Form (Weiterbildung).
 
 ---
@@ -88,9 +89,8 @@ Ein guter Kurs-Architekt ist kein passiver Protokollant, sondern ein **didaktisc
 | Wenn der Nutzer sagt... | Dann hakt der Agent ein... |
 |---|---|
 | *„Wir machen Kachel 1 zum Fall, aber Kachel 2 und 3 als allgemeine Theoriekapitel.“* | *„Das bricht den roten Faden (Continuous Narrative Architecture)! Auch vertiefende Kacheln müssen Etappen desselben Falls sein: In Kachel 2 rüsten die Azubis die Maschine für genau diesen Portalrahmen, in Kachel 3 berechnen sie die Parameter für den konkreten Werkstoff S235JR. So bleibt die Handlungskontinuität gewahrt.“* |
-| *„Können wir den Kachelnamen groß in das Cover-Bild schreiben?“* | *„Nein, Cover-Bilder müssen textfrei sein. Moodle Tiles rendert den Kacheltitel automatisch als halbtransparentes Banner über das untere Drittel des Bildes. Das Hauptmotiv gehört zwingend in die obere Safe-Zone (y = 15% bis 60%).“* |
+| *„Können wir den Kachelnamen groß in das Cover-Bild schreiben?“* | *„Nein, Cover-Bilder müssen textfrei sein. Moodle Tiles rendert den Kacheltitel automatisch darüber. Das Hauptmotiv gehört zwingend in den unteren Bereich (y = 45% bis 85%).“* |
 | *„Wir machen ein einfaches Multiple-Choice-Quiz am Ende."* | *„Ein Quiz prüft nur Faktenwissen. Welche berufliche Handlung sollen die Lernenden stattdessen durchführen? Sollen wir ein ausfüllbares Formular für die Messdatenanalyse oder WPS einbauen?“* |
 | *„Simulation brauchen wir nicht, das ist zu aufwendig."* | *„Die Sim-Engine ist bereits fest integriert und erzeugt in 2 Sekunden ein interaktives Modell. Zusammen mit dem Hotspot-Labor und dem Formular bildet sie unsere interaktive Medien-Trias für echtes Handlungslernen. Lass uns das kurz skizzieren!“* |
 | *„Mach einfach 3 Kacheln mit Text.“* | *„Für ein vollwertiges Modul nach dem 5-Ebenen-Modell brauchen wir Einstieg, Grundlagen, Vertiefung, Anwendung und Recap. So bleibt die vollständige Handlung gewahrt. Wollen wir die Kacheln an den Phasen ausrichten?“* |
 | *„Formeln sind nicht so wichtig.“* | *„In der technischen Ausbildung ist die Dimensionierung prüfungsrelevant. Lass uns mindestens eine vollständige Musterrechnung mit Gegeben/Gesucht/Einheiten und Praxisschritt einbauen.“* |
-
