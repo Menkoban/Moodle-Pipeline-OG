@@ -1,204 +1,179 @@
-# moodle-mbz-builder
+# moodle-mbz-builder 🎓📦
 
-**Didaktischer Kurs-Generator für Moodle.** Aus einer einfachen JSON-Kursdefinition
-entsteht eine importfertige **Moodle-Sicherung (`.mbz`)** für Moodle 4.1+ — inklusive
-selbstgezeichneter Fachdiagramme, interaktiver Simulationen, druckbarer Materialien
-(PDF/PPTX), einer bearbeitbaren Vorschau und eines KI-erzeugten Recap-Videos.
+[![Moodle 4.1+](https://img.shields.io/badge/Moodle-4.1%2B%20%7C%204.5%20LTS-orange.svg)](https://moodle.org/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Format Tiles](https://img.shields.io/badge/Plugin-format__tiles-green.svg)](https://moodle.org/plugins/format_tiles)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Der Skill ist als [Claude-Code-Skill](https://docs.claude.com/en/docs/claude-code)
-gebaut: Man beschreibt der KI einen Kurs, sie schreibt die `course.json`, zeichnet
-die Diagramme und durchläuft die Bau-Pipeline. Man kann die Skripte aber auch
-**eigenständig** von Hand ausführen.
+**Automatisierter didaktischer Kurs-Generator für Moodle.**  
+Aus einer einfachen JSON-Kursdefinition (`course.json`) erzeugt `moodle-mbz-builder` eine vollständig strukturierte, importfertige **Moodle-Kurssicherung (`.mbz`)** für Moodle 4.1+ und 4.5 LTS — inklusive selbstgezeichneter Fachdiagramme, interaktiver Medien (Hotspots, Canvas-Simulationen, Digitalprotokolle), druckbarer Begleitmaterialien (PDF/PPTX/DOCX), einer eigenständigen HTML-Vorschau und KI-gestützter Video-Recaps via NotebookLM.
 
 ---
 
-## Was am Ende herauskommt
+## 🌟 Highlights & Kern-Features
 
-| Datei | Inhalt |
+- 🎯 **Duales Goldstandard-System:**
+  - ⚙️ **Gewerblich-Technischer Goldstandard:** `assets/fewshot_bohrmaschine.json` (Fertigungstechnik, ZDQ-5-Ebenen-Progression, Arbeitssicherheit, Arbeitsplan-WPS & 4-Stufen-Rubriken).
+  - 📐 **Mathematik-, Stochastik- & MINT-Goldstandard:** `assets/fewshot_mathematik_statistik.json` (Beschreibende Statistik, DIN 55303, standardisierte Lernziele mit Lehrerduplikat, reale Aufgabenblätter mit Moodle-Abgabeaktivitäten (`assign`), Formel-Anatomie-Hotspots & reaktive Schieberegler-Canvas-Simulationen).
+- 🧩 **Interaktive Medien-Trias:**
+  - 🔍 **Formel- & Bauteil-Hotspots (`hotspot_engine.py`):** Zoom- und klickbare Pins im oberen Dockingbereich ohne Verdeckung von Formelzeichen und Texten.
+  - 🎛️ **Reaktive Schieberegler-Simulationen (`sim_engine.py`):** 60-fps Canvas-Berechnungen mit Live-DOM-Aktualisierung und interaktiven Prüf-Challenges.
+  - 📝 **Digitale Protokolle & Formulare (`formular`):** Strukturierte 6-Schritte-Berechnungstabellen mit Indizes, Formelvalidierung und Autosave.
+- 📐 **Strikte mathematische Typografie & Vektorgeometrie:**
+  - Vektorielle Summenzeichen (Σ) mit horizontalen Schenkeln und rechts geöffnetem Vertex (`validate_math_symbols.py`).
+  - Zentrierte Makrons (x̄) exakt über Variablen, saubere Indizes (x_i, n_i, s²) und standardisierte MathJax-Bruchstriche.
+- 🛡️ **Automatisierte Qualitäts-Gates (Gate 0 bis 8):**
+  - Strikte Validierungskette: `validate_svg.py`, `validate_math_formulas.py`, `validate_math_symbols.py`, `validate_interactive_media.py`, `validate_mbz.py` und E2E-Live-Restore via `check_delivery.py`.
+- 📄 **Druckbare Begleitmaterialien:** Automatische Generierung von Einzel-PDFs, editierbaren PPTX-Präsentationsfolien und dem zusammenhängenden `Kurs-Materialdossier.pdf`.
+- 🎬 **NotebookLM Video-Recap:** Integrierter Workflow zur Erstellung und Einbindung didaktischer Video-Zusammenfassungen.
+
+---
+
+## 🏗️ Architektur der Moodle-Pipeline
+
+```mermaid
+graph TD
+    G0["🚀 Gate 0: Didaktisches Alignment<br/><b>moodle-kurs-grill-me</b><br/><i>(Cluster-Interview & Steckbrief)</i>"] -->|kurs-steckbrief.json| G1
+    
+    subgraph MBZ_BUILDER ["📦 moodle-mbz-builder (Dieser Skill)"]
+        G1["🎨 Gate 1: course.json & SVG-Diagramme<br/><i>autofit_svg.py & validate_svg.py</i>"] --> G2["👁️ Gate 2: Editor & HTML-Vorschau<br/><i>preview_mbz.py & build_editor_widget.py</i>"]
+        G2 --> G3["🧪 Gate 3: Interaktive Medien-Trias<br/><i>hotspot_engine.py & build_simulation.py</i>"]
+        G3 --> G4["📑 Gate 4: Material-Export<br/><i>make_materials.py (PDF, PPTX, Dossier)</i>"]
+        G4 --> G5["📦 Gate 5: MBZ-Archivierung<br/><i>build_mbz.py & validate_mbz.py</i>"]
+        G5 --> G6["🎬 Gate 6: Video-Recap (NotebookLM)<br/><i>export_course_dossier.py</i>"]
+        G6 --> G7["🛡️ Gate 7: Endabnahme & QA<br/><i>check_delivery.py (Live-Restore)</i>"]
+    end
+
+    G7 -->|sicherung.mbz| G8["🎮 Gate 8: Moodle-Spielwiese<br/><b>moodle-spielwiese</b> (Port 8090)<br/><i>(Erprobung mit Testschülern)</i>"]
+
+    style G0 fill:#0284c7,stroke:#0369a1,color:#fff
+    style MBZ_BUILDER fill:#f8fafc,stroke:#64748b,stroke-width:2px
+    style G7 fill:#059669,stroke:#047857,color:#fff
+    style G8 fill:#d97706,stroke:#b45309,color:#fff
+```
+
+---
+
+## 📦 Was am Ende herauskommt
+
+| Ausgabedatei / Ordner | Beschreibung |
 |---|---|
-| `<kurs>.mbz` | Die Kurssicherung — in Moodle über *Kursverwaltung → Wiederherstellen* importierbar |
-| `<kurs>_vorschau.html` | Interaktive Komplettvorschau im Browser (ohne Moodle) |
-| `materials/` | Pro Infoblatt ein Druck-**PDF** und eine editierbare **PPTX** |
-| `sims/` | Interaktive HTML-Simulationen (Schieberegler → Werte live) |
-| `assets/` | Die selbstgezeichneten SVG-Diagramme |
-
-Didaktisch folgt jeder Kurs dem **5-Ebenen-Modell des ZDQ (vom Autor erweitert)**
-(Lernelement → Lernbaustein → Lernabschnitt → Modul → Lernkurs) mit fester
-Abschnitts-Sequenz: *Einführung → Grundlagen → Vertiefung → Anwendung →
-Kurs-Recap → Glossar → Material für Lehrkräfte*.
+| `sicherung-moodle2-<kurs>.mbz` | Das finale Moodle-Backup — direkt importierbar über *Kursverwaltung → Wiederherstellen*. |
+| `<kurs>_vorschau.html` | Vollständige, interaktive Lese-Vorschau aller Kacheln, Aktivitäten, Quizzes und Lösungen im Browser (ohne Moodle). |
+| `editor.html` | Interaktives Kurs-Dashboard und Kachel-Editor. |
+| `materials/` | Druckfertige **PDFs**, editierbare **PPTX-Folien** und das `Kurs-Materialdossier.pdf`. |
+| `sims/` | Selbsttragende, interaktive HTML5-Simulationen und Hotspot-Widgets. |
+| `assets/` | Textfreie, DIN-konforme Vektordiagramme und Kachel-Cover in der sicheren Bildzone. |
 
 ---
 
-## Herunterladen & installieren
+## 💻 Installation & Setup
 
-Dies ist ein **[Claude-Code-Skill](https://docs.claude.com/en/docs/claude-code)** —
-du klonst ihn in den Skills-Ordner deiner Claude-Code-Installation
-(`~/.claude/skills/`); danach findet Claude ihn automatisch. Voraussetzung:
-**Git** und **Python 3.11+**.
+Dieser Skill kann sowohl mit **Antigravity / Gemini CLI** als auch mit **Claude Code** oder als **Standalone Python CLI** betrieben werden.
 
-**Linux / macOS** (auch Windows Git-Bash):
+### Voraussetzungen
+- **Python 3.10+** (inkl. `pip`)
+- **Git**
+- *(Optional für E2E-Browsertests):* `playwright` (`pip install playwright && playwright install chromium`)
 
-```bash
-git clone https://github.com/Menkoban/moodle-mbz-builder ~/.claude/skills/moodle-mbz-builder
-python3 -m pip install -r ~/.claude/skills/moodle-mbz-builder/requirements.txt
-```
+### 1. Repository klonen
 
-**Windows (PowerShell):**
-
+**Für Antigravity / Gemini CLI (Standard):**
 ```powershell
-git clone https://github.com/Menkoban/moodle-mbz-builder "$HOME\.claude\skills\moodle-mbz-builder"
-python -m pip install -r "$HOME\.claude\skills\moodle-mbz-builder\requirements.txt"
+# Windows (PowerShell)
+git clone https://github.com/Menkoban/moodle-mbz-builder.git "$HOME\.gemini\config\skills\moodle-mbz-builder"
+```
+```bash
+# Linux / macOS
+git clone https://github.com/Menkoban/moodle-mbz-builder.git ~/.gemini/config/skills/moodle-mbz-builder
 ```
 
-> **Privates Repo?** Vorher anmelden — am einfachsten mit der GitHub-CLI:
-> `gh auth login`, dann `gh repo clone Menkoban/moodle-mbz-builder <zielpfad>`.
-> Alternativ per SSH: `git clone git@github.com:Menkoban/moodle-mbz-builder <zielpfad>`.
-> Ist das Repo öffentlich, funktioniert der HTTPS-Befehl oben direkt.
-
-**Aktualisieren:** `git -C ~/.claude/skills/moodle-mbz-builder pull`
-(Windows: `git -C "$HOME\.claude\skills\moodle-mbz-builder" pull`).
-
-Der Skill ist self-contained: alle Skripte finden einander relativ zum Ordner,
-egal wohin er installiert wird. Kein Moodle nötig, um die `.mbz` zu bauen.
-`requirements.txt` deckt die Materialien-Pipeline **und** die automatische
-Diagramm-Prüfung ab.
-
----
-
-## Schnellstart
-
-**1. Kursdefinition schreiben** (`course.json`, minimal):
-
-```json
-{
-  "course": {"fullname": "Mein Kurs", "shortname": "MK-1", "format": "topics"},
-  "sections": [
-    {"name": "Einführung", "summary": "<p>Worum es geht</p>", "activities": [
-      {"type": "label", "name": "Hinweis", "intro": "<p>Zuerst lesen</p>"},
-      {"type": "page",  "name": "Lektion 1", "content": "<h3>Thema</h3><p>…</p>"}
-    ]}
-  ]
-}
+**Für Claude Code:**
+```powershell
+# Windows (PowerShell)
+git clone https://github.com/Menkoban/moodle-mbz-builder.git "$HOME\.claude\skills\moodle-mbz-builder"
+```
+```bash
+# Linux / macOS
+git clone https://github.com/Menkoban/moodle-mbz-builder.git ~/.claude/skills/moodle-mbz-builder
 ```
 
-## Schnellstart
-
-**1. Didaktisches Briefing ("Grill-Me Gate"):**
-Führe vor dem Bauen das strukturierte 6-Cluster-Interview mit dem Skill `moodle-kurs-grill-me` durch, um den `kurs-steckbrief.json` abzustimmen.
-
-**2. Kursdefinition schreiben** (`course.json`, minimal):
-
-```json
-{
-  "course": {"fullname": "Mein Kurs", "shortname": "MK-1", "format": "tiles", "didaktik_profil": "zdq"},
-  "sections": [
-    {"name": "Über dieses Modul", "summary": "<p>Worum es geht</p>", "activities": [
-      {"type": "label", "name": "Begrüßung", "intro": "<p>Zuerst lesen</p>"}
-    ]}
-  ]
-}
-```
-
-**3. Pipeline durchlaufen** (Standard für jeden Kurs):
+### 2. Python-Abhängigkeiten installieren
 
 ```bash
-SK=<skill-dir>/scripts
-
-python $SK/autofit_svg.py       assets/                         # SVG-viewBox passgenau (kein Clipping)
-python $SK/validate_svg.py      course.json --strict            # Diagramme prüfen (Überlappung/Textüberlauf)
-python $SK/build_simulation.py  course.json -o course.sim.json  # nur falls Simulationen/Formulare enthalten
-python $SK/make_materials.py    course.sim.json -o course.materialized.json   # PDF/PPTX/DOCX erzeugen
-python $SK/build_mbz.py         course.materialized.json -o mein-kurs.mbz
-python $SK/preview_mbz.py       course.json -o mein-kurs_vorschau.html
-python $SK/build_editor_widget.py course.json                   # WYSIWYG-Editor erzeugen
-python $SK/check_delivery.py    .                               # 9-Stufen QA Gate + Live-Restore Lab
-```
-
-Ohne Simulationen entfällt `build_simulation.py` (dann direkt `make_materials.py course.json …`).
-Ohne Infoblätter (`material:true`) entfällt `make_materials.py`.
-
-**4. In Moodle importieren oder in der Spielwiese testen:**
-- *Produktiv-Moodle:* Kursverwaltung → Wiederherstellen → `.mbz` hochladen (beim Restore „Nutzerdaten einbeziehen" aktiviert lassen).
-- *Lokale Spielwiese (`moodle-spielwiese`):* `python spielwiese.py import <kurs.mbz> --schueler` (spielt den Kurs auf Port 8090 ein und schreibt Testschüler ein).
-
----
-
-## Unterstützte Bausteine
-
-**Arbeitsmaterialien:** `label`, `page` (Infoblatt mit `material:true`), `url`, `resource` (Datei-Download), `folder`, `book`.
-**Aktivitäten:** `assign` (Aufgabe mit Rubrik), `quiz` (Wahr/Falsch + Multiple-Choice mit formativem Feedback), `forum`, `glossary`, `choice`, `feedback`, `simulation` (Schieberegler-Simulationen), `hotspot` (interaktive Bilderkundung), `formular` (ausfüllbare Arbeitsblätter mit Autosave).
-
-Das vollständige Feld-Schema steht in
-[`references/course-spec.md`](references/course-spec.md).
-
----
-
-## Kernfunktionen
-
-- **Infoblatt-Bauplan.** Jede `page` mit `"material": true` wird zum Infoblatt
-  (Kopfleiste + Erklär-Fließtext + Diagramm + Stichpunkte + Merke-Box) und
-  automatisch als PDF + PPTX exportiert.
-- **Selbstgezeichnete Diagramme & Schaltungen.** Beschriftete SVG-Fachdiagramme und DIN EN 60617 Schaltungen (`circuit_builder.py`); `autofit_svg.py`/`validate_svg.py` messen echte Textbreiten und verhindern abgeschnittene Ränder, Überlappungen und Pfeil-über-Label-Defekte.
-- **Interaktive Hotspots & Simulationen.** `hotspot_engine.py` baut H5P-ähnliche Hotspot-Modelle; `build_simulation.py` liefert dynamische Schieberegler-Simulationen (offline, CSP-sicher, Dark-Mode).
-- **Formatives Feedback.** Quizze tragen Antwort-, Allgemein- und Gesamtfeedback.
-- **Bearbeitbare Vorschau (Editor-Widget).** `build_editor_widget.py` erzeugt eine WYSIWYG-Ansicht (`editor.html`), in der man Struktur und Inhalte direkt editiert.
-- **Automatische 9-Stufen QA-Pipeline (`check_delivery.py`).** Prüft Vollständigkeit, XML-Integrität, relative Pfade, Materialien, Recap und führt einen automatischen Live-Restore in der lokalen Moodle 4.5 Testinstanz durch.
-- **Pflicht-Attribution.** Jeder Kurs trägt den Hinweis, dass er mit Hilfe von künstlicher Intelligenz und in Kooperation mit dem *Labor Didaktik der Technik* der *Hochschule Osnabrück* entstanden ist.
-
----
-
-## Projektstruktur
-
-```
-moodle-mbz-builder/
-├── SKILL.md                  # Vollständige Anleitung für die KI (Startpunkt)
-├── README.md                 # Diese Bedienungsanleitung
-├── requirements.txt          # Python-Abhängigkeiten
-├── scripts/                  # Die Bau-Pipeline
-│   ├── build_mbz.py          #   Kern-Generator (JSON → .mbz)
-│   ├── check_delivery.py     #   9-Stufen QA-Suite & Live-Restore Gate
-│   ├── make_materials.py     #   PDF/PPTX pro Infoblatt + Materialdossier
-│   ├── build_simulation.py   #   Simulations-Specs → HTML-Ressourcen
-│   ├── sim_engine.py         #   generische Simulations-Engine + Bibliothek
-│   ├── hotspot_engine.py     #   interaktive Hotspot-Modelle (H5P-Alternative)
-│   ├── circuit_builder.py    #   DIN EN 60617 Vektor-Schaltplan-Assembler
-│   ├── didactic_profiles.py  #   Profil-Definitionen (ZDQ, Tandem, etc.)
-│   ├── autofit_svg.py        #   viewBox passgenau wachsen lassen
-│   ├── validate_svg.py       #   Diagramm-Lint (Clipping/Überlappung/…)
-│   ├── svg_geometry.py       #   Textbreiten-Messung (Basis der SVG-Prüfung)
-│   ├── validate_mbz.py       #   .mbz-Strukturprüfung
-│   ├── preview_mbz.py        #   HTML-Komplettvorschau
-│   ├── build_editor_widget.py#   bearbeitbare WYSIWYG-Vorschau
-│   ├── export_course_dossier.py  # NotebookLM-Quelle (Markdown)
-│   └── set_recap_video.py    #   Recap-Video in den Kurs einbauen
-├── references/               # Nachschlagewerke
-│   ├── course-design.md      #   Didaktik-Playbook (5-Ebenen-Modell, Bauplan)
-│   ├── course-spec.md        #   JSON-Schema aller Felder
-│   ├── activity-types.md     #   Feld-Schemata je Aktivitätstyp
-│   ├── mbz-format.md         #   das .mbz-Format im Detail
-│   └── notebooklm-video-recap.md  # Video-Recap-Workflow
-├── assets/                   # Few-Shot-Kurs + Schaltsymbole + Beispiel-Diagramme
-│   ├── fewshot_bohrmaschine.json  # didaktisches Gold-Standard-Beispiel
-│   ├── schaltsymbole/        # DIN EN 60617 Vektorsymbol-Bibliothek
-│   └── *.svg
-└── tests/                    # pytest-Suite
+cd moodle-mbz-builder
+pip install -r requirements.txt
+playwright install chromium
 ```
 
 ---
 
-## Weiterführende Dokumentation
+## 🚀 Schnellstart & Workflow
 
-- **[`SKILL.md`](SKILL.md)** — die vollständige Anleitung (Intake, Pipeline,
-  Editor-Widget-Workflow, Kompatibilitätshinweise). Startpunkt für die KI.
-- **[`references/course-design.md`](references/course-design.md)** — das
-  didaktische „Gehirn": 5-Ebenen-Modell, Pflicht-Sequenz, Infoblatt-Bauplan,
-  Lernziel-Operatoren, SVG-Autorenregeln, Qualitäts-Checkliste.
-- **[`assets/fewshot_bohrmaschine.json`](assets/fewshot_bohrmaschine.json)** — ein
-  voll ausgearbeiteter Beispielkurs als Vorlage.
+### 1. Kursdefinition erstellen (`course.json`)
+Erstelle eine Kursdefinition basierend auf einem der Goldstandards:
+```bash
+# Gewerblich-Technischer Kurs:
+cp assets/fewshot_bohrmaschine.json course.json
 
-Tests laufen mit `python -m pytest tests/ -v`.
+# Mathematik- & MINT-Kurs:
+cp assets/fewshot_mathematik_statistik.json course.json
+```
+
+### 2. Build-Pipeline ausführen
+
+Die Erstellung erfolgt in 4 einfachen Schritten:
+
+```bash
+# 1. Simulationen & Hotspots generieren
+python scripts/build_simulation.py course.json -o course.sim.json
+
+# 2. Begleitmaterialien (PDF, PPTX, Dossier) erzeugen
+python scripts/make_materials.py course.sim.json -o course.sim.materialized.json
+
+# 3. Moodle-Kurssicherung (.mbz) packen
+python scripts/build_mbz.py course.sim.materialized.json -o mein-moodle-kurs.mbz
+
+# 4. Lese-Vorschau erzeugen
+python scripts/preview_mbz.py course.json -o mein-moodle-kurs_vorschau.html
+```
+
+### 3. Qualitätsprüfung & QA-Gate
+
+Führe vor der Auslieferung die Endabnahme durch:
+```bash
+python scripts/check_delivery.py . --allow-video-placeholder
+```
+*Prüft automatisch XML-Wohlgeformtheit, relative Pfade, mathematische Typografie, Vektorsymbole, Medien-Vollständigkeit und führt einen Live-Restore-Test im lokalen Moodle-Lab durch.*
 
 ---
 
-*Erstellt mit Hilfe von künstlicher Intelligenz, in Kooperation mit dem Labor
-Didaktik der Technik der Hochschule Osnabrück.*
+## 🛠️ CLI-Werkzeuge & Skripte im Überblick
+
+| Skript | Aufgabe |
+|---|---|
+| `scripts/build_mbz.py` | Erzeugt das fertige Moodle-Gzip-Tar-Archiv (`.mbz`) aus der JSON-Spezifikation. |
+| `scripts/build_simulation.py` | Kompiliert interaktive Schieberegler-Simulationen und Hotspots in eigenständige HTML-Ressourcen. |
+| `scripts/hotspot_engine.py` | Generiert interaktive Formel- und Bauteil-Anatomien mit responsivem Pin-Docking. |
+| `scripts/make_materials.py` | Wandelt Infoblätter (`material: true`) in PDFs, PPTX-Folien und Lehrer-Dossiers um. |
+| `scripts/preview_mbz.py` | Rendert eine eigenständige Komplett-Vorschau (`_vorschau.html`) ohne Moodle-Instanz. |
+| `scripts/validate_mbz.py` | Tiefgehende statische Validierung des `.mbz`-Archivs (XML, SHA1-Pool, Module, Rubriken). |
+| `scripts/validate_math_symbols.py` | Geometrische Vektorprüfung für mathematische Zeichen (Σ, x̄, √). |
+| `scripts/validate_math_formulas.py` | Typografie-Prüfung für HTML-Subskripte, MathJax-Brüche und Variablensymbole. |
+| `scripts/validate_svg.py` | Prüft SVGs auf viewBox, Farbkontraste, Schriftgrößen und Safe-Zones. |
+| `scripts/check_delivery.py` | Zentrales Gate-Skript: Führt alle Validatoren und den Moodle-Live-Restore aus. |
+
+---
+
+## 🤝 Zusammenarbeit in der Pipeline
+
+`moodle-mbz-builder` arbeitet Hand in Hand mit den weiteren Modulen der Moodle-Suite:
+- 📋 [**moodle-kurs-grill-me**](https://github.com/Menkoban/moodle-kurs-grill-me): Didaktisches Alignment-Interview vor dem Kursbau.
+- 🧪 [**moodle-testinstanz**](https://github.com/Menkoban/moodle-testinstanz): Steriles Moodle-4.5-Lab für automatisierte Live-Restore-Checks.
+- 🎮 [**moodle-spielwiese**](https://github.com/Menkoban/moodle-spielwiese): Persistente Moodle-4.5-Spielwiese (Port 8090) zur Erprobung mit Testschülern.
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt ist unter der **MIT-Lizenz** lizenziert.
