@@ -298,9 +298,9 @@ Für das Moodle-Kachelformat (`format_tiles`) erzeugte Kachel-Cover (`cover_<slu
 1. **Striktes Textverbot im Cover:**
    - Cover-SVGs für Kacheln dürfen **KEINEN Text** enthalten.
    - *Begründung:* Moodle Tiles rendert den Kacheltitel nativ als halbtransparentes Overlay über das Bild. Text im Bild führt zu unleserlicher Doppelbeschriftung und Darstellungsfehlern auf mobilen Geräten.
-2. **Safe-Zone-Architektur ($y = 15\%$ bis $60\%$):**
-   - **Obere Safe-Zone ($y = 15\dots60\%$):** Das symbolstarke, kontrastreiche Hauptmotiv (z. B. Schweißbrenner, Sensor, Getriebe, Schaltschrank, Messgerät) wird zwingend in der oberen Bildhälfte platziert.
-   - **Unteres Drittel ($y > 65\%$ frei halten):** Das untere Drittel des Covers muss frei von fokalen Motiven, feinen Details oder Symbolen bleiben, da Moodle hier den Kacheltitel und den abgedunkelten Verlauf einblendet.
+2. **Safe-Zone & Icon-Positionierung ($y = 45\%$ bis $85\%$):**
+   - **Unterer Bereich ($y = 45\dots85\%$):** Das symbolstarke, kontrastreiche Hauptmotiv bzw. Icon (z. B. Schweißbrenner, Sensor, Getriebe, Schaltschrank, Messgerät) wird zwingend in den **unteren Bereich / unteren Rand** platziert.
+   - **Oberer Bereich ($y < 45\%$):** Dient als ruhiger technischer Hintergrund (z. B. feine Blueprint-Gitter, Schaltungs-HUDs oder dezente Radial-Glows).
 3. **Farbwelt & Format:**
    - 16:9-Format (z. B. 1200×675 px oder 800×450 px).
    - Ruhiger, dezenter Hintergrund mit technischer Tiefe; Hauptmotiv klar freigestellt und mit prägnanten Akzentfarben akzentuiert.
@@ -580,7 +580,7 @@ Infoblättern erreicht so von allein ihr Wort-Soll.
 9. `material:true` auf allen Infoblättern &rarr; PDF/PPTX automatisch; Lehrkräfte-Sektion verborgen.
 10. Mengen tragen die Zeit (Abschnitt 9).
 11. Pipeline durchlaufen: make_materials &rarr; build &rarr; **validate (grün)** &rarr; preview.
-12. **Kachel-Cover Bildarchitektur für `format_tiles`:** Jede sichtbare Kachel erhält ein **textfreies** Cover-PNG (`cover_<slug>.png`, gerastert aus SVG). **Safe-Zone eingehalten ($y = 15\dots60\%$ für Hauptmotiv)**, unteres Drittel frei für Moodles Titelbanner.
+12. **Kachel-Cover Bildarchitektur für `format_tiles`:** Jede sichtbare Kachel erhält ein **textfreies** Cover-PNG (`cover_<slug>.png`, gerastert aus SVG). **Safe-Zone eingehalten ($y = 45\dots85\%$ für Hauptmotiv/Icon am unteren Rand)**, oberer Bereich ($y < 45\%$) ruhig gehalten für technische Hintergrundstrukturen. Keine Schriftzüge im Bild.
 13. **Pflicht-Attribution** in `course.summary` **und** als „Hinweis zur Entstehung"-`label` im Kurs-Recap (KI + Labor Didaktik der Technik, HS Osnabrück – siehe Abschnitt 3).
 14. **Interaktive Medien-Trias je Fachthema:** Hotspot-Labor (`hotspot`) für Erkundung + Simulation (`simulation`) für Prozessparameter + ausfüllbares Formular (`formular`) für Protokolle/WPS.
 15. **Typografie- & Rendering-Garantie:** Keine LaTeX-Pfeilbrüche (immer `&rarr;` oder `→`), echte Umlaute, ²/³, Malpunkt ·, Dezimalkomma, Bündigkeit, Kontrast warnungsfrei.

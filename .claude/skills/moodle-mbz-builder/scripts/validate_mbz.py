@@ -509,18 +509,18 @@ def _deep_checks(tar, members, contents, problems, warns, info):
         blob_path = f"files/{h[:2]}/{h}"
         if blob_path not in members:
             continue
-        html = tar.extractfile(blob_path).read().decode("utf-8", "ignore")
-        if "data-field" in html:  # Formular (form_engine)
+        doc_html = tar.extractfile(blob_path).read().decode("utf-8", "ignore")
+        if "data-field" in doc_html:  # Formular (form_engine)
             n_form += 1
-            if "placeholder=" in html:
+            if "placeholder=" in doc_html:
                 problems.append("formular: Eingabefelder enthalten placeholder-Text "
                                 "(Felder müssen LEER sein — kein vorgezeichneter "
                                 "Lösungsweg)")
-            if "localStorage" not in html or "btn-save" not in html:
+            if "localStorage" not in doc_html or "btn-save" not in doc_html:
                 problems.append("formular: Autosave/Speichern-Button fehlt")
-        elif "var SPEC" in html:  # Simulation (sim_engine)
+        elif "var SPEC" in doc_html:  # Simulation (sim_engine)
             n_sim += 1
-            if "grid-template-columns:300px" not in html:
+            if "grid-template-columns:300px" not in doc_html:
                 warns.append("simulation: altes Layout ohne Kompakt-Grid — passt "
                              "eventuell nicht ohne Scrollen auf einen Bildschirm")
     if n_form or n_sim:
@@ -573,6 +573,42 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                     warns.append(
                         f"RECHENBEISPIEL: Einsetzen springt direkt zum Ergebnis — "
                         f"Zwischenschritt fehlt in {tag}: '{snip}'")
+
+    # ---- 15. Typografie- & LaTeX-Hygiene in HTML-Seiten ------------------- #
+    for path, data in contents.items():
+        if not re.match(r"activities/(page|book|label)_\d+/\w+\.xml$", path):
+            continue
+        tag = path.split("/")[1]
+        for block in re.findall(r"<(?:content|intro)>(.*?)</(?:content|intro)>", data, re.S):
+            # Check for raw unrendered LaTeX arrows
+            if re.search(r"\\(?:to|rightarrow|Rightarrow|leftarrow|Leftarrow)\b", block):
+                warns.append(
+                    f"TYPOGRAFIE: Roher LaTeX-Pfeil ('\\to' / '\\rightarrow') in {tag} — "
+                    f"in Moodle-HTML immer sauberes '&rarr;' verwenden!"
+                )
+            # Check for unescaped raw dollar math delimiter like $E=mc^2$ instead of \( \)
+            if re.search(r"(?<!\\)\$(?!\$)[^$\n]+(?<!\\)\$", block):
+                warns.append(
+                    f"TYPOGRAFIE: Veraltete Dollar-Math-Syntax ('$ ... $') in {tag} — "
+                    f"in Moodle immer saubere HTML-Tags (<sub>/<sup>) oder MathJax '\\( ... \\)' verwenden!"
+                )
+
+    # ---- 16. Infoblatt-Wortzahl-Sicherung (Goldstandard) ----------------- #
+    for path, data in contents.items():
+        if not re.match(r"activities/page_\d+/page\.xml$", path):
+            continue
+        tag = path.split("/")[1]
+        name = re.search(r"<name>(.*?)</name>", data)
+        name_txt = html.unescape(name.group(1)) if name else ""
+        if "Infoblatt" in name_txt or "infoblatt" in data.lower():
+            for block in re.findall(r"<content>(.*?)</content>", data, re.S):
+                words = _readable_text(block).split()
+                if len(words) < 80:
+                    warns.append(
+                        f"INHALT-DÜNN: Infoblatt '{name_txt}' ({tag}) enthält nur "
+                        f"{len(words)} Wörter — Goldstandard fordert mindestens 120-200 Wörter "
+                        f"Erklär-Fließtext (Was -> Wie -> Warum)!"
+                    )
 
 
 def _report(info: list[str], warns: list[str], problems: list[str]) -> None:

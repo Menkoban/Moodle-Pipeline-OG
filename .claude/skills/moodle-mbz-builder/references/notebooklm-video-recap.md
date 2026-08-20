@@ -59,29 +59,10 @@ Builds, die `video_recap`-Action aus dem Editor-Widget oder direkte User-Bitte.
    Infoblätter mit ihren Diagrammen in EINER PDF). Diese Datei wird in Punkt 3
    als zweite Quelle hochgeladen — der Upload funktioniert zuverlässig, sobald
    die Datei **session-geteilt** ist (per `SendUserFile` in die Session gegeben).
-2. **Browser verbinden:** claude-in-chrome-Tools laden (ToolSearch,
-   gebündelt), `tabs_context_mcp{createIfEmpty:true}`. Wenn kein Browser
-   verbunden ist (`list_connected_browsers` = leer): User bitten, die
-   Claude-Erweiterung in Chrome mit seinem Konto anzumelden. Der User loggt
-   sich selbst bei notebooklm.google.com ein.
-3. **Notebook + Quelle:** notebooklm.google.com öffnen (legt automatisch ein
-   leeres Notebook an; „Willkommen"-Dialog mit Ok wegklicken). Quelle
-   einbringen über **„Quellen hinzufügen → Kopierter Text"** — NICHT
-   „Dateien hochladen" (Datei-Upload aus der Claude-Sandbox ist blockiert,
-   nur session-geteilte Dateien). Dossier-Inhalt in Blöcken à ~3–5k Zeichen
-   eintippen (ein Riesenblock läuft in einen 30s-CDP-Timeout), Ende per
-   Screenshot verifizieren, „Einfügen" klicken. NotebookLM benennt das
-   Notebook automatisch nach der Quelle.
-   - **Bild-Quelle hinzufügen (STANDARD, Diagramme als echte Bild-Quelle):**
-     das kombinierte `materials/Kurs-Materialdossier.pdf` (aus
-     `make_materials.py`, enthält alle Infoblätter + SVG-Diagramme) ZUERST per
-     **`SendUserFile`** in die Session geben — dann ist es session-geteilt und
-     für die Browser-Tools sichtbar. Danach in NotebookLM „Quellen hinzufügen →
-     Dateien hochladen" und diese PDF wählen. So sieht NotebookLM die Diagramme
-     als echte Bild-Quelle, nicht nur als Text. **Nur** falls die Datei NICHT
-     session-geteilt werden kann (reiner Sandbox-Upload ist unzuverlässig),
-     entfällt der Schritt — der Diagramm-Textblock aus Punkt 1 trägt dann
-     allein.
+2. **Browser verbinden:** Verwende die MCP-Werkzeuge des Servers `chrome-devtools-mcp` (`navigate_page`, `fill`, `click`, `upload_file`, `take_screenshot`). Der Nutzer ist in Chrome bei `notebooklm.google.com` angemeldet.
+3. **Notebook + Quelle:** Mit `navigate_page("https://notebooklm.google.com")` öffnen.
+   - **Textquelle hinzufügen:** „Quellen hinzufügen → Kopierter Text" wählen, den Dossier-Inhalt (`dossier.md`) mit `fill` oder `evaluate_script` einfügen und bestätigen.
+   - **Bild-Quelle hinzufügen (STANDARD):** Über `upload_file` das kombinierte `materials/Kurs-Materialdossier.pdf` (enthält alle Infoblätter + SVG-Diagramme) als Datei-Quelle hochladen. So sieht NotebookLM die Diagramme als echte Bild-Quelle.
 4. **Videoübersicht anfordern:** Studio-Kachel „Videoübersicht" → Chevron
    (>) öffnet „Video-Zusammenfassung anpassen": Format „Erklärvideo",
    **Sprache Deutsch** prüfen, in das Fokus-Feld („Worauf sollen sich die

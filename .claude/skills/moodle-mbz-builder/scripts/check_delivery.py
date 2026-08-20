@@ -42,10 +42,22 @@ ABS_RX = re.compile(r"^(?:[A-Za-z]:[/\\]|[/\\])")
 # Optionaler Live-Restore-Skill (siehe docs/superpowers/specs/
 # 2026-07-15-moodle-testinstanz-restore-gate-design.md). Fehlt er, laeuft das
 # Gate wie bisher (nur statische Checks).
-TESTINSTANZ_HOME = os.environ.get(
-    "MOODLE_TESTINSTANZ_HOME",
-    os.path.expanduser("~/.claude/skills/moodle-testinstanz"),
-)
+def _find_testinstanz_home():
+    env_path = os.environ.get("MOODLE_TESTINSTANZ_HOME")
+    if env_path and os.path.isdir(env_path):
+        return env_path
+    candidates = [
+        os.path.expanduser("~/.gemini/config/skills/moodle-testinstanz"),
+        os.path.normpath(os.path.join(HERE, "..", "..", "moodle-testinstanz")),
+        os.path.normpath(os.path.join(HERE, "..", "moodle-testinstanz")),
+        os.path.expanduser("~/.claude/skills/moodle-testinstanz"),
+    ]
+    for c in candidates:
+        if os.path.isdir(c):
+            return c
+    return os.path.expanduser("~/.claude/skills/moodle-testinstanz")
+
+TESTINSTANZ_HOME = _find_testinstanz_home()
 
 
 def walk_paths(node, keys=("image", "file")):
@@ -166,7 +178,7 @@ def main() -> int:
         fehler.append(f"{len(mbzs)} .mbz im Ordner — erwartet genau 1")
     else:
         r = subprocess.run([sys.executable, os.path.join(HERE, "validate_mbz.py"),
-                            mbzs[0]], capture_output=True, text=True)
+                            mbzs[0]], capture_output=True, text=True, encoding="utf-8", errors="replace")
         if r.returncode == 0:
             ok.append(f"validate_mbz: {os.path.basename(mbzs[0])} gruen")
         else:
@@ -221,7 +233,7 @@ def main() -> int:
     if pathmaps and os.path.exists(sim):
         if len(mbzs) == 1:
             r = subprocess.run([sys.executable, sim, mbzs[0], pathmaps[0]],
-                               capture_output=True, text=True)
+                               capture_output=True, text=True, encoding="utf-8", errors="replace")
             if r.returncode == 0:
                 ok.append("simulate_pathways: adaptiver Pfad gruen")
             else:

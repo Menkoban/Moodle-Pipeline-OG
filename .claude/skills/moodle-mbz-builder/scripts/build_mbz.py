@@ -48,7 +48,10 @@ ATTRIBUTION_SENTENCE = (
 def attribution_text(spec) -> str:
     c = (spec or {}).get("course", {})
     if "attribution" in c:
-        return c.get("attribution") or ""
+        val = c.get("attribution")
+        if isinstance(val, bool):
+            return ATTRIBUTION_SENTENCE if val else ""
+        return str(val) if val is not None else ""
     return ATTRIBUTION_SENTENCE
 
 
