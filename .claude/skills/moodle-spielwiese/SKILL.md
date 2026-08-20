@@ -43,6 +43,7 @@ ist die zentrale Fehlbedienung, gegen die dieses Modell schützt.
 |---|---|---|
 | `setup [--force]` | Instanz aufbauen, idempotent | **Stufe 1** |
 | `start` | MariaDB + Apache hochfahren (verweigert bei Wartungs-Lock oder `*.vor-reset`-Trümmern) | **Stufe 1** |
+| `serve` | Persistenter Daemon-Server (`serve.py` mit `IsDaemon: true`) — überwacht Dienste und hält localhost dauerhaft aktiv | **Zusatz** |
 | `stop` | beide stoppen (DB **sauber** über `mariadb-admin`; meldet Fehlschlag statt still weiterzugehen) | **Stufe 1** |
 | `status` | Zustand beider Dienste + HTTP-Probe; „up" nur bei verifizierten eigenen PIDs **und** antwortendem Login-Formular | **Stufe 1** |
 | `snapshot <name> \| --list` | Zustand sichern: Dienste stoppen (Prozessende belegt), `db-data` + `data` kopieren, Dienste wieder hoch, wenn sie liefen | **Stufe 2** |

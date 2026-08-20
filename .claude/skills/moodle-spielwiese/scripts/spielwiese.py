@@ -79,7 +79,7 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 PHP_EXTENSIONS = ["curl", "fileinfo", "gd", "intl", "mbstring", "exif",
                   "mysqli", "openssl", "soap", "sodium", "zip"]
 
-DETACHED = 0x00000008 | 0x00000200 | 0x01000000  # DETACHED_PROCESS | NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB
+DETACHED = 0x00000008 | 0x00000200  # DETACHED_PROCESS | NEW_PROCESS_GROUP
 
 # Markierung des Blocks, den wir in config.php verwalten. Wird bei jedem
 # setup-Lauf zwischen den Markern ersetzt statt angehaengt — sonst wuechse
@@ -715,17 +715,24 @@ def starte_mariadb() -> None:
         log(f"MariaDB laeuft bereits auf {DB_PORT}")
         return
     log(f"starte MariaDB auf Port {DB_PORT}")
-    with open(os.path.join(PG, "mariadbd.log"), "ab") as lf:
-        subprocess.Popen([MARIADBD, f"--datadir={DBDATA}",
-                          f"--port={DB_PORT}", "--console",
-                          # Wegwerf-Instanz: kein fsync je Commit (Absturz
-                          # kostet schlimmstenfalls ~1 s Transaktionen —
-                          # die Absicherung heisst hier `reset`), und ein
-                          # Buffer-Pool, der Kurse im Speicher haelt.
-                          # Beschleunigt vor allem Importe/Restores.
-                          "--innodb-flush-log-at-trx-commit=2",
-                          "--innodb-buffer-pool-size=512M"],
-                         stdout=lf, stderr=lf, creationflags=DETACHED)
+    logf = os.path.join(PG, "mariadbd.log")
+    # Starte via PowerShell Start-Process, damit der Dienst unabhängig von Terminal-Job-Objekten weiterläuft
+    ps = (
+        f'$args = @("--datadir=`"{DBDATA}`"", "--port={DB_PORT}", "--console", '
+        f'"--innodb-flush-log-at-trx-commit=2", "--innodb-buffer-pool-size=512M"); '
+        f'Start-Process -FilePath "{MARIADBD}" -ArgumentList $args '
+        f'-RedirectStandardOutput "{logf}" -RedirectStandardError "{logf}" -WindowStyle Hidden'
+    )
+    r = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
+                       capture_output=True, text=True)
+    if r.returncode != 0 or not port_open(DB_PORT):
+        # Fallback auf Popen
+        with open(logf, "ab") as lf:
+            subprocess.Popen([MARIADBD, f"--datadir={DBDATA}",
+                              f"--port={DB_PORT}", "--console",
+                              "--innodb-flush-log-at-trx-commit=2",
+                              "--innodb-buffer-pool-size=512M"],
+                             stdout=lf, stderr=lf, creationflags=DETACHED)
     if not warte_auf(lambda: port_open(DB_PORT), 60):
         raise Abbruch(f"MariaDB kommt nicht hoch — siehe {PG}\\mariadbd.log", 3)
 
@@ -735,8 +742,17 @@ def starte_apache() -> None:
         log(f"Apache laeuft bereits auf {WWW_PORT}")
         return
     log(f"starte Apache auf Port {WWW_PORT}")
-    subprocess.Popen([HTTPD, "-f", HTTPD_CONF], creationflags=DETACHED,
-                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # Starte via PowerShell Start-Process für persistenten Daemon-Betrieb
+    ps = (
+        f'$args = @("-f", "`"{HTTPD_CONF}`""); '
+        f'Start-Process -FilePath "{HTTPD}" -ArgumentList $args -WindowStyle Hidden'
+    )
+    r = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
+                       capture_output=True, text=True)
+    if r.returncode != 0 or not port_open(WWW_PORT):
+        # Fallback auf Popen
+        subprocess.Popen([HTTPD, "-f", HTTPD_CONF], creationflags=DETACHED,
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if not warte_auf(lambda: port_open(WWW_PORT), 30):
         fehler = os.path.join(APACHE, "logs", "error.log")
         schwanz = ""
