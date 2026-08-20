@@ -15,8 +15,11 @@ vollständig ausgearbeiteter Kurs für die **berufliche Bildung** entsteht – u
 
 **Leitmodell:** das 5-Ebenen-Strukturmodell für Moodlekurse des ZDQ (vom Autor erweitert)
 (Lernelement → Lernbaustein → Lernabschnitt → Lerneinheit/Modul → Lernkurs).
-Gold-Standard-Beispiel, das jeden Punkt unten umsetzt: `assets/fewshot_bohrmaschine.json`
-(mit eingebetteten SVG-Diagrammen und `material`-Flags). Nutze es als Few-Shot-Vorlage.
+
+**Zwei verbindliche Goldstandard-Referenzbeispiele:**
+1. **Technik & Fertigung:** `assets/fewshot_bohrmaschine.json` (Fertigungstechnik, Maschinenbedienung, 5-Sicherheitsregeln, Arbeitsplan-WPS, Rubriken).
+2. **Mathematik, Stochastik & MINT:** `assets/fewshot_mathematik_statistik.json` (Beschreibende Statistik, standardisierte Lernziel-Formulierungen mit Duplikat in Kachel 6, reale Inbox-Aufgabenblätter mit nachgelagerten `assign`-Abgaben, mathematische Formel-Anatomie-Hotspots ohne Textüberdeckung, reaktive Live-Canvas-Simulation nach DIN 55303 und 6-Schritte-Prüfprotokoll).
+Nutze sie als Few-Shot-Vorlagen je nach Fachbereich.
 
 ## Inhalt
 1. Leitprinzipien
