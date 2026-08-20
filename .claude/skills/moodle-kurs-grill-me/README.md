@@ -1,47 +1,84 @@
-# moodle-kurs-grill-me
+# moodle-kurs-grill-me 🎯📋
 
-**Didaktisches Alignment-Interview ("Grill-Me") für berufliche und technische Moodle-Kurse.**
+[![Gate 0](https://img.shields.io/badge/Pipeline-Gate%200-blue.svg)](README.md)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Dieser Skill fungiert als **Schritt 0 (Didaktik-Gate)** der Moodle-Kurs-Pipeline. Er führt vor der technischen Erstellung eines Moodle-Kurses ein fundiertes, iteratives Befragungskonzept in 6 thematischen Clustern durch und erzeugt einen normierten, schema-geprüften **Kurs-Steckbrief** (`kurs-steckbrief.json`).
+**Interaktives didaktisches Alignment-Interview („Grill-Me“) für berufliche, mathematische und technische Moodle-Kurse.**
+
+Dieser Skill fungiert als **verbindliches Gate 0 (Didaktik-Gate)** der gesamten Moodle-Kurs-Pipeline. Bevor eine einzige Zeile Kurs-Code geschrieben oder eine Kurssicherung gebaut wird, führt der Skill ein tiefgehendes, adaptives Befragungs-Interview in **8 didaktischen Clustern** mit dem Kursautor durch. Das Ergebnis ist ein vollständig spezifizierter, schema-validierter **Kurs-Steckbrief** (`kurs-steckbrief.json`), der als unverrückbare Bauanleitung für `moodle-mbz-builder` dient.
 
 ---
 
-## Die 6 Themen-Cluster
+## 🌟 Kern-Prinzipien & Features
 
-| # | Cluster | Inhalt & Didaktische Substanz |
+- ❓ **Strikter Interview-Vertrag (Sequenziell & Interaktiv):**
+  - Genau **eine Frage zur Zeit** über das interaktive `ask_question`-Tool mit 5 konkreten Optionen und `(Empfohlen)` an erster Stelle.
+  - **Verbot von One-Shot-Vorausfüllung:** Keine unaufgeforderten Block-Tabellen oder eigenmächtigen Vorab-Generierungen — der Kursautor behält die volle didaktische Hoheit.
+- 📚 **Automatisches KMK- & CuVo-Retrieval (`fetch_curriculum.py`):**
+  - Automatisierte Extraktion von Ausbildungsberufen, Lernfeldern, Handlungsphasen, Normen und Fachbegriffen aus der integrierten Lehrplan-Datenbank.
+- 📥 **Inbox-Primat & Material-Ingestion (`ingest_material.py`):**
+  - Automatisierte Extraktion und Übernahme bestehender Lehrkraft-Materialien (PDF, DOCX, Skripte, Aufgabenblätter). Reale Aufgaben haben stets Vorrang vor generischen MC-Fragen.
+- 🔗 **Continuous Narrative Architecture:**
+  - Sicherstellung eines durchgehenden roten Fadens: Jede Kachel ist eine handlungsorientierte Etappe zur Lösung desselben authentischen Gesamtauftrags.
+- 📐 **MINT- & Mathematik-Standards:**
+  - Standardisierte Kompetenzformeln (*„Die Schülerinnen und Schüler sind in der Lage...“*), Spoiler-Verbot in der Ausgangssituation und mathematische Formelqualität.
+
+---
+
+## 🧩 Die 8 didaktischen Cluster
+
+| Cluster | Thema | Didaktischer Schwerpunkt |
 |---|---|---|
-| 1 | **Curriculares Profil & Lerngruppe** | Schulform (Duale BBS, BFS, FOS, BGY, AV, Technikerschule, Sek 1/2), Fachbereich, Lernfeld, Vorwissen, DaZ/Heterogenität. Abgleich mit der Lehrplan-Datenbank `references/curricula/`. |
-| 2 | **Authentische Handlungssituation** | Reales betriebliches Szenario (Kunde/Auftraggeber, Arbeitsort, konkrete Störung/Montageaufgabe), Handlungsprodukt (Was geben die Lernenden ab?). |
-| 3 | **Fachinhalte, Berechnungen & Normen** | Fachbegriffe (Glossar), vollständige 5-Punkte-Musterrechnungen (Geg/Ges/Einheiten/Zwischenschritt), Normen (DIN EN 60617, VDE, DGUV V3), Sicherheitsregeln. |
-| 4 | **Aufgaben-Architektur & Kaskade** | 3-stufige Aufgabenkaskade: 1. Formative Erkundungsaufgabe (Grundlagen), 2. Ausfüllbares Protokoll (`type: "formular"` mit Autosave) in Vertiefung, 3. Summative Praxisaufgabe (`type: "assign"` mit 6 Handlungsphasen & Bewertungsrubrik) in Anwendung. |
-| 5 | **Interaktive Medien, Simulationen & Hotspots** | Interaktive Hotspot-Modelle (`type: "hotspot"` via `hotspot_engine.py`), dynamische Schieberegler-Simulationen (`sim_engine.py`), normgerechte Vektor-Schaltpläne (`circuit_builder.py`). |
-| 6 | **Kachelstruktur, Profil & Format** | Didaktisches Profil (`zdq`, `theorie-praxis-tandem`, etc.), Kachelanzahl (4–6 Kacheln), Kachelformat (`tiles` mit Kachel-Fotos vs. `topics`), Tonalität (Du/Sie). |
+| **1.1 – 1.3** | **Curriculares Profil & Lerngruppe** | Präziser Ausbildungsberuf / Schulform, Lernfeld, Vorwissen, Heterogenität, Sprachförderung (DaZ). |
+| **2.1 – 2.2** | **Handlungssituation & Continuous Narrative** | Authentischer betrieblicher Auftrag, Schadensfall, messbares Handlungsprodukt, roter Faden über alle Kacheln. |
+| **3.1 – 3.2** | **Fachinhalte, Normen & Formeln** | Fachbegriffe, 5-Punkte-Musterrechnungen, DIN/ISO/VDE/DGUV-Normen, 5 Sicherheitsregeln. |
+| **4.1 – 4.2** | **E-Learning-Format & Fachmethoden** | Blended Learning, Flipped Classroom, Szenariolernen, Auswahl aus 35 Fachmethoden via `method_recommender.py`. |
+| **5.1 – 5.3** | **Lernziel- & Aufgaben-Architektur** | Standard-Lernziele mit Lehrerduplikat, echte Aufgabenblätter mit nachgelagerten `assign`-Abgaben. |
+| **6.1 – 6.3** | **Interaktive Medien-Trias** | Feindefinition von Hotspot-Labor (`hotspot`), Schieberegler-Canvas (`simulation`) und Digitalprotokoll (`formular`). |
+| **7.1 – 7.2** | **Kachelstruktur & Transfer** | ZDQ-5-Ebenen-Phasen, Zeitbudgets, SPC-/Toleranz-Transfer für Leistungsstarke. |
+| **8.1 – 8.3** | **Cover-Design & Lehrer-Paket** | Textfreie Cover in der Unten-Rechts-Safe-Zone ($y=45\dots85\%$), 5-Fallen-Leitfaden, Musterlösungen. |
 
 ---
 
-## Methoden- und Format-Empfehlung (Pflicht)
+## 💻 Installation & Setup
 
-Auf Basis von Schulform, Zielgruppe und Thema unterbreitet der Grillmaster im Gespräch zwei strukturierte Auswahlentscheidungen mit fundierter Empfehlung `(Empfohlen)`:
-- **E-Learning-Format:** *Blended Learning (Theorie-Praxis-Tandem)* vs. *Flipped Classroom* vs. *Szenariobasiertes Lernen (PBL)* vs. *Microlearning* (siehe `references/methoden-und-elearning-formate.md`).
-- **Didaktische Methoden:** Bewertung und Auswahl aus über 35 Fachmethoden via `scripts/method_recommender.py`.
-
----
-
-## Pipeline-Integration
-
-```mermaid
-graph LR
-    G0["Skill 0: moodle-kurs-grill-me<br/>(Didaktik-Briefing & Steckbrief)"] -->|kurs-steckbrief.json| G1["Skill 1: moodle-mbz-builder<br/>(Standard ZDQ Kursbau)"]
-    G0 -->|kurs-steckbrief.json| G1A["Skill 1A: moodle-adaptive-mbz-builder<br/>(Adaptiver Kursbau)"]
-    G1 --> G2["Skill 2: moodle-testinstanz<br/>(Live-Restore QA Gate)"]
-    G1A --> G2
-    G2 --> G3["Skill 3: moodle-spielwiese<br/>(Persistente Erprobung & Testschüler)"]
-
-    style G0 fill:#0284c7,stroke:#0369a1,color:#fff
-    style G1 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style G1A fill:#0f766e,stroke:#115e59,color:#fff
-    style G2 fill:#047857,stroke:#065f46,color:#fff
-    style G3 fill:#b45309,stroke:#9a3412,color:#fff
+**Antigravity / Gemini CLI:**
+```powershell
+# Windows (PowerShell)
+git clone https://github.com/Menkoban/moodle-kurs-grill-me.git "$HOME\.gemini\config\skills\moodle-kurs-grill-me"
+```
+```bash
+# Linux / macOS
+git clone https://github.com/Menkoban/moodle-kurs-grill-me.git ~/.gemini/config/skills/moodle-kurs-grill-me
 ```
 
-Sobald der Steckbrief freigegeben ist, wird der Kurs nahtlos an den jeweiligen Builder übergeben und kann in der **Moodle-Spielwiese** (`python spielwiese.py import <kurs.mbz> --schueler`) direkt erprobt werden.
+**Claude Code:**
+```powershell
+git clone https://github.com/Menkoban/moodle-kurs-grill-me.git "$HOME\.claude\skills\moodle-kurs-grill-me"
+```
+
+---
+
+## 🚀 Workflow & Steckbrief-Validierung
+
+1. **Interview starten:** Die KI ruft den Skill auf, sobald ein neuer Kursauftrag erteilt wird.
+2. **Materialien einlesen (falls vorhanden):**
+   ```bash
+   python scripts/ingest_material.py pfad/zu/skript.pdf
+   ```
+3. **Lehrplan abrufen:**
+   ```bash
+   python scripts/fetch_curriculum.py --beruf "Elektroniker für Betriebstechnik" --lernfeld 4
+   ```
+4. **Steckbrief validieren (Gate 0 Abschluss):**
+   ```bash
+   python scripts/validate_steckbrief.py kurs-steckbrief.json
+   ```
+   *Erst bei erfolgreicher Validierung (Exit 0) wird an `moodle-mbz-builder` übergeben!*
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt ist unter der **MIT-Lizenz** lizenziert.
