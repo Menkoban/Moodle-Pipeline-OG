@@ -79,7 +79,7 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 PHP_EXTENSIONS = ["curl", "fileinfo", "gd", "intl", "mbstring", "exif",
                   "mysqli", "openssl", "soap", "sodium", "zip"]
 
-DETACHED = 0x00000008 | 0x00000200  # DETACHED_PROCESS | NEW_PROCESS_GROUP
+DETACHED = 0x00000008 | 0x00000200 | 0x01000000  # DETACHED_PROCESS | NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB
 
 # Markierung des Blocks, den wir in config.php verwalten. Wird bei jedem
 # setup-Lauf zwischen den Markern ersetzt statt angehaengt — sonst wuechse
