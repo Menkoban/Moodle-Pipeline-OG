@@ -55,6 +55,25 @@ ist die zentrale Fehlbedienung, gegen die dieses Modell schützt.
 | `purge` · `upgrade` | Caches leeren · Upgrade-Lauf (installiert frisch eingehängte Plugins) | **Stufe 4** |
 | `debug [schnell\|entwickler]` | Debug-Modus zeigen/umschalten: **schnell** ≈ 0,1 s/Seite (Fehler+Warnungen sichtbar, Default) · **entwickler** ≈ 1 s/Seite (volle Backtraces) | Zusatz |
 
+## Moodle Copilot Plugin (`local_copilot`) & Assistenz-Architektur
+
+Das integrierte Moodle-Plugin `local_copilot` (`C:\moodle-playground\moodle\local\copilot\`) stellt für Lehrkräfte ein schwebendes, intuitives Assistenz-Panel bereit:
+
+1. **4 didaktische Ebenen nach Henning Rode (Tabelle 2.6):**
+   - **`📦 Modul / Lerneinheit`:** Gesamter Kursaufbau, Kachel-Struktur, Roter Faden, Abschluss-Test, .mbz Export.
+   - **`📑 Lernabschnitt`:** Didaktische Phasen / Kacheln (Einstieg, Grundlagen, Vertiefung, Robuste Streumaße, Praxisauftrag, Recap, Lehrkräfte).
+   - **`🧩 Lernbaustein`:** Konkrete Aktivitäten (Informationsblatt, Aufgabenblatt mit Abgabe, Hotspot-Labor, Simulation, Glossar).
+   - **`✏️ Lernelement`:** Atomare Inhalte (Text vereinfachen / DaZ, mathematische Formelprüfung, Vektorgrafik einbetten, Merksatz-Box).
+
+2. **Interaktiver geführter Dialog (Scaffolding-Chat):**
+   - Ein Klick auf eine 1-Klick-Option startet sofort einen geführten Dialog mit gezielten Leitfragen und sofort anklickbaren Auswahl-Chips.
+
+3. **Sprachbedienung & Flexibilität:**
+   - **Tap-to-Toggle Spracheingabe:** Ein Klick startet die Aufnahme, ein erneuter Klick sendet den Befehl.
+   - **Drag & Resize:** Frei auf dem Bildschirm verschiebbar und anpassbar.
+   - **Element-Inspektor:** Klick auf ein beliebiges Moodle-Element setzt den Bearbeitungsfokus.
+
+
 Alle Kommandos des Kontrakts sind umgesetzt (Stufen 1–4).
 
 ## Snapshots & Reset (Stufe 2)

@@ -1,0 +1,215 @@
+{
+  "modul": {
+    "title": "📦 Modul / Lerneinheit (Gesamtkurs)",
+    "description": "Gesamter Kursaufbau, Kachelstruktur und didaktischer roter Faden",
+    "actions": [
+      {
+        "id": "add_section",
+        "icon": "➕",
+        "title": "Lernabschnitt anfügen",
+        "hint": "Neue Kachel hinten anhängen",
+        "guide_question": "Welches didaktische Thema soll der neue Lernabschnitt behandeln?",
+        "options": [
+          "1. Grundlagen & Begriffe",
+          "2. Vertiefung & Berechnung",
+          "3. Technischer Praxistransfer",
+          "4. Wiederholung & Recap"
+        ]
+      },
+      {
+        "id": "check_narrative",
+        "icon": "🔄",
+        "title": "Roter Faden prüfen",
+        "hint": "Continuous Narrative aller Abschnitte analysieren",
+        "guide_question": "Welcher Aspekt des roten Fadens soll geprüft werden?",
+        "options": [
+          "1. Lückenloser Handlungsbogen",
+          "2. Spoiler-Check (keine Vorab-Lösungen)",
+          "3. Verknüpfung der Aufgabenblätter"
+        ]
+      },
+      {
+        "id": "final_quiz",
+        "icon": "🎓",
+        "title": "Abschluss-Test bauen",
+        "hint": "Kompetenz-Quiz über das gesamte Modul",
+        "guide_question": "Wie viele Fragen soll der Abschluss-Test umfassen?",
+        "options": [
+          "1. Kompakter Selbsttest (5 Fragen)",
+          "2. Umfassende Modulprüfung (10 Fragen)",
+          "3. Prüfungsfragen mit Bildbezug"
+        ]
+      },
+      {
+        "id": "download_mbz",
+        "icon": "💾",
+        "title": ".mbz sichern",
+        "hint": "Fertige Kurssicherung exportieren",
+        "is_download": true
+      }
+    ]
+  },
+  "abschnitt": {
+    "title": "📑 Lernabschnitt (Kachel / Thema)",
+    "description": "Themenbereich (z. B. Einstieg, Grundlagen, Vertiefung, Recap)",
+    "actions": [
+      {
+        "id": "add_baustein",
+        "icon": "🧩",
+        "title": "Lernbaustein anlegen",
+        "hint": "Infoblatt, Aufgabenblatt oder Test einfügen",
+        "guide_question": "Welche Art von Lernbaustein möchtest du in diesem Lernabschnitt anlegen?",
+        "options": [
+          "1. 📄 Informationsblatt mit Vektorgrafik",
+          "2. 📝 Aufgabenblatt mit Moodle-Abgabe",
+          "3. 🔬 Interaktives Hotspot-Labor",
+          "4. ✅ Formatives Selbsttest-Quiz"
+        ]
+      },
+      {
+        "id": "add_hotspot",
+        "icon": "🔬",
+        "title": "Hotspot-Labor einbinden",
+        "hint": "Interaktive Bauteil-/Formel-Anatomie",
+        "guide_question": "Welche Struktur soll das Hotspot-Labor interaktiv vermitteln?",
+        "options": [
+          "1. 📐 Formel-Anatomie mit Docking-Pins",
+          "2. 📊 Diagramm- und Kennwert-Erkundung",
+          "3. ⚙️ Bauteil- und Funktions-Anatomie"
+        ]
+      },
+      {
+        "id": "add_sim",
+        "icon": "🎛️",
+        "title": "Simulation einbauen",
+        "hint": "Reaktives Canvas mit Schiebereglern",
+        "guide_question": "Welche Messgrößen sollen im Live-Canvas verändert werden können?",
+        "options": [
+          "1. Häufigkeiten n_i variieren",
+          "2. Toleranzgrenzen & Streuungsintervalle",
+          "3. Parameter-Rechner mit Live-Kurve"
+        ]
+      },
+      {
+        "id": "scaffolding",
+        "icon": "💡",
+        "title": "Hilfekarte anlegen",
+        "hint": "Differenzierung & gestufte Hilfen",
+        "guide_question": "Welche Art von Differenzierung wird benötigt?",
+        "options": [
+          "1. Gestufte mathematische Lösungsschritte",
+          "2. Sprachliche Hilfen / Wortspeicher (DaZ)",
+          "3. Erweiterungsaufgabe für Schnelle"
+        ]
+      }
+    ]
+  },
+  "baustein": {
+    "title": "🧩 Lernbaustein (Aktivität / Material)",
+    "description": "Konkretes Infoblatt, Aufgabenblatt, Moodle-Abgabe oder Test",
+    "actions": [
+      {
+        "id": "add_assignment",
+        "icon": "📝",
+        "title": "Aufgabenblatt + Abgabe",
+        "hint": "Übungsblatt mit Moodle-Abgabeaktivität",
+        "guide_question": "Welcher Typ von Schülerabgabe wird für dieses Aufgabenblatt gewünscht?",
+        "options": [
+          "1. PDF-Upload + Online-Texteingabe",
+          "2. Reines Dateiupload (Handschrift/Foto)",
+          "3. Tabellen-Ausfüllung direkt in Moodle"
+        ]
+      },
+      {
+        "id": "add_solution",
+        "icon": "🔑",
+        "title": "Musterlösung ergänzen",
+        "hint": "Für Material für Lehrkräfte",
+        "guide_question": "Wie detailliert soll die Musterlösung für Lehrkräfte ausgearbeitet werden?",
+        "options": [
+          "1. Vollständige Schritt-für-Schritt-Rechnung",
+          "2. Endergebnisse & Toleranzwerte",
+          "3. Mit typischen Schüler-Fehlern & 5-Fallen-Leitfaden"
+        ]
+      },
+      {
+        "id": "add_video_recap",
+        "icon": "🎬",
+        "title": "Videozusammenfassung",
+        "hint": "Audiovisuelles Recap via NotebookLM",
+        "guide_question": "Wie soll die Videozusammenfassung eingebunden werden?",
+        "options": [
+          "1. NotebookLM Video-Recap (MP4)",
+          "2. Audio-Overview Podcasterklärung",
+          "3. Platzhalter für eigenen Videolink"
+        ]
+      },
+      {
+        "id": "add_selfcheck",
+        "icon": "✅",
+        "title": "Selbsttest-Check",
+        "hint": "Formative Multiple-Choice-Fragen",
+        "guide_question": "Welcher Kompetenzbereich soll mit dem Selbsttest geprüft werden?",
+        "options": [
+          "1. Fachbegriffe & Definitionen",
+          "2. Rechnerisches Formelverständnis",
+          "3. Fehleranalyse & Interpretation"
+        ]
+      }
+    ]
+  },
+  "element": {
+    "title": "✏️ Lernelement (Inhalt / Detail)",
+    "description": "Einzelner Text, Bild, Formel, Fragestellung oder Hinweis",
+    "actions": [
+      {
+        "id": "simplify_text",
+        "icon": "📖",
+        "title": "Text vereinfachen",
+        "hint": "Verständlicher formulieren (DaZ/Scaffolding)",
+        "guide_question": "Wie soll das Lernelement sprachlich angepasst werden?",
+        "options": [
+          "1. Kürzere Sätze & Aktivverben",
+          "2. Fachbegriffe mit Tooltip/Erklärung",
+          "3. Schritt-für-Schritt Aufzählung"
+        ]
+      },
+      {
+        "id": "math_check",
+        "icon": "📐",
+        "title": "Formel & Indizes prüfen",
+        "hint": "MathJax, Indizes & Bruchstriche validieren",
+        "guide_question": "Welche typografische Anforderung soll geprüft werden?",
+        "options": [
+          "1. Echte Subskripte (x_i, n_i) ohne Klartext-Unterstriche",
+          "2. Horizontale Bruchstriche statt Schrägstrich",
+          "3. DIN 13303 / 55303 Normenprüfung"
+        ]
+      },
+      {
+        "id": "replace_image",
+        "icon": "🖼️",
+        "title": "Vektorgrafik einbetten",
+        "hint": "DIN-konformes SVG mit Safe-Zone einfügen",
+        "guide_question": "Welche Art von SVG-Grafik soll eingefügt werden?",
+        "options": [
+          "1. Diagramm / Koordinatensystem",
+          "2. Anatomische Schemazeichnung",
+          "3. Textfreies Kachel-Cover mit Safe-Zone"
+        ]
+      },
+      {
+        "id": "add_hint",
+        "icon": "📌",
+        "title": "Merksatz / Hinweisbox",
+        "hint": "Hervorgehobene Infobox erzeugen",
+        "guide_question": "Welcher Stil soll für die Hinweisbox gewählt werden?",
+        "options": [
+          "1. 📌 Merksatz (Blau hinterlegt)",
+          "2. 💡 Praxistipp (Gelb hinterlegt)",
+          "3. ⚠️ Achtung / Stolperfalle (Rot umrandet)"
+        ]
+      }
+    ]
+  }
+}
