@@ -518,6 +518,9 @@ def _deep_checks(tar, members, contents, problems, warns, info):
                                 "Lösungsweg)")
             if "localStorage" not in doc_html or "btn-save" not in doc_html:
                 problems.append("formular: Autosave/Speichern-Button fehlt")
+        elif "btn-save" in doc_html and "btn-print" in doc_html:
+            # Defektes / leeres Formular (hat Formular-Buttons aber keine Felder)
+            problems.append("formular: Formular-HTML enthält KEINE data-field Eingabefelder (leeres Formular generiert!)")
         elif "var SPEC" in doc_html:  # Simulation (sim_engine)
             n_sim += 1
             if "grid-template-columns:300px" not in doc_html:

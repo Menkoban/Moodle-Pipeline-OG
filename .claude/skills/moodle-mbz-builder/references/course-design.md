@@ -39,6 +39,16 @@ Nutze sie als Few-Shot-Vorlagen je nach Fachbereich.
 
 - **Handlungskontinuität & Der Rote Faden (Continuous Narrative Architecture):** 
   Wenn ein Kurs aus einer authentischen Handlungssituation startet (z. B. Fertigungsauftrag *Kommission Portalrahmen*, Kälteanlagen-Störung, Kfz-Diagnose), müssen **ALLE Kacheln** – auch wenn sie als 90-Minuten-Mikromodule oder Fachthemen vertieft werden – **zwingend aufeinander aufbauen**. Jede Kachel ist eine handlungsorientierte Etappe zur Lösung desselben Gesamtfalls (*Kachel 1 Fallanalyse &rarr; Kachel 2 Arbeitsplatzsicherheit für diesen Fall &rarr; Kachel 3 Brennerinstandsetzung/Rüsten &rarr; Kachel 4 Parameter für diese Werkstoffe &rarr; Kachel 5 WPS für diesen Auftrag &rarr; Kachel 6 Qualitätsprüfung der gefertigten Nähte &rarr; Kachel 7 Kundenabnahme/Reflexion*). Isolierte Theoriekapitel ohne Fallbezug sind unzulässig.
+- **Modulare Kurserweiterungs-Architektur (Variante A / Reines Anhängen mit Bestandsschutz):**
+  Werden bestehende Kurse nachträglich um neue Themen, Methoden oder Berechnungsverfahren erweitert (z. B. Teil 2 eines Skripts), gilt **strikter Bestandsschutz für alle bisherigen Kacheln (Read-Only / Frozen)**:
+  - Bisherige Kacheln (z. B. Kacheln 0–6 für Teil 1) werden **nicht angetastet, verschoben oder umnummeriert**.
+  - Die Erweiterung wird als **eigenständiger, modularer Folgeblock angehängt**:
+    1. *Theoretische Vertiefungs-Kachel (z. B. Kachel 7: Robuste Streumaße)* mit Infoblatt, Hotspot-Labor, Aufgabenblatt und `assign`-Abgabe.
+    2. *Eigene Anwendungs-Kachel (z. B. Kachel 8: Praxisauftrag & Prüfbericht Teil 2)* mit digitalem Protokoll und `assign`-Abgabe.
+    3. *Eigene Recap- & Glossar-Kachel (z. B. Kachel 9: Recap, Transfer & Glossar Teil 2)* mit Teil-2-Zusammenfassung und Begriffserweiterung.
+    4. *Eigene Lehrkraft-Kachel (z. B. Kachel 10: Material für Lehrkräfte Teil 2)* mit exklusiver Musterlösung und Handreichung.
+- **Didaktische Integrität & Spoiler-Freiheit (MINT- & Praxisauftrags-Standard):**
+  In den Informationselementen (Infoblätter, Einführungen, Hotspot-Labore) dürfen **keine berechneten Zielwerte, Schülerergebnisse oder fertigen Vergleichsdiagramme vorab gespoilert werden**. Infoblätter und Hotspots nutzen **allgemeine, neutrale anatomische Schemazeichnungen**. Das Berechnen konkreter Kennwerte und das Zeichnen von Vergleichen ist der originäre Handlungsauftrag der Lernenden in den Aufgabenblättern und Abgabeaktivitäten (`assign`). Fertig gerechnete Vergleiche und Musterdiagramme gehören ausschließlich in das Material für Lehrkräfte.
 - **Handlungsorientierung:** Jedes Modul ist um eine **Handlungssituation** (ein
   echter beruflicher Auftrag/Fall) herum gebaut und mündet in ein
   **Handlungsprodukt** (etwas, das die Lernenden erstellen).

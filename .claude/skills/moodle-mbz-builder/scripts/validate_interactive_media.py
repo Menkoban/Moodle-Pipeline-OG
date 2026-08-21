@@ -97,11 +97,23 @@ def validate_interactive_media(course_path: str) -> Tuple[List[str], List[str]]:
             # 3. Formulare
             elif act_type == "formular":
                 form_count += 1
-                if not spec.get("storage_key"):
-                    warnungen.append(f"[{sec_name} -> {act_name}] Formular hat keinen 'storage_key' (Autosave eingeschränkt).")
+                storage_key = spec.get("storage_key") or spec.get("title")
+                if not storage_key:
+                    warnungen.append(f"[{sec_name} -> {act_name}] Formular hat weder 'storage_key' noch 'title' (Autosave eingeschränkt).")
+                
                 blocks = spec.get("blocks", [])
-                if not blocks or len(blocks) < 2:
-                    fehler.append(f"[{sec_name} -> {act_name}] Formular hat weniger als 2 Eingabeblöcke/Felder.")
+                fields = spec.get("fields", [])
+                
+                # Zähle alle echten Eingabefelder
+                field_count = 0
+                for blk in blocks:
+                    if "field" in blk:
+                        field_count += 1
+                if not blocks and fields:
+                    field_count = len(fields)
+                    
+                if field_count < 2:
+                    fehler.append(f"[{sec_name} -> {act_name}] Formular hat weniger als 2 Eingabefelder ({field_count} gefunden). Leere Formulare sind unzulässig!")
 
     print(f"Geprüfte interaktive Elemente: {hotspot_count} Hotspots, {sim_count} Simulationen, {form_count} Formulare.")
     return fehler, warnungen

@@ -162,7 +162,17 @@ def render(spec):
     title = spec.get("title", "Arbeitsblatt")
     storage = _slug(spec.get("storage_key") or title)
     parts = []
-    for blk in spec.get("blocks", []):
+    
+    blocks = list(spec.get("blocks") or [])
+    # Convenience Fallback: Falls 'fields' auf oberster Ebene angegeben wurde
+    if not blocks and spec.get("fields"):
+        for fld in spec.get("fields"):
+            blocks.append({"field": fld})
+            
+    if not blocks:
+        raise ValueError(f"Formular-Fehler: Spec für '{title}' enthält weder 'blocks' noch 'fields' (leeres Formular verhindert)!")
+        
+    for blk in blocks:
         if "heading" in blk:
             parts.append(f"    <h2>{_esc(blk['heading'])}</h2>")
         elif "html" in blk:
