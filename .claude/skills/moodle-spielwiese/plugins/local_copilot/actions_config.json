@@ -1,6 +1,6 @@
 {
-  "modul": {
-    "title": "📦 Modul / Lerneinheit (Gesamtkurs)",
+  "lerneinheit": {
+    "title": "📦 Lerneinheit (Gesamtkurs)",
     "description": "Gesamter Kursaufbau, Kachelstruktur und didaktischer roter Faden",
     "actions": [
       {
@@ -20,7 +20,7 @@
         "id": "check_narrative",
         "icon": "🔄",
         "title": "Roter Faden prüfen",
-        "hint": "Continuous Narrative aller Abschnitte analysieren",
+        "hint": "Continuous Narrative aller Lernabschnitte analysieren",
         "guide_question": "Welcher Aspekt des roten Fadens soll geprüft werden?",
         "options": [
           "1. Lückenloser Handlungsbogen",
@@ -32,7 +32,7 @@
         "id": "final_quiz",
         "icon": "🎓",
         "title": "Abschluss-Test bauen",
-        "hint": "Kompetenz-Quiz über das gesamte Modul",
+        "hint": "Kompetenz-Quiz über die gesamte Lerneinheit",
         "guide_question": "Wie viele Fragen soll der Abschluss-Test umfassen?",
         "options": [
           "1. Kompakter Selbsttest (5 Fragen)",
@@ -49,7 +49,7 @@
       }
     ]
   },
-  "abschnitt": {
+  "lernabschnitt": {
     "title": "📑 Lernabschnitt (Kachel / Thema)",
     "description": "Themenbereich (z. B. Einstieg, Grundlagen, Vertiefung, Recap)",
     "actions": [
@@ -104,7 +104,7 @@
       }
     ]
   },
-  "baustein": {
+  "lernbaustein": {
     "title": "🧩 Lernbaustein (Aktivität / Material)",
     "description": "Konkretes Infoblatt, Aufgabenblatt, Moodle-Abgabe oder Test",
     "actions": [
@@ -158,7 +158,7 @@
       }
     ]
   },
-  "element": {
+  "lernelement": {
     "title": "✏️ Lernelement (Inhalt / Detail)",
     "description": "Einzelner Text, Bild, Formel, Fragestellung oder Hinweis",
     "actions": [
