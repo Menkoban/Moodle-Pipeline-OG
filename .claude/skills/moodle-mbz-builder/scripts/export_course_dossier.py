@@ -127,7 +127,7 @@ def build_dossier(spec):
     summary = strip_html(spec.get("course", {}).get("summary", ""))
     if summary:
         out.append(summary)
-    sections = spec.get("course", {}).get("sections") if "course" in spec else spec.get("sections", [])
+    sections = spec.get("sections") or spec.get("course", {}).get("sections") or []
     for sec in sections:
         if sec.get("visible") == 0:
             continue

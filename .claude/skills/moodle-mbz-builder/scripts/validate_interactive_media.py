@@ -55,9 +55,9 @@ def validate_interactive_media(course_path: str) -> Tuple[List[str], List[str]]:
             # 1. Hotspots
             if act_type == "hotspot":
                 hotspot_count += 1
-                img_path = spec.get("image")
+                img_path = spec.get("image") or spec.get("svg") or spec.get("file")
                 if not img_path:
-                    fehler.append(f"[{sec_name} -> {act_name}] Hotspot hat keine 'image' Bildangabe in spec!")
+                    fehler.append(f"[{sec_name} -> {act_name}] Hotspot hat keine 'image'/'svg' Bildangabe in spec!")
                 else:
                     full_img = os.path.join(course_dir, img_path)
                     if not os.path.exists(full_img):
@@ -65,7 +65,7 @@ def validate_interactive_media(course_path: str) -> Tuple[List[str], List[str]]:
                     elif os.path.getsize(full_img) == 0:
                         fehler.append(f"[{sec_name} -> {act_name}] Hotspot-Bild ist leer (0 Bytes): {full_img}")
 
-                pins = spec.get("pins", [])
+                pins = spec.get("pins") or spec.get("hotspots") or []
                 if not pins or len(pins) < 2:
                     warnungen.append(f"[{sec_name} -> {act_name}] Hotspot hat weniger als 2 interaktive Pins.")
 
@@ -74,8 +74,10 @@ def validate_interactive_media(course_path: str) -> Tuple[List[str], List[str]]:
                     y = p.get("y")
                     if x is None or y is None or not (0 <= x <= 100) or not (0 <= y <= 100):
                         fehler.append(f"[{sec_name} -> {act_name}] Pin #{p_idx+1} hat ungültige Koordinaten: x={x}, y={y} (muss 0..100 sein).")
-                    if not p.get("title") or not p.get("desc"):
-                        warnungen.append(f"[{sec_name} -> {act_name}] Pin #{p_idx+1} ('{p.get('title')}') hat unvollständigen Titel/Text.")
+                    desc = p.get("desc") or p.get("content") or p.get("text")
+                    title = p.get("title") or p.get("name")
+                    if not title or not desc:
+                        warnungen.append(f"[{sec_name} -> {act_name}] Pin #{p_idx+1} ('{title}') hat unvollständigen Titel/Text.")
 
             # 2. Simulationen
             elif act_type == "simulation":
