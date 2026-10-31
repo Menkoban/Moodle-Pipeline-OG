@@ -46,16 +46,18 @@ def _find_testinstanz_home():
     env_path = os.environ.get("MOODLE_TESTINSTANZ_HOME")
     if env_path and os.path.isdir(env_path):
         return env_path
+    # Zuerst der Geschwisterordner im Monorepo (.claude/skills/moodle-testinstanz),
+    # damit nie eine veraltete globale Installation gewinnt.
+    sibling = os.path.normpath(os.path.join(HERE, "..", "..", "moodle-testinstanz"))
     candidates = [
-        os.path.expanduser("~/.gemini/config/skills/moodle-testinstanz"),
-        os.path.normpath(os.path.join(HERE, "..", "..", "moodle-testinstanz")),
-        os.path.normpath(os.path.join(HERE, "..", "moodle-testinstanz")),
+        sibling,
         os.path.expanduser("~/.claude/skills/moodle-testinstanz"),
+        os.path.expanduser("~/.gemini/config/skills/moodle-testinstanz"),
     ]
     for c in candidates:
         if os.path.isdir(c):
             return c
-    return os.path.expanduser("~/.claude/skills/moodle-testinstanz")
+    return sibling
 
 TESTINSTANZ_HOME = _find_testinstanz_home()
 

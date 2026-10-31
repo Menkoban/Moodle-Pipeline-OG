@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="600" viewBox="0 0 1280 600" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif">
+<title>Ablauf der Pipeline: Grill-Me, linearer oder adaptiver Builder, Testinstanz, Spielwiese</title>
+<rect x="1" y="1" width="1278" height="598" rx="22" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+<text x="40" y="56" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">PHASE 0 · INTAKE</text>
+<text x="360" y="56" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">PHASE 1–2 · KURSBAU</text>
+<text x="760" y="56" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">PHASE 3 · PRÜFUNG</text>
+<text x="1040" y="56" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">ERPROBUNG</text>
+<g transform="translate(40 175)">
+<rect width="260" height="300" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+<path d="M0 18 a18 18 0 0 1 18 -18 h224 a18 18 0 0 1 18 18 v38 h-260 z" fill="#0284c7"/>
+<text x="20" y="25" font-size="12" font-weight="700" fill="#ffffff" opacity="0.85" letter-spacing="1">GATE 0</text>
+<text x="20" y="46" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#ffffff">moodle-kurs-grill-me</text>
+<circle cx="26" cy="81" r="3.5" fill="#0284c7"/>
+<text x="38" y="86" font-size="15" fill="#334155">Interview in Themen-Clustern</text>
+<circle cx="26" cy="108" r="3.5" fill="#0284c7"/>
+<text x="38" y="113" font-size="15" fill="#334155">Methoden- und Format-Wahl</text>
+<circle cx="26" cy="135" r="3.5" fill="#0284c7"/>
+<text x="38" y="140" font-size="15" fill="#334155">Abgleich mit dem Lehrplan</text>
+<rect x="16" y="248" width="228" height="36" rx="10" fill="#e0f2fe"/>
+<text x="130" y="271" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="14" font-weight="700" fill="#0284c7">kurs-steckbrief.json</text>
+</g>
+<g transform="translate(360 80)">
+<rect width="340" height="235" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+<path d="M0 18 a18 18 0 0 1 18 -18 h304 a18 18 0 0 1 18 18 v38 h-340 z" fill="#7c3aed"/>
+<text x="20" y="25" font-size="12" font-weight="700" fill="#ffffff" opacity="0.85" letter-spacing="1">GATES 1–5 · LINEAR</text>
+<text x="20" y="46" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#ffffff">moodle-mbz-builder</text>
+<circle cx="26" cy="81" r="3.5" fill="#7c3aed"/>
+<text x="38" y="86" font-size="15" fill="#334155">course.json und DIN-Diagramme</text>
+<circle cx="26" cy="108" r="3.5" fill="#7c3aed"/>
+<text x="38" y="113" font-size="15" fill="#334155">Hotspots, Simulationen, Formulare</text>
+<circle cx="26" cy="135" r="3.5" fill="#7c3aed"/>
+<text x="38" y="140" font-size="15" fill="#334155">PDF, PPTX und Materialdossier</text>
+<rect x="16" y="183" width="308" height="36" rx="10" fill="#ede9fe"/>
+<text x="170" y="206" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="14" font-weight="700" fill="#7c3aed">kurs.mbz + Vorschau</text>
+</g>
+<g transform="translate(360 335)">
+<rect width="340" height="235" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+<path d="M0 18 a18 18 0 0 1 18 -18 h304 a18 18 0 0 1 18 18 v38 h-340 z" fill="#0f766e"/>
+<text x="20" y="25" font-size="12" font-weight="700" fill="#ffffff" opacity="0.85" letter-spacing="1">GATES 1–5 · ADAPTIV</text>
+<text x="20" y="46" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#ffffff">moodle-adaptive-mbz-builder</text>
+<circle cx="26" cy="81" r="3.5" fill="#0f766e"/>
+<text x="38" y="86" font-size="15" fill="#334155">Einstufung und Niveaupfade</text>
+<circle cx="26" cy="108" r="3.5" fill="#0f766e"/>
+<text x="38" y="113" font-size="15" fill="#334155">Auf- und Absteigen, Wiederholung</text>
+<circle cx="26" cy="135" r="3.5" fill="#0f766e"/>
+<text x="38" y="140" font-size="15" fill="#334155">niveaugewichteter Score</text>
+<rect x="16" y="183" width="308" height="36" rx="10" fill="#ccfbf1"/>
+<text x="170" y="206" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="14" font-weight="700" fill="#0f766e">kurs.mbz (adaptiv)</text>
+</g>
+<g transform="translate(760 175)">
+<rect width="240" height="300" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+<path d="M0 18 a18 18 0 0 1 18 -18 h204 a18 18 0 0 1 18 18 v38 h-240 z" fill="#047857"/>
+<text x="20" y="25" font-size="12" font-weight="700" fill="#ffffff" opacity="0.85" letter-spacing="1">GATE 6</text>
+<text x="20" y="46" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#ffffff">moodle-testinstanz</text>
+<circle cx="26" cy="81" r="3.5" fill="#047857"/>
+<text x="38" y="86" font-size="15" fill="#334155">echter Restore</text>
+<circle cx="26" cy="108" r="3.5" fill="#047857"/>
+<text x="38" y="113" font-size="15" fill="#334155">Moodle 4.5, ohne Docker</text>
+<circle cx="26" cy="135" r="3.5" fill="#047857"/>
+<text x="38" y="140" font-size="15" fill="#334155">Stacktrace bei Fehler</text>
+<rect x="16" y="248" width="208" height="36" rx="10" fill="#d1fae5"/>
+<text x="120" y="271" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="14" font-weight="700" fill="#047857">GATE GRÜN</text>
+</g>
+<g transform="translate(1040 175)">
+<rect width="200" height="300" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+<path d="M0 18 a18 18 0 0 1 18 -18 h164 a18 18 0 0 1 18 18 v38 h-200 z" fill="#b45309"/>
+<text x="20" y="25" font-size="12" font-weight="700" fill="#ffffff" opacity="0.85" letter-spacing="1">GATE 7</text>
+<text x="20" y="46" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#ffffff">moodle-spielwiese</text>
+<circle cx="26" cy="81" r="3.5" fill="#b45309"/>
+<text x="38" y="86" font-size="15" fill="#334155">dauerhaftes Moodle</text>
+<circle cx="26" cy="108" r="3.5" fill="#b45309"/>
+<text x="38" y="113" font-size="15" fill="#334155">Testschüler 01–05</text>
+<circle cx="26" cy="135" r="3.5" fill="#b45309"/>
+<text x="38" y="140" font-size="15" fill="#334155">Plugin-Entwicklung</text>
+<rect x="16" y="248" width="168" height="36" rx="10" fill="#fef3c7"/>
+<text x="100" y="271" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="14" font-weight="700" fill="#b45309">localhost:8090</text>
+</g>
+<path d="M300 325 C330 325 320 197 349 197" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><path d="M349 190 L360 197 L349 204 z" fill="#94a3b8"/>
+<path d="M300 325 C330 325 320 452 349 452" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><path d="M349 445 L360 452 L349 459 z" fill="#94a3b8"/>
+<path d="M700 197 C730 197 720 325 749 325" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><path d="M749 318 L760 325 L749 332 z" fill="#94a3b8"/>
+<path d="M700 452 C730 452 720 325 749 325" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><path d="M749 318 L760 325 L749 332 z" fill="#94a3b8"/>
+<path d="M1000 325 L1029 325" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><path d="M1029 318 L1040 325 L1029 332 z" fill="#94a3b8"/>
+</svg>

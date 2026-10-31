@@ -43,9 +43,16 @@ from datetime import datetime
 PG = os.environ.get("MOODLE_SPIELWIESE_HOME", r"C:\moodle-playground")
 GATE_LAB = os.environ.get("MOODLE_GATE_LAB",
                           os.path.expanduser(r"~\.claude\moodle-lab"))
-TESTINSTANZ = os.environ.get(
-    "MOODLE_TESTINSTANZ_HOME",
-    os.path.expanduser(r"~\.claude\skills\moodle-testinstanz"))
+def _find_testinstanz_home():
+    """Geschwisterordner im Monorepo zuerst, dann die alte globale Installation."""
+    sibling = os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "..", "moodle-testinstanz"))
+    if os.path.isdir(sibling):
+        return sibling
+    return os.path.expanduser(r"~\.claude\skills\moodle-testinstanz")
+
+
+TESTINSTANZ = os.environ.get("MOODLE_TESTINSTANZ_HOME") or _find_testinstanz_home()
 
 DB_PORT = 3308
 WWW_PORT = 8090

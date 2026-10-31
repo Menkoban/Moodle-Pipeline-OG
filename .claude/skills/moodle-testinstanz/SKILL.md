@@ -26,7 +26,7 @@ Jeder so gefundene Fehler wird anschließend als statischer Check in
 ## Entry-Skript & Vertrag (VERBINDLICH)
 
 ```
-~/.claude/skills/moodle-testinstanz/scripts/run_restore.py
+<skill-dir>/scripts/run_restore.py
 (Discovery-Override für Aufrufer: Env MOODLE_TESTINSTANZ_HOME)
 ```
 
@@ -60,10 +60,10 @@ behält den Kurs zum Inspizieren (Login unten). Mehrfach sicher aufrufbar.
 ## Typische interaktive Nutzung
 
 ```bash
-python ~/.claude/skills/moodle-testinstanz/scripts/run_restore.py --health
-python ~/.claude/skills/moodle-testinstanz/scripts/run_restore.py "C:/…/kurs.mbz"
-python ~/.claude/skills/moodle-testinstanz/scripts/run_restore.py "C:/…/kurs.mbz" --json
-python ~/.claude/skills/moodle-testinstanz/scripts/run_restore.py "C:/…/kurs.mbz" --keep
+python <skill-dir>/scripts/run_restore.py --health
+python <skill-dir>/scripts/run_restore.py "C:/…/kurs.mbz"
+python <skill-dir>/scripts/run_restore.py "C:/…/kurs.mbz" --json
+python <skill-dir>/scripts/run_restore.py "C:/…/kurs.mbz" --keep
 ```
 
 - **„Warum lehnt Moodle meinen Kurs ab?"** → Restore ohne `--json` fahren;

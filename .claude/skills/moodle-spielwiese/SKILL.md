@@ -35,7 +35,7 @@ ist die zentrale Fehlbedienung, gegen die dieses Modell schützt.
 ## Entry-Skript & Vertrag
 
 ```
-~/.claude/skills/moodle-spielwiese/scripts/spielwiese.py
+<skill-dir>/scripts/spielwiese.py
 (Override: Env MOODLE_SPIELWIESE_HOME, Default C:\moodle-playground)
 ```
 
@@ -135,10 +135,10 @@ Zugänge: `admin` / `Admin123!` · (ab Stufe 3) `schueler01`–`schueler05` /
 ## Typische Nutzung
 
 ```bash
-python ~/.claude/skills/moodle-spielwiese/scripts/spielwiese.py setup
-python ~/.claude/skills/moodle-spielwiese/scripts/spielwiese.py start
-python ~/.claude/skills/moodle-spielwiese/scripts/spielwiese.py status --json
-python ~/.claude/skills/moodle-spielwiese/scripts/spielwiese.py stop
+python <skill-dir>/scripts/spielwiese.py setup
+python <skill-dir>/scripts/spielwiese.py start
+python <skill-dir>/scripts/spielwiese.py status --json
+python <skill-dir>/scripts/spielwiese.py stop
 ```
 
 Für alles, was Oberfläche ist, danach der Playwright-MCP gegen
