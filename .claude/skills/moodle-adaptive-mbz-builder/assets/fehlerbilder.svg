@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" font-family="Arial, Helvetica, sans-serif">
+  <rect width="600" height="360" fill="#ffffff"/>
+  <text x="300" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a1a1a">Häufige Fehler beim Bohren</text>
+
+  <!-- Spalte 1: Bohrer verläuft -->
+  <rect x="20" y="50" width="180" height="290" rx="8" fill="#fdeceb" stroke="#d8312c" stroke-width="2"/>
+  <text x="110" y="76" text-anchor="middle" font-size="15" font-weight="bold" fill="#a3322f">Bohrer verläuft</text>
+  <rect x="55" y="92" width="110" height="40" fill="#cfd3d7" stroke="#3c4043" stroke-width="1.5"/>
+  <ellipse cx="95" cy="112" rx="9" ry="6" fill="#fff" stroke="#a3322f" stroke-width="2"/>
+  <line x1="120" y1="92" x2="135" y2="132" stroke="#a3322f" stroke-width="2" stroke-dasharray="4"/>
+  <text x="110" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">Ursache</text>
+  <text x="110" y="192" text-anchor="middle" font-size="12" fill="#5f6368">nicht angekörnt</text>
+  <text x="110" y="230" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f6e56">Abhilfe</text>
+  <text x="110" y="250" text-anchor="middle" font-size="12" fill="#0f6e56">vorher ankörnen,</text>
+  <text x="110" y="268" text-anchor="middle" font-size="12" fill="#0f6e56">Werkstück spannen</text>
+
+  <!-- Spalte 2: Loch zu groß/unrund -->
+  <rect x="210" y="50" width="180" height="290" rx="8" fill="#fbeec9" stroke="#ba7517" stroke-width="2"/>
+  <text x="300" y="76" text-anchor="middle" font-size="15" font-weight="bold" fill="#854f0b">Loch unrund</text>
+  <rect x="245" y="92" width="110" height="40" fill="#cfd3d7" stroke="#3c4043" stroke-width="1.5"/>
+  <ellipse cx="300" cy="112" rx="16" ry="8" fill="#fff" stroke="#854f0b" stroke-width="2"/>
+  <text x="300" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">Ursache</text>
+  <text x="300" y="192" text-anchor="middle" font-size="12" fill="#5f6368">Werkstück locker /</text>
+  <text x="300" y="208" text-anchor="middle" font-size="12" fill="#5f6368">Drehzahl falsch</text>
+  <text x="300" y="240" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f6e56">Abhilfe</text>
+  <text x="300" y="260" text-anchor="middle" font-size="12" fill="#0f6e56">fest spannen,</text>
+  <text x="300" y="278" text-anchor="middle" font-size="12" fill="#0f6e56">Drehzahl anpassen</text>
+
+  <!-- Spalte 3: Grat -->
+  <rect x="400" y="50" width="180" height="290" rx="8" fill="#fdeceb" stroke="#d8312c" stroke-width="2"/>
+  <text x="490" y="76" text-anchor="middle" font-size="15" font-weight="bold" fill="#a3322f">Grat am Rand</text>
+  <rect x="435" y="92" width="110" height="40" fill="#cfd3d7" stroke="#3c4043" stroke-width="1.5"/>
+  <circle cx="490" cy="112" r="9" fill="#fff" stroke="#3c4043" stroke-width="1.5"/>
+  <path d="M 480 104 l -6 -6 M 500 104 l 6 -6" stroke="#a3322f" stroke-width="2"/>
+  <text x="490" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">Ursache</text>
+  <text x="490" y="192" text-anchor="middle" font-size="12" fill="#5f6368">stumpfer Bohrer /</text>
+  <text x="490" y="208" text-anchor="middle" font-size="12" fill="#5f6368">nicht entgratet</text>
+  <text x="490" y="240" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f6e56">Abhilfe</text>
+  <text x="490" y="260" text-anchor="middle" font-size="12" fill="#0f6e56">scharfer Bohrer,</text>
+  <text x="490" y="278" text-anchor="middle" font-size="12" fill="#0f6e56">entgraten/senken</text>
+</svg>
