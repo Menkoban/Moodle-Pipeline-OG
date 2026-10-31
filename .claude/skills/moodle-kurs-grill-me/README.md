@@ -47,12 +47,8 @@ graph LR
 Sobald der Steckbrief freigegeben ist, wird der Kurs nahtlos an den jeweiligen Builder übergeben und kann in der **Moodle-Spielwiese** (`python spielwiese.py import <kurs.mbz> --schueler`) direkt erprobt werden.
 
 
-## 📥 Anleitung zum Herunterladen & Installieren
+## 📥 Installation
 
-```powershell
-# Für Google Antigravity / Gemini CLI:
-git clone https://github.com/Menkoban/moodle-kurs-grill-me.git "$HOME\.gemini\config\skills\moodle-kurs-grill-me"
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-kurs-grill-me/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
-# Für Claude Code:
-git clone https://github.com/Menkoban/moodle-kurs-grill-me.git ~/.claude/skills/moodle-kurs-grill-me
-```
+Für den Curriculum-Abruf (`scripts/fetch_curriculum.py`) bindet der Skill den Geschwisterordner `../shared` ein; der liegt im Monorepo unter `.claude/skills/shared/`.

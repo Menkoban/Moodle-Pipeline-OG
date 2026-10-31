@@ -1,0 +1,16 @@
+# Moodle-Pipeline — alle Python-Abhängigkeiten der Skills
+# Installation:  python -m pip install -r requirements.txt
+#
+# Builder (moodle-mbz-builder, moodle-adaptive-mbz-builder): Materialien (PDF/PPTX)
+# und SVG-Diagrammprüfung. build_mbz.py selbst braucht nur die Standardbibliothek.
+svglib
+reportlab
+pymupdf
+python-pptx
+python-docx
+pillow
+# moodle-kurs-grill-me (Lehrplan-Abruf über shared/retrieval.py)
+pdfplumber
+pypdf
+# Tests
+pytest

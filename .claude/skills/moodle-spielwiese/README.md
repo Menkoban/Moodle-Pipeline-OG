@@ -25,10 +25,7 @@ Läuft lokal unter `C:\moodle-playground` (Apache 2.4 + mod_fcgid auf Port **809
 
 ## 💻 Installation & Setup
 
-**Antigravity / Gemini CLI:**
-```powershell
-git clone https://github.com/Menkoban/moodle-spielwiese.git "$HOME\.gemini\config\skills\moodle-spielwiese"
-```
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-spielwiese/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
 **Einmalige Einrichtung der Spielwiese:**
 ```bash

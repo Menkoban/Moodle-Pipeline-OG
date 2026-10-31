@@ -303,7 +303,7 @@ Für mathematische, statistische und naturwissenschaftliche Kurse gelten verbind
    - Vollständiges Spezifikations-Objekt mit `compute` (JS-Berechnung), `visual` (responsives SVG-Canvas), `render` (DOM-Live-Aktualisierung bei Slider-Events) und `challenge` (Prüfaufgabe mit Feedback).
 6. **Validierungspflicht & Referenz-Vorlage:**
    - Vor jeder Auslieferung müssen `validate_math_formulas.py` und `validate_math_symbols.py` fehlerfrei durchlaufen (Gate 7 in `check_delivery.py`).
-   - Als verbindliche Few-Shot-Referenz für alle mathematischen und statistischen Kurse dient [`assets/fewshot_mathematik_statistik.json`](file:///C:/Users/User/.gemini/config/skills/moodle-mbz-builder/assets/fewshot_mathematik_statistik.json) (analog zu `assets/fewshot_bohrmaschine.json` für gewerblich-technische Kurse).
+   - Als verbindliche Few-Shot-Referenz für alle mathematischen und statistischen Kurse dient [`assets/fewshot_mathematik_statistik.json`](assets/fewshot_mathematik_statistik.json) (analog zu `assets/fewshot_bohrmaschine.json` für gewerblich-technische Kurse).
 
 
 

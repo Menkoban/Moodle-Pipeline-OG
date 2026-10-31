@@ -78,30 +78,12 @@ Dieser Skill kann sowohl mit **Antigravity / Gemini CLI** als auch mit **Claude 
 
 ### 1. Repository klonen
 
-**Für Antigravity / Gemini CLI (Standard):**
-```powershell
-# Windows (PowerShell)
-git clone https://github.com/Menkoban/moodle-mbz-builder.git "$HOME\.gemini\config\skills\moodle-mbz-builder"
-```
-```bash
-# Linux / macOS
-git clone https://github.com/Menkoban/moodle-mbz-builder.git ~/.gemini/config/skills/moodle-mbz-builder
-```
-
-**Für Claude Code:**
-```powershell
-# Windows (PowerShell)
-git clone https://github.com/Menkoban/moodle-mbz-builder.git "$HOME\.claude\skills\moodle-mbz-builder"
-```
-```bash
-# Linux / macOS
-git clone https://github.com/Menkoban/moodle-mbz-builder.git ~/.claude/skills/moodle-mbz-builder
-```
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-mbz-builder/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
 ### 2. Python-Abhängigkeiten installieren
 
 ```bash
-cd moodle-mbz-builder
+cd .claude/skills/moodle-mbz-builder
 pip install -r requirements.txt
 playwright install chromium
 ```
@@ -167,10 +149,10 @@ python scripts/check_delivery.py . --allow-video-placeholder
 
 ## 🤝 Zusammenarbeit in der Pipeline
 
-`moodle-mbz-builder` arbeitet Hand in Hand mit den weiteren Modulen der Moodle-Suite:
-- 📋 [**moodle-kurs-grill-me**](https://github.com/Menkoban/moodle-kurs-grill-me): Didaktisches Alignment-Interview vor dem Kursbau.
-- 🧪 [**moodle-testinstanz**](https://github.com/Menkoban/moodle-testinstanz): Steriles Moodle-4.5-Lab für automatisierte Live-Restore-Checks.
-- 🎮 [**moodle-spielwiese**](https://github.com/Menkoban/moodle-spielwiese): Persistente Moodle-4.5-Spielwiese (Port 8090) zur Erprobung mit Testschülern.
+`moodle-mbz-builder` arbeitet Hand in Hand mit den weiteren Skills im selben Repo:
+- 📋 [**moodle-kurs-grill-me**](../moodle-kurs-grill-me/): Didaktisches Alignment-Interview vor dem Kursbau.
+- 🧪 [**moodle-testinstanz**](../moodle-testinstanz/): Steriles Moodle-4.5-Lab für automatisierte Live-Restore-Checks.
+- 🎮 [**moodle-spielwiese**](../moodle-spielwiese/): Persistente Moodle-4.5-Spielwiese (Port 8090) zur Erprobung mit Testschülern.
 
 ---
 

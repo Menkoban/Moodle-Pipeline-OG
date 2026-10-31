@@ -3,8 +3,8 @@
 Ein Claude-Code-Skill, der `.mbz`-Moodle-Kurssicherungen gegen ein **echtes,
 lokales Moodle 4.5** restauriert (portable, **kein Docker**) — als optionales
 **Live-Restore-Gate** für die Builder-Skills
-[`moodle-mbz-builder`](https://github.com/Menkoban/moodle-mbz-builder) /
-[`moodle-adaptive-mbz-builder`](https://github.com/Menkoban/moodle-adaptive-mbz-builder)
+[`moodle-mbz-builder`](../moodle-mbz-builder/) /
+[`moodle-adaptive-mbz-builder`](../moodle-adaptive-mbz-builder/)
 **und** interaktiv („restaurier mir diese .mbz und zeig den Stacktrace").
 
 Warum: Die gefährlichste Fehlerklasse generierter Backups sind
@@ -19,38 +19,25 @@ Dies ist ein **[Claude-Code-Skill](https://docs.claude.com/en/docs/claude-code)*
 Schritt 1 (klonen) läuft überall; das Lab in Schritt 2 ist derzeit **Windows-only**
 (portable `.exe`-Binaries).
 
-**Schritt 1 — Skill an den festen Discovery-Pfad klonen**
+**Schritt 1 — Repo klonen**
 
-Linux / macOS (auch Windows Git-Bash):
-
-```bash
-git clone https://github.com/Menkoban/moodle-testinstanz ~/.claude/skills/moodle-testinstanz
-```
-
-Windows (PowerShell):
-
-```powershell
-git clone https://github.com/Menkoban/moodle-testinstanz "$HOME\.claude\skills\moodle-testinstanz"
-```
-
-> **Privates Repo?** Vorher anmelden: `gh auth login`, dann
-> `gh repo clone Menkoban/moodle-testinstanz <zielpfad>` (oder per SSH
-> `git clone git@github.com:Menkoban/moodle-testinstanz <zielpfad>`).
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-testinstanz/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
+Die Builder finden diesen Skill automatisch als Geschwisterordner.
 
 **Schritt 2 — Lab aufbauen** (einmalig, ~10–20 min, ≈450 MB von offiziellen
 Quellen: windows.php.net, archive.mariadb.org, packaging.moodle.org):
 
 ```bash
-python ~/.claude/skills/moodle-testinstanz/scripts/setup_lab.py          # Git-Bash
+python .claude/skills/moodle-testinstanz/scripts/setup_lab.py          # Git-Bash
 ```
 ```powershell
-python "$HOME\.claude\skills\moodle-testinstanz\scripts\setup_lab.py"    # PowerShell
+python ".claude\skills\moodle-testinstanz\scripts\setup_lab.py"    # PowerShell
 ```
 
 **Schritt 3 — prüfen:**
 
 ```bash
-python ~/.claude/skills/moodle-testinstanz/scripts/run_restore.py --health
+python .claude/skills/moodle-testinstanz/scripts/run_restore.py --health
 #  -> "Lab bereit — Moodle 4.5.x, format_tiles=True, mod_hvp=True" (Exit 0)
 ```
 
@@ -58,7 +45,7 @@ Voraussetzungen: **Windows** (portable .exe-Binaries), **Python 3.10+**
 (nur Standardbibliothek!), freier **Port 3307**, MS Visual C++ Runtime
 2015–2022 (auf normalen Systemen vorhanden). Lab-Ort: `~/.claude/moodle-lab`
 (Override: Env `MOODLE_LAB_HOME`). **Aktualisieren:**
-`git -C ~/.claude/skills/moodle-testinstanz pull`.
+`git pull` im Repo.
 
 Ab dann erkennt das Schluss-Gate (`check_delivery.py`) der Builder-Skills den
 Skill **automatisch** und führt bei jedem Kurs-Build einen echten Restore aus.
@@ -125,12 +112,3 @@ format_tiles, mod_hvp werden beim Setup von ihren offiziellen Quellen geladen un
 unterliegen ihren eigenen Lizenzen (PHP License, GPLv2, GPLv3, GPLv3, GPLv3).
 
 
-## 📥 Anleitung zum Herunterladen & Installieren
-
-```powershell
-# Für Google Antigravity / Gemini CLI:
-git clone https://github.com/Menkoban/moodle-testinstanz.git "$HOME\.gemini\config\skills\moodle-testinstanz"
-
-# Für Claude Code:
-git clone https://github.com/Menkoban/moodle-testinstanz.git ~/.claude/skills/moodle-testinstanz
-```

@@ -1,7 +1,7 @@
 # moodle-adaptive-mbz-builder
 
 > **Was dieser Skill zusätzlich kann:** Er ist der **adaptive Fork** von
-> [`moodle-mbz-builder`](https://github.com/Menkoban/moodle-mbz-builder) und
+> [`moodle-mbz-builder`](../moodle-mbz-builder/) und
 > erzeugt **verzweigte Kurse mit Niveaupfaden** — Einstufung, durchlässiges
 > Auf-/Absteigen, Wiederhol-Schleife und ein niveaugewichteter Dokumentations-
 > Score. Er erbt die **komplette lineare Toolchain** (Kacheln, Quizze, Glossar,
@@ -39,37 +39,10 @@ Kurs-Recap → Glossar → Material für Lehrkräfte*.
 
 ## Herunterladen & installieren
 
-Dies ist ein **[Claude-Code-Skill](https://docs.claude.com/en/docs/claude-code)** —
-du klonst ihn in den Skills-Ordner deiner Claude-Code-Installation
-(`~/.claude/skills/`); danach findet Claude ihn automatisch. Voraussetzung:
-**Git** und **Python 3.11+**.
-
-**Linux / macOS** (auch Windows Git-Bash):
-
-```bash
-git clone https://github.com/Menkoban/moodle-adaptive-mbz-builder ~/.claude/skills/moodle-adaptive-mbz-builder
-python3 -m pip install -r ~/.claude/skills/moodle-adaptive-mbz-builder/requirements.txt
-```
-
-**Windows (PowerShell):**
-
-```powershell
-git clone https://github.com/Menkoban/moodle-adaptive-mbz-builder "$HOME\.claude\skills\moodle-adaptive-mbz-builder"
-python -m pip install -r "$HOME\.claude\skills\moodle-adaptive-mbz-builder\requirements.txt"
-```
-
-> **Privates Repo?** Vorher anmelden — am einfachsten mit der GitHub-CLI:
-> `gh auth login`, dann `gh repo clone Menkoban/moodle-adaptive-mbz-builder <zielpfad>`.
-> Alternativ per SSH: `git clone git@github.com:Menkoban/moodle-adaptive-mbz-builder <zielpfad>`.
-> Ist das Repo öffentlich, funktioniert der HTTPS-Befehl oben direkt.
-
-**Aktualisieren:** `git -C ~/.claude/skills/moodle-adaptive-mbz-builder pull`
-(Windows: `git -C "$HOME\.claude\skills\moodle-adaptive-mbz-builder" pull`).
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-adaptive-mbz-builder/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
 Der Skill ist self-contained: alle Skripte finden einander relativ zum Ordner,
 egal wohin er installiert wird. Kein Moodle nötig, um die `.mbz` zu bauen.
-
----
 
 ## Schnellstart
 
