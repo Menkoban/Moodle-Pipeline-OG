@@ -49,6 +49,6 @@ Sobald der Steckbrief freigegeben ist, wird der Kurs nahtlos an den jeweiligen B
 
 ## 📥 Installation
 
-Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-kurs-grill-me/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG`](https://github.com/Menkoban/Moodle-Pipeline-OG) und liegt dort unter `.claude/skills/moodle-kurs-grill-me/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
 Für den Curriculum-Abruf (`scripts/fetch_curriculum.py`) bindet der Skill den Geschwisterordner `../shared` ein; der liegt im Monorepo unter `.claude/skills/shared/`.

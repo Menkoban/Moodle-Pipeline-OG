@@ -78,7 +78,7 @@ Dieser Skill kann sowohl mit **Antigravity / Gemini CLI** als auch mit **Claude 
 
 ### 1. Repository klonen
 
-Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-mbz-builder/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG`](https://github.com/Menkoban/Moodle-Pipeline-OG) und liegt dort unter `.claude/skills/moodle-mbz-builder/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
 ### 2. Python-Abhängigkeiten installieren
 

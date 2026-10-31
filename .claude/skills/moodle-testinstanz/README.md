@@ -21,7 +21,7 @@ Schritt 1 (klonen) läuft überall; das Lab in Schritt 2 ist derzeit **Windows-o
 
 **Schritt 1 — Repo klonen**
 
-Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-testinstanz/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG`](https://github.com/Menkoban/Moodle-Pipeline-OG) und liegt dort unter `.claude/skills/moodle-testinstanz/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 Die Builder finden diesen Skill automatisch als Geschwisterordner.
 
 **Schritt 2 — Lab aufbauen** (einmalig, ~10–20 min, ≈450 MB von offiziellen
