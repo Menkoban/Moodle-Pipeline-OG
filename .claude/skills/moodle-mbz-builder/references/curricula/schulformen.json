@@ -1,0 +1,32 @@
+﻿{
+    "schulformen":  [
+                        {
+                            "id":  "bs",
+                            "name":  "Duale Berufsschule (Duale Ausbildung nach BBiG/HwO)"
+                        },
+                        {
+                            "id":  "bfs",
+                            "name":  "Berufsfachschule (BFS / Einjährige \u0026 Zweijährige)"
+                        },
+                        {
+                            "id":  "bgy",
+                            "name":  "Berufliches Gymnasium / Fachgymnasium (BGY)"
+                        },
+                        {
+                            "id":  "fos",
+                            "name":  "Fachoberschule (FOS / Klasse 11 \u0026 12)"
+                        },
+                        {
+                            "id":  "av",
+                            "name":  "Ausbildungsvorbereitung (AV / BVJ / BvB)"
+                        },
+                        {
+                            "id":  "fs",
+                            "name":  "Fachschule für Technik / Meisterkurs (Technikerschule)"
+                        },
+                        {
+                            "id":  "sek1_2",
+                            "name":  "Sekundarstufe 1 \u0026 2 (Allgemeinbildend: Realschule, Gymnasium, Gesamtschule)"
+                        }
+                    ]
+}

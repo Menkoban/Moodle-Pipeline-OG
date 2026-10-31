@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 5 690 573" width="690" height="573">
+<title>Stern-Dreieck-Schaltung — Hauptstromkreis</title>
+<style>
+
+:root {
+  --wid: #16232b;
+  --text: #16232b;
+  --text2: #5a6b75;
+  --strom: #e07a2f;
+  --spannung: #2f6fe0;
+  --magnet: #d94f9a;
+  --ok: #2e8b57;
+  --gefahr: #d0392b;
+  --leiter-l: #8a3b14;
+  --leiter-n: #2f6fe0;
+  --leiter-pe: #2e8b57;
+}
+svg { background: #ffffff; }
+text { font-family: "IBM Plex Mono", Consolas, "Liberation Mono", monospace; }
+text.bmk { font-size: 26px; font-weight: 700; fill: var(--text); }
+text.wert { font-size: 22px; font-weight: 500; fill: var(--text2); }
+text.pin { font-size: 18px; font-weight: 600; fill: var(--text2); }
+text.title { font-size: 28px; font-weight: 700; fill: var(--text); }
+text.leiter { font-size: 22px; font-weight: 700; fill: var(--text); }
+.wire { fill: none; stroke: var(--wid); stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-thick { fill: none; stroke: var(--wid); stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-pe { fill: none; stroke: var(--leiter-pe); stroke-width: 5px; stroke-dasharray: 12 8; stroke-linecap: round; stroke-linejoin: round; }
+.wire-n { fill: none; stroke: var(--leiter-n); stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.knoten { fill: var(--wid); stroke: none; }
+.klemme-dot { fill: #ffffff; stroke: var(--wid); stroke-width: 3px; }
+
+</style>
+<rect x="0" y="5" width="690" height="573" fill="#ffffff"/>
+
+  <!-- Node: K1_1 (schliesser) -->
+  <g id="K1_1" class="sym " transform="translate(140, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K1 (Netz)</text>
+  </g>
+  <!-- Node: K1_2 (schliesser) -->
+  <g id="K1_2" class="sym " transform="translate(200, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: K1_3 (schliesser) -->
+  <g id="K1_3" class="sym " transform="translate(260, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: F1_1 (widerstand) -->
+  <g id="F1_1" class="sym " transform="translate(140, 300)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H20 M100 30 H120"/><rect x="20" y="14" width="80" height="32"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">F1</text>
+  </g>
+  <!-- Node: F1_2 (widerstand) -->
+  <g id="F1_2" class="sym " transform="translate(200, 300)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H20 M100 30 H120"/><rect x="20" y="14" width="80" height="32"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: F1_3 (widerstand) -->
+  <g id="F1_3" class="sym " transform="translate(260, 300)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H20 M100 30 H120"/><rect x="20" y="14" width="80" height="32"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: M1 (motor3) -->
+  <g id="M1" class="sym " transform="translate(200, 470)">
+    <g transform="rotate(0)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><circle cx="60" cy="30" r="30"/><text x="60" y="26" text-anchor="middle" transform="rotate(0 60 26)" font-family="BarlowC" font-weight="700" font-size="24" stroke="none" fill="var(--wid)">M</text><text x="60" y="50" text-anchor="middle" transform="rotate(0 60 50)" font-family="BarlowC" font-weight="700" font-size="22" stroke="none" fill="var(--wid)">3~</text></g>
+    </g>
+    </g>
+    <text class="bmk" x="60" y="-46" text-anchor="middle">M1</text><text class="wert" x="60" y="58" text-anchor="middle">U1,V1,W1 / U2,V2,W2</text>
+  </g>
+  <!-- Node: K2_1 (schliesser) -->
+  <g id="K2_1" class="sym " transform="translate(380, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K2 (Dreieck)</text>
+  </g>
+  <!-- Node: K2_2 (schliesser) -->
+  <g id="K2_2" class="sym " transform="translate(440, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: K2_3 (schliesser) -->
+  <g id="K2_3" class="sym " transform="translate(500, 160)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: K3_1 (schliesser) -->
+  <g id="K3_1" class="sym " transform="translate(380, 320)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">K3 (Stern)</text>
+  </g>
+  <!-- Node: K3_2 (schliesser) -->
+  <g id="K3_2" class="sym " transform="translate(440, 320)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    
+  </g>
+  <!-- Node: K3_3 (schliesser) -->
+  <g id="K3_3" class="sym " transform="translate(500, 320)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g>
+    </g>
+    
+  </g>  <path d="M 80 45 L 650 45" class="wire-thick" stroke="var(--leiter-l)" stroke-width="5"/>  <path d="M 80 75 L 650 75" class="wire-thick" stroke="var(--leiter-l)" stroke-width="5"/>  <path d="M 80 105 L 650 105" class="wire-thick" stroke="var(--leiter-l)" stroke-width="5"/>  <path d="M 140 45 L 140 160" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 200 75 L 200 160" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 260 105 L 260 160" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 140 280 L 140 300" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 200 280 L 200 300" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 260 280 L 260 300" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 140 420 L 200 470" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 200 420 L 200 470" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 260 420 L 200 470" class="wire" stroke="var(--wid)" stroke-width="5"/>  <path d="M 380 440 L 500 440" class="wire" stroke="var(--wid)" stroke-width="5"/>  <circle class="knoten" cx="140" cy="45" r="7" fill="var(--wid)"/>  <circle class="knoten" cx="200" cy="75" r="7" fill="var(--wid)"/>  <circle class="knoten" cx="260" cy="105" r="7" fill="var(--wid)"/>  <circle class="knoten" cx="380" cy="440" r="7" fill="var(--wid)"/>  <circle class="knoten" cx="440" cy="440" r="7" fill="var(--wid)"/>  <circle class="knoten" cx="500" cy="440" r="7" fill="var(--wid)"/>  <text class="leiter" x="40" y="50" text-anchor="start" font-size="24px" font-weight="600">L1</text>  <text class="leiter" x="40" y="80" text-anchor="start" font-size="24px" font-weight="600">L2</text>  <text class="leiter" x="40" y="110" text-anchor="start" font-size="24px" font-weight="600">L3</text>
+</svg>

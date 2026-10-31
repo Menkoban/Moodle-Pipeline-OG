@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45 -80 215 343"
+     width="430" height="686"
+     data-sym="wechsler" data-gruppe="Schaltgeräte"
+     data-prioritaet="1" data-folge="082"
+     data-norm="Ein Hebel und zwei feste Kontakte an drei Anschlüssen; im Ruhezustand liegt der Hebel am Öffner-Kontakt mit dem Querbalken an, der Schließer-Kontakt bleibt frei." data-quelle="Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Wechsler mit Unterbrechung'"
+     data-lage="Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts.">
+<title>wechsler — Schaltzeichen nach DIN EN 60617</title>
+<desc>Ein Hebel und zwei feste Kontakte an drei Anschlüssen; im Ruhezustand liegt der Hebel am Öffner-Kontakt mit dem Querbalken an, der Schließer-Kontakt bleibt frei. | Quelle: Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Wechsler mit Unterbrechung' | Lage: Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts.</desc>
+<style>
+  :root{--wid:#16232b;--text:#16232b;--text2:#7a8a94;
+        --strom:#e07a2f;--spannung:#2f6fe0;--magnet:#d94f9a;--ok:#3a9d5d;--gefahr:#d0392b}
+  svg{background:#fff}
+  text[font-family="BarlowC"]{font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+  text[font-family="PlexMono"]{font-family:"IBM Plex Mono",Consolas,monospace}
+  .zelle{fill:none;stroke:#cfd9df;stroke-width:1.2;stroke-dasharray:6 5}
+  .pin{fill:#9fb0ba}
+  .nm{font-family:"IBM Plex Mono",Consolas,monospace;font-size:13px;font-weight:700;fill:#16232b}
+  .kop{font-family:"IBM Plex Mono",Consolas,monospace;font-size:7.5px;font-weight:700;fill:#8a99a3;letter-spacing:.4px}
+  .tx{font-family:system-ui,"Segoe UI",sans-serif;font-size:8.4px;fill:#3d4c56}
+  .tl{stroke:#e2e9ec;stroke-width:1}
+</style>
+<g class="raster">
+  <rect class="zelle" x="0" y="-30" width="120" height="60"/>
+  <circle class="pin" cx="0" cy="0" r="3"/><circle class="pin" cx="120" cy="0" r="3"/>
+</g>
+<g data-sym="wechsler" class="sym" transform="translate(0,0)">
+    <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5"
+       stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30"/><path d="M120 30 H90"/><path d="M120 -10 H90"/>
+     <path d="M90 -10 V10"/>
+     <path id="sw_arm" d="M30 30 L90 10"/></g>
+    </g></g>
+<text class="nm" x="-40" y="108">wechsler</text><line class="tl" x1="-40" y1="113" x2="168" y2="113"/><text class="kop" x="-40" y="120">BEDEUTUNG</text><text class="tx" x="-40" y="130">Ein Hebel und zwei feste Kontakte an drei</text><text class="tx" x="-40" y="140">Anschlüssen; im Ruhezustand liegt der Hebel am</text><text class="tx" x="-40" y="150">Öffner-Kontakt mit dem Querbalken an, der</text><text class="tx" x="-40" y="160">Schließer-Kontakt bleibt frei.</text><text class="kop" x="-40" y="169">QUELLE</text><text class="tx" x="-40" y="179">Westermann Tabellenbuch Elektrotechnik,</text><text class="tx" x="-40" y="189">Technische Dokumentation und Formeln, S. 448</text><text class="tx" x="-40" y="199">(DIN EN 60617-7), Zeile 'Wechsler mit</text><text class="tx" x="-40" y="209">Unterbrechung'</text><text class="kop" x="-40" y="218">LAGE</text><text class="tx" x="-40" y="228">Vorlage senkrecht gezeichnet (Strompfad von</text><text class="tx" x="-40" y="238">oben nach unten); hier um 90 Grad nach links</text><text class="tx" x="-40" y="248">gekippt, Strompfad von links nach rechts.</text>
+</svg>

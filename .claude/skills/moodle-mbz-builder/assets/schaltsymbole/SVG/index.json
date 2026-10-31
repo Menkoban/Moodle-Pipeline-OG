@@ -1,0 +1,1627 @@
+{
+  "hinweis": "Ein SVG je Schaltzeichen. Jede Datei traegt dieselben Angaben zusaetzlich als data-Attribute am <svg> und als <title>/<desc>. Die Zelle ist 120 x 60, die Anschluesse liegen auf (0,0) und (120,0) im Dateikoordinatensystem.",
+  "lage_hinweis": "Alle Zeichen sind WAAGERECHT gezeichnet, Strompfad links nach rechts. Das Tabellenbuch zeichnet einen Teil SENKRECHT; diese sind um 90 Grad NACH LINKS gekippt. Das Feld \"lage\" sagt es je Zeichen. Kennbuchstaben drehen nicht mit.",
+  "anzahl": 180,
+  "zeichen": {
+    "klemme": {
+      "datei": "klemme.svg",
+      "gruppe": "Anschluss und Erde",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "002",
+      "norm": "Kleiner OFFENER Kreis auf dem Anschlusspunkt; gefüllt wäre er die Verbindung zweier Leiter (knoten) und damit eine andere Aussage.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Spalte 'Anschlüsse und Leiterverbindungen', Zeile 'Anschluss (z. B. Klemme)'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "erde": {
+      "datei": "erde.svg",
+      "gruppe": "Anschluss und Erde",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "010",
+      "norm": "Senkrechter Anschlussstrich, darunter drei waagerechte Striche, von oben nach unten kürzer werdend; kein Kreis, keine Schraffur.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Spalte 'Erde, Masse, Äquipotenzial', Zeile 'Erde'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "schutzerde": {
+      "datei": "schutzerde.svg",
+      "gruppe": "Anschluss und Erde",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "132",
+      "norm": "Das Erdezeichen (drei kürzer werdende Striche) vollständig in einem Kreis; der Anschlussstrich läuft von oben in den Kreis hinein.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Schutzerde'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "masse": {
+      "datei": "masse.svg",
+      "gruppe": "Anschluss und Erde",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "133",
+      "norm": "Senkrechter Anschlussstrich auf EINEN waagerechten Balken, darunter drei schräge Schraffurstriche; drei parallele Striche wären die Erde.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Masse, Gehäuse'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "box": {
+      "datei": "box.svg",
+      "gruppe": "Anschluss und Erde",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "024",
+      "norm": "QUADRAT mit zwei Anschlüssen und einer Beschriftung darin; ein liegendes Rechteck an derselben Stelle wäre der Widerstandskörper.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Spalte 'Symbolelemente', Zeile 'Betriebsmittel, Komponente, Funktionseinheit, Funktion — Form 1'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "widerstand": {
+      "datei": "widerstand.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "004",
+      "norm": "Leeres Rechteck, lange Achse LÄNGS zum Strompfad, Anschlüsse mittig an den Schmalseiten; keine abgerundeten Ecken, kein Strich darin.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand, allgemein / Dämpfungsglied'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "widerstandEinstellbar": {
+      "datei": "widerstandEinstellbar.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "031",
+      "norm": "Widerstandsrechteck mit einem PFEIL schräg hindurch, der über beide Ecken hinausragt; der Pfeil heißt 'von außen einstellbar'. ZWEI Anschlüsse — mit drei Anschlüssen wäre es das Potenziometer.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand, veränderbar, allgemein'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "poti": {
+      "datei": "poti.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "011",
+      "norm": "Widerstandsrechteck mit einem Schleiferpfeil, der von außen senkrecht auf den Körper zeigt und selbst der DRITTE Anschluss ist; ein Zweipol mit Schrägpfeil wäre der einstellbare Widerstand.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand mit Schleifkontakt, Potenziometer'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "trimmer": {
+      "datei": "trimmer.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "031",
+      "norm": "Widerstandsrechteck mit schrägem Strich, der am oberen Ende einen kurzen Querstrich trägt — das Kennzeichen 'trimmbar' (einmal eingestellt, nicht im Betrieb bedient).",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand, einstellbar, mit Schleifkontakt'; Kennzeichen 'trimmbar' S. 445",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "ntc": {
+      "datei": "ntc.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "022",
+      "norm": "Widerstandsrechteck mit einem schrägen Strich OHNE Pfeilspitze und der Markierung −t°; das Minuszeichen ist die Aussage: der Widerstand fällt mit der Temperatur. Mit + wäre es der PTC.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand, spannungsabhängig, Varistor' (Bauform) mit Kennzeichen 'inhärent veränderbar', S. 445",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "ptc": {
+      "datei": "ptc.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "032",
+      "norm": "Widerstandsrechteck mit schrägem Strich ohne Pfeilspitze und der Markierung +t°: der Widerstand steigt mit der Temperatur.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Bauform wie NTC, Kennzeichen 'inhärent veränderbar' S. 445",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "varistor": {
+      "datei": "varistor.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "034",
+      "norm": "Widerstandsrechteck mit schrägem Strich ohne Pfeilspitze und dem Buchstaben U: der Widerstand hängt von der Spannung ab.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand, spannungsabhängig, Varistor'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "ldr": {
+      "datei": "ldr.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "033",
+      "norm": "Widerstandsrechteck mit zwei parallelen Pfeilen, die AUF das Bauteil zeigen; zeigten sie weg, wäre es ein lichtaussendendes Bauteil.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Widerstand, lichtempfindlich, Photowiderstand'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "heizelement": {
+      "datei": "heizelement.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "014",
+      "norm": "Widerstandsrechteck, durch senkrechte Striche in gleich breite Felder geteilt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Heizelement'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "kondensator": {
+      "datei": "kondensator.svg",
+      "gruppe": "Kondensatoren",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "027",
+      "norm": "Zwei GLEICH lange, parallele gerade Platten quer zum Strompfad, dazwischen ein Spalt; ungleich lange Platten wären die Primärzelle.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Kondensator, allgemein'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "kondensatorPol": {
+      "datei": "kondensatorPol.svg",
+      "gruppe": "Kondensatoren",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "037",
+      "norm": "Eine gerade Platte mit einem Pluszeichen daneben und eine doppelt gezogene Gegenplatte; ohne Pluszeichen und ohne Doppelplatte wäre es der ungepolte Kondensator.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Kondensator, gepolt, Elektrolyt-Kondensator'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "kondensatorVar": {
+      "datei": "kondensatorVar.svg",
+      "gruppe": "Kondensatoren",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "069",
+      "norm": "Kondensatorplatten mit einem Pfeil schräg hindurch: von außen einstellbar.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Kondensator, veränderbar'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "spule": {
+      "datei": "spule.svg",
+      "gruppe": "Induktivitäten",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "028",
+      "norm": "Vier gleich große Halbkreisbögen in einer Reihe, alle nach derselben Seite gewölbt; ein gefülltes Rechteck wäre die frühere, zurückgezogene Form.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Induktivität, Spule, Wicklung, Drossel — bevorzugte Form'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "spuleKern": {
+      "datei": "spuleKern.svg",
+      "gruppe": "Induktivitäten",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "029",
+      "norm": "Spulenbögen mit einem geraden Kernstrich auf der Seite, ZU DER SICH DIE BÖGEN WÖLBEN; liegt der Strich auf der anderen Seite, ist es kein genormtes Zeichen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Induktivität mit Magnetkern'; Gegenprobe S. 453, Transformatorwicklungen",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "trafo": {
+      "datei": "trafo.svg",
+      "gruppe": "Induktivitäten",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "052",
+      "norm": "Zwei getrennte Wicklungen, deren Bögen sich beide zu zwei geraden Kernstrichen in der Mitte hin wölben; vier Anschlüsse, die Wicklungen berühren einander nicht.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Einphasentransformator mit zwei Wicklungen', Form 2",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "quelleDC": {
+      "datei": "quelleDC.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "002",
+      "norm": "Kreis mit einem DURCHGEHENDEN Längsstrich von Anschluss zu Anschluss; ein quer stehender Strich wäre die Stromquelle, ein unterbrochener Längsstrich ist keins von beidem.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), 'Arten von Strömen und Spannungen'; Kreis als Symbolelement Form 3, S. 445",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "quelleI": {
+      "datei": "quelleI.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "009",
+      "norm": "Kreis mit einem Strich QUER zur Anschlussrichtung, der die Anschlussleitungen nicht berührt; läuft der Strich längs und durchgehend, ist es die Spannungsquelle.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), abgeleitet aus der Gegenüberstellung zur Spannungsquelle",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "quelleAC": {
+      "datei": "quelleAC.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "180",
+      "norm": "Kreis mit einer liegenden Sinuslinie in der Mitte, die die Anschlussleitungen nicht berührt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Kennzeichen 'Wechselstrom' (Sinuslinie)",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "batterie": {
+      "datei": "batterie.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "001",
+      "norm": "Zwei Platten gleicher Strichstärke, aber ungleicher Länge: die LANGE ist der Pluspol, die KURZE der Minuspol; hier liegt der Pluspol links. Gleich lange Platten wären der Kondensator.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Primärzelle, Primärelement, Akkumulator'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "akku": {
+      "datei": "akku.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "302",
+      "norm": "Gleiches Zeichen wie die Primärzelle — die Norm unterscheidet Batterie und Akkumulator im Schaltzeichen NICHT; der Unterschied steht im Betriebsmittelkennzeichen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Primärzelle, Primärelement, Akkumulator'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "batterieMehrzellig": {
+      "datei": "batterieMehrzellig.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "023",
+      "norm": "Vier Platten abwechselnd lang-kurz-lang-kurz: zwei in Reihe geschaltete Zellen; eine unsichtbare oder überzählige Platte macht daraus ein Zeichen, dessen Anschluss ins Leere läuft.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Primärzelle, mehrfach gereiht",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "generator": {
+      "datei": "generator.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "228",
+      "norm": "Kreis mit dem Kennbuchstaben G; mit M wäre es ein Motor, die Maschinenart steht allein im Buchstaben.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Maschine, allgemein', Kennbuchstabe G",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "solarzelle": {
+      "datei": "solarzelle.svg",
+      "gruppe": "Quellen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "298",
+      "norm": "Quadrat mit dem Kennbuchstaben G und dem Zeichen der Primärzelle darin, dazu zwei Pfeile, die von außen auf das Quadrat zeigen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Fotoelektrischer Generator'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "schalter": {
+      "datei": "schalter.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "003",
+      "norm": "Zwei Anschlussleitungen und ein beweglicher Hebel, der RECHTS angelenkt ist und NACH LINKS abhebt; sein freies Ende steht über dem blanken Ende der linken Zuleitung, ohne es zu berühren — offen. Kein Querbalken. Gefüllte Punkte an den Anschlüssen bedeuten 'Verbindung von Leitern' und gehören nicht dazu.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Schließer, Schaltfunktion, allgemein Schalter', Form 1",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "schliesser": {
+      "datei": "schliesser.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "107",
+      "norm": "Beweglicher Hebel, rechts angelenkt, nach LINKS abgehoben, ohne Querbalken: im Ruhezustand OFFEN. Der Öffner hebt in die GEGENRICHTUNG ab (nach rechts) und trägt dort den Querbalken — daran sind die beiden nebeneinander zu trennen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Schließer'; Schützschaltungen Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116, Klemmen 13/14",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "oeffner": {
+      "datei": "oeffner.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "107",
+      "norm": "Der Hebel ist LINKS angelenkt und hebt NACH RECHTS ab — die Gegenrichtung zum Schließer. Die rechte Anschlussleitung knickt um 90 Grad ab; dieser QUER stehende Balken ist der feste Kontakt, und die Hebelspitze liegt auf seinem freien Ende: im Ruhezustand GESCHLOSSEN. Ohne den Balken wäre es der Schließer.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Öffner'; Schützschaltungen Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116, Klemmen 21/22",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "wechsler": {
+      "datei": "wechsler.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "082",
+      "norm": "Ein Hebel und zwei feste Kontakte an drei Anschlüssen; im Ruhezustand liegt der Hebel am Öffner-Kontakt mit dem Querbalken an, der Schließer-Kontakt bleibt frei.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Wechsler mit Unterbrechung'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "taster": {
+      "datei": "taster.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "085",
+      "norm": "Schließer (Hebel nach links abgehoben) mit dem Betätigungsglied 'Drücken': ein Stiel auf dem Hebel und eine Platte quer darüber. Ein waagerechter Balken zwischen den Anschlüssen wäre ein GESCHLOSSENER Kontakt und damit die Aussage eines Öffners.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Druckschalter, Taster'; Betätigungsglied 'Betätigung durch Drücken', S. 445",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "tasterOeffner": {
+      "datei": "tasterOeffner.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "103",
+      "norm": "Öffner mit dem Betätigungsglied 'Drücken': im Ruhezustand geschlossen, Drücken trennt. Das Bauteil jeder Ausschaltbedingung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Öffner betätigt dargestellt' in Verbindung mit dem Betätigungsglied 'Drücken', S. 445",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "notaus": {
+      "datei": "notaus.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "161",
+      "norm": "Öffner mit einem Betätigungsglied, dessen Kopf ein PILZ (Halbkreis) statt einer flachen Platte ist. Die Kennzeichen 'zwangsläufige Betätigung' und 'Selbsthaltung' der Vorlage sind hier nicht mitgezeichnet — siehe BERICHT.md, Abschnitt 4.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Pilz-Notdrucktaster mit zwangsläufiger Betätigung und Selbsthaltung des Öffners'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "grenztaster": {
+      "datei": "grenztaster.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "218",
+      "norm": "Schließer mit einem mechanischen Betätigungsglied (Dreieck auf einem Stiel) statt der Drückplatte.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Grenzschalter, Endschalter (Schließer)'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "trennschalter": {
+      "datei": "trennschalter.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "296",
+      "norm": "Schalter mit dem Kennzeichen 'Trennschalter-Funktion': ein waagerechter Strich am freien Ende des Hebels. Er darf nur lastfrei geschaltet werden.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Trennschalter, Leerschalter'; Kennzeichen S. 448",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "leistungsschalter": {
+      "datei": "leistungsschalter.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "296",
+      "norm": "Schalter mit dem Kennzeichen 'x' am freien Ende des Hebels: darf auch Kurzschlussströme abschalten.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Leistungsschalter'; Kennzeichen 'Leistungsschalter-Funktion' S. 448",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "lsSchalter": {
+      "datei": "lsSchalter.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "136",
+      "norm": "Schließer mit einem waagerechten Auslöserpfeil am Kontakt: selbsttätige Auslösung bei Überstrom.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Leitungsschutz-Schalter'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "motorschutz": {
+      "datei": "motorschutz.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "241",
+      "norm": "Öffner mit dem Kennzeichen 'thermische Wirkung' (gestufter Haken) daneben: er öffnet, wenn der Strom zu lange zu groß war.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Öffner mit selbsttätiger thermischer Betätigung (Thermokontakt, z. B. Bimetall)'; Einsatz Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116 als F4/F7/F8, Klemmen 95/96",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "sicherung": {
+      "datei": "sicherung.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "014",
+      "norm": "Rechteck LÄNGS zum Strompfad mit einem durchgehenden Strich von Anschluss zu Anschluss; ohne den Strich wäre es der Widerstand.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-7), Zeile 'Sicherung, allgemein'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "schuetzspule": {
+      "datei": "schuetzspule.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "101",
+      "norm": "SCHLICHTES Rechteck, lange Achse QUER zum Strompfad, Anschlüsse an den Schmalseiten. Eine Diagonale darin bedeutet 'veränderbar/abhängig' und macht daraus ein anderes Bauteil; ein liegendes Rechteck wäre der Widerstand.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Elektromechanischer Antrieb, Relaisspule', Form 1; Einsatz Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116 als Q1…Q4",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "relaisspule": {
+      "datei": "relaisspule.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "101",
+      "norm": "Gleiches Zeichen wie die Schützspule — die Norm unterscheidet Relais und Schütz im Zeichen NICHT, nur im Kennbuchstaben (K bzw. Q).",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Elektromechanischer Antrieb, Relaisspule', Form 1",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "zeitrelaisAnzug": {
+      "datei": "zeitrelaisAnzug.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "106",
+      "norm": "Antriebsrechteck mit einem durchkreuzten Feld an der Schmalseite: der Antrieb zieht verzögert an.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Elektromechanischer Antrieb mit Ansprechverzögerung'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "zeitrelaisAbfall": {
+      "datei": "zeitrelaisAbfall.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "106",
+      "norm": "Antriebsrechteck mit einem ausgefüllten Feld an der Schmalseite: der Antrieb fällt verzögert ab. Das gefüllte Feld ist das Kennzeichen selbst, offen gezeichnet bedeutete es etwas anderes.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Elektromechanischer Antrieb mit Rückfallverzögerung'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "ausschalter": {
+      "datei": "ausschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "081",
+      "norm": "Offener Kreis als Anschlusspunkt und EIN schräges Schaltglied mit einem Häkchen am freien Ende.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Ausschalter, einpolig'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "serienschalter": {
+      "datei": "serienschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "084",
+      "norm": "Offener Kreis mit ZWEI Schaltgliedern, die von derselben Seite abgehen: ein Schalter, zwei getrennt schaltbare Stromkreise.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Serienschalter, einpolig'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "wechselschalter": {
+      "datei": "wechselschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "082",
+      "norm": "Offener Kreis mit zwei Schaltgliedern auf GEGENÜBERLIEGENDEN Seiten: umschaltend, nicht ausschaltend.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Wechselschalter, einpolig'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "kreuzschalter": {
+      "datei": "kreuzschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "083",
+      "norm": "Offener Kreis mit VIER Schaltgliedern über Kreuz: er vertauscht die beiden durchlaufenden Adern.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Kreuzschalter, Zwischenschalter'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "tasterInst": {
+      "datei": "tasterInst.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "085",
+      "norm": "Zwei Kreise ineinander; ein Kreis mit Kreuz darin wäre der Taster mit Leuchte.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Taster'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "steckdose": {
+      "datei": "steckdose.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "174",
+      "norm": "Bogen, dessen Scheitel die Zuleitung aufnimmt, mit einem Querstrich als Schutzkontakt darüber; ohne den Querstrich wäre es eine Steckdose ohne Schutzkontakt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Schutzkontaktsteckdose'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "dose": {
+      "datei": "dose.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "173",
+      "norm": "Ein leerer Kreis am Ende einer Leitung; mit einem Punkt darin wäre es die Anschluss- oder Verbindungsdose.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Dose, allgemein / Leerdose'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "verteiler": {
+      "datei": "verteiler.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "175",
+      "norm": "Rechteck mit fünf abgehenden Anschlussstrichen auf einer Seite.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Verteiler, dargestellt mit fünf Anschlüssen'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "stromstossschalter": {
+      "datei": "stromstossschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "085",
+      "norm": "Rechteck mit einem Stufenzeichen darin: ein Impuls kippt den Schaltzustand um.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Stromstoßschalter'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "diode": {
+      "datei": "diode.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "041",
+      "norm": "OFFENES Dreieck, dessen Spitze in Durchlassrichtung zeigt, und unmittelbar davor ein Querstrich als Kathode; die Vorlage zeichnet das Dreieck nicht ausgefüllt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Halbleiterdiode, allgemein'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "led": {
+      "datei": "led.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "042",
+      "norm": "Diode mit zwei parallelen Pfeilen, die VOM Bauteil weg zeigen; zeigten sie darauf, wäre es eine Fotodiode.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Leuchtdiode, allgemein'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "fotodiode": {
+      "datei": "fotodiode.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "070",
+      "norm": "Diode mit zwei parallelen Pfeilen, die AUF das Bauteil zeigen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Diode, lichtempfindlich, Photodiode'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "zdiode": {
+      "datei": "zdiode.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "043",
+      "norm": "Diode, deren Kathodenstrich an einem Ende rechtwinklig abgeknickt ist; ohne den Knick wäre es die gewöhnliche Diode.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Durchbruch-Diode, Z-Diode'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "transistorNPN": {
+      "datei": "transistorNPN.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "044",
+      "norm": "Basisstrich quer zur Basiszuleitung, davon Kollektor und Emitter schräg abgehend; der Pfeil sitzt auf dem Emitter und zeigt VOM Basisstrich WEG.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'NPN-Transistor'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "transistorPNP": {
+      "datei": "transistorPNP.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "044",
+      "norm": "Gleicher Aufbau wie der NPN-Transistor, aber der Emitterpfeil zeigt ZUM Basisstrich hin — die Pfeilrichtung ist der ganze Unterschied.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'PNP-Transistor'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "thyristor": {
+      "datei": "thyristor.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "047",
+      "norm": "Diode mit einem dritten Anschluss (Gate), der schräg an der Kathodenseite ansetzt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Thyristortriode, Thyristor'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "triac": {
+      "datei": "triac.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "047",
+      "norm": "Zwei gegensinnige Dreiecke mit einem gemeinsamen Querstrich und einem seitlichen Gate: leitend in beide Richtungen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Thyristortriode, bidirektional, Triac'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "bruecke": {
+      "datei": "bruecke.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "263",
+      "norm": "Raute mit einem Diodenzeichen darin; die Wechselstromseite liegt an den seitlichen, die Gleichstromseite an den übrigen Ecken.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Gleichrichter in Brückenschaltung'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "verstaerker": {
+      "datei": "verstaerker.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "048",
+      "norm": "Gleichschenkliges Dreieck, dessen Spitze in Signalrichtung zeigt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Verstärker, allgemein', Form 1",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "opamp": {
+      "datei": "opamp.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "048",
+      "norm": "Verstärkerdreieck mit zwei Eingängen an der Grundseite, der obere mit −, der untere mit + bezeichnet, und einem Ausgang an der Spitze.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Verstärker, allgemein' — die Kennzeichnung der Eingänge mit − und + steht NICHT in der Vorlage, siehe BERICHT.md Abschnitt 4",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "lampe": {
+      "datei": "lampe.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "003",
+      "norm": "Kreis mit einem durchgehenden Kreuz darin, dessen Enden den Kreis berühren.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Leuchte, allgemein / Leuchtmelder, allgemein'; ebenso S. 449",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "motor": {
+      "datei": "motor.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "016",
+      "norm": "Kreis mit dem Kennbuchstaben M; der Buchstabe steht aufrecht, auch wenn das Zeichen gedreht eingebaut ist.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Maschine, allgemein', Kennbuchstabe M",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "motor3": {
+      "datei": "motor3.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "200",
+      "norm": "Kreis mit M und darunter 3~: Drehstrom-Asynchronmotor.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Drehstrom-Asynchronmotor mit Käfigläufer'; Einsatz Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116 als M1",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "hupe": {
+      "datei": "hupe.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "329",
+      "norm": "Kleines Rechteck mit einem sich öffnenden Trichter daran.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Horn, Hupe'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "klingel": {
+      "datei": "klingel.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "330",
+      "norm": "Halbkreis auf einer geraden Grundlinie, nach oben gewölbt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Wecker, Klingel'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "messer": {
+      "datei": "messer.svg",
+      "gruppe": "Messtechnik",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "053",
+      "norm": "Kreis mit dem Kennbuchstaben der gemessenen Größe (V, A, W, Ω, Hz, cos φ …); der Buchstabe allein sagt, was gemessen wird.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-8), Spalte 'Aufzeichnende Messgeräte', Zeilen 'Spannungsmessgerät', 'Amperemeter', 'Wattmeter', 'Widerstandsmessgerät' u. a.",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "zaehler": {
+      "datei": "zaehler.svg",
+      "gruppe": "Messtechnik",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "067",
+      "norm": "Rechteck mit einem abgeteilten Kopffeld und der Einheit (Wh) im unteren Feld.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-8), Spalte 'Zähler', Zeile 'Wattstundenzähler, Elektrizitätszähler'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "oszilloskop": {
+      "datei": "oszilloskop.svg",
+      "gruppe": "Messtechnik",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "065",
+      "norm": "Kreis mit einem Kurvenzug darin.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-8), Zeile 'Oszilloskop'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "gleichrichter": {
+      "datei": "gleichrichter.svg",
+      "gruppe": "Stromrichter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "263",
+      "norm": "Quadrat mit einer Diagonale; auf der Eingangsseite das Wechselstromzeichen, auf der Ausgangsseite das Gleichstromzeichen. Vertauscht wären es der Wechselrichter.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Gleichrichter'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "wechselrichter": {
+      "datei": "wechselrichter.svg",
+      "gruppe": "Stromrichter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "300",
+      "norm": "Quadrat mit einer Diagonale; Gleichstromzeichen am Eingang, Wechselstromzeichen am Ausgang.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Wechselrichter'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "ueberspannungsableiter": {
+      "datei": "ueberspannungsableiter.svg",
+      "gruppe": "Schutz",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "156",
+      "norm": "Rechteck längs zum Strompfad mit einem Pfeil darin, der zur Ableitseite zeigt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-7), Zeile 'Überspannungsableiter'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "funkenstrecke": {
+      "datei": "funkenstrecke.svg",
+      "gruppe": "Schutz",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "155",
+      "norm": "Zwei Elektroden, die sich mit ihren Spitzen gegenüberstehen und einander nicht berühren.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-7), Zeile 'Funkenstrecke'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "antenne": {
+      "datei": "antenne.svg",
+      "gruppe": "Schutz",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "333",
+      "norm": "Senkrechter Stab, an dessen oberem Ende zwei Äste schräg nach außen abgehen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-10), Zeile 'Antenne, allgemein'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "gatterUND": {
+      "datei": "gatterUND.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "096",
+      "norm": "Rechteck mit dem Kennzeichen & im Körper; der Ausgang führt nur dann 1, wenn alle Eingänge 1 führen.",
+      "quelle": "NICHT in der Vorlage — DIN EN 60617-12 ist in der Referenzmappe nicht enthalten. Gezeichnet in der Rechteckform, wie sie in KOP/FUP und in deutschen Lehrbüchern steht. Siehe BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "gatterODER": {
+      "datei": "gatterODER.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "096",
+      "norm": "Rechteck mit dem Kennzeichen ≥1 im Körper.",
+      "quelle": "NICHT in der Vorlage — siehe gatterUND und BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "gatterNICHT": {
+      "datei": "gatterNICHT.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "096",
+      "norm": "Rechteck mit dem Kennzeichen 1 und einem kleinen Kreis am Ausgang; der Kreis ist die Negation.",
+      "quelle": "NICHT in der Vorlage — siehe gatterUND und BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "gatterNAND": {
+      "datei": "gatterNAND.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "098",
+      "norm": "UND-Rechteck mit einem Negationskreis am Ausgang.",
+      "quelle": "NICHT in der Vorlage — siehe gatterUND und BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "gatterNOR": {
+      "datei": "gatterNOR.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "098",
+      "norm": "ODER-Rechteck mit einem Negationskreis am Ausgang.",
+      "quelle": "NICHT in der Vorlage — siehe gatterUND und BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "gatterXOR": {
+      "datei": "gatterXOR.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "363",
+      "norm": "Rechteck mit dem Kennzeichen =1: der Ausgang führt 1, wenn GENAU ein Eingang 1 führt.",
+      "quelle": "NICHT in der Vorlage — siehe gatterUND und BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "filter": {
+      "datei": "filter.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "265",
+      "norm": "Quadrat mit einer Sinuslinie. Tiefpass, Hochpass, Bandpass und Bandsperre unterscheiden sich davon nur dadurch, welche der übereinanderliegenden Wellen durchgestrichen ist — siehe BERICHT.md, Abschnitt 4.3.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Filter, allgemein'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "daempfungsglied": {
+      "datei": "daempfungsglied.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "400",
+      "norm": "Quadrat mit dem Kennbuchstaben A.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Dämpfungsglied, fest eingestellt'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "daempfungsgliedVar": {
+      "datei": "daempfungsgliedVar.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "400",
+      "norm": "Dämpfungsglied mit dem Pfeil 'nicht inhärent veränderbar' schräg hindurch: von außen einstellbar.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Dämpfungsglied, veränderbar'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "phasenschieber": {
+      "datei": "phasenschieber.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "186",
+      "norm": "Quadrat mit dem Formelzeichen des Phasenwinkels.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Phasenschieber'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "sinusgenerator": {
+      "datei": "sinusgenerator.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "180",
+      "norm": "Quadrat mit G und der Sinuslinie darunter: er erzeugt eine sinusförmige Spannung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Sinusgenerator'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "pulsgenerator": {
+      "datei": "pulsgenerator.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "358",
+      "norm": "Quadrat mit G und dem Rechtecksignal darunter.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Pulsgenerator'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "spannungskonstanthalter": {
+      "datei": "spannungskonstanthalter.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "043",
+      "norm": "Quadrat mit U und const: die Ausgangsspannung bleibt gleich, was auch am Eingang passiert.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Spannungskonstanthalter'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "umrichterDC": {
+      "datei": "umrichterDC.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "262",
+      "norm": "Quadrat mit Diagonale und auf BEIDEN Seiten dem Gleichstromzeichen. Steht beidseitig die Welle, ist es der Wechselstromumrichter.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Gleichstromumrichter'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "umrichterAC": {
+      "datei": "umrichterAC.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "245",
+      "norm": "Quadrat mit Diagonale und beidseitig der Sinuslinie.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-6), Zeile 'Wechselstromumrichter'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "frequenzteiler": {
+      "datei": "frequenzteiler.svg",
+      "gruppe": "Signalverarbeitung",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "217",
+      "norm": "Quadrat mit Diagonale, oben f, unten f/n: die Ausgangsfrequenz ist ein Bruchteil der Eingangsfrequenz.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 454 (DIN EN 60617-9), Zeile 'Frequenzteiler'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "gleichstrom": {
+      "datei": "gleichstrom.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "180",
+      "norm": "Ein durchgezogener Strich mit einem gestrichelten darunter. KEIN Bauteil, sondern ein Kennzeichen — es steht an einer Leitung oder in einem Gerätezeichen und hat deshalb keine Anschlüsse.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Spalte 'Arten von Strömen und Spannungen', Zeile 'Gleichstrom'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "wechselstrom": {
+      "datei": "wechselstrom.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "180",
+      "norm": "Eine Sinuslinie. Kennzeichen ohne Anschlüsse.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Wechselstrom'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "drehstrom": {
+      "datei": "drehstrom.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "200",
+      "norm": "Drei schräge Striche für die drei Phasen und die Sinuslinie. Kennzeichen ohne Anschlüsse.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Dreiphasen-Vierleitersystem'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "schirm": {
+      "datei": "schirm.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "266",
+      "norm": "Gestrichelte Umrandung, zu einer Seite offen: sie umschließt das, was abgeschirmt wird.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Schirm, Abschirmung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "wirkverbindung": {
+      "datei": "wirkverbindung.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "108",
+      "norm": "Gestrichelte Linie: zwei Zeichen gehören mechanisch zusammen, ohne dass Strom fließt. Genau das, was der Kontaktspiegel eines Schützes zeigt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Wirkverbindung, allgemein', Form 1",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "begrenzungslinie": {
+      "datei": "begrenzungslinie.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "080",
+      "norm": "Strichpunktlinie: sie fasst zusammen, was ein Gerät ist.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Begrenzungslinie einer Gruppe zusammengehöriger Objekte'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "huelle": {
+      "datei": "huelle.svg",
+      "gruppe": "Kennzeichen und Symbolelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "080",
+      "norm": "Rechteck mit runden Enden. Es umschließt, was in einem Gehäuse oder Kolben sitzt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), Zeile 'Hülle, Gehäuse, Kolben, Kessel', Form 2",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "lwl": {
+      "datei": "lwl.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "416",
+      "norm": "Die Leitung mit einem Kreis, in dem ein schräger Strich steht. Ohne den Schrägstrich wäre es der Koaxialleiter.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Lichtwellenleiter (LWL), allgemein'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "koaxleiter": {
+      "datei": "koaxleiter.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "401",
+      "norm": "Die Leitung mit einem Kreis darauf.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Leiter, koaxial'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "uhr": {
+      "datei": "uhr.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "319",
+      "norm": "Kreis mit Zeigern.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Uhr, allgemein, Nebenuhr'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "temperaturmelder": {
+      "datei": "temperaturmelder.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "328",
+      "norm": "Melderkasten mit dem Formelzeichen der Temperatur.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Temperaturmelder'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "rauchmelder": {
+      "datei": "rauchmelder.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "328",
+      "norm": "Melderkasten mit zwei Lichtpfeilen, die HINEIN zeigen: der Rauch stört den Lichtstrahl im Melder.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Rauchmelder, selbsttätig, lichtabhängiges Prinzip'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "brandmelder": {
+      "datei": "brandmelder.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "327",
+      "norm": "Melderkasten mit dem Meldekontakt darin und der abgehenden Meldeleitung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Brandmelder'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "lichtsender": {
+      "datei": "lichtsender.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "165",
+      "norm": "Kasten mit dem Strahlungszeichen und der Leuchte. Zusammen mit dem Lichtempfänger bildet er die Lichtschranke.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Lichtsender, Gleichlichtsender'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "lichtempfaenger": {
+      "datei": "lichtempfaenger.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "165",
+      "norm": "Kasten mit dem Strahlungszeichen, dem Verstärkerdreieck und einem Schaltglied: er macht aus Licht ein Schaltsignal.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Lichtempfänger mit Hell-Schaltung und Kontaktausgang'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "sirene": {
+      "datei": "sirene.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "329",
+      "norm": "Spitzer Bogen auf einer Grundlinie. Der Gong hat zwei senkrechte Striche darüber, die Klingel nur den runden Bogen — die drei nicht verwechseln.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Sirene'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "gong": {
+      "datei": "gong.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "330",
+      "norm": "Halbkreis auf einer Grundlinie mit zwei senkrechten Strichen darüber.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Gong, Einschlagwecker'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "fernsprecher": {
+      "datei": "fernsprecher.svg",
+      "gruppe": "Melde- und Signaleinrichtungen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "331",
+      "norm": "Gehäuse mit dem Hörer als Bogen darauf.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 450 (DIN EN 60617-8), Zeile 'Fernsprecher, allgemein'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leuchtstofflampe": {
+      "datei": "leuchtstofflampe.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "316",
+      "norm": "Ein Stab mit einer kurzen Kappe an jedem Ende. Mehrere Lampen in einer Leuchte werden durch mehrere Stäbe dargestellt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Leuchte für Leuchtstofflampe'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leuchtstofflampe3": {
+      "datei": "leuchtstofflampe3.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "316",
+      "norm": "Drei Stäbe zwischen denselben zwei Kappen: eine Leuchte mit drei Lampen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Leuchte mit drei Leuchtstofflampen'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leuchtenauslass": {
+      "datei": "leuchtenauslass.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "173",
+      "norm": "Die Leitung endet in einem Kreuz: hier kommt eine Leuchte hin, gezeichnet ist sie nicht.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Leuchtenauslass, dargestellt mit Leitung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "scheinwerfer": {
+      "datei": "scheinwerfer.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "317",
+      "norm": "Die Leuchte mit einem Bogen davor: das Licht ist gerichtet.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Scheinwerfer, allgemein'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "punktleuchte": {
+      "datei": "punktleuchte.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "317",
+      "norm": "Scheinwerfer mit zwei PARALLELEN Strahlpfeilen: gebündeltes Licht. Laufen die Pfeile auseinander, ist es die Flutlichtleuchte.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Punktleuchte'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "flutlichtleuchte": {
+      "datei": "flutlichtleuchte.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "317",
+      "norm": "Scheinwerfer mit zwei AUSEINANDERLAUFENDEN Strahlpfeilen: breit streuendes Licht.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Flutlichtleuchte'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "entladungslampe": {
+      "datei": "entladungslampe.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "316",
+      "norm": "Die Hülle Form 2 (Rechteck mit runden Enden, S. 445) mit einem Kreuz darin.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Leuchte für Entladungslampe'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "vorschaltgeraet": {
+      "datei": "vorschaltgeraet.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "316",
+      "norm": "Rechteck mit einem gefüllten Balken darin; der gefüllte Balken ist das Kennzeichen selbst.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Vorschaltgerät für Entladungslampen'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "ventilator": {
+      "datei": "ventilator.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "267",
+      "norm": "Rechteck mit dem Zeichen der Endlosschleife.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-11), Zeile 'Ventilator, dargestellt mit Leitung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "parabolantenne": {
+      "datei": "parabolantenne.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "333",
+      "norm": "Der Reflektorbogen mit dem Erreger davor.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 449 (DIN EN 60617-10), Zeile 'Parabolantenne, dargestellt mit Rechteck-Hohlleiterzuleitung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "schliesserAnzug": {
+      "datei": "schliesserAnzug.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "106",
+      "norm": "Schließer mit dem Verzögerungskennzeichen (Halbkreis am Querstrich auf dem Hebel), dessen Wölbung VOM Hebel WEG zeigt: er schließt verzögert beim Betätigen. Zeigt die Wölbung zum Hebel hin, ist es abfallverzögert — die Richtung dreht die Zeitfunktion um.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Schließer, anzugverzögert'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "schliesserAbfall": {
+      "datei": "schliesserAbfall.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "106",
+      "norm": "Schließer mit dem Verzögerungskennzeichen, dessen Wölbung ZUM Hebel HIN zeigt: er öffnet verzögert beim Loslassen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Schließer, abfallverzögert'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "oeffnerAnzug": {
+      "datei": "oeffnerAnzug.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "106",
+      "norm": "Öffner mit dem Verzögerungskennzeichen, Wölbung vom Hebel weg: er öffnet verzögert beim Betätigen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Öffner, anzugverzögert'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "oeffnerAbfall": {
+      "datei": "oeffnerAbfall.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "106",
+      "norm": "Öffner mit dem Verzögerungskennzeichen, Wölbung zum Hebel hin: er schließt verzögert beim Loslassen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Öffner, abfallverzögert'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "wechslerMittelstellung": {
+      "datei": "wechslerMittelstellung.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "107",
+      "norm": "Ein Hebel und zwei feste Kontakte, aber mit einer dritten, mittleren Stellung, in der er KEINEN berührt: in der Mitte ist der Kreis offen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Wechsler mit Mittelstellung Aus'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "zeitrelaisInst": {
+      "datei": "zeitrelaisInst.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "106",
+      "norm": "Rechteck mit dem Kennbuchstaben t im Installationsplan.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Zeitrelais'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "schaltuhr": {
+      "datei": "schaltuhr.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "319",
+      "norm": "Rechteck mit einem Uhrzeichen und einem Schaltglied: sie schaltet nach Tageszeit.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Schaltuhr'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "daemmerungsschalter": {
+      "datei": "daemmerungsschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "319",
+      "norm": "Rechteck mit dem Kennzeichen der Beleuchtungsstärke und einem Schaltglied: er schaltet nach Helligkeit.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Dämmerungsschalter'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "schluesselschalter": {
+      "datei": "schluesselschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "280",
+      "norm": "Rechteck mit einem Schlüsselloch: nur mit Schlüssel bedienbar.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Schlüsselschalter, Wächtermelder'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "anschlussdose": {
+      "datei": "anschlussdose.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "173",
+      "norm": "Kreis mit einem PUNKT darin. Ohne Punkt wäre es die Leerdose (dose) — der Punkt sagt, dass hier Leiter verbunden sind.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Anschlussdose, Verbindungsdose'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "hausanschlusskasten": {
+      "datei": "hausanschlusskasten.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "174",
+      "norm": "Kasten mit einem Verbindungspunkt und der ankommenden Leitung: der Übergabepunkt vom Netz ins Gebäude.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Hausanschlusskasten, allgemein dargestellt mit Leitung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "dimmer": {
+      "datei": "dimmer.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "319",
+      "norm": "Installationsschalter mit einem Querstrich am Schaltglied: er stellt stufenlos statt zu schalten.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Dimmer'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "zeitschalter": {
+      "datei": "zeitschalter.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "085",
+      "norm": "Installationsschalter mit dem Kennbuchstaben t: er schaltet nach einer Zeit von selbst zurück (Treppenhauslicht).",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Zeitschalter, einpolig'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "tasterLeuchte": {
+      "datei": "tasterLeuchte.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "085",
+      "norm": "Kreis mit Kreuz. Der Taster OHNE Leuchte ist der Doppelkreis (tasterInst) — Kreuz und zweiter Kreis nicht verwechseln.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Taster mit Leuchte'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "schalterKontrollleuchte": {
+      "datei": "schalterKontrollleuchte.svg",
+      "gruppe": "Installationsschaltzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "081",
+      "norm": "Wie der Ausschalter, aber der Anschlusskreis trägt ein Kreuz: im Schalter sitzt eine Orientierungsleuchte.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-11), Zeile 'Schalter mit Kontrollleuchte'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "maschine": {
+      "datei": "maschine.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "228",
+      "norm": "Kreis mit dem Kennbuchstaben der Maschinenart (C Umformer, G Generator, GS Synchrongenerator, M Motor, MG Generator oder Motor, MS Synchronmotor) und darunter der Stromart. Der Buchstabe allein sagt, was die Maschine ist — an der Zeichnung ändert sich nichts.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Maschine, allgemein'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "motorDC": {
+      "datei": "motorDC.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "253",
+      "norm": "Kreis mit M und darunter dem Gleichstromzeichen (zwei waagerechte Striche).",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Gleichstrom-Nebenschlussmotor' (Maschinenzeichen)",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "motorAC1": {
+      "datei": "motorAC1.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "231",
+      "norm": "Kreis mit M und darunter 1~: einphasiger Wechselstrommotor.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Wechselstrom-Reihenschlussmotor, einphasig' (Maschinenzeichen)",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "schrittmotor": {
+      "datei": "schrittmotor.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "456",
+      "norm": "Kreis mit M und dem Stufenzeichen darunter: er dreht in Schritten, nicht stetig.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Schrittmotor'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "linearmotor": {
+      "datei": "linearmotor.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "456",
+      "norm": "Kreis mit M und einer geraden Sehne im unteren Teil: die Bewegung läuft geradlinig statt rund.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Linearmotor'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "motorSchleifring": {
+      "datei": "motorSchleifring.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "231",
+      "norm": "Wie der Käfigläufer (M, 3~), aber mit den drei herausgeführten Läuferanschlüssen: an sie kommen die Anlasswiderstände.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Drehstrom-Asynchronmotor mit Schleifringläufer'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "dreieckschaltung": {
+      "datei": "dreieckschaltung.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "202",
+      "norm": "Ein Dreieck. KEIN Bauteil, sondern ein Kennzeichen: es steht neben oder in einem Maschinen- oder Trafozeichen und hat deshalb keine Anschlüsse.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Spalte 'Kennzeichnung der Schaltungsart', Zeile 'Dreieckschaltung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "sternschaltung": {
+      "datei": "sternschaltung.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "201",
+      "norm": "Ein Y. Kennzeichen ohne Anschlüsse; mit einem Querstrich am Fuß wäre der Neutralleiter herausgeführt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Sternschaltung'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "sternschaltungN": {
+      "datei": "sternschaltungN.svg",
+      "gruppe": "Verbraucher und Maschinen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "204",
+      "norm": "Das Y mit einem Querstrich am Fuß: der Sternpunkt ist als Neutralleiter herausgeführt.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Sternschaltung, Neutralleiter herausgeführt'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "stromwandler": {
+      "datei": "stromwandler.svg",
+      "gruppe": "Induktivitäten",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "066",
+      "norm": "Der Primärleiter läuft GERADE hindurch, die Sekundärwicklung liegt daneben am Kern. Das Bauteil hinter der Strommesszange: messen, ohne aufzutrennen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Stromwandler, Impulstransformator'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "spartransformator": {
+      "datei": "spartransformator.svg",
+      "gruppe": "Induktivitäten",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "148",
+      "norm": "EINE Wicklung mit einer Anzapfung. Primär- und Sekundärseite hängen galvanisch zusammen — deshalb trennt er nicht, anders als der Transformator mit zwei Wicklungen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 453 (DIN EN 60617-6), Zeile 'Spartransformator'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "leiterN": {
+      "datei": "leiterN.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "088",
+      "norm": "Durchgehende Leitung mit einem schrägen Strich, der am oberen Ende einen PUNKT trägt. Mit Querstrich statt Punkt wäre es der Schutzleiter.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Neutralleiter (N), Mittelleiter (M)'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leiterPE": {
+      "datei": "leiterPE.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "088",
+      "norm": "Durchgehende Leitung mit einem schrägen Strich, der am oberen Ende einen QUERSTRICH trägt. Punkt und Querstrich sind der ganze Unterschied zwischen N und PE.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Schutzleiter (PE)'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leiterPEN": {
+      "datei": "leiterPEN.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "128",
+      "norm": "Durchgehende Leitung mit einem schrägen Strich, der Punkt UND Querstrich trägt: der Leiter tut beides zugleich. Genau der Leiter, der im TN-C-S-Netz aufgeteilt wird.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Neutralleiter mit Schutzfunktion (PEN)'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leiter3NPE": {
+      "datei": "leiter3NPE.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "127",
+      "norm": "Einpolige Darstellung eines fünfadrigen Drehstromkreises: drei schlichte Striche für L1, L2, L3, dann der N mit Punkt, dann der PE mit Querstrich.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Drei Leiter, ein Neutralleiter, ein Schutzleiter'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leiterBeweglich": {
+      "datei": "leiterBeweglich.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "144",
+      "norm": "Leitung mit einer Wellenlinie: die Verbindung bewegt sich im Betrieb.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Leiter, bewegbar'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leitungAufPutz": {
+      "datei": "leitungAufPutz.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "087",
+      "norm": "Leitung mit drei schrägen Strichen UNTERHALB der Leitung. Dieselben Striche auf der Leitung heißen 'im Putz', oberhalb 'unter Putz' — die LAGE ist die ganze Aussage.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-11), Zeile 'Leitung auf Putz'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leitungImPutz": {
+      "datei": "leitungImPutz.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "087",
+      "norm": "Leitung mit drei schrägen Strichen, die die Leitung KREUZEN.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-11), Zeile 'im Putz'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "leitungUnterPutz": {
+      "datei": "leitungUnterPutz.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "087",
+      "norm": "Leitung mit drei schrägen Strichen OBERHALB der Leitung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-11), Zeile 'unter Putz'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "erdkabel": {
+      "datei": "erdkabel.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "294",
+      "norm": "Leitung mit dem Erdezeichen darunter: sie liegt im Erdreich.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Leiter im Erdreich, Erdkabel'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "klemmenleiste": {
+      "datei": "klemmenleiste.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "175",
+      "norm": "Eine Reihe gleich großer, aneinandergesetzter Klemmen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Klemmenleiste'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "trennstelle": {
+      "datei": "trennstelle.svg",
+      "gruppe": "Leitungen und Leiterkennzeichen",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "175",
+      "norm": "Durchgehende Leitung mit zwei Querstrichen: hier lässt sich die Verbindung auftrennen, im Bild ist sie geschlossen.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 447 (DIN EN 60617-3), Zeile 'Trennstelle, Lasche, geschlossen', Form 2",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "erdungsschalter": {
+      "datei": "erdungsschalter.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "075",
+      "norm": "Schalter, dessen bewegliche Seite auf dem Erdungszeichen endet: er legt die abgeschaltete Anlage auf Erde. Das Bauteil hinter der vierten Sicherheitsregel.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Erdungsschalter, allgemein'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "schraubsicherung": {
+      "datei": "schraubsicherung.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "137",
+      "norm": "Sicherungskörper mit drei schrägen Strichen — das Kennzeichen der Schraubbauform (D-System).",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-7), Zeile 'Schraubsicherung, dargestellt 10 A, Typ D II, dreipolig'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "nhSicherung": {
+      "datei": "nhSicherung.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "137",
+      "norm": "Sicherungskörper mit einem Querbalken an JEDEM Ende: die Sicherung lässt sich ziehen und trennt dabei. Ohne die Balken wäre es die Sicherung allgemein.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-7), Zeile 'Niederspannungs-Hochleistungssicherung (NH), dargestellt 25 A, Größe 00'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "blitzstromableiter": {
+      "datei": "blitzstromableiter.svg",
+      "gruppe": "Schutz",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "154",
+      "norm": "Körper mit einem Blitzzeichen darin. Der Überspannungsableiter trägt an derselben Stelle einen Pfeil — die beiden nicht verwechseln, sie sitzen an verschiedenen Stellen der Blitzschutzkette.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-7), Zeile 'Blitzstromableiter'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "thermorelais": {
+      "datei": "thermorelais.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "241",
+      "norm": "Antriebsrechteck mit einem zweiten Rechteck darin: der Antrieb spricht auf Erwärmung an, nicht auf Strom allein.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Elektromechanischer Antrieb eines Thermorelais'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "stromstossrelais": {
+      "datei": "stromstossrelais.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "110",
+      "norm": "Antriebsrechteck mit dem Stufenzeichen: ein Impuls kippt den Schaltzustand um und er bleibt so.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Fortschaltrelais, Stromstoßrelais'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "zeitrelaisAnzugAbfall": {
+      "datei": "zeitrelaisAnzugAbfall.svg",
+      "gruppe": "Schaltgeräte",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "106",
+      "norm": "Antriebsrechteck mit BEIDEN Kennzeichen an derselben Schmalseite: gefülltes Feld für die Rückfall-, durchkreuztes Feld für die Ansprechverzögerung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 451 (DIN EN 60617-7), Zeile 'Elektromechanischer Antrieb mit Ansprech- und Rückfallverzögerung'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "galvanometer": {
+      "datei": "galvanometer.svg",
+      "gruppe": "Messtechnik",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "013",
+      "norm": "Messgerät mit einem Pfeil statt eines Kennbuchstabens: es zeigt kleinste Ströme an und dient als Nullindikator.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 452 (DIN EN 60617-8), Zeile 'Galvanometer'",
+      "lage": "Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage."
+    },
+    "widerstandAnzapfung": {
+      "datei": "widerstandAnzapfung.svg",
+      "gruppe": "Widerstände",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "011",
+      "norm": "Widerstandsrechteck mit zwei Abgriffen, die als eigene Anschlüsse herausgeführt sind; VIER Anschlüsse. Sitzen die Abgriffe an den Enden statt in der Fläche, ist es der Nebenschlusswiderstand.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Widerstand mit Anzapfungen'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "spuleLuftspalt": {
+      "datei": "spuleLuftspalt.svg",
+      "gruppe": "Induktivitäten",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "029",
+      "norm": "Spulenbögen mit einem Kernstrich auf der Wölbungsseite, der in der Mitte UNTERBROCHEN ist; die Lücke ist der Luftspalt und damit die ganze Aussage.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Induktivität mit Luftspalt im Magnetkern'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "piezo": {
+      "datei": "piezo.svg",
+      "gruppe": "Sonstige Bauelemente",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "091",
+      "norm": "Zwei Elektrodenplatten quer zum Strompfad und dazwischen der Kristall als kleines Rechteck.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-4), Zeile 'Piezoelektrischer Kristall mit zwei Elektroden'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "kapazitaetsdiode": {
+      "datei": "kapazitaetsdiode.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "069",
+      "norm": "Diode, deren Kathodenstrich eine zweite, gleich lange Platte gegenübersteht: die Sperrschicht wirkt als spannungsabhängiger Kondensator.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Kapazitätsdiode, Varactor'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "diac": {
+      "datei": "diac.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "047",
+      "norm": "Zwei gegensinnige Dreiecke mit einem gemeinsamen Querstrich und OHNE Steueranschluss; mit Gate wäre es der Triac.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Thyristordiode, bidirektional, Diac'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "jfetN": {
+      "datei": "jfetN.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "044",
+      "norm": "Durchgehender Kanalbalken; das Gate liegt AM Kanal an und trägt einen Pfeil, der ZUM Kanal zeigt. Beim P-Kanal zeigt derselbe Pfeil weg — das ist der ganze Unterschied.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Sperrschicht-Feldeffekt-Transistor (JFET) mit N-Kanal'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "jfetP": {
+      "datei": "jfetP.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "044",
+      "norm": "Wie der JFET mit N-Kanal, aber der Gate-Pfeil zeigt VOM Kanal weg.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Sperrschicht-Feldeffekt-Transistor (JFET) mit P-Kanal'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "mosfetN": {
+      "datei": "mosfetN.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "044",
+      "norm": "Das Gate ist eine eigene Elektrode MIT ABSTAND zum Kanal — der Abstand ist die Isolierschicht. Der Kanal besteht aus drei GETRENNTEN Stücken: Anreicherungstyp, er leitet erst, wenn das Gate ihn aufsteuert. Ein durchgehender Kanal wäre der Verarmungstyp, ein am Kanal anliegendes Gate der JFET.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Isolierschicht-Feldeffekt-Transistor (IGFET), Anreicherungstyp, Substrat intern mit Source verbunden'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "igbt": {
+      "datei": "igbt.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "248",
+      "norm": "Isoliertes Gate wie beim MOSFET (eigene Elektrode mit Abstand), Ausgangsseite wie beim Bipolartransistor: Kollektor und Emitter schräg vom Steuerbalken, Emitterpfeil zeigt WEG.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Zeile 'Insulated Gate Bipolar Transistor (IGBT)'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "fotoelement": {
+      "datei": "fotoelement.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "091",
+      "norm": "Das Zeichen der Primärzelle (lange und kurze Platte) mit zwei Pfeilen, die AUF das Bauteil zeigen: Licht erzeugt hier eine Spannung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Photoelement, Photozelle'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "optokoppler": {
+      "datei": "optokoppler.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "091",
+      "norm": "Ein Gehäuse, darin links eine Leuchtdiode und rechts ein Phototransistor, dazwischen zwei Pfeile als optische Kopplung; VIER Anschlüsse. Ohne die Pfeile wären es zwei Bauteile nebeneinander statt einer galvanischen Trennung.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Optokoppler, Leuchtdiode und Phototransistor'",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    },
+    "hallgenerator": {
+      "datei": "hallgenerator.svg",
+      "gruppe": "Halbleiter",
+      "prioritaet": 2,
+      "gebraucht_ab_folge": "091",
+      "norm": "Körper mit einem Kreuz; der Steuerstrom läuft LÄNGS hindurch, die Hallspannung wird QUER dazu abgegriffen. VIER Anschlüsse.",
+      "quelle": "Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 446 (DIN EN 60617-5), Spalte 'Sensoren', Zeile 'Hall-Generator'",
+      "lage": "Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts."
+    },
+    "flipflopRS": {
+      "datei": "flipflopRS.svg",
+      "gruppe": "Binäre Elemente",
+      "prioritaet": 1,
+      "gebraucht_ab_folge": "099",
+      "norm": "Rechteck mit den Eingängen S (Setzen) und R (Rücksetzen) und dem Ausgang Q.",
+      "quelle": "NICHT in der Vorlage — siehe gatterUND und BERICHT.md, Abschnitt 4.",
+      "lage": "Vorlage bereits waagerecht gezeichnet (Anschluesse links und rechts); Lage unveraendert uebernommen."
+    }
+  }
+}

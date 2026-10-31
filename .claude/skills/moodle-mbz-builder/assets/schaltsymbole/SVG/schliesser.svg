@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45 -80 215 383"
+     width="430" height="766"
+     data-sym="schliesser" data-gruppe="Schaltgeräte"
+     data-prioritaet="1" data-folge="107"
+     data-norm="Beweglicher Hebel, rechts angelenkt, nach LINKS abgehoben, ohne Querbalken: im Ruhezustand OFFEN. Der Öffner hebt in die GEGENRICHTUNG ab (nach rechts) und trägt dort den Querbalken — daran sind die beiden nebeneinander zu trennen." data-quelle="Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Schließer'; Schützschaltungen Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116, Klemmen 13/14"
+     data-lage="Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts.">
+<title>schliesser — Schaltzeichen nach DIN EN 60617</title>
+<desc>Beweglicher Hebel, rechts angelenkt, nach LINKS abgehoben, ohne Querbalken: im Ruhezustand OFFEN. Der Öffner hebt in die GEGENRICHTUNG ab (nach rechts) und trägt dort den Querbalken — daran sind die beiden nebeneinander zu trennen. | Quelle: Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 448 (DIN EN 60617-7), Zeile 'Schließer'; Schützschaltungen Westermann Tabellenbuch Elektrotechnik, Steuerungstechnik, S. 114/116, Klemmen 13/14 | Lage: Vorlage senkrecht gezeichnet (Strompfad von oben nach unten); hier um 90 Grad nach links gekippt, Strompfad von links nach rechts.</desc>
+<style>
+  :root{--wid:#16232b;--text:#16232b;--text2:#7a8a94;
+        --strom:#e07a2f;--spannung:#2f6fe0;--magnet:#d94f9a;--ok:#3a9d5d;--gefahr:#d0392b}
+  svg{background:#fff}
+  text[font-family="BarlowC"]{font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+  text[font-family="PlexMono"]{font-family:"IBM Plex Mono",Consolas,monospace}
+  .zelle{fill:none;stroke:#cfd9df;stroke-width:1.2;stroke-dasharray:6 5}
+  .pin{fill:#9fb0ba}
+  .nm{font-family:"IBM Plex Mono",Consolas,monospace;font-size:13px;font-weight:700;fill:#16232b}
+  .kop{font-family:"IBM Plex Mono",Consolas,monospace;font-size:7.5px;font-weight:700;fill:#8a99a3;letter-spacing:.4px}
+  .tx{font-family:system-ui,"Segoe UI",sans-serif;font-size:8.4px;fill:#3d4c56}
+  .tl{stroke:#e2e9ec;stroke-width:1}
+</style>
+<g class="raster">
+  <rect class="zelle" x="0" y="-30" width="120" height="60"/>
+  <circle class="pin" cx="0" cy="0" r="3"/><circle class="pin" cx="120" cy="0" r="3"/>
+</g>
+<g data-sym="schliesser" class="sym" transform="translate(0,0)">
+    <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5"
+       stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H30 M90 30 H120"/><path id="sw_arm" d="M90 30 L34 8"/></g>
+    </g></g>
+<text class="nm" x="-40" y="108">schliesser</text><line class="tl" x1="-40" y1="113" x2="168" y2="113"/><text class="kop" x="-40" y="120">BEDEUTUNG</text><text class="tx" x="-40" y="130">Beweglicher Hebel, rechts angelenkt, nach</text><text class="tx" x="-40" y="140">LINKS abgehoben, ohne Querbalken: im</text><text class="tx" x="-40" y="150">Ruhezustand OFFEN. Der Öffner hebt in die</text><text class="tx" x="-40" y="160">GEGENRICHTUNG ab (nach rechts) und trägt dort</text><text class="tx" x="-40" y="170">den Querbalken — daran sind die beiden</text><text class="tx" x="-40" y="180">nebeneinander zu trennen.</text><text class="kop" x="-40" y="189">QUELLE</text><text class="tx" x="-40" y="199">Westermann Tabellenbuch Elektrotechnik,</text><text class="tx" x="-40" y="209">Technische Dokumentation und Formeln, S. 448</text><text class="tx" x="-40" y="219">(DIN EN 60617-7), Zeile 'Schließer';</text><text class="tx" x="-40" y="229">Schützschaltungen Westermann Tabellenbuch</text><text class="tx" x="-40" y="239">Elektrotechnik, Steuerungstechnik, S. 114/116,</text><text class="tx" x="-40" y="249">Klemmen 13/14</text><text class="kop" x="-40" y="258">LAGE</text><text class="tx" x="-40" y="268">Vorlage senkrecht gezeichnet (Strompfad von</text><text class="tx" x="-40" y="278">oben nach unten); hier um 90 Grad nach links</text><text class="tx" x="-40" y="288">gekippt, Strompfad von links nach rechts.</text>
+</svg>

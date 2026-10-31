@@ -1,0 +1,15 @@
+# moodle-mbz-builder — Python dependencies
+#
+# Install once after copying the skill:  python -m pip install -r requirements.txt
+#
+# build_mbz.py itself needs only the Python standard library. These packages are
+# needed for the material pipeline (PDF/PPTX per Infoblatt) AND for the automatic
+# SVG diagram quality check (validate_svg.py / autofit_svg.py measure real text
+# widths via reportlab). Without them, build_mbz.py still builds, but the diagram
+# check is skipped with a NOTE — so install them to keep the QA active.
+svglib
+reportlab
+pymupdf
+python-pptx
+python-docx
+pillow

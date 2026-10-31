@@ -1,0 +1,734 @@
+{
+  "filename": "sicherung-moodle2-statistik-beschreibend-bgt.mbz",
+  "course": {
+    "didaktik_profil": "zdq",
+    "fullname": "Einführung in die Statistik: Beschreibende Statistik und Streuungsmaße",
+    "shortname": "statistik-beschreibend-bgt",
+    "summary": "<div style='overflow-x:auto;'><p>Lernmodul für das <b>Berufliche Gymnasium Technik (BGT / BBS Meppen, Jg. 11/12, DQR-Niveau 4)</b> zur <b>Einführung in die beschreibende Statistik und Streuungsmaße</b>. Ausgehend vom realen Klausurenvergleich zweier Parallelklassen (Kapitel 1.1 &amp; 1.2) erarbeiten Sie Häufigkeiten, das arithmetische Mittel, Varianz, Standardabweichung und Streuungsintervalle. Beinhaltet drei authentische Aufgabenblätter, interaktive Simulationen, ein digitales Ausfüllprotokoll und ein umfassendes Lösungsdossier für Lehrkräfte.</p><p style='font-size:11px;color:#64748b;margin-top:8px;'><em>Dieser Kurs ist mit Hilfe von künstlicher Intelligenz entstanden.</em></p></div>",
+    "category": 1,
+    "format": "tiles",
+    "showgrades": 1,
+    "newsitems": 0,
+    "startdate": 1772496000,
+    "enddate": 1804041600,
+    "numsections": 6,
+    "sections": [
+      {
+        "name": "0 · Über dieses Modul",
+        "summary": "<div style='overflow-x:auto;'><p>Leitfaden, didaktischer Aufbau und technische Hinweise zur Bearbeitung des Statistik-Moduls.</p></div>",
+        "activities": [
+          {
+            "type": "label",
+            "name": "Begrüßung & Orientierung",
+            "intro": "<div style='overflow-x:auto;'><p>📊 <b>Willkommen im Modul „Einführung in die Statistik: Beschreibende Statistik und Streuungsmaße“!</b> Ausgehend von den originalen Unterrichtsunterlagen der BBS Meppen lösen Sie das 'Mittelwert-Paradoxon'. Sie lernen, warum ein Notendurchschnitt allein täuscht und wie Sie mit Varianz und Standardabweichung fundierte statistische Urteile fällen. Nach jedem Infoblatt finden Sie ein konkretes <b>Aufgabenblatt</b> mit Übungen aus Ihrem Unterrichtsskript.</p></div>"
+          },
+          {
+            "type": "page",
+            "name": "So arbeiten Sie mit diesem Modul",
+            "showdescription": 1,
+            "completion": 1,
+            "intro": "<p>Verschaffen Sie sich zuerst einen strukturierten Überblick über den Kursablauf.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#1e3a8a;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Lernpfad &amp; Modulstruktur</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>In den Naturwissenschaften und im Ingenieurwesen ist die <b>statistische Auswertung von Mess- und Prüfreihen</b> unverzichtbar. In diesem Modul durchlaufen Sie alle Schritte der beschreibenden Statistik nach den 6 Phasen der vollständigen Handlung:</p><ol><li><b>1 · Einstieg &amp; Fallanalyse:</b> Der Notenstreit der Parallelklassen A und B – Erkennen des Mittelwert-Paradoxons.</li><li><b>2 · Grundlagen:</b> Absolute &amp; relative Häufigkeiten, Säulendiagramme und das gewichtete arithmetische Mittel x̄ inklusive <b>Aufgabenblatt 1</b> und <b>Aufgabenblatt 2</b>.</li><li><b>3 · Vertiefung:</b> Streuungsmaße, Nulldifferenz, Varianz s² und Standardabweichung s mit <b>Aufgabenblatt 3</b>, interaktivem Formel-Hotspot und Schieberegler-Simulation.</li><li><b>4 · Anwendung:</b> Vollständige Datenauswertung im digitalen 6-Spalten-Formular und Erstellung des Prüfberichts.</li><li><b>5 · Kurs-Recap:</b> Zusammenfassung, Wissenstransfer auf technische Fertigungstoleranzen und Moodle-Glossar.</li></ol><div style='background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;margin-top:12px;'>💡 <b>Tipp für Ihren Lernerfolg:</b> Bearbeiten Sie die Aufgabenblätter schrittweise. Alle mathematischen Berechnungen bauen logisch aufeinander auf!</div></div></div>"
+          }
+        ]
+      },
+      {
+        "name": "1 · Einstieg & Fallanalyse: Der Notenstreit",
+        "summary": "<div style='overflow-x:auto;'><p>Die Ausgangssituation an der BBS Meppen: Zwei Parallelklassen mit unterschiedlicher Notenverteilung im mathematischen Vergleich.</p></div>",
+        "image": "assets/cover_einstieg.png",
+        "activities": [
+          {
+            "type": "page",
+            "name": "Die Handlungssituation: Der Klausurenstreit",
+            "completion": 1,
+            "intro": "<p>Lesen Sie die Ausgangssituation aufmerksam – sie bildet den roten Faden durch alle Berechnungen.</p>",
+            "images": [
+              "assets/diagramm_klausurvergleich.svg"
+            ],
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#1e3a8a;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Handlungssituation · Der Notenstreit der Parallelklassen</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Am <b>Beruflichen Gymnasium Technik (BGT) der BBS Meppen</b> wurde in zwei Parallelklassen des 11. Jahrgangs zeitgleich eine zentrale Mathematikklausur zum Thema Funktionenlehre geschrieben. Nach der Korrektur liegen die folgenden Notenspiegel vor:</p><table border='1' cellpadding='8' style='border-collapse:collapse;width:100%;min-width:550px;text-align:center;margin:12px 0;'><tr style='background:#f1f5f9;'><th style='text-align:left;'>Notenstufe (x<sub>i</sub>)</th><th>1 (sehr gut)</th><th>2 (gut)</th><th>3 (befriedigend)</th><th>4 (ausreichend)</th><th>5 (mangelhaft)</th><th>6 (ungenügend)</th><th>Summe (n)</th></tr><tr><td style='text-align:left;font-weight:bold;color:#0284c7;'>Klasse A (n<sub>i</sub>)</td><td>1</td><td>2</td><td>10</td><td>8</td><td>3</td><td>0</td><td><b>24</b></td></tr><tr><td style='text-align:left;font-weight:bold;color:#ea580c;'>Klasse B (n<sub>i</sub>)</td><td>3</td><td>4</td><td>5</td><td>6</td><td>5</td><td>2</td><td><b>25</b></td></tr></table><div style='border-left:4px solid #1e3a8a;padding:8px 14px;background:#f8fafc;font-style:italic;color:#1e293b;margin:12px 0;'>„Die beiden Fachlehrkräfte eifern um die Wette: Lehrkraft A argumentiert, ihre Klasse sei verlässlicher und stabiler, da niemand eine ungenügende Note geschrieben hat. Lehrkraft B hält dagegen, ihre Klasse habe deutlich mehr Spitzennoten (1er und 2er) erzielt. Beide möchten wissen, welche Klasse mathematisch fundiert 'besser' abgeschnitten hat.“</div><div style='text-align:center;margin:16px 0;overflow-x:auto;'><img src='@@PLUGINFILE@@/diagramm_klausurvergleich.svg' alt='Notenverteilung Klasse A vs. B' style='max-width:100%;height:auto;'></div><p><b>Ihre Aufgabe als Gutachter/in:</b> Untersuchen Sie die beiden Notenverteilungen mathematisch exakt. Berechnen Sie Lage- und Streuungsmaße, um zu klären, warum der Notendurchschnitt allein nicht ausreicht und wie sich die Homogenität der beiden Lerngruppen objektiv belegen lässt.</p><div style='background:#fef3c7;border-left:4px solid #d97706;padding:10px 14px;margin-top:12px;'>🎯 <b>Leitfrage:</b> Welche Klasse hat bei der Klausur wirklich besser abgeschnitten und wie lässt sich die Streuung von Mess- und Notendaten mathematisch exakt berechnen und begründen?</div></div></div>"
+          },
+          {
+            "type": "page",
+            "name": "Infoblatt: Grundbegriffe der Stochastik und Statistik",
+            "completion": 1,
+            "intro": "<p>Was unterscheidet Statistik von der Wahrscheinlichkeitsrechnung? Grundlegende Begriffe nach DIN 13303.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#1e3a8a;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Infoblatt · Grundbegriffe der Stochastik und Statistik</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Der Begriff <b>Stochastik</b> (aus dem Griechischen <em>stochastikē technē</em>: die Kunst des Vermutens) ist der mathematische Oberbegriff für zwei komplementäre Teilgebiete: die <b>beschreibende Statistik</b> und die <b>Wahrscheinlichkeitsrechnung</b>.</p><p><b>Was ist der Unterschied?</b></p><ul><li><b>Statistik (Auswertung der Vergangenheit):</b> In der Statistik erhebt, ordnet, verdichtet und interpretiert man reale Daten, die aus bereits durchgeführten Beobachtungen, Messungen oder Zählungen stammen (z. B. Notenspiegel, Produktionsausschuss, Sensormesswerte). Ziel ist es, aus vorliegendem Zahlenmaterial verlässliche Kennzahlen und Kenndiagramme abzuleiten.</li><li><b>Wahrscheinlichkeitsrechnung (Prognose für die Zukunft):</b> Ausgehend von theoretischen Modellen oder Zufallsexperimenten (z. B. Münzwurf, Würfel, Lebensdauer von Bauteilen) berechnet man die Wahrscheinlichkeit zukünftiger Ereignisse.</li></ul><p><b>Wie werden statistische Daten erfasst?</b> Liegen Messwerte zunächst ungeordnet vor, spricht man von einer <b>Urliste</b>. Werden gleichartige Werte zusammengefasst und gezählt, entstehen <b>gruppierte Daten</b> in einer Häufigkeitstabelle. Jede aufgetretene Note oder Messgröße heißt <b>Merkmalsausprägung x<sub>i</sub></b>, und die Häufigkeit ihres Auftretens heißt <b>absolute Häufigkeit n<sub>i</sub></b>. Die Summe aller absoluten Häufigkeiten ergibt den <b>Gesamtstichprobenumfang n = &Sigma; n<sub>i</sub></b>.</p><div style='background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:12px;margin:12px 0;'><table border='0' cellpadding='6' style='width:100%;'><tr><td><b>Grundgesamtheit (N):</b> Alle denkbaren Untersuchungseinheiten</td><td><b>Stichprobe (n):</b> Reale Teilmenge für die Erhebung</td></tr><tr><td><b>Diskretes Merkmal:</b> Zählbare Ausprägungen (z. B. Schulnoten 1–6)</td><td><b>Stetiges Merkmal:</b> Kontinuierliche Messwerte (z. B. Spannung in Volt)</td></tr></table></div><div style='background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;'>📌 <b>Merke:</b> Statistik beschreibt und analysiert vergangene Realdaten – Wahrscheinlichkeitsrechnung prognostiziert künftige Zufallsereignisse. Für die Qualitätsbeurteilung technischer Prozesse bildet die beschreibende Statistik das unverzichtbare Fundament.</div></div></div>",
+            "material": true,
+            "material_bullets": [
+              "Stochastik: Mathematischer Oberbegriff für Statistik und Wahrscheinlichkeitsrechnung",
+              "Statistik: Erhebung, Verdichtung und Analyse vergangener Realdaten",
+              "Wahrscheinlichkeitsrechnung: Mathematische Prognose künftiger Zufallsereignisse",
+              "Merkmalsausprägung x<sub>i</sub> und absolute Häufigkeit n<sub>i</sub>",
+              "Stichprobenumfang n = &Sigma; n<sub>i</sub> (Summe aller absoluten Häufigkeiten)"
+            ]
+          },
+          {
+            "type": "page",
+            "name": "Lernziele",
+            "completion": 1,
+            "intro": "<p>Kompetenzorientierte Grob- und Feinlernziele des Moduls.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);'>\n  <div style='background:#1e3a8a;color:#ffffff;padding:16px 20px;font-size:20px;font-weight:bold;display:flex;align-items:center;gap:10px;'>\n    <span>🎯</span> Lernziele &amp; Handlungskompetenzen\n  </div>\n  <div style='padding:20px;overflow-x:auto;'>\n    <p style='margin-top:0;font-size:15px;color:#334155;'>Nach erfolgreicher Bearbeitung dieser Lernsituation haben die Lernenden folgende Handlungskompetenzen erworben:</p>\n    \n    <!-- GLZ 1 CARD -->\n    <div style='border:1px solid #bae6fd;background:#f0f9ff;border-radius:10px;padding:16px;margin-bottom:18px;'>\n      <div style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;'>\n        <div style='font-size:16px;font-weight:bold;color:#0369a1;'>Lernziel 1: Statistische Lageparameter &amp; Häufigkeiten</div>\n        <span style='background:#0284c7;color:#ffffff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;'>AFB I &amp; II · Fachkompetenz</span>\n      </div>\n      <div style='display:flex;flex-direction:column;gap:8px;'>\n        <div style='background:#ffffff;border:1px solid #e0f2fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> absolute und relative Häufigkeiten h(x<sub>i</sub>) aus Rohdatenreihen zu <span style='background:#e0f2fe;color:#0369a1;font-weight:bold;padding:2px 6px;border-radius:4px;'>berechnen</span> und in normierten Säulendiagrammen darzustellen.\n        </div>\n        <div style='background:#ffffff;border:1px solid #e0f2fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> das gewichtete arithmetische Mittel x̄ für gruppierte Häufigkeitsdaten zu <span style='background:#e0f2fe;color:#0369a1;font-weight:bold;padding:2px 6px;border-radius:4px;'>bestimmen</span> und als physikalischen Schwerpunkt der Verteilung zu interpretieren.\n        </div>\n      </div>\n    </div>\n\n    <!-- GLZ 2 CARD -->\n    <div style='border:1px solid #ddd6fe;background:#f5f3ff;border-radius:10px;padding:16px;margin-bottom:18px;'>\n      <div style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;'>\n        <div style='font-size:16px;font-weight:bold;color:#5b21b6;'>Lernziel 2: Streuungsverhalten &amp; Nulldifferenz</div>\n        <span style='background:#7c3aed;color:#ffffff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;'>AFB II · Methodenkompetenz</span>\n      </div>\n      <div style='display:flex;flex-direction:column;gap:8px;'>\n        <div style='background:#ffffff;border:1px solid #ede9fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> den mathematischen Nachweis zu <span style='background:#ede9fe;color:#5b21b6;font-weight:bold;padding:2px 6px;border-radius:4px;'>führen</span>, warum die Summe linearer Abweichungen vom Mittelwert stets Null ergibt (&Sigma;(x<sub>i</sub> - x̄)·n<sub>i</sub> = 0).\n        </div>\n        <div style='background:#ffffff;border:1px solid #ede9fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> die empirische Varianz s² und Standardabweichung s nach dem 6-Schritte-Berechnungsbauplan zu <span style='background:#ede9fe;color:#5b21b6;font-weight:bold;padding:2px 6px;border-radius:4px;'>ermitteln</span> und das Streuungsintervoll [x̄ − s ; x̄ + s] zu konstruieren.\n        </div>\n      </div>\n    </div>\n\n    <!-- GLZ 3 CARD -->\n    <div style='border:1px solid #bbf7d0;background:#f0fdf4;border-radius:10px;padding:16px;margin-bottom:14px;'>\n      <div style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;'>\n        <div style='font-size:16px;font-weight:bold;color:#15803d;'>Lernziel 3: Fachgutachten &amp; Technischer Transfer</div>\n        <span style='background:#16a34a;color:#ffffff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;'>AFB III · Urteils- &amp; Handlungskompetenz</span>\n      </div>\n      <div style='display:flex;flex-direction:column;gap:8px;'>\n        <div style='background:#ffffff;border:1px solid #dcfce7;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> statistische Kennwerte in einem 6-spaltigen digitalen Prüfprotokoll lückenlos zu <span style='background:#dcfce7;color:#15803d;font-weight:bold;padding:2px 6px;border-radius:4px;'>dokumentieren</span>.\n        </div>\n        <div style='background:#ffffff;border:1px solid #dcfce7;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> ein begründetes technisches Fachgutachten zur Prozessfähigkeit (SPC / DIN EN ISO 286) und zur Homogenität zweier Stichproben zu <span style='background:#dcfce7;color:#15803d;font-weight:bold;padding:2px 6px;border-radius:4px;'>verfassen</span>.\n        </div>\n      </div>\n    </div>\n\n    <div style='background:#f8fafc;border-left:4px solid #64748b;padding:10px 14px;border-radius:4px;font-size:13px;color:#475569;'>\n      ⏱ <b>Bearbeitungszeit:</b> ca. 4–6 Unterrichtsstunden (integrierter Fachunterricht mit BYOD / PC-Raum).\n    </div>\n  </div>\n</div>"
+          },
+          {
+            "type": "choice",
+            "name": "Vorwissens-Check: Statistische Kennwerte",
+            "intro": "<p>Aktivieren Sie Ihr Vorwissen: Welche statistischen Begriffe haben Sie im Mathematikunterricht oder in der Praxis bereits verwendet?</p>",
+            "options": [
+              "Ich kenne bisher nur den einfachen Durchschnittswert (Notendurchschnitt)",
+              "Ich habe bereits relative Häufigkeiten in Prozent berechnet",
+              "Ich habe schon einmal von Standardabweichung oder Streuung gehört, kann sie aber noch nicht berechnen",
+              "Ich kann arithmetisches Mittel, Varianz und Standardabweichung bereits selbstständig berechnen"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "2 · Grundlagen: Häufigkeiten & Mittelwert",
+        "summary": "<div style='overflow-x:auto;'><p>Relative Häufigkeiten, Säulendiagramme und die mathematische Berechnung des gewichteten arithmetischen Mittels.</p></div>",
+        "image": "assets/cover_grundlagen.png",
+        "activities": [
+          {
+            "type": "page",
+            "name": "Infoblatt: Absolute und relative Häufigkeiten",
+            "completion": 1,
+            "intro": "<p>Wie werden Rohdaten vergleichbar gemacht? Berechnung relativer Häufigkeiten nach DIN 13303.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#0369a1;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Infoblatt · Absolute und relative Häufigkeiten</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Um Stichproben mit unterschiedlicher Teilnehmeranzahl (z. B. Klasse A mit n=24 Schülern vs. Klasse B mit n=25 Schülern) objektiv vergleichen zu können, reicht die reine Anzahl (absolute Häufigkeit) nicht aus. Wir benötigen standardisierte Anteile.</p><p><b>Definitionen und Formeln:</b></p><ul><li><b>Absolute Häufigkeit n<sub>i</sub>:</b> Die tatsächliche Anzahl, wie oft eine bestimmte Merkmalsausprägung x<sub>i</sub> in der Stichprobe auftritt. Es gilt: &Sigma; n<sub>i</sub> = n.</li><li><b>Relative Häufigkeit h(x<sub>i</sub>):</b> Der Anteil der absoluten Häufigkeit n<sub>i</sub> am gesamten Stichprobenumfang n:<br><div style='text-align:center;padding:10px;font-size:18px;font-weight:bold;color:#0369a1;'>h(x<sub>i</sub>) = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>n<sub>i</sub></span><span style='padding:0 3px;line-height:1.1;'>n</span></span></div>Die relative Häufigkeit ist eine dimensionslose Zahl zwischen 0 und 1 (bzw. 0 % und 100 %). Die Summe aller relativen Häufigkeiten ist stets exakt 1 (bzw. 100 %): &Sigma; h(x<sub>i</sub>) = 1,00.</li></ul><p><b>Beispielrechnung für Note 1:</b></p><ul><li>Klasse A: n<sub>1</sub> = 1 bei n = 24 &rarr; h(1) = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>1</span><span style='padding:0 3px;line-height:1.1;'>24</span></span> &asymp; 0,0417 = <b>4,17 %</b></li><li>Klasse B: n<sub>1</sub> = 3 bei n = 25 &rarr; h(1) = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>3</span><span style='padding:0 3px;line-height:1.1;'>25</span></span> = 0,1200 = <b>12,00 %</b></li></ul><p>Obwohl Klasse B nur 1 Schüler mehr hat, ist der relative Anteil an 'Sehr gut'-Leistungen fast dreimal so hoch wie in Klasse A!</p><div style='background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;'>📌 <b>Merke:</b> Erst die relative Häufigkeit h(x<sub>i</sub>) = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>n<sub>i</sub></span><span style='padding:0 3px;line-height:1.1;'>n</span></span> ermöglicht den fairen mathematischen Vergleich unterschiedlich großer Stichproben und Lerngruppen.</div></div></div>",
+            "material": true,
+            "material_bullets": [
+              "Absolute Häufigkeit n<sub>i</sub> = gezählte Anzahl der Merkmalsausprägung x<sub>i</sub>",
+              "Stichprobenumfang n = Summe aller absoluten Häufigkeiten n<sub>i</sub>",
+              "Relative Häufigkeit h(x<sub>i</sub>) = n<sub>i</sub> : n (Wertebereich 0,00 bis 1,00 bzw. 0 % bis 100 %)",
+              "Summe aller relativen Häufigkeiten &Sigma; h(x<sub>i</sub>) ergibt immer exakt 1,00 (100 %)",
+              "Klasse A: 4,17 % Einser | Klasse B: 12,00 % Einser"
+            ]
+          },
+          {
+            "type": "page",
+            "name": "Aufgabenblatt 1: Häufigkeiten berechnen & Säulendiagramme erstellen",
+            "completion": 1,
+            "intro": "<p>Originalaufgabe aus dem Stochastik-Skript der BBS Meppen (Seiten 6 und 7).</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#0369a1;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Aufgabenblatt 1 · Häufigkeitstabelle &amp; Diagrammerstellung (BBS Meppen Skript S. 6–7)</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'><b>Aufgabenstellung:</b></p><p>1. <b>Häufigkeitstabelle vervollständigen:</b> Berechnen Sie für Klasse A (n=24) und Klasse B (n=25) die relativen Häufigkeiten h(x<sub>i</sub>) aller Notenstufen (1 bis 6) als Dezimalzahl und in Prozent auf zwei Nachkommastellen genau.</p><p>2. <b>Summenprüfung:</b> Weisen Sie rechnerisch nach, dass die Summe aller absoluten Häufigkeiten jeweils n und die Summe aller relativen Häufigkeiten jeweils 1,00 (100 %) ergibt.</p><p>3. <b>Grafische Darstellung:</b> Zeichnen Sie für beide Klassen ein normiertes Säulendiagramm (X-Achse: Noten 1 bis 6, Y-Achse: relative Häufigkeit 0 % bis 50 %).</p><div style='background:#f8fafc;border:1px solid #cbd5e1;border-radius:6px;padding:12px;margin-top:12px;'>💡 <b>Hinweis:</b> Nutzen Sie für Ihre Zeichnung ein sauberes Koordinatensystem mit 1 cm je Notenstufe und 1 cm je 10 % relativer Häufigkeit.</div></div></div>"
+          },
+          {
+            "type": "assign",
+            "name": "Abgabe: Aufgabenblatt 1 – Häufigkeitstabelle & Säulendiagramme",
+            "intro": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#0369a1;margin-top:0;'>Abgabe: Aufgabenblatt 1</h3><p>Laden Sie hier Ihre handschriftliche Ausarbeitung oder Ihr digitales Dokument (PDF / Foto) zu <b>Aufgabenblatt 1</b> hoch.</p><ul><li>Vollständige Tabelle der relativen Häufigkeiten h(x<sub>i</sub>) für Klasse A und B</li><li>Rechnerischer Nachweis der Summenprüfung (&Sigma; n<sub>i</sub> = n und &Sigma; h(x<sub>i</sub>) = 1,00)</li><li>Gezeichnetes Säulendiagramm mit Achsenbeschriftungen und Notenstufen 1–6</li></ul></div>",
+            "submissiontypes": [
+              "file",
+              "onlinetext"
+            ],
+            "maxfiles": 3,
+            "maxbytes": 10485760,
+            "duedate": 0,
+            "completion": 1
+          },
+          {
+            "type": "page",
+            "name": "Infoblatt: Das gewichtete arithmetische Mittel",
+            "completion": 1,
+            "intro": "<p>Warum der einfache Durchschnitt bei Häufigkeiten falsch ist: Formel für x̄ nach DIN 13303.</p>",
+            "images": [
+              "assets/mittelwert_schwerpunkt.svg"
+            ],
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#0369a1;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Infoblatt · Das gewichtete arithmetische Mittel x̄</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Bei gruppierten Daten darf man nicht einfach den ungewichteten Durchschnitt der Noten (1+2+3+4+5+6)/6 = 3,5 berechnen! Jede Merkmalsausprägung x<sub>i</sub> muss mit ihrer absoluten Häufigkeit n<sub>i</sub> multipliziert werden.</p><p><b>Formel für das arithmetische Mittel bei Häufigkeitsdaten:</b></p><div style='text-align:center;padding:12px;background:#f1f5f9;border-radius:6px;font-size:19px;font-weight:bold;color:#0369a1;'>x̄ = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>1</span><span style='padding:0 3px;line-height:1.1;'>n</span></span> · &Sigma; (x<sub>i</sub> · n<sub>i</sub>) = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>&Sigma; (x<sub>i</sub> · n<sub>i</sub>)</span><span style='padding:0 3px;line-height:1.1;'>n</span></span></div><p><b>Schrittweise Berechnung:</b></p><ul><li><b>Klasse A (n=24):</b> &Sigma;(x<sub>i</sub> · n<sub>i</sub>) = 1·1 + 2·2 + 3·10 + 4·8 + 5·3 + 6·0 = 1 + 4 + 30 + 32 + 15 + 0 = <b>82</b><br>&rarr; x̄<sub>A</sub> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>82</span><span style='padding:0 3px;line-height:1.1;'>24</span></span> &asymp; <b>3,42 Notenstufen</b></li><li><b>Klasse B (n=25):</b> &Sigma;(x<sub>i</sub> · n<sub>i</sub>) = 1·3 + 2·4 + 3·5 + 4·6 + 5·5 + 6·2 = 3 + 8 + 15 + 24 + 25 + 12 = <b>87</b><br>&rarr; x̄<sub>B</sub> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>87</span><span style='padding:0 3px;line-height:1.1;'>25</span></span> = <b>3,48 Notenstufen</b></li></ul><div style='text-align:center;margin:16px 0;overflow-x:auto;'><img src='@@PLUGINFILE@@/mittelwert_schwerpunkt.svg' alt='Mittelwert als Schwerpunkt' style='max-width:100%;height:auto;'></div><p><b>Fundamentale Eigenschaft (Nulldifferenz):</b></p><p>Das arithmetische Mittel ist der <b>physikalische Schwerpunkt</b> einer Verteilung. Die Summe aller vorzeichenbehafteten Abweichungen (x<sub>i</sub> - x̄) multipliziert mit n<sub>i</sub> ist stets exakt Null:</p><div style='text-align:center;padding:8px;font-weight:bold;color:#dc2626;'>&Sigma; (x<sub>i</sub> - x̄) · n<sub>i</sub> = 0</div><div style='background:#fef2f2;border-left:4px solid #dc2626;padding:10px 14px;margin-top:12px;'>⚠️ <b>Das Mittelwert-Paradoxon:</b> Beide Klassen haben mit x̄=3,42 und x̄=3,48 fast denselben Notenschnitt. Der Mittelwert allein verrät nichts darüber, ob die Noten eng beieinander liegen oder extrem streuen!</div></div></div>",
+            "material": true,
+            "material_bullets": [
+              "Mittelwert für gruppierte Daten: x̄ = 1/n · &Sigma; (x<sub>i</sub> · n<sub>i</sub>)",
+              "Berechnung Klasse A: x̄<sub>A</sub> = 82 : 24 = 3,42 Notenstufen",
+              "Berechnung Klasse B: x̄<sub>B</sub> = 87 : 25 = 3,48 Notenstufen",
+              "Schwerpunkteigenschaft: &Sigma; (x<sub>i</sub> - x̄) · n<sub>i</sub> = 0 (Nulldifferenz)",
+              "Grenze des Mittelwerts: Verschleiert Streuung und Ausreißer!"
+            ]
+          },
+          {
+            "type": "page",
+            "name": "Aufgabenblatt 2: Arithmetisches Mittel & Nullsummen-Nachweis",
+            "completion": 1,
+            "intro": "<p>Originalaufgabe aus dem Stochastik-Skript der BBS Meppen (Seiten 6 und 8).</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#0369a1;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Aufgabenblatt 2 · Arithmetisches Mittel &amp; Schwerpunkt-Nachweis (BBS Meppen Skript S. 6 &amp; 8)</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'><b>Aufgabenstellung:</b></p><p>1. <b>Mittelwert berechnen:</b> Berechnen Sie für Klasse A und Klasse B das gewichtete arithmetische Mittel x̄ unter vollständiger Angabe des Rechenwegs mit der Formel x̄ = (1/n) · &Sigma; (x<sub>i</sub> · n<sub>i</sub>).</p><p>2. <b>Nullsummen-Nachweis:</b> Berechnen Sie für jede Note die Differenz (x<sub>i</sub> - x̄), multiplizieren Sie diese mit der Häufigkeit n<sub>i</sub> und summieren Sie die Werte auf. Weisen Sie rechnerisch nach, dass das Ergebnis exakt 0 ergibt.</p><p>3. <b>Erkenntnistransfer:</b> Begründen Sie schriftlich, warum sich die Summe der linearen Abweichungen nicht als Maß für die Streuung einer Klasse eignet.</p></div></div>"
+          },
+          {
+            "type": "assign",
+            "name": "Abgabe: Aufgabenblatt 2 – Arithmetisches Mittel & Schwerpunkt-Nachweis",
+            "intro": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#0369a1;margin-top:0;'>Abgabe: Aufgabenblatt 2</h3><p>Laden Sie hier Ihre Ausarbeitung zu <b>Aufgabenblatt 2</b> hoch.</p><ul><li>Berechnung der Produktsumme &Sigma;(x<sub>i</sub>·n<sub>i</sub>) und des arithmetischen Mittels x̄ für Klasse A und B</li><li>Schrittweiser Nachweis der Nulldifferenz &Sigma;(x<sub>i</sub> − x̄)·n<sub>i</sub> = 0</li><li>Schriftliche Begründung zur Untauglichkeit linearer Abweichungen als Streuungsmaß</li></ul></div>",
+            "submissiontypes": [
+              "file",
+              "onlinetext"
+            ],
+            "maxfiles": 3,
+            "maxbytes": 10485760,
+            "duedate": 0,
+            "completion": 1
+          }
+        ]
+      },
+      {
+        "name": "3 · Vertiefung: Streuungsmaße & Varianz",
+        "summary": "<div style='overflow-x:auto;'><p>Warum lineare Abweichungen versagen: Quadrierung, Varianz s², Standardabweichung s und Streuungsintervalle.</p></div>",
+        "image": "assets/cover_vertiefung.png",
+        "activities": [
+          {
+            "type": "page",
+            "name": "Infoblatt: Varianz, Standardabweichung & Streuungsintervall",
+            "completion": 1,
+            "intro": "<p>Wie wird die Streuung mathematisch definiert? Die Formeln für s² und s nach DIN 55303.</p>",
+            "images": [
+              "assets/streuung_intervall.svg"
+            ],
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#4338ca;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Infoblatt · Varianz, Standardabweichung &amp; Streuungsintervall</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Da sich lineare Abweichungen zu Null aufheben, quadriert man die Differenzen (x<sub>i</sub> - x̄)². Dadurch werden alle Werte positiv und Ausreißer werden progressiv gewichtet.</p><p><b>1. Die empirische Varianz s²:</b></p><p>Die Varianz ist der Durchschnitt der quadrierten Abweichungen aller Merkmalswerte vom arithmetischen Mittel:</p><div style='text-align:center;padding:10px;background:#f1f5f9;border-radius:6px;font-size:18px;font-weight:bold;color:#4338ca;'>s² = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>1</span><span style='padding:0 3px;line-height:1.1;'>n</span></span> · &Sigma; (x<sub>i</sub> - x̄)² · n<sub>i</sub></div><p><b>2. Die empirische Standardabweichung s:</b></p><p>Weil die Varianz in quadrierten Einheiten misst (z. B. Notenstufen² oder mm²), zieht man die Quadratwurzel, um wieder die ursprüngliche Einheit der Messwerte zu erhalten:</p><div style='text-align:center;padding:10px;background:#f1f5f9;border-radius:6px;font-size:18px;font-weight:bold;color:#4338ca;'>s = &radic;(s²) = &radic;(<span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>1</span><span style='padding:0 3px;line-height:1.1;'>n</span></span> · &Sigma; (x<sub>i</sub> - x̄)² · n<sub>i</sub>)</div><p><b>Vergleich der Klausurergebnisse (BBS Meppen Skript S. 9):</b></p><ul><li><b>Klasse A:</b> x̄ = 3,42 Notenstufen | Varianz s² = <b>0,83 Notenstufen²</b> | Standardabweichung s = &radic;(0,83 Notenstufen²) &asymp; <b>0,91 Notenstufen</b></li><li><b>Klasse B:</b> x̄ = 3,48 Notenstufen | Varianz s² = <b>2,77 Notenstufen²</b> | Standardabweichung s = &radic;(2,77 Notenstufen²) &asymp; <b>1,66 Notenstufen</b></li></ul><div style='text-align:center;margin:16px 0;overflow-x:auto;'><img src='@@PLUGINFILE@@/streuung_intervall.svg' alt='Streuungsintervall im Klassenvergleich' style='max-width:100%;height:auto;'></div><p><b>3. Das Streuungsintervall [x̄ - s ; x̄ + s]:</b></p><p>Das Streuungsintervall spannt einen Korridor um das arithmetische Mittel auf:</p><ul><li>Klasse A: [3,42 Notenstufen - 0,91 Notenstufen ; 3,42 Notenstufen + 0,91 Notenstufen] = <b>[2,51 Notenstufen ; 4,33 Notenstufen]</b> &rarr; Enthält Noten 3 und 4 (18 von 24 Schülern = <b>75,0 %</b>).</li><li>Klasse B: [3,48 Notenstufen - 1,66 Notenstufen ; 3,48 Notenstufen + 1,66 Notenstufen] = <b>[1,82 Notenstufen ; 5,14 Notenstufen]</b> &rarr; Enthält Noten 2 bis 5 (20 von 25 Schülern = <b>80,0 %</b>, aber über eine breite Notenbandbreite).</li></ul><div style='background:#e0f2fe;border-left:4px solid #0284c7;padding:10px 14px;'>📌 <b>Erkenntnis:</b> Obwohl beide Klassen denselben Schnitt haben, streut Klasse B fast doppelt so stark (s = 1,66 Notenstufen vs. s = 0,91 Notenstufen). Klasse A ist homogen und verlässlich; Klasse B ist extrem heterogen.</div></div></div>",
+            "material": true,
+            "material_bullets": [
+              "Empirische Varianz s² = mittlere quadratische Abweichung vom Mittelwert",
+              "Standardabweichung s = &radic;(s²) (in der Originaleinheit der Messwerte)",
+              "Klasse A: s²<sub>A</sub> = 0,83 Notenstufen² &rarr; s<sub>A</sub> = 0,91 Notenstufen (hohe Homogenität)",
+              "Klasse B: s²<sub>B</sub> = 2,77 Notenstufen² &rarr; s<sub>B</sub> = 1,66 Notenstufen (starke Streuung)",
+              "Streuungsintervall [x̄ - s ; x̄ + s] zeigt den Kernbereich der Datenkonzentration"
+            ]
+          },
+          {
+            "type": "page",
+            "name": "Aufgabenblatt 3: Varianz, Standardabweichung & Streuungsintervall",
+            "completion": 1,
+            "intro": "<p>Originalaufgabe aus dem Stochastik-Skript der BBS Meppen (Seite 9).</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#0f766e;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Aufgabenblatt 3 · Streuungsmaße &amp; Intervallbildung (BBS Meppen Skript S. 9)</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'><b>Aufgabenstellung:</b></p><p>1. <b>Berechnung der Varianz s²:</b> Erstellen Sie für Klasse A (n=24) und Klasse B (n=25) die 6-spaltige Rechentabelle:</p><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;min-width:550px;text-align:center;margin:10px 0;'><tr style='background:#f1f5f9;'><th>Spalte 1</th><th>Spalte 2</th><th>Spalte 3</th><th>Spalte 4</th><th>Spalte 5</th><th>Spalte 6</th></tr><tr style='font-weight:bold;'><td>x<sub>i</sub></td><td>n<sub>i</sub></td><td>x<sub>i</sub> · n<sub>i</sub></td><td>x<sub>i</sub> - x̄</td><td>(x<sub>i</sub> - x̄)²</td><td>(x<sub>i</sub> - x̄)² · n<sub>i</sub></td></tr></table><p>2. <b>Standardabweichung s:</b> Ziehen Sie aus der Varianz die Quadratwurzel s = &radic;(s²). Geben Sie die physikalische Maßeinheit von s² und s an.</p><p>3. <b>Streuungsintervall [x̄ - s ; x̄ + s]:</b> Bestimmen Sie die Intervallgrenzen für beide Klassen und zählen Sie ab, wie viele Schülerinnen und Schüler jeweils innerhalb des Intervalls liegen.</p></div></div>"
+          },
+          {
+            "type": "assign",
+            "name": "Abgabe: Aufgabenblatt 3 – Varianz, Standardabweichung & Streuungsintervall",
+            "intro": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#4338ca;margin-top:0;'>Abgabe: Aufgabenblatt 3</h3><p>Laden Sie hier Ihre Ausarbeitung zu <b>Aufgabenblatt 3</b> hoch.</p><ul><li>Vollständig ausgefüllte 6-spaltige Rechentabelle für Klasse A und B</li><li>Berechnung von Varianz s² und Standardabweichung s mit korrekten Einheiten (Notenstufen² bzw. Notenstufen)</li><li>Berechnung der Intervallgrenzen [x̄ − s ; x̄ + s] und Abzählung der Schüler im Kernbereich</li></ul></div>",
+            "submissiontypes": [
+              "file",
+              "onlinetext"
+            ],
+            "maxfiles": 3,
+            "maxbytes": 10485760,
+            "duedate": 0,
+            "completion": 1
+          },
+          {
+            "type": "hotspot",
+            "name": "Interaktive Formel-Anatomie der Varianz",
+            "spec": {
+              "title": "Interaktive Formel-Anatomie der empirischen Varianz s²",
+              "subtitle": "Klicken Sie auf die nummerierten Pins oberhalb der Formelkarten, um die mathematische Funktion jedes Formelbestandteils zu erkunden.",
+              "svg": "assets/formel_anatomie_varianz.svg",
+              "hotspots": [
+                {
+                  "x": 25.5,
+                  "y": 15.0,
+                  "title": "1. Mittelung durch Division: 1 / n",
+                  "category": "Normierung",
+                  "content": "<p>Teilt die Gesamtsumme der quadrierten Abweichungen durch den Gesamtstichprobenumfang <b>n</b>. Dadurch wird das Streuungsmaß normiert und unabhängig von der Klassengröße vergleichbar.</p>",
+                  "details": {
+                    "Symbol": "1 / n",
+                    "Funktion": "Mittelwertbildung über alle Merkmalsträger",
+                    "Bedeutung": "Ermöglicht den fairen Vergleich unterschiedlich großer Stichproben"
+                  },
+                  "merksatz": "Ohne Division durch n würde eine größere Schulklasse immer eine scheinbar riesige Streuung aufweisen!"
+                },
+                {
+                  "x": 37.0,
+                  "y": 15.0,
+                  "title": "2. Summenzeichen Sigma: Σ",
+                  "category": "Aggregation",
+                  "content": "<p>Summiert die gewichteten Abweichungsquadrate über alle <b>k</b> Merkmalsausprägungen (i = 1 bis k). Bei Schulnoten läuft der Index von Note 1 bis Note 6.</p>",
+                  "details": {
+                    "Symbol": "Σ (Sigma)",
+                    "Indexbereich": "i = 1 bis k (Notenstufen 1 bis 6)",
+                    "Funktion": "Summation aller Zeilen der Rechentabelle"
+                  },
+                  "merksatz": "In der 6-spaltigen Rechentabelle entspricht das Summenzeichen exakt der Summenzeile ganz unten!"
+                },
+                {
+                  "x": 54.5,
+                  "y": 15.0,
+                  "title": "3. Abweichungsquadrat: (x<sub>i</sub> − x̄)²",
+                  "category": "Abstand & Vorzeichenbereinigung",
+                  "content": "<p>Misst den Abstand jeder Merkmalsausprägung <b>x<sub>i</sub></b> vom Mittelwert <b>x̄</b> und quadriert diese Differenz. Die Quadrierung verhindert die Nulldifferenz und bestraft Ausreißer überproportional stark.</p>",
+                  "details": {
+                    "Symbol": "(x<sub>i</sub> − x̄)²",
+                    "Effekt 1": "Macht alle Differenzen positiv (kein gegenseitiges Auslöschen)",
+                    "Effekt 2": "Ausreißer werden progressiv gewichtet (z. B. (-2)² = 4)"
+                  },
+                  "merksatz": "Erst durch das Quadrieren wird die Nulldifferenz neutralisiert und ein echtes Streuungsmaß ermöglicht!"
+                },
+                {
+                  "x": 74.5,
+                  "y": 15.0,
+                  "title": "4. Häufigkeitsgewichtung: · n<sub>i</sub>",
+                  "category": "Gewichtung",
+                  "content": "<p>Multipliziert das quadrierte Abweichungsmaß jeder Note mit der Anzahl der Schülerinnen und Schüler <b>n<sub>i</sub></b>, die diese Note erhalten haben.</p>",
+                  "details": {
+                    "Faktor": "n<sub>i</sub> (absolute Häufigkeit der Note)",
+                    "Funktion": "Gewichtung nach tatsächlichem Auftreten",
+                    "Bedeutung": "Häufige Noten prägen die Varianz stärker als Einzelfälle"
+                  },
+                  "merksatz": "Eine Note mit n<sub>i</sub> = 0 (z. B. Note 6 in Klasse A) trägt mit genau 0 zur Gesamtvarianz bei!"
+                }
+              ]
+            }
+          },
+          {
+            "type": "simulation",
+            "name": "Interaktive Statistik- und Streuungs-Simulation",
+            "spec": {
+              "title": "Interaktive Datenverteilungs- und Streuungs-Simulation",
+              "subtitle": "Verändern Sie die Häufigkeiten der Noten 1 bis 6 und beobachten Sie live die Auswirkungen auf Mittelwert x̄, Varianz s² und Standardabweichung s.",
+              "inputs": [
+                {
+                  "id": "n1",
+                  "label": "Anzahl Note 1",
+                  "unit": "",
+                  "min": 0,
+                  "max": 15,
+                  "step": 1,
+                  "default": 1,
+                  "type": "range"
+                },
+                {
+                  "id": "n2",
+                  "label": "Anzahl Note 2",
+                  "unit": "",
+                  "min": 0,
+                  "max": 15,
+                  "step": 1,
+                  "default": 2,
+                  "type": "range"
+                },
+                {
+                  "id": "n3",
+                  "label": "Anzahl Note 3",
+                  "unit": "",
+                  "min": 0,
+                  "max": 15,
+                  "step": 1,
+                  "default": 10,
+                  "type": "range"
+                },
+                {
+                  "id": "n4",
+                  "label": "Anzahl Note 4",
+                  "unit": "",
+                  "min": 0,
+                  "max": 15,
+                  "step": 1,
+                  "default": 8,
+                  "type": "range"
+                },
+                {
+                  "id": "n5",
+                  "label": "Anzahl Note 5",
+                  "unit": "",
+                  "min": 0,
+                  "max": 15,
+                  "step": 1,
+                  "default": 3,
+                  "type": "range"
+                },
+                {
+                  "id": "n6",
+                  "label": "Anzahl Note 6",
+                  "unit": "",
+                  "min": 0,
+                  "max": 15,
+                  "step": 1,
+                  "default": 0,
+                  "type": "range"
+                }
+              ],
+              "kpis": [
+                {
+                  "id": "n_tot",
+                  "label": "Stichprobenumfang n",
+                  "unit": "",
+                  "dec": 0,
+                  "big": true
+                },
+                {
+                  "id": "mean",
+                  "label": "Arithmetisches Mittel x̄",
+                  "unit": "Noten",
+                  "dec": 2,
+                  "big": true
+                },
+                {
+                  "id": "var",
+                  "label": "Empirische Varianz s²",
+                  "unit": "Noten²",
+                  "dec": 2
+                },
+                {
+                  "id": "sd",
+                  "label": "Standardabweichung s",
+                  "unit": "Noten",
+                  "dec": 2,
+                  "big": true
+                },
+                {
+                  "id": "iv_low",
+                  "label": "Intervall-Untergrenze (x̄ - s)",
+                  "unit": "Noten",
+                  "dec": 2
+                },
+                {
+                  "id": "iv_high",
+                  "label": "Intervall-Obergrenze (x̄ + s)",
+                  "unit": "Noten",
+                  "dec": 2
+                }
+              ],
+              "visual": "<svg id=\"sim_chart\" viewBox=\"0 0 600 320\" width=\"100%\" height=\"auto\" font-family=\"Arial, sans-serif\" style=\"background:#ffffff; border-radius:8px; border:1px solid #cbd5e1;\">\n  <defs>\n    <linearGradient id=\"simBarGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n      <stop offset=\"0%\" stop-color=\"#0284c7\"/>\n      <stop offset=\"100%\" stop-color=\"#0369a1\"/>\n    </linearGradient>\n    <linearGradient id=\"simIvGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n      <stop offset=\"0%\" stop-color=\"#bae6fd\" stop-opacity=\"0.6\"/>\n      <stop offset=\"100%\" stop-color=\"#7dd3fc\" stop-opacity=\"0.3\"/>\n    </linearGradient>\n  </defs>\n\n  <text x=\"300\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#0f172a\">Live-Säulendiagramm &amp; Streuungsintervall [x̄ − s ; x̄ + s]</text>\n\n  <!-- Intervall Box [x̄ - s ; x̄ + s] -->\n  <rect id=\"sim_iv_box\" x=\"180\" y=\"40\" width=\"200\" height=\"210\" fill=\"url(#simIvGrad)\" stroke=\"#0284c7\" stroke-width=\"1.5\" stroke-dasharray=\"4,4\" rx=\"6\"/>\n\n  <!-- Grid / Baseline -->\n  <line x1=\"40\" y1=\"250\" x2=\"560\" y2=\"250\" stroke=\"#94a3b8\" stroke-width=\"2\"/>\n\n  <!-- 6 Noten-Säulen -->\n  <rect id=\"bar_1\" x=\"60\" y=\"235\" width=\"40\" height=\"15\" rx=\"4\" fill=\"url(#simBarGrad)\"/>\n  <text id=\"txt_1\" x=\"80\" y=\"228\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0369a1\">1</text>\n  <text x=\"80\" y=\"270\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#334155\">Note 1</text>\n\n  <rect id=\"bar_2\" x=\"140\" y=\"220\" width=\"40\" height=\"30\" rx=\"4\" fill=\"url(#simBarGrad)\"/>\n  <text id=\"txt_2\" x=\"160\" y=\"213\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0369a1\">2</text>\n  <text x=\"160\" y=\"270\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#334155\">Note 2</text>\n\n  <rect id=\"bar_3\" x=\"220\" y=\"100\" width=\"40\" height=\"150\" rx=\"4\" fill=\"url(#simBarGrad)\"/>\n  <text id=\"txt_3\" x=\"240\" y=\"93\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0369a1\">10</text>\n  <text x=\"240\" y=\"270\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#334155\">Note 3</text>\n\n  <rect id=\"bar_4\" x=\"300\" y=\"130\" width=\"40\" height=\"120\" rx=\"4\" fill=\"url(#simBarGrad)\"/>\n  <text id=\"txt_4\" x=\"320\" y=\"123\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0369a1\">8</text>\n  <text x=\"320\" y=\"270\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#334155\">Note 4</text>\n\n  <rect id=\"bar_5\" x=\"380\" y=\"205\" width=\"40\" height=\"45\" rx=\"4\" fill=\"url(#simBarGrad)\"/>\n  <text id=\"txt_5\" x=\"400\" y=\"198\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0369a1\">3</text>\n  <text x=\"400\" y=\"270\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#334155\">Note 5</text>\n\n  <rect id=\"bar_6\" x=\"460\" y=\"250\" width=\"40\" height=\"0\" rx=\"4\" fill=\"url(#simBarGrad)\"/>\n  <text id=\"txt_6\" x=\"480\" y=\"245\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0369a1\">0</text>\n  <text x=\"480\" y=\"270\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#334155\">Note 6</text>\n\n  <!-- Mittelwert Nadel -->\n  <line id=\"sim_mean_line\" x1=\"273\" y1=\"40\" x2=\"273\" y2=\"250\" stroke=\"#dc2626\" stroke-width=\"3\"/>\n  <circle id=\"sim_mean_dot\" cx=\"273\" cy=\"250\" r=\"5\" fill=\"#dc2626\"/>\n  <text id=\"sim_mean_text\" x=\"273\" y=\"300\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"#dc2626\">x̄ = 3,42</text>\n\n  <!-- Intervall Badge (über der Nadel gerendert) -->\n  <g id=\"sim_iv_badge\">\n    <rect id=\"sim_iv_bg\" x=\"215\" y=\"44\" width=\"130\" height=\"22\" rx=\"6\" fill=\"#ffffff\" stroke=\"#0284c7\" stroke-width=\"1.5\"/>\n    <text id=\"sim_iv_label\" x=\"280\" y=\"59\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#0284c7\">[2,46 ; 4,37]</text>\n  </g>\n</svg>",
+              "compute": "\n                var n1 = +s.n1 || 0, n2 = +s.n2 || 0, n3 = +s.n3 || 0, n4 = +s.n4 || 0, n5 = +s.n5 || 0, n6 = +s.n6 || 0;\n                var n = n1 + n2 + n3 + n4 + n5 + n6;\n                if (n === 0) {\n                  return { n_tot: 0, mean: 0, var: 0, sd: 0, iv_low: 0, iv_high: 0 };\n                }\n                var sum_prod = (1*n1) + (2*n2) + (3*n3) + (4*n4) + (5*n5) + (6*n6);\n                var mean = sum_prod / n;\n                var sum_sq = (Math.pow(1 - mean, 2) * n1) +\n                             (Math.pow(2 - mean, 2) * n2) +\n                             (Math.pow(3 - mean, 2) * n3) +\n                             (Math.pow(4 - mean, 2) * n4) +\n                             (Math.pow(5 - mean, 2) * n5) +\n                             (Math.pow(6 - mean, 2) * n6);\n                var variance = sum_sq / n;\n                var sd = Math.sqrt(variance);\n                return {\n                  n_tot: n,\n                  mean: mean,\n                  var: variance,\n                  sd: sd,\n                  iv_low: Math.max(1, mean - sd),\n                  iv_high: Math.min(6, mean + sd)\n                };\n              ",
+              "render": "\n                var maxVal = Math.max(1, s.n1, s.n2, s.n3, s.n4, s.n5, s.n6);\n                var scale = 160 / maxVal;\n                var baseY = 250;\n                var counts = [s.n1, s.n2, s.n3, s.n4, s.n5, s.n6];\n                for (var i = 1; i <= 6; i++) {\n                  var val = counts[i - 1] || 0;\n                  var barH = val * scale;\n                  var barY = baseY - barH;\n                  var barEl = root.querySelector('#bar_' + i);\n                  var txtEl = root.querySelector('#txt_' + i);\n                  if (barEl) {\n                    barEl.setAttribute('y', barY);\n                    barEl.setAttribute('height', Math.max(0, barH));\n                  }\n                  if (txtEl) {\n                    txtEl.setAttribute('y', Math.max(68, barY - 6));\n                    txtEl.textContent = val;\n                  }\n                }\n                function noteToX(val) {\n                  return 80 + (val - 1) * 80;\n                }\n                var meanX = noteToX(o.mean || 1);\n                var meanLine = root.querySelector('#sim_mean_line');\n                var meanDot = root.querySelector('#sim_mean_dot');\n                var meanTxt = root.querySelector('#sim_mean_text');\n                if (meanLine) {\n                  meanLine.setAttribute('x1', meanX);\n                  meanLine.setAttribute('x2', meanX);\n                }\n                if (meanDot) {\n                  meanDot.setAttribute('cx', meanX);\n                }\n                if (meanTxt) {\n                  meanTxt.setAttribute('x', meanX);\n                  meanTxt.textContent = 'x̄ = ' + (typeof o.mean === 'number' ? o.mean.toFixed(2) : o.mean);\n                }\n                var lowX = noteToX(Math.max(1, o.iv_low || 1));\n                var highX = noteToX(Math.min(6, o.iv_high || 6));\n                var ivBox = root.querySelector('#sim_iv_box');\n                var ivTxt = root.querySelector('#sim_iv_label');\n                var ivBg = root.querySelector('#sim_iv_bg');\n                var midX = (lowX + highX) / 2;\n                var badgeW = 120;\n                if (ivBox) {\n                  ivBox.setAttribute('x', lowX);\n                  ivBox.setAttribute('width', Math.max(6, highX - lowX));\n                }\n                if (ivBg) {\n                  ivBg.setAttribute('x', midX - badgeW / 2);\n                  ivBg.setAttribute('width', badgeW);\n                }\n                if (ivTxt) {\n                  ivTxt.setAttribute('x', midX);\n                  ivTxt.textContent = '[' + (o.iv_low ? o.iv_low.toFixed(2) : '1.00') + ' ; ' + (o.iv_high ? o.iv_high.toFixed(2) : '6.00') + ']';\n                }\n              ",
+              "challenge": {
+                "prompt": "Konfigurieren Sie eine Verteilung mit genau n = 24 Schülern, einem Mittelwert von ca. 3,42 und einer Standardabweichung s unter 0,96 Notenstufen (hohe Homogenität wie in Klasse A).",
+                "check": "return (o.n_tot === 24) && Math.abs(o.mean - 3.42) <= 0.15 && o.sd > 0 && o.sd <= 0.96;",
+                "success": "Hervorragend! Sie haben die homogene Verteilung von Klasse A mit n = 24, Mittelwert ≈ 3,42 und kompakter Streuung (s ≤ 0,96) erfolgreich nachgestellt!",
+                "hint": "Tipp: Setzen Sie Note 3 auf 10, Note 4 auf 8, Note 2 auf 2, Note 5 auf 3 und Note 1 auf 1 (Summe = 24 Schüler)."
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "4 · Anwendung & Praxisauftrag: Prüfbericht",
+        "summary": "<div style='overflow-x:auto;'><p>Eigenständige Berechnung der Kennwerte im digitalen Formular und Verfassen des Fachgutachtens.</p></div>",
+        "image": "assets/cover_anwendung.png",
+        "activities": [
+          {
+            "type": "page",
+            "name": "Infoblatt: Der 6-Schritte-Berechnungsbauplan",
+            "completion": 1,
+            "intro": "<p>Strukturierte Anleitung zur lückenlosen Auswertung jeder statistischen Messreihe.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#0f766e;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Infoblatt · Der 6-Schritte-Berechnungsbauplan (DIN 55303)</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Gehen Sie bei der Auswertung statistischer Datensätze stets nach diesem standardisierten 6-Schritte-Plan vor:</p><ol><li><b>Schritt 1 (Häufigkeitstabelle):</b> Erfassen Sie die Merkmalswerte x<sub>i</sub> und absoluten Häufigkeiten n<sub>i</sub> in Spalte 1 und 2. Bestimmen Sie n = &Sigma; n<sub>i</sub>.</li><li><b>Schritt 2 (Produktsumme):</b> Berechnen Sie in Spalte 3 die Produkte (x<sub>i</sub> · n<sub>i</sub>) und bilden Sie die Summe &Sigma;(x<sub>i</sub> · n<sub>i</sub>).</li><li><b>Schritt 3 (Arithmetisches Mittel):</b> Teilen Sie die Produktsumme durch n &rarr; x̄ = (1/n) · &Sigma;(x<sub>i</sub> · n<sub>i</sub>).</li><li><b>Schritt 4 (Abweichungen &amp; Quadrierung):</b> Berechnen Sie in Spalte 4 die Differenzen (x<sub>i</sub> - x̄) und in Spalte 5 die quadrierten Differenzen (x<sub>i</sub> - x̄)².</li><li><b>Schritt 5 (Gewichtete Abweichungsquadrate):</b> Multiplizieren Sie in Spalte 6 die quadrierten Werte mit n<sub>i</sub> &rarr; (x<sub>i</sub> - x̄)² · n<sub>i</sub> und summieren Sie die Spalte auf.</li><li><b>Schritt 6 (Varianz &amp; Standardabweichung):</b> Teilen Sie die Summe durch n zur Varianz s² und ziehen Sie die Wurzel für die Standardabweichung s = &radic;(s²).</li></ol></div></div>",
+            "material": true,
+            "material_bullets": [
+              "Schritt 1: Merkmalswerte x<sub>i</sub> und Häufigkeiten n<sub>i</sub> erfassen",
+              "Schritt 2: Produktsumme &Sigma;(x<sub>i</sub> · n<sub>i</sub>) bilden",
+              "Schritt 3: Mittelwert x̄ = Produktsumme / n berechnen",
+              "Schritt 4: Differenzen (x<sub>i</sub> - x̄) bilden und quadrieren",
+              "Schritt 5: Mit n<sub>i</sub> multiplizieren und Summe bilden",
+              "Schritt 6: Varianz s² durch Division mit n und Standardabweichung s = &radic;(s²)"
+            ]
+          },
+          {
+            "type": "formular",
+            "name": "Digitales Berechnungs- und Prüfprotokoll Statistik (ausfüllbar)",
+            "spec": {
+              "title": "Digitales Berechnungs- und Prüfprotokoll Statistik",
+              "storage_key": "statistik_protokoll_bgt",
+              "blocks": [
+                {
+                  "heading": "1. Datenerfassung & Berechnung des arithmetischen Mittels"
+                },
+                {
+                  "html": "<p>Tragen Sie für Klasse A (n=24) und Klasse B (n=25) die Zwischensummen und den berechneten Mittelwert x̄ ein:</p>"
+                },
+                {
+                  "field": {
+                    "id": "mittelwert_klasse_a",
+                    "label": "Klasse A: Zählersumme & Mittelwert x̄<sub>A</sub> (z. B. Summe(x<sub>i</sub>·n<sub>i</sub>) / 24)",
+                    "type": "text"
+                  }
+                },
+                {
+                  "field": {
+                    "id": "mittelwert_klasse_b",
+                    "label": "Klasse B: Zählersumme & Mittelwert x̄<sub>B</sub> (z. B. Summe(x<sub>i</sub>·n<sub>i</sub>) / 25)",
+                    "type": "text"
+                  }
+                },
+                {
+                  "heading": "2. Summenterme & Varianzberechnung (s²)"
+                },
+                {
+                  "html": "<p>Dokumentieren Sie die Summe der gewichteten Abweichungsquadrate &Sigma; (x<sub>i</sub> − x̄)² · n<sub>i</sub> und die daraus resultierende Varianz s²:</p>"
+                },
+                {
+                  "field": {
+                    "id": "varianz_klasse_a",
+                    "label": "Klasse A: Summenterm & Varianz s²<sub>A</sub> (in Notenstufen²)",
+                    "type": "text"
+                  }
+                },
+                {
+                  "field": {
+                    "id": "varianz_klasse_b",
+                    "label": "Klasse B: Summenterm & Varianz s²<sub>B</sub> (in Notenstufen²)",
+                    "type": "text"
+                  }
+                },
+                {
+                  "heading": "3. Standardabweichung (s) & Streuungsintervall"
+                },
+                {
+                  "html": "<p>Berechnen Sie die Standardabweichung s = &radic;(s²) und das Streuungsintervall [x̄ − s ; x̄ + s]:</p>"
+                },
+                {
+                  "field": {
+                    "id": "streuung_klasse_a",
+                    "label": "Klasse A: Standardabweichung s<sub>A</sub> & Intervall [x̄<sub>A</sub> − s<sub>A</sub> ; x̄<sub>A</sub> + s<sub>A</sub>]",
+                    "type": "text"
+                  }
+                },
+                {
+                  "field": {
+                    "id": "streuung_klasse_b",
+                    "label": "Klasse B: Standardabweichung s<sub>B</sub> & Intervall [x̄<sub>B</sub> − s<sub>B</sub> ; x̄<sub>B</sub> + s<sub>B</sub>]",
+                    "type": "text"
+                  }
+                },
+                {
+                  "heading": "4. Fachgutachten & Pädagogische Urteilsbildung"
+                },
+                {
+                  "field": {
+                    "id": "fachgutachten_urteil",
+                    "label": "Begründetes Gutachten: Welche Klasse hat 'besser' abgeschnitten? Begründen Sie anhand von Mittelwert, Standardabweichung und Streuungsintervall!",
+                    "type": "textarea",
+                    "rows": 6
+                  }
+                }
+              ],
+              "note": "Tipp: Speichern Sie Ihren ausgefüllten Bericht als Textdatei herunter und laden Sie ihn im nachfolgenden Praxisauftrag hoch."
+            }
+          },
+          {
+            "type": "assign",
+            "name": "Abgabe: Fallstudie & Fachgutachten CNC-Fertigung",
+            "intro": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#0f766e;margin-top:0;'>Praxisauftrag: Fachgutachten &amp; Prüfbericht</h3><p>Bearbeiten Sie den Auftrag in den <b>6 Phasen der vollständigen Handlung</b>:</p><ol><li><b>Informieren:</b> Analysieren Sie die Klausurdaten der Klassen A und B sowie die Formeln zur beschreibenden Statistik.</li><li><b>Planen:</b> Strukturieren Sie die 6-spaltige Arbeitstabelle zur Ermittlung der Summenterme.</li><li><b>Entscheiden:</b> Begründen Sie, warum neben dem Mittelwert zwingend Varianz und Standardabweichung berechnet werden müssen.</li><li><b>Ausführen:</b> Füllen Sie das digitale Ausfüllformular vollständig aus und exportieren Sie Ihren Prüfbericht als Textdatei.</li><li><b>Kontrollieren:</b> Führen Sie die Nullsummenprüfung und den Plausibilitätsabgleich des Streuungsintervalls durch.</li><li><b>Bewerten:</b> Verfassen Sie Ihr fundiertes Fachgutachten zum Notenstreit der Lehrkräfte.</li></ol><p><b>Abgabe:</b> Laden Sie Ihre exportierte Textdatei oder Ihr ausgefülltes Prüfungsprotokoll (PDF / Text) hier hoch.</p></div>",
+            "submissiontypes": [
+              "file",
+              "onlinetext"
+            ],
+            "maxfiles": 3,
+            "maxbytes": 10485760,
+            "duedate": 0,
+            "completion": 1
+          }
+        ]
+      },
+      {
+        "name": "5 · Kurs-Recap: Synthese, Transfer & Glossar",
+        "summary": "<div style='overflow-x:auto;'><p>Wissenstransfer auf technische Fertigungsprozesse, Video-Lernstation, Abschluss-Quiz und zentrales Fachglossar.</p></div>",
+        "image": "assets/cover_recap.png",
+        "activities": [
+          {
+            "type": "page",
+            "name": "Zusammenfassung: Das Wichtigste auf einen Blick",
+            "completion": 1,
+            "intro": "<p>Kompakte Synthese aller Formeln, Kennwerte und Erkenntnisse des Moduls.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#701a75;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Synthese · Kennwerte der beschreibenden Statistik im Überblick</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Die beschreibende Statistik liefert standardisierte Maße zur Verdichtung und Interpretation von Messdaten:</p><table border='1' cellpadding='8' style='border-collapse:collapse;width:100%;min-width:550px;margin:12px 0;'><tr style='background:#f1f5f9;'><th>Statistische Kennzahl</th><th>Mathematische Formel</th><th>Bedeutung &amp; Interpretation</th></tr><tr><td><b>Relative Häufigkeit</b></td><td>h(x<sub>i</sub>) = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>n<sub>i</sub></span><span style='padding:0 3px;line-height:1.1;'>n</span></span></td><td>Anteil einer Merkmalsausprägung an der Gesamtheit (0,00 bis 1,00 bzw. 0 % bis 100 %).</td></tr><tr><td><b>Arithmetisches Mittel</b></td><td>x̄ = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>1</span><span style='padding:0 3px;line-height:1.1;'>n</span></span> · &Sigma; (x<sub>i</sub> · n<sub>i</sub>)</td><td>Physikalischer Schwerpunkt der Verteilung. Summe aller linearen Abweichungen ist stets 0.</td></tr><tr><td><b>Empirische Varianz</b></td><td>s² = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>1</span><span style='padding:0 3px;line-height:1.1;'>n</span></span> · &Sigma; (x<sub>i</sub> - x̄)² · n<sub>i</sub></td><td>Mittlere quadratische Abweichung vom Mittelwert in quadrierten Einheiten (z. B. Noten²).</td></tr><tr><td><b>Standardabweichung</b></td><td>s = &radic;(s²)</td><td>Durchschnittliche Streubreite der Werte um das Mittel in der Originaleinheit der Messwerte.</td></tr><tr><td><b>Streuungsintervall</b></td><td>[x̄ − s ; x̄ + s]</td><td>Korridor der Datenkonzentration (enthält bei Normalverteilungen ca. 68 % aller Messwerte).</td></tr></table></div></div>",
+            "material": true,
+            "material_bullets": [
+              "Relative Häufigkeit h(x<sub>i</sub>) = n<sub>i</sub> : n (Anteilsmaß)",
+              "Arithmetisches Mittel x̄ = (1/n) · &Sigma; (x<sub>i</sub> · n<sub>i</sub>) (Schwerpunkt)",
+              "Varianz s² = (1/n) · &Sigma; (x<sub>i</sub> - x̄)² · n<sub>i</sub> (Quadratmaß)",
+              "Standardabweichung s = &radic;(s²) (Streumaß in Originaleinheit)",
+              "Streuungsintervall [x̄ - s ; x̄ + s] = Kernkonzentrationsbereich"
+            ]
+          },
+          {
+            "type": "page",
+            "name": "Wissenstransfer: Prozessstreuung & Fertigungstoleranzen (SPC)",
+            "completion": 1,
+            "intro": "<p>Wie Ingenieure und Techniker Streuungsmaße in der Praxis anwenden (DIN EN ISO 286).</p>",
+            "images": [
+              "assets/prozess_toleranz_transfer.svg"
+            ],
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;'><div style='background:#701a75;color:#ffffff;padding:12px 16px;font-size:18px;font-weight:bold;'>Technischer Wissenstransfer · Statistische Prozesslenkung (SPC)</div><div style='padding:16px;overflow-x:auto;'><p style='margin-top:0;'>Das in der Schule erarbeitete Prinzip der Streuung ist das <b>Rückgrat moderner industrieller Qualitätssicherung</b> (Statistical Process Control / SPC nach DIN EN ISO 286).</p><p><b>Praxisbeispiel: CNC-Bohrungsdurchmesser D = 10,00 ± 0,10 mm</b></p><p>Zwei CNC-Bearbeitungszentren fertigen je 1.000 Bolzenbohrungen. Beide Maschinen haben exakt denselben Mittelwert von x̄ = 10,00 mm:</p><ul><li><b>Maschine A (s = 0,03 mm):</b> Das 3-Sigma-Intervall liegt bei [9,91 mm ; 10,09 mm]. Nahezu 100 % aller Werkstücke liegen sicher innerhalb des Toleranzfeldes. Kein Ausschuss!</li><li><b>Maschine B (s = 0,09 mm):</b> Das 3-Sigma-Intervall reicht von [9,73 mm ; 10,27 mm]. Zahlreiche Bauteile verletzen das untere und obere Grenzabmaß. Hoher Ausschuss und Reklamationskosten!</li></ul><div style='text-align:center;margin:16px 0;overflow-x:auto;'><img src='@@PLUGINFILE@@/prozess_toleranz_transfer.svg' alt='Prozessstreuung vs. Toleranzband' style='max-width:100%;height:auto;'></div><div style='background:#fef3c7;border-left:4px solid #d97706;padding:10px 14px;'>⚙️ <b>Fazit für Techniker/innen:</b> Ein passender Mittelwert allein nützt nichts, wenn die Streuung s zu groß ist. Qualitätsmanagement bedeutet in erster Linie: <b>Minimierung der Standardabweichung s!</b></div></div></div>",
+            "material": true,
+            "material_bullets": [
+              "SPC (Statistische Prozesslenkung): Qualitätsüberwachung in der Industrie",
+              "Toleranzfeld nach DIN EN ISO 286 (z. B. 10,00 ± 0,10 mm)",
+              "Maschine A (s = 0,03 mm): Prozessfähig, null Ausschuss",
+              "Maschine B (s = 0,09 mm): Unfähig, hoher Ausschuss trotz identischem Mittelwert",
+              "Kernregel: Qualitätsverbesserung = Minimierung der Standardabweichung s"
+            ]
+          },
+          {
+            "type": "page",
+            "name": "Video-Lernstation: Beschreibende Statistik & Streuungsmaße",
+            "completion": 1,
+            "intro": "<p>Audiovisuelles Erklärvideo mit Zusammenfassung aller Rechenschritte.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:20px;text-align:center;background:#f8fafc;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#1e3a8a;margin-top:0;'>Video-Lernstation: Statistik &amp; Streuungsmaße</h3><div style='background:#e2e8f0;border-radius:8px;padding:40px 20px;margin:16px 0;'><p style='font-size:48px;margin:0;'>🎬</p><p style='font-size:16px;font-weight:bold;color:#1e293b;margin-top:10px;'>Erklärvideo: Vom Notenstreit zur Standardabweichung</p><p style='font-size:13px;color:#64748b;max-width:500px;margin:0 auto;'>In diesem 5-minütigen Video rechnet der Fachdozent den Notenvergleich der Klassen A und B Schritt für Schritt vor und erläutert die Hebel- und Schwerpunkteigenschaft des Mittelwerts.</p></div><p style='font-size:12px;color:#94a3b8;'>Hinweis: Das Videomedium kann direkt im Browser gestreamt oder für die Offline-Nutzung heruntergeladen werden.</p></div>"
+          },
+          {
+            "type": "quiz",
+            "name": "Abschluss-Selbsttest: Beschreibende Statistik",
+            "intro": "<p>Überprüfen Sie Ihr Wissen zu Lage- und Streuungsmaßen. Sie haben 2 Versuche.</p>",
+            "time_limit": 900,
+            "max_attempts": 2,
+            "passing_grade": 70,
+            "questions": [
+              {
+                "type": "multichoice",
+                "name": "Frage 1: Nulldifferenz",
+                "text": "Warum ergibt die Summe der linearen Abweichungen &Sigma;(x<sub>i</sub> - x̄)·n<sub>i</sub> stets genau Null?",
+                "answers": [
+                  {
+                    "text": "Weil das arithmetische Mittel der physikalische Schwerpunkt der Verteilung ist, an dem sich linke und rechte Drehmomente exakt aufheben.",
+                    "fraction": 100,
+                    "feedback": "Richtig! Das arithmetische Mittel ist der Schwerpunkt im mechanischen Gleichgewicht."
+                  },
+                  {
+                    "text": "Weil alle negativen Zahlen beim Summieren automatisch ignoriert werden.",
+                    "fraction": 0,
+                    "feedback": "Falsch. Die Vorzeichen heben sich gegenseitig auf."
+                  },
+                  {
+                    "text": "Weil die Anzahl der Schüler in jeder Note genau gleich groß ist.",
+                    "fraction": 0,
+                    "feedback": "Falsch. Die Nulldifferenz gilt für jede beliebige Verteilung."
+                  }
+                ]
+              },
+              {
+                "type": "multichoice",
+                "name": "Frage 2: Einheit der Varianz",
+                "text": "In welcher Maßeinheit wird die empirische Varianz s² gemessen, wenn die Messwerte in 'mm' (Millimeter) vorliegen?",
+                "answers": [
+                  {
+                    "text": "mm² (Quadratmillimeter)",
+                    "fraction": 100,
+                    "feedback": "Exakt! Durch die Quadrierung der Abweichungen quadriert sich auch die Maßeinheit."
+                  },
+                  {
+                    "text": "mm (Millimeter)",
+                    "fraction": 0,
+                    "feedback": "Falsch. In mm misst erst die Standardabweichung s = √(s²)."
+                  },
+                  {
+                    "text": "Die Varianz ist immer dimensionslos.",
+                    "fraction": 0,
+                    "feedback": "Falsch. Nur die relative Häufigkeit ist dimensionslos."
+                  }
+                ]
+              },
+              {
+                "type": "multichoice",
+                "name": "Frage 3: Streuungsvergleich",
+                "text": "Klasse A hat s = 0,91 Notenstufen, Klasse B hat s = 1,66 Notenstufen bei gleichem Mittelwert x̄ ≈ 3,45. Welche Aussage ist fachlich korrekt?",
+                "answers": [
+                  {
+                    "text": "Klasse A ist homogener und stabiler, da ihre Leistungen viel enger um den Mittelwert konzentriert sind.",
+                    "fraction": 100,
+                    "feedback": "Richtig! Eine kleine Standardabweichung bedeutet hohe Homogenität."
+                  },
+                  {
+                    "text": "Klasse B ist besser, weil ihre Standardabweichung größer ist.",
+                    "fraction": 0,
+                    "feedback": "Falsch. Eine große Standardabweichung bedeutet hohe Streuung und größeres Ausfallrisiko."
+                  },
+                  {
+                    "text": "Beide Klassen sind exakt gleich leistungsfähig, weil der Mittelwert fast identisch ist.",
+                    "fraction": 0,
+                    "feedback": "Falsch. Das ist der klassische Trugschluss des Mittelwert-Paradoxons."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "glossary",
+            "name": "Fachglossar: Statistik & Stochastik",
+            "intro": "<p>Zentraler Wortspeicher mit mathematischen und technischen Definitionen nach DIN 13303 und DIN 55303.</p>",
+            "entries": [
+              {
+                "concept": "Absolute Häufigkeit (n<sub>i</sub>)",
+                "definition": "Die tatsächlich gezählte Anzahl, wie oft eine bestimmte Merkmalsausprägung x<sub>i</sub> in einer Stichprobe vorkommt."
+              },
+              {
+                "concept": "Relative Häufigkeit (h(x<sub>i</sub>))",
+                "definition": "Der Anteil der absoluten Häufigkeit n<sub>i</sub> am Gesamtstichprobenumfang n: h(x<sub>i</sub>) = n<sub>i</sub> / n. Nimmt Werte zwischen 0 und 1 bzw. 0 % und 100 % an."
+              },
+              {
+                "concept": "Arithmetisches Mittel (x̄)",
+                "definition": "Der gewichtete Durchschnittswert bei gruppierten Daten: x̄ = (1/n) · Σ (x<sub>i</sub> · n<sub>i</sub>). Bildet den physikalischen Schwerpunkt der Verteilung."
+              },
+              {
+                "concept": "Empirische Varianz (s²)",
+                "definition": "Die mittlere quadratische Abweichung aller Messwerte vom arithmetischen Mittel: s² = (1/n) · Σ (x<sub>i</sub> - x̄)² · n<sub>i</sub>."
+              },
+              {
+                "concept": "Standardabweichung (s)",
+                "definition": "Die Quadratwurzel aus der Varianz: s = √(s²). Misst die durchschnittliche Streubreite der Werte in der Originaleinheit der Messgröße."
+              },
+              {
+                "concept": "Streuungsintervall",
+                "definition": "Das Intervall [x̄ − s ; x̄ + s] um das arithmetische Mittel. Gibt Aufschluss über die Homogenität und Kernkonzentration der Datenreihe."
+              },
+              {
+                "concept": "Gruppierte Daten",
+                "definition": "Zusammenfassung von Einzelmesswerten zu Häufigkeitsklassen oder Wertestufen (z. B. Noten 1 bis 6 mit ihren absoluten Häufigkeiten n<sub>i</sub>)."
+              },
+              {
+                "concept": "Nulldifferenz",
+                "definition": "Fundamentale Eigenschaft des arithmetischen Mittels: Die Summe aller vorzeichenbehafteten linearen Abweichungen ergibt exakt Null: &Sigma; (x<sub>i</sub> - x̄) · n<sub>i</sub> = 0."
+              },
+              {
+                "concept": "Stochastik",
+                "definition": "Mathematischer Oberbegriff, der die beschreibende Statistik (Daten der Vergangenheit) und die Wahrscheinlichkeitsrechnung (Zukunftsprognosen) umfasst."
+              },
+              {
+                "concept": "Statistische Prozesslenkung (SPC)",
+                "definition": "Industrielles Verfahren zur kontinuierlichen Überwachung und Optimierung von Fertigungsprozessen durch statistische Kennwerte."
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "Hinweis zur Entstehung",
+            "intro": "<div style='overflow-x:auto;'><p style='font-size:11px;color:#64748b;text-align:center;margin-top:20px;'><em>Dieser Kurs ist mit Hilfe von künstlicher Intelligenz entstanden.</em></p></div>"
+          }
+        ]
+      },
+      {
+        "name": "6 · Material & Handreichung für Lehrkräfte",
+        "summary": "<div style='overflow-x:auto;'><p>Didaktische Handreichung, vollständige Musterrechnungen zu allen Aufgabenblättern, Erwartungshorizont, Verlaufsplan, editierbare PowerPoint-Grafiken und GTR-Bedienkarte.</p></div>",
+        "image": "assets/cover_lehrkraefte.png",
+        "visible": 0,
+        "activities": [
+          {
+            "type": "page",
+            "name": "Lernziele",
+            "completion": 1,
+            "intro": "<p>Didaktische Lernziele und Kompetenzmatrix für Lehrkräfte.</p>",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;font-family:Arial,sans-serif;max-width:100%;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);'>\n  <div style='background:#1e3a8a;color:#ffffff;padding:16px 20px;font-size:20px;font-weight:bold;display:flex;align-items:center;gap:10px;'>\n    <span>🎯</span> Lernziele &amp; Kompetenzmatrix (Handreichung für Lehrkräfte)\n  </div>\n  <div style='padding:20px;overflow-x:auto;'>\n    <p style='margin-top:0;font-size:15px;color:#334155;'>Die Kompetenzentwicklung in diesem Modul gliedert sich nach den Bildungsstandards für das Berufliche Gymnasium (BGT) in folgende Fach- und Methodenkompetenzen:</p>\n    \n    <!-- GLZ 1 CARD -->\n    <div style='border:1px solid #bae6fd;background:#f0f9ff;border-radius:10px;padding:16px;margin-bottom:18px;'>\n      <div style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;'>\n        <div style='font-size:16px;font-weight:bold;color:#0369a1;'>Lernziel 1: Statistische Lageparameter &amp; Häufigkeiten</div>\n        <span style='background:#0284c7;color:#ffffff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;'>AFB I &amp; II · Fachkompetenz</span>\n      </div>\n      <div style='display:flex;flex-direction:column;gap:8px;'>\n        <div style='background:#ffffff;border:1px solid #e0f2fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> absolute und relative Häufigkeiten h(x<sub>i</sub>) aus Rohdatenreihen zu <span style='background:#e0f2fe;color:#0369a1;font-weight:bold;padding:2px 6px;border-radius:4px;'>berechnen</span> und in normierten Säulendiagrammen darzustellen.\n        </div>\n        <div style='background:#ffffff;border:1px solid #e0f2fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> das gewichtete arithmetische Mittel x̄ für gruppierte Häufigkeitsdaten zu <span style='background:#e0f2fe;color:#0369a1;font-weight:bold;padding:2px 6px;border-radius:4px;'>bestimmen</span> und als physikalischen Schwerpunkt der Verteilung zu interpretieren.\n        </div>\n      </div>\n    </div>\n\n    <!-- GLZ 2 CARD -->\n    <div style='border:1px solid #ddd6fe;background:#f5f3ff;border-radius:10px;padding:16px;margin-bottom:18px;'>\n      <div style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;'>\n        <div style='font-size:16px;font-weight:bold;color:#5b21b6;'>Lernziel 2: Streuungsverhalten &amp; Nulldifferenz</div>\n        <span style='background:#7c3aed;color:#ffffff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;'>AFB II · Methodenkompetenz</span>\n      </div>\n      <div style='display:flex;flex-direction:column;gap:8px;'>\n        <div style='background:#ffffff;border:1px solid #ede9fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> den mathematischen Nachweis zu <span style='background:#ede9fe;color:#5b21b6;font-weight:bold;padding:2px 6px;border-radius:4px;'>führen</span>, warum die Summe linearer Abweichungen vom Mittelwert stets Null ergibt (&Sigma;(x<sub>i</sub> - x̄)·n<sub>i</sub> = 0).\n        </div>\n        <div style='background:#ffffff;border:1px solid #ede9fe;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> die empirische Varianz s² und Standardabweichung s nach dem 6-Schritte-Berechnungsbauplan zu <span style='background:#ede9fe;color:#5b21b6;font-weight:bold;padding:2px 6px;border-radius:4px;'>ermitteln</span> und das Streuungsintervall [x̄ − s ; x̄ + s] zu konstruieren.\n        </div>\n      </div>\n    </div>\n\n    <!-- GLZ 3 CARD -->\n    <div style='border:1px solid #bbf7d0;background:#f0fdf4;border-radius:10px;padding:16px;margin-bottom:14px;'>\n      <div style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;'>\n        <div style='font-size:16px;font-weight:bold;color:#15803d;'>Lernziel 3: Fachgutachten &amp; Technischer Transfer</div>\n        <span style='background:#16a34a;color:#ffffff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;'>AFB III · Urteils- &amp; Handlungskompetenz</span>\n      </div>\n      <div style='display:flex;flex-direction:column;gap:8px;'>\n        <div style='background:#ffffff;border:1px solid #dcfce7;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> statistische Kennwerte in einem 6-spaltigen digitalen Prüfprotokoll lückenlos zu <span style='background:#dcfce7;color:#15803d;font-weight:bold;padding:2px 6px;border-radius:4px;'>dokumentieren</span>.\n        </div>\n        <div style='background:#ffffff;border:1px solid #dcfce7;border-radius:6px;padding:10px 14px;font-size:14px;color:#0f172a;'>\n          <b>Die Schülerinnen und Schüler sind in der Lage,</b> ein begründetes technisches Fachgutachten zur Prozessfähigkeit (SPC / DIN EN ISO 286) und zur Homogenität zweier Stichproben zu <span style='background:#dcfce7;color:#15803d;font-weight:bold;padding:2px 6px;border-radius:4px;'>verfassen</span>.\n        </div>\n      </div>\n    </div>\n\n    <div style='background:#f8fafc;border-left:4px solid #64748b;padding:10px 14px;border-radius:4px;font-size:13px;color:#475569;'>\n      ⏱ <b>Bearbeitungszeit:</b> ca. 4–6 Unterrichtsstunden (integrierter Fachunterricht mit BYOD / PC-Raum).\n    </div>\n  </div>\n</div>"
+          },
+          {
+            "type": "page",
+            "name": "Lösungsdossier: Musterlösungen zu Aufgabenblatt 1, 2, 3 & Praxisauftrag",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#1e3a8a;margin-top:0;'>Vollständige Musterlösungen für Lehrkräfte</h3><h4>1. Lösungen zu Aufgabenblatt 1 (Häufigkeitstabelle):</h4><div style='overflow-x:auto;'><table border='1' cellpadding='6' style='border-collapse:collapse;width:100%;min-width:550px;text-align:center;'><tr style='background:#f1f5f9;'><th>Note x<sub>i</sub></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>Summe</th></tr><tr><td style='font-weight:bold;color:#0284c7;'>Klasse A: n<sub>i</sub></td><td>1</td><td>2</td><td>10</td><td>8</td><td>3</td><td>0</td><td><b>24</b></td></tr><tr><td style='color:#0284c7;'>Klasse A: h(x<sub>i</sub>)</td><td>4,17 %</td><td>8,33 %</td><td>41,67 %</td><td>33,33 %</td><td>12,50 %</td><td>0,00 %</td><td><b>100,00 %</b></td></tr><tr><td style='font-weight:bold;color:#ea580c;'>Klasse B: n<sub>i</sub></td><td>3</td><td>4</td><td>5</td><td>6</td><td>5</td><td>2</td><td><b>25</b></td></tr><tr><td style='color:#ea580c;'>Klasse B: h(x<sub>i</sub>)</td><td>12,00 %</td><td>16,00 %</td><td>20,00 %</td><td>24,00 %</td><td>20,00 %</td><td>8,00 %</td><td><b>100,00 %</b></td></tr></table></div><h4>2. Lösungen zu Aufgabenblatt 2 (Mittelwert &amp; Nullsummen-Nachweis):</h4><p>x̄<sub>A</sub> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>82</span><span style='padding:0 3px;line-height:1.1;'>24</span></span> = <b>3,42</b> | x̄<sub>B</sub> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>87</span><span style='padding:0 3px;line-height:1.1;'>25</span></span> = <b>3,48</b>.<br>Nullsummen-Nachweis Klasse A: 1·(-2,42) + 2·(-1,42) + 10·(-0,42) + 8·(+0,58) + 3·(+1,58) + 0·(+2,58) = -2,42 - 2,84 - 4,20 + 4,64 + 4,74 + 0 = <b>0,00</b>.</p><h4>3. Lösungen zu Aufgabenblatt 3 &amp; Praxisauftrag (6-Spalten-Varianzrechnung):</h4><p><b>Klasse A:</b> s²<sub>A</sub> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>21,833</span><span style='padding:0 3px;line-height:1.1;'>24</span></span> = <b>0,83</b> &rarr; s<sub>A</sub> = <b>0,91 Notenstufen</b> | Intervall: <b>[2,51 ; 4,33]</b> (18 von 24 Schülern = 75,0 %).<br><b>Klasse B:</b> s²<sub>B</sub> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:0.92em;margin:0 3px;'><span style='border-bottom:1.5px solid currentColor;padding:0 3px;line-height:1.1;'>54,240</span><span style='padding:0 3px;line-height:1.1;'>25</span></span> = <b>2,17</b> (bzw. 2,77) &rarr; s<sub>B</sub> = <b>1,66 Notenstufen</b> | Intervall: <b>[1,82 ; 5,14]</b> (20 von 25 Schülern = 80,0 % über 4 Notenstufen verteilt).</p></div>"
+          },
+          {
+            "type": "resource",
+            "name": "Editierbare Unterrichtsgrafiken & Folien (PowerPoint .pptx)",
+            "file": "materials/Statistik_Unterrichtsfolien_und_Grafiken_editierbar.pptx",
+            "intro": "<p>Vollständig anpassbare PowerPoint-Präsentation mit allen Grafiken, Hebelmodellen, Rechentabellen und Formelkarten für Lehrkräfte.</p>"
+          },
+          {
+            "type": "page",
+            "name": "Didaktische Handreichung: 5-Fallen-Leitfaden für Lehrkräfte",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#1e3a8a;margin-top:0;'>5-Fallen-Leitfaden für den Unterricht</h3><ol><li><b>Falle 1 (Ungewichteter Mittelwert):</b> Lernende addieren (1+2+3+4+5+6)/6 = 3,5. &rarr; <em>Intervention:</em> Zeigen Sie, dass die Note 3 in Klasse A zehnmal vorkommt und viel stärker wiegt als die Note 1.</li><li><b>Falle 2 (Lineare Abweichungssumme):</b> Lernende summieren (x<sub>i</sub> - x̄) und erhalten 0. &rarr; <em>Intervention:</em> Nutzen Sie die Hebel-Grafik, um den Schwerpunktcharakter zu verdeutlichen.</li><li><b>Falle 3 (Vergessene Wurzel):</b> Lernende geben s² als Streuung an. &rarr; <em>Intervention:</em> Auf die Maßeinheit 'Notenstufen²' hinweisen, die erst durch &radic; wieder zu 'Notenstufen' wird.</li><li><b>Falle 4 (n vs. n-1 Division):</b> In der Schule wird bei beschreibender Statistik durch n geteilt (empirische Varianz). Erst in der schließenden Statistik (Stichprobenfunktion) nutzt man n-1.</li><li><b>Falle 5 (Mittelwert-Scheingenauigkeit):</b> Ein Notendurchschnitt auf 4 Nachkommastellen suggeriert Genauigkeit, verschleiert aber die Heterogenität.</li></ol></div>"
+          },
+          {
+            "type": "page",
+            "name": "Erwartungshorizont & Bewertungsraster",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#1e3a8a;margin-top:0;'>Bewertungsraster &amp; Notenschlüssel für den Praxisauftrag</h3><div style='overflow-x:auto;'><table border='1' cellpadding='8' style='border-collapse:collapse;width:100%;min-width:550px;'><tr style='background:#f1f5f9;'><th>Kriterium</th><th>Max. Punkte</th><th>Erwartete Schülerleistung</th></tr><tr><td>1. Mathematische Formeln &amp; Symbolik</td><td>15 Punkte</td><td>Korrekte Verwendung von x̄, s², s, n<sub>i</sub>, h(x<sub>i</sub>) nach DIN 13303.</td></tr><tr><td>2. 6-Spalten-Arbeitstabelle</td><td>35 Punkte</td><td>Lückenlose und fehlerfreie Tabellenberechnung für Klasse A und B.</td></tr><tr><td>3. Varianz, s und Streuungsintervall</td><td>25 Punkte</td><td>Exakte Berechnung von s² und s sowie Aufstellung des Intervalls.</td></tr><tr><td>4. Fachgutachten &amp; Reflexion</td><td>25 Punkte</td><td>Fundierte schriftliche Begründung des Klassenvergleichs.</td></tr><tr style='background:#e0f2fe;font-weight:bold;'><td>Gesamtpunktzahl:</td><td>100 Punkte</td><td>100–85: sehr gut | 84–70: gut | 69–55: befriedigend | 54–40: ausreichend</td></tr></table></div></div>"
+          },
+          {
+            "type": "page",
+            "name": "Blended-Learning-Unterrichtsverlaufsplan (4-6 UStd)",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#1e3a8a;margin-top:0;'>Unterrichtsverlaufsplan (4–6 UStd)</h3><ul><li><b>Phase 1 (UStd 1):</b> Fallkonfrontation mit dem Notenstreit, Grundbegriffe der Stochastik (Kachel 1).</li><li><b>Phase 2 (UStd 2):</b> Relative Häufigkeiten, Säulendiagramme, gewichteter Mittelwert x̄, Aufgabenblatt 1 und Aufgabenblatt 2 (Kachel 2).</li><li><b>Phase 3 (UStd 3):</b> Kognitiver Konflikt (Nulldifferenz), Formel-Anatomie (Hotspot), Simulation und Aufgabenblatt 3 (Kachel 3).</li><li><b>Phase 4 (UStd 4-5):</b> Selbstständige Gruppen-/Einzelarbeit mit dem digitalen Ausfüllformular und Praxisauftrag (Kachel 4).</li><li><b>Phase 5 (UStd 6):</b> Wissenstransfer (SPC / Toleranzband), Quiz-Abschlusstest und Synthese im Plenum (Kachel 5).</li></ul></div>"
+          },
+          {
+            "type": "page",
+            "name": "GTR-Bedienkarte (TI / Casio): 1-Var-Stats & Listen",
+            "content": "<div style='border:1px solid #cbd5e1;border-radius:8px;padding:16px;font-family:Arial,sans-serif;max-width:100%;'><h3 style='color:#1e3a8a;margin-top:0;'>GTR-Befehlsübersicht für TI-84 / Nspire und Casio fx-CG</h3><h4>Texas Instruments (TI-84 Plus):</h4><ol><li><b>STAT &rarr; 1:Edit:</b> Liste L1 = Noten (1,2,3,4,5,6), Liste L2 = Häufigkeiten n<sub>i</sub>.</li><li><b>STAT &rarr; CALC &rarr; 1:1-Var Stats:</b> List: L1, FreqList: L2 &rarr; Calculate.</li><li><b>Ergebnisse:</b> x̄ = Mittelwert, &sigma;x = Standardabweichung s (empirisch), n = Stichprobenumfang.</li></ol><h4>Casio (fx-CG Serie):</h4><ol><li><b>Menu &rarr; STAT:</b> List 1 = Noten, List 2 = Häufigkeiten n<sub>i</sub>.</li><li><b>CALC &rarr; SET:</b> 1Var XList: List1, 1Var Freq: List2.</li><li><b>1-VAR:</b> x̄ = Mittelwert, x&sigma;n = Standardabweichung.</li></ol></div>"
+          }
+        ]
+      }
+    ]
+  }
+}

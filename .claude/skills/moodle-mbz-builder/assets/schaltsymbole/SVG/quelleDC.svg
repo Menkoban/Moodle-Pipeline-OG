@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45 -80 215 373"
+     width="430" height="746"
+     data-sym="quelleDC" data-gruppe="Quellen"
+     data-prioritaet="1" data-folge="002"
+     data-norm="Kreis mit einem DURCHGEHENDEN Längsstrich von Anschluss zu Anschluss; ein quer stehender Strich wäre die Stromquelle, ein unterbrochener Längsstrich ist keins von beidem." data-quelle="Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), 'Arten von Strömen und Spannungen'; Kreis als Symbolelement Form 3, S. 445"
+     data-lage="Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage.">
+<title>quelleDC — Schaltzeichen nach DIN EN 60617</title>
+<desc>Kreis mit einem DURCHGEHENDEN Längsstrich von Anschluss zu Anschluss; ein quer stehender Strich wäre die Stromquelle, ein unterbrochener Längsstrich ist keins von beidem. | Quelle: Westermann Tabellenbuch Elektrotechnik, Technische Dokumentation und Formeln, S. 445 (DIN EN 60617-2), 'Arten von Strömen und Spannungen'; Kreis als Symbolelement Form 3, S. 445 | Lage: Richtungsfrei: das Zeichen hat keine Vorzugsrichtung (Kreis, Erdungszeichen, Grundrissdarstellung); Lage wie in der Vorlage.</desc>
+<style>
+  :root{--wid:#16232b;--text:#16232b;--text2:#7a8a94;
+        --strom:#e07a2f;--spannung:#2f6fe0;--magnet:#d94f9a;--ok:#3a9d5d;--gefahr:#d0392b}
+  svg{background:#fff}
+  text[font-family="BarlowC"]{font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+  text[font-family="PlexMono"]{font-family:"IBM Plex Mono",Consolas,monospace}
+  .zelle{fill:none;stroke:#cfd9df;stroke-width:1.2;stroke-dasharray:6 5}
+  .pin{fill:#9fb0ba}
+  .nm{font-family:"IBM Plex Mono",Consolas,monospace;font-size:13px;font-weight:700;fill:#16232b}
+  .kop{font-family:"IBM Plex Mono",Consolas,monospace;font-size:7.5px;font-weight:700;fill:#8a99a3;letter-spacing:.4px}
+  .tx{font-family:system-ui,"Segoe UI",sans-serif;font-size:8.4px;fill:#3d4c56}
+  .tl{stroke:#e2e9ec;stroke-width:1}
+</style>
+<g class="raster">
+  <rect class="zelle" x="0" y="-30" width="120" height="60"/>
+  <circle class="pin" cx="0" cy="0" r="3"/><circle class="pin" cx="120" cy="0" r="3"/>
+</g>
+<g data-sym="quelleDC" class="sym" transform="translate(0,0)">
+    <g transform="rotate(0)" fill="none" stroke="var(--wid)" stroke-width="5"
+       stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H120"/><circle cx="60" cy="30" r="30"/></g>
+    </g></g>
+<text class="nm" x="-40" y="108">quelleDC</text><line class="tl" x1="-40" y1="113" x2="168" y2="113"/><text class="kop" x="-40" y="120">BEDEUTUNG</text><text class="tx" x="-40" y="130">Kreis mit einem DURCHGEHENDEN Längsstrich von</text><text class="tx" x="-40" y="140">Anschluss zu Anschluss; ein quer stehender</text><text class="tx" x="-40" y="150">Strich wäre die Stromquelle, ein</text><text class="tx" x="-40" y="160">unterbrochener Längsstrich ist keins von</text><text class="tx" x="-40" y="170">beidem.</text><text class="kop" x="-40" y="179">QUELLE</text><text class="tx" x="-40" y="189">Westermann Tabellenbuch Elektrotechnik,</text><text class="tx" x="-40" y="199">Technische Dokumentation und Formeln, S. 445</text><text class="tx" x="-40" y="209">(DIN EN 60617-2), 'Arten von Strömen und</text><text class="tx" x="-40" y="219">Spannungen'; Kreis als Symbolelement Form 3,</text><text class="tx" x="-40" y="229">S. 445</text><text class="kop" x="-40" y="238">LAGE</text><text class="tx" x="-40" y="248">Richtungsfrei: das Zeichen hat keine</text><text class="tx" x="-40" y="258">Vorzugsrichtung (Kreis, Erdungszeichen,</text><text class="tx" x="-40" y="268">Grundrissdarstellung); Lage wie in der</text><text class="tx" x="-40" y="278">Vorlage.</text>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 14 900 326" width="900" height="326">
+<title>Graetz-Brueckengleichrichter</title>
+<style>
+
+:root {
+  --wid: #16232b;
+  --text: #16232b;
+  --text2: #5a6b75;
+  --strom: #e07a2f;
+  --spannung: #2f6fe0;
+  --magnet: #d94f9a;
+  --ok: #2e8b57;
+  --gefahr: #d0392b;
+  --leiter-l: #8a3b14;
+  --leiter-n: #2f6fe0;
+  --leiter-pe: #2e8b57;
+}
+svg { background: #ffffff; }
+text { font-family: "IBM Plex Mono", Consolas, "Liberation Mono", monospace; }
+text.bmk { font-size: 26px; font-weight: 700; fill: #16232b; }
+text.wert { font-size: 22px; font-weight: 500; fill: #5a6b75; }
+text.pin { font-size: 18px; font-weight: 600; fill: #5a6b75; }
+text.title { font-size: 28px; font-weight: 700; fill: #16232b; }
+text.leiter { font-size: 22px; font-weight: 700; fill: #16232b; }
+.wire { fill: none; stroke: #16232b; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-thick { fill: none; stroke: #16232b; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+.wire-pe { fill: none; stroke: #2e8b57; stroke-width: 5px; stroke-dasharray: 12 8; stroke-linecap: round; stroke-linejoin: round; }
+.wire-n { fill: none; stroke: #2f6fe0; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; }
+.knoten { fill: #16232b; stroke: none; }
+.klemme-dot { fill: #ffffff; stroke: #16232b; stroke-width: 3px; }
+
+</style>
+<rect x="40" y="14" width="900" height="326" fill="#ffffff"/>
+
+  <!-- Node: T1 (trafo) -->
+  <g id="T1" class="sym " transform="translate(80, 180)">
+    <g transform="rotate(0)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 -10 H38 V0"/><path d="M0 70 H38 V60"/>
+     <path d="M120 -10 H82 V0"/><path d="M120 70 H82 V60"/>
+     <path d="M38 0 a10 10 0 0 1 0 20 a10 10 0 0 1 0 20 a10 10 0 0 1 0 20"/>
+     <path d="M82 0 a10 10 0 0 0 0 20 a10 10 0 0 0 0 20 a10 10 0 0 0 0 20"/>
+     <path d="M56 -4 V64"/><path d="M64 -4 V64"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="60" y="-46" text-anchor="middle">T1</text><text class="wert" x="60" y="58" text-anchor="middle">230V / 24V</text>
+  </g>
+  <!-- Node: V1 (diode) -->
+  <g id="V1" class="sym " transform="translate(300, 120)">
+    <g transform="rotate(0)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H40 M80 30 H120"/><path d="M40 10 L40 50 L80 30 Z"/><path d="M80 6 V54"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="60" y="-46" text-anchor="middle">V1</text><text class="wert" x="60" y="58" text-anchor="middle">1N4007</text>
+  </g>
+  <!-- Node: V2 (diode) -->
+  <g id="V2" class="sym " transform="translate(300, 240)">
+    <g transform="rotate(180)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H40 M80 30 H120"/><path d="M40 10 L40 50 L80 30 Z"/><path d="M80 6 V54"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="-60" y="-46" text-anchor="middle">V2</text>
+  </g>
+  <!-- Node: V3 (diode) -->
+  <g id="V3" class="sym " transform="translate(440, 120)">
+    <g transform="rotate(0)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H40 M80 30 H120"/><path d="M40 10 L40 50 L80 30 Z"/><path d="M80 6 V54"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="60" y="-46" text-anchor="middle">V3</text>
+  </g>
+  <!-- Node: V4 (diode) -->
+  <g id="V4" class="sym " transform="translate(440, 240)">
+    <g transform="rotate(180)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H40 M80 30 H120"/><path d="M40 10 L40 50 L80 30 Z"/><path d="M80 6 V54"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="-60" y="-46" text-anchor="middle">V4</text>
+  </g>
+  <!-- Node: C1 (kondensatorPol) -->
+  <g id="C1" class="sym " transform="translate(660, 120)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H52 M76 30 H120"/><path d="M52 8 V52"/><path d="M68 8 V52"/><path d="M76 8 V52"/>
+     <path d="M32 14 H44"/><path d="M38 8 V20"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">C1</text><text class="wert" x="48" y="92" text-anchor="start">1000 µF</text>
+  </g>
+  <!-- Node: RL (widerstand) -->
+  <g id="RL" class="sym " transform="translate(780, 120)">
+    <g transform="rotate(90)">
+      <g transform="rotate(0)" fill="none" stroke="#16232b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(0,-30)"><path d="M0 30 H20 M100 30 H120"/><rect x="20" y="14" width="80" height="32"/></g>
+    </g>
+    </g>
+    <text class="bmk" x="48" y="52" text-anchor="start">R_L</text><text class="wert" x="48" y="92" text-anchor="start">470 Ω</text>
+  </g>  <path d="M 200 140 L 300 140" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 300 140 L 300 120" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 300 140 L 300 240" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 200 220 L 560 220" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 560 220 L 560 120" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 560 220 L 560 240" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 420 120 L 440 120" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 430 120 L 660 120" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 180 240 L 320 240" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 310 240 L 660 240" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 660 120 L 660 120" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 660 120 L 780 120" class="wire" stroke="#16232b" stroke-width="5"/>  <path d="M 660 240 L 780 240" class="wire" stroke="#16232b" stroke-width="5"/>  <circle class="knoten" cx="300" cy="140" r="7" fill="#16232b"/>  <circle class="knoten" cx="560" cy="220" r="7" fill="#16232b"/>  <circle class="knoten" cx="430" cy="120" r="7" fill="#16232b"/>  <circle class="knoten" cx="310" cy="240" r="7" fill="#16232b"/>  <circle class="knoten" cx="660" cy="120" r="7" fill="#16232b"/>  <circle class="knoten" cx="660" cy="240" r="7" fill="#16232b"/>  <circle class="knoten" cx="780" cy="120" r="7" fill="#16232b"/>  <circle class="knoten" cx="780" cy="240" r="7" fill="#16232b"/>  <text class="leiter" x="830" y="115" text-anchor="start" font-size="24px" font-weight="600">+ U_DC</text>  <text class="leiter" x="830" y="255" text-anchor="start" font-size="24px" font-weight="600">- GND</text>
+</svg>
