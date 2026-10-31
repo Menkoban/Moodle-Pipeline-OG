@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="300" viewBox="0 0 1280 300" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif">
+  <title>Was am Ende herauskommt: .mbz, Vorschau, Editor, Materialien, Simulationen, Diagramme</title>
+  <rect x="1" y="1" width="1278" height="298" rx="22" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="40" y="52" font-size="22" font-weight="700" fill="#0f172a">Was am Ende herauskommt</text>
+  <text x="40" y="78" font-size="15" fill="#64748b">Ein Kursordner, der sich jederzeit neu bauen lässt</text>
+  <g font-size="13">
+    <!-- 1 mbz -->
+    <g transform="translate(40 102)">
+      <rect width="186" height="170" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="40" cy="42" r="24" fill="#ffedd5"/>
+      <path d="M40 27 L54 34 L54 50 L40 57 L26 50 L26 34 Z M26 34 L40 41 L54 34 M40 41 L40 57" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linejoin="round"/>
+      <text x="18" y="96" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#0f172a">kurs.mbz</text>
+      <text x="18" y="122" fill="#475569">Kurssicherung, direkt</text>
+      <text x="18" y="140" fill="#475569">in Moodle einspielbar</text>
+    </g>
+    <!-- 2 vorschau -->
+    <g transform="translate(240 102)">
+      <rect width="186" height="170" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="40" cy="42" r="24" fill="#e0f2fe"/>
+      <path d="M24 42 Q40 26 56 42 Q40 58 24 42 Z" fill="none" stroke="#0284c7" stroke-width="2.6"/>
+      <circle cx="40" cy="42" r="5" fill="#0284c7"/>
+      <text x="18" y="96" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#0f172a">_vorschau.html</text>
+      <text x="18" y="122" fill="#475569">Lese-Vorschau aller</text>
+      <text x="18" y="140" fill="#475569">Kacheln, ohne Moodle</text>
+    </g>
+    <!-- 3 editor -->
+    <g transform="translate(440 102)">
+      <rect width="186" height="170" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="40" cy="42" r="24" fill="#ede9fe"/>
+      <path d="M29 53 L31 45 L47 29 L53 35 L37 51 Z M44 32 L50 38" fill="none" stroke="#7c3aed" stroke-width="2.6" stroke-linejoin="round"/>
+      <text x="18" y="96" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#0f172a">editor.html</text>
+      <text x="18" y="122" fill="#475569">Kurs-Dashboard und</text>
+      <text x="18" y="140" fill="#475569">Kachel-Editor</text>
+    </g>
+    <!-- 4 materials -->
+    <g transform="translate(640 102)">
+      <rect width="186" height="170" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="40" cy="42" r="24" fill="#fee2e2"/>
+      <path d="M31 28 H44 L51 35 V56 H31 Z M44 28 V35 H51 M35 42 H47 M35 47 H47 M35 52 H43" fill="none" stroke="#dc2626" stroke-width="2.4" stroke-linejoin="round"/>
+      <text x="18" y="96" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#0f172a">materials/</text>
+      <text x="18" y="122" fill="#475569">PDF-Infoblätter, PPTX</text>
+      <text x="18" y="140" fill="#475569">und Materialdossier</text>
+    </g>
+    <!-- 5 sims -->
+    <g transform="translate(840 102)">
+      <rect width="186" height="170" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="40" cy="42" r="24" fill="#d1fae5"/>
+      <path d="M26 35 H54 M26 49 H54" stroke="#047857" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="34" cy="35" r="4.5" fill="#ffffff" stroke="#047857" stroke-width="2.6"/>
+      <circle cx="47" cy="49" r="4.5" fill="#ffffff" stroke="#047857" stroke-width="2.6"/>
+      <text x="18" y="96" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#0f172a">sims/</text>
+      <text x="18" y="122" fill="#475569">Simulationen und</text>
+      <text x="18" y="140" fill="#475569">Hotspot-Widgets</text>
+    </g>
+    <!-- 6 assets -->
+    <g transform="translate(1040 102)">
+      <rect width="200" height="170" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="40" cy="42" r="24" fill="#fef3c7"/>
+      <rect x="27" y="30" width="26" height="24" rx="3" fill="none" stroke="#b45309" stroke-width="2.6"/>
+      <path d="M29 51 L37 42 L43 48 L47 44 L52 50" fill="none" stroke="#b45309" stroke-width="2.4" stroke-linejoin="round"/>
+      <text x="18" y="96" font-family="Consolas, Menlo, monospace" font-size="16" font-weight="700" fill="#0f172a">assets/</text>
+      <text x="18" y="122" fill="#475569">DIN-konforme Diagramme</text>
+      <text x="18" y="140" fill="#475569">und Kachel-Cover</text>
+    </g>
+  </g>
+</svg>

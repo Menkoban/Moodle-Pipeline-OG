@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="250" viewBox="0 0 1280 250" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif">
+<title>Die acht Gates der Pipeline von Steckbrief bis Erprobung</title>
+<rect x="1" y="1" width="1278" height="248" rx="22" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+<text x="40" y="50" font-size="22" font-weight="700" fill="#0f172a">Acht Gates – jedes muss grün sein</text>
+<line x1="105" y1="118" x2="1175" y2="118" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
+<circle cx="105.0" cy="118" r="27" fill="#0284c7"/>
+<circle cx="105.0" cy="118" r="33" fill="none" stroke="#0284c7" stroke-width="2" opacity="0.3"/>
+<text x="105.0" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">0</text>
+<text x="105.0" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Steckbrief</text>
+<text x="105.0" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">grill-me</text>
+<circle cx="257.9" cy="118" r="27" fill="#7c3aed"/>
+<circle cx="257.9" cy="118" r="33" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.3"/>
+<text x="257.9" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">1</text>
+<text x="257.9" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Struktur &amp; SVGs</text>
+<text x="257.9" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">validate_svg.py</text>
+<circle cx="410.7" cy="118" r="27" fill="#7c3aed"/>
+<circle cx="410.7" cy="118" r="33" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.3"/>
+<text x="410.7" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">2</text>
+<text x="410.7" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Vorschau &amp; Editor</text>
+<text x="410.7" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">preview_mbz.py</text>
+<circle cx="563.6" cy="118" r="27" fill="#7c3aed"/>
+<circle cx="563.6" cy="118" r="33" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.3"/>
+<text x="563.6" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">3</text>
+<text x="563.6" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Medien-Trias</text>
+<text x="563.6" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">build_simulation.py</text>
+<circle cx="716.4" cy="118" r="27" fill="#7c3aed"/>
+<circle cx="716.4" cy="118" r="33" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.3"/>
+<text x="716.4" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">4</text>
+<text x="716.4" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Materialien</text>
+<text x="716.4" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">make_materials.py</text>
+<circle cx="869.3" cy="118" r="27" fill="#7c3aed"/>
+<circle cx="869.3" cy="118" r="33" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.3"/>
+<text x="869.3" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">5</text>
+<text x="869.3" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Paketierung</text>
+<text x="869.3" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">build_mbz.py</text>
+<circle cx="1022.1" cy="118" r="27" fill="#047857"/>
+<circle cx="1022.1" cy="118" r="33" fill="none" stroke="#047857" stroke-width="2" opacity="0.3"/>
+<text x="1022.1" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">6</text>
+<text x="1022.1" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Live-Restore</text>
+<text x="1022.1" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">check_delivery.py</text>
+<circle cx="1175.0" cy="118" r="27" fill="#b45309"/>
+<circle cx="1175.0" cy="118" r="33" fill="none" stroke="#b45309" stroke-width="2" opacity="0.3"/>
+<text x="1175.0" y="127" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff">7</text>
+<text x="1175.0" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Erprobung</text>
+<text x="1175.0" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748b">spielwiese.py</text>
+</svg>
