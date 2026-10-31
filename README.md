@@ -41,8 +41,8 @@
 ## 🚀 Schnellstart
 
 ```bash
-git clone https://github.com/Menkoban/Moodle-Pipeline-OG-.git
-cd Moodle-Pipeline-OG-
+git clone https://github.com/Menkoban/Moodle-Pipeline-OG.git
+cd Moodle-Pipeline-OG
 python -m pip install -r requirements.txt
 
 # Beispielkurs bauen und prüfen – ganz ohne Moodle
@@ -95,8 +95,8 @@ Alle Skills liegen unter [`.claude/skills/`](.claude/skills/) und werden von Cla
 **Voraussetzungen:** Git und Python 3.11 oder neuer. Für Testinstanz und Spielwiese zusätzlich **Windows 10/11** – beide arbeiten mit portablen PHP-, MariaDB- und Apache-Programmen, ganz ohne Docker.
 
 ```bash
-git clone https://github.com/Menkoban/Moodle-Pipeline-OG-.git
-cd Moodle-Pipeline-OG-
+git clone https://github.com/Menkoban/Moodle-Pipeline-OG.git
+cd Moodle-Pipeline-OG
 python -m pip install -r requirements.txt
 ```
 
@@ -157,7 +157,7 @@ Ausführliche Anleitungen stehen in der `SKILL.md` und im `README.md` jedes Skil
 ## 📁 Aufbau des Repositorys
 
 ```
-Moodle-Pipeline-OG-/
+Moodle-Pipeline-OG/
 ├── .claude/skills/
 │   ├── moodle-kurs-grill-me/          Gate 0 · Interview und Steckbrief
 │   ├── moodle-mbz-builder/            Gates 1–5 · linearer Kursbau

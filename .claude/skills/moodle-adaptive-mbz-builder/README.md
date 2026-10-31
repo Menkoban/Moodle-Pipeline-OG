@@ -39,7 +39,7 @@ Kurs-Recap → Glossar → Material für Lehrkräfte*.
 
 ## Herunterladen & installieren
 
-Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG-`](https://github.com/Menkoban/Moodle-Pipeline-OG-) und liegt dort unter `.claude/skills/moodle-adaptive-mbz-builder/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
+Dieser Skill ist Teil des Monorepos [`Moodle-Pipeline-OG`](https://github.com/Menkoban/Moodle-Pipeline-OG) und liegt dort unter `.claude/skills/moodle-adaptive-mbz-builder/`. Installation und Aktualisierung für alle Skills gemeinsam: siehe [README im Hauptverzeichnis](../../../README.md#installation).
 
 Der Skill ist self-contained: alle Skripte finden einander relativ zum Ordner,
 egal wohin er installiert wird. Kein Moodle nötig, um die `.mbz` zu bauen.
